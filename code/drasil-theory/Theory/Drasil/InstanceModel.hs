@@ -2,13 +2,14 @@
 module Theory.Drasil.InstanceModel
   ( InstanceModel
   , im, imNoDeriv, imNoRefs, imNoDerivNoRefs
-  , qwUC, qwC
+  , qwUC, qwC, getEqMod
   ) where
 
 import Language.Drasil
 import Theory.Drasil.Classes (HasInputs(inputs), HasOutput(..))
 import Data.Drasil.IdeaDicts (inModel)
 
+import Data.Maybe (mapMaybe)
 import Control.Lens (makeLenses, view, lens, (^.), set, Getter, Setter', Lens', to, _1, _2)
 
 type Input = (QuantityDict, Maybe (RealInterval Expr Expr))
@@ -45,15 +46,15 @@ setMk (ExistingModel q)        _ g x = ExistingModel $ set g x q
 lensMk :: forall a. Lens' QDefinition a -> Lens' RelationConcept a -> Lens' InstanceModel a
 lensMk lq lr = lens g s
     where g :: InstanceModel -> a
-          g im = elimMk lq lr (im ^. mk)
+          g ima = elimMk lq lr (ima ^. mk)
           s :: InstanceModel -> a -> InstanceModel
-          s im x = set mk (setMk (im ^. mk) lq lr x) im
+          s ima x = set mk (setMk (ima ^. mk) lq lr x) ima
 
 instance HasUID             InstanceModel where uid = lensMk uid uid
 instance NamedIdea          InstanceModel where term = lensMk term term
 instance Idea               InstanceModel where getA = elimMk (to getA) (to getA) . view mk
 instance Definition         InstanceModel where defn = lensMk defn defn
--- instance ConceptDomain      InstanceModel where cdom = cdom . view rc
+instance ConceptDomain      InstanceModel where cdom = cdom -- TODO
 instance ExprRelat          InstanceModel where relat = elimMk (to relat) (to relat) . view mk
 instance HasDerivation      InstanceModel where derivations = deri
 instance HasReference       InstanceModel where getReferences = ref
@@ -75,35 +76,41 @@ instance HasSpace           InstanceModel where typ = output . typ
 instance MayHaveUnit        InstanceModel where getUnit = getUnit . view output
 
 -- | Smart constructor for instance models with everything defined
-im :: RelationConcept -> Inputs -> Output -> 
+im :: RelationConcept -> Inputs -> Output ->
   OutputConstraints -> [Reference] -> Maybe Derivation -> String -> [Sentence] -> InstanceModel
 im rcon _  _ _  [] _  _  = error $ "Source field of " ++ rcon ^. uid ++ " is empty"
-im rcon i o oc r der sn = 
+im rcon i o oc r der sn =
   IM (ExistingModel rcon) i (o, oc) r der (shortname' sn) (prependAbrv inModel sn)
 
 -- | Smart constructor for instance models; no derivation
-imNoDeriv :: RelationConcept -> Inputs -> Output -> 
+imNoDeriv :: RelationConcept -> Inputs -> Output ->
   OutputConstraints -> [Reference] -> String -> [Sentence] -> InstanceModel
 imNoDeriv rcon _  _ _ [] _  = error $ "Source field of " ++ rcon ^. uid ++ " is empty"
 imNoDeriv rcon i o oc r sn =
   IM (ExistingModel rcon) i (o, oc) r Nothing (shortname' sn) (prependAbrv inModel sn)
 
 -- | Smart constructor for instance models; no references
-imNoRefs :: RelationConcept -> Inputs -> Output -> 
+imNoRefs :: RelationConcept -> Inputs -> Output ->
   OutputConstraints -> Maybe Derivation -> String -> [Sentence] -> InstanceModel
-imNoRefs rcon i o oc der sn = 
+imNoRefs rcon i o oc der sn =
   IM (ExistingModel rcon) i (o, oc) [] der (shortname' sn) (prependAbrv inModel sn)
 
 -- | Smart constructor for instance models; no derivations or references
-imNoDerivNoRefs :: RelationConcept -> Inputs -> Output -> 
+imNoDerivNoRefs :: RelationConcept -> Inputs -> Output ->
   OutputConstraints -> String -> [Sentence] -> InstanceModel
-imNoDerivNoRefs rcon i o oc sn = 
+imNoDerivNoRefs rcon i o oc sn =
   IM (ExistingModel rcon) i (o, oc) [] Nothing (shortname' sn) (prependAbrv inModel sn)
 
 -- | For building a quantity with no constraint
-qwUC :: (Quantity q, MayHaveUnit q) => q -> Input 
+qwUC :: (Quantity q, MayHaveUnit q) => q -> Input
 qwUC x = (qw x, Nothing)
 
 -- | For building a quantity with a constraint
-qwC :: (Quantity q, MayHaveUnit q) => q -> RealInterval Expr Expr -> Input 
+qwC :: (Quantity q, MayHaveUnit q) => q -> RealInterval Expr Expr -> Input
 qwC x y = (qw x, Just y)
+
+getEqMod :: [InstanceModel] -> [QDefinition]
+getEqMod = mapMaybe (isEqMod . view mk)
+  where
+    -- isEqMod (EquationalModel f) = Just f
+    isEqMod _                   = Nothing

@@ -70,25 +70,25 @@ executables:
     - Drasil.GamePhysics.References
     - Drasil.GamePhysics.Requirements
   
-  glassbr:
-    main: Drasil.GlassBR.Main
-    source-dirs: ./
-    other-modules:
-    - Drasil.GlassBR.Assumptions
-    - Drasil.GlassBR.Body
-    - Drasil.GlassBR.Changes
-    - Drasil.GlassBR.Concepts
-    - Drasil.GlassBR.DataDefs
-    - Drasil.GlassBR.Figures
-    - Drasil.GlassBR.Goals
-    - Drasil.GlassBR.ModuleDefs
-    - Drasil.GlassBR.IMods
-    - Drasil.GlassBR.References
-    - Drasil.GlassBR.Requirements
-    - Drasil.GlassBR.Symbols
-    - Drasil.GlassBR.TMods
-    - Drasil.GlassBR.Unitals
-    - Drasil.GlassBR.Units
+  # glassbr:
+  #   main: Drasil.GlassBR.Main
+  #   source-dirs: ./
+  #   other-modules:
+  #   - Drasil.GlassBR.Assumptions
+  #   - Drasil.GlassBR.Body
+  #   - Drasil.GlassBR.Changes
+  #   - Drasil.GlassBR.Concepts
+  #   - Drasil.GlassBR.DataDefs
+  #   - Drasil.GlassBR.Figures
+  #   - Drasil.GlassBR.Goals
+  #   - Drasil.GlassBR.ModuleDefs
+  #   - Drasil.GlassBR.IMods
+  #   - Drasil.GlassBR.References
+  #   - Drasil.GlassBR.Requirements
+  #   - Drasil.GlassBR.Symbols
+  #   - Drasil.GlassBR.TMods
+  #   - Drasil.GlassBR.Unitals
+  #   - Drasil.GlassBR.Units
 
   hghc:
     main: Drasil.HGHC.Main
@@ -126,22 +126,22 @@ executables:
     - Drasil.SWHS.IMods
     - Drasil.SWHS.Unitals
 
-  projectile:
-    main: Drasil.Projectile.Main
-    source-dirs: ./
-    other-modules:
-    - Drasil.Projectile.Assumptions
-    - Drasil.Projectile.Body
-    - Drasil.Projectile.Concepts
-    - Drasil.Projectile.DataDefs
-    - Drasil.Projectile.Figures
-    - Drasil.Projectile.GenDefs
-    - Drasil.Projectile.Goals
-    - Drasil.Projectile.IMods
-    - Drasil.Projectile.References
-    - Drasil.Projectile.Requirements
-    - Drasil.Projectile.TMods
-    - Drasil.Projectile.Unitals
+  # projectile:
+    # main: Drasil.Projectile.Main
+    # source-dirs: ./
+    # other-modules:
+    # - Drasil.Projectile.Assumptions
+    # - Drasil.Projectile.Body
+    # - Drasil.Projectile.Concepts
+    # - Drasil.Projectile.DataDefs
+    # - Drasil.Projectile.Figures
+    # - Drasil.Projectile.GenDefs
+    # - Drasil.Projectile.Goals
+    # - Drasil.Projectile.IMods
+    # - Drasil.Projectile.References
+    # - Drasil.Projectile.Requirements
+    # - Drasil.Projectile.TMods
+    # - Drasil.Projectile.Unitals
 
   ssp:
     main: Drasil.SSP.Main

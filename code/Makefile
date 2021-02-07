@@ -19,7 +19,8 @@ PACKAGE_GEN_TARGET = BUILD DOC GRAPH
 #####
 
 # Current list of examples
-SRC_EXAMPLES = glassbr nopcm projectile
+# TODO: add back "projectile" to SRC_EXAMPLES
+SRC_EXAMPLES = glassbr nopcm 
 EXAMPLES = $(SRC_EXAMPLES) hghc swhs ssp gamephysics template dblpendulum
 GOOLTEST = gooltest
 
@@ -37,7 +38,8 @@ DBLPENDULUM_DIR = DblPendulum
 
 MULTI_SRC_DIRS = $(PROJECTILE_DIR) # Directories for examples with multiple src versions
 
-EXAMPLE_DIRS = $(MULTI_SRC_DIRS) $(HGHC_DIR) $(GLASSBR_DIR) $(NOPCM_DIR) \
+# TODO: add back "$(MULTI_SRC_DIRS) $(GLASSBR_DIR)" to EXAMPLE_DIRS
+EXAMPLE_DIRS = $(HGHC_DIR) $(NOPCM_DIR) \
   $(SWHS_DIR) $(SSP_DIR) $(GAMEPHYSICS_DIR)  $(DBLPENDULUM_DIR) # All example directories
 
 # and the name of their executables

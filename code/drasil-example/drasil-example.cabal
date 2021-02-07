@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 0b309f06021ba88a5f8dbe6e1ac5e159945c09c231ed024dd0d93abcd119c720
+-- hash: c54ceb4afbb31096d708293af00b46ee425bc7f133ee173b6580743f43f1ceab
 
 name:           drasil-example
 version:        0.1.24.0
@@ -97,47 +97,6 @@ executable gamephysics
     , split >=0.2.3.1
   default-language: Haskell2010
 
-executable glassbr
-  main-is: Drasil/GlassBR/Main.hs
-  other-modules:
-      Drasil.GlassBR.Assumptions
-      Drasil.GlassBR.Body
-      Drasil.GlassBR.Changes
-      Drasil.GlassBR.Concepts
-      Drasil.GlassBR.DataDefs
-      Drasil.GlassBR.Figures
-      Drasil.GlassBR.Goals
-      Drasil.GlassBR.ModuleDefs
-      Drasil.GlassBR.IMods
-      Drasil.GlassBR.References
-      Drasil.GlassBR.Requirements
-      Drasil.GlassBR.Symbols
-      Drasil.GlassBR.TMods
-      Drasil.GlassBR.Unitals
-      Drasil.GlassBR.Units
-  hs-source-dirs:
-      ./
-  ghc-options: -Wall -Wredundant-constraints -threaded -O2 -main-is Drasil.GlassBR.Main
-  build-depends:
-      base >=4.7 && <5
-    , containers >=0.5.5.1
-    , directory >=1.2.6.2
-    , drasil-code
-    , drasil-data
-    , drasil-database
-    , drasil-docLang
-    , drasil-gen
-    , drasil-gool
-    , drasil-lang
-    , drasil-printers
-    , drasil-theory
-    , drasil-utils
-    , lens >=4.12
-    , mtl >=2.2.1
-    , pretty >=1.1.1.1
-    , split >=0.2.3.1
-  default-language: Haskell2010
-
 executable hghc
   main-is: Drasil/HGHC/Main.hs
   other-modules:
@@ -196,44 +155,6 @@ executable nopcm
   hs-source-dirs:
       ./
   ghc-options: -Wall -Wredundant-constraints -threaded -O2 -main-is Drasil.NoPCM.Main
-  build-depends:
-      base >=4.7 && <5
-    , containers >=0.5.5.1
-    , directory >=1.2.6.2
-    , drasil-code
-    , drasil-data
-    , drasil-database
-    , drasil-docLang
-    , drasil-gen
-    , drasil-gool
-    , drasil-lang
-    , drasil-printers
-    , drasil-theory
-    , drasil-utils
-    , lens >=4.12
-    , mtl >=2.2.1
-    , pretty >=1.1.1.1
-    , split >=0.2.3.1
-  default-language: Haskell2010
-
-executable projectile
-  main-is: Drasil/Projectile/Main.hs
-  other-modules:
-      Drasil.Projectile.Assumptions
-      Drasil.Projectile.Body
-      Drasil.Projectile.Concepts
-      Drasil.Projectile.DataDefs
-      Drasil.Projectile.Figures
-      Drasil.Projectile.GenDefs
-      Drasil.Projectile.Goals
-      Drasil.Projectile.IMods
-      Drasil.Projectile.References
-      Drasil.Projectile.Requirements
-      Drasil.Projectile.TMods
-      Drasil.Projectile.Unitals
-  hs-source-dirs:
-      ./
-  ghc-options: -Wall -Wredundant-constraints -threaded -O2 -main-is Drasil.Projectile.Main
   build-depends:
       base >=4.7 && <5
     , containers >=0.5.5.1

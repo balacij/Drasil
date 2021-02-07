@@ -1,13 +1,13 @@
 module Drasil.Projectile.Body (printSetting, si, srs) where
 
 import Language.Drasil hiding (Symbol(..), Vector)
-import Language.Drasil.Code (relToQD)
 import Language.Drasil.Printers (PrintingInformation(..), defaultConfiguration)
 import Database.Drasil (Block, ChunkDB, ReferenceDB, SystemInformation(SI),
   cdb, rdb, refdb, _authors, _purpose, _concepts, _constants, _constraints, 
   _datadefs, _configFiles, _definitions, _defSequence, _inputs, _kind, 
   _outputs, _quants, _sys, _sysinfodb, _usedinfodb)
 import Utils.Drasil
+import Theory.Drasil (getEqMod)
 
 import Drasil.DocLang (AuxConstntSec(AuxConsProg),
   DerivationDisplay(ShowDerivation),
@@ -110,8 +110,7 @@ si = SI {
   _purpose     = [],
   _quants      = symbols,
   _concepts    = [] :: [DefinedQuantityDict],
-  _definitions = map (relToQD symbMap) iMods ++
-                 map (relToQD symbMap) genDefns,
+  _definitions = getEqMod iMods, -- TODO: ++ getEqMod genDefns,
   _datadefs    = dataDefs,
   _configFiles = [],
   _inputs      = inputs,
