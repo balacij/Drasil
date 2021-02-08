@@ -107,6 +107,19 @@ codeSpec SI {_sys = sys
         sysinfodb = db
       }
 
+-- TODO: TEMPORARY REVERSION -- I believe Dr. Carette wanted to remove this as part of the backporting task
+-- medium hacks ---
+
+-- Converts a chunk with a defining relation to a QDefinition
+relToQD :: ExprRelat c => ChunkDB -> c -> QDefinition
+relToQD sm r = convertRel sm (relat r)
+
+-- Converts an Expr representing a definition (i.e. an equality where the left 
+-- side is just a variable) to a QDefinition.
+convertRel :: ChunkDB -> Expr -> QDefinition
+convertRel sm (BinaryOp Eq (C x) r) = ec (symbResolve sm x) r
+convertRel _ _ = error "Conversion failed"
+
 -- | Convert a Func to an implementation-stage QuantityDict representing the 
 -- function.
 asVC :: Func -> QuantityDict
