@@ -70,25 +70,25 @@ executables:
     - Drasil.GamePhysics.References
     - Drasil.GamePhysics.Requirements
   
-  # glassbr:
-  #   main: Drasil.GlassBR.Main
-  #   source-dirs: ./
-  #   other-modules:
-  #   - Drasil.GlassBR.Assumptions
-  #   - Drasil.GlassBR.Body
-  #   - Drasil.GlassBR.Changes
-  #   - Drasil.GlassBR.Concepts
-  #   - Drasil.GlassBR.DataDefs
-  #   - Drasil.GlassBR.Figures
-  #   - Drasil.GlassBR.Goals
-  #   - Drasil.GlassBR.ModuleDefs
-  #   - Drasil.GlassBR.IMods
-  #   - Drasil.GlassBR.References
-  #   - Drasil.GlassBR.Requirements
-  #   - Drasil.GlassBR.Symbols
-  #   - Drasil.GlassBR.TMods
-  #   - Drasil.GlassBR.Unitals
-  #   - Drasil.GlassBR.Units
+  glassbr:
+    main: Drasil.GlassBR.Main
+    source-dirs: ./
+    other-modules:
+    - Drasil.GlassBR.Assumptions
+    - Drasil.GlassBR.Body
+    - Drasil.GlassBR.Changes
+    - Drasil.GlassBR.Concepts
+    - Drasil.GlassBR.DataDefs
+    - Drasil.GlassBR.Figures
+    - Drasil.GlassBR.Goals
+    - Drasil.GlassBR.ModuleDefs
+    - Drasil.GlassBR.IMods
+    - Drasil.GlassBR.References
+    - Drasil.GlassBR.Requirements
+    - Drasil.GlassBR.Symbols
+    - Drasil.GlassBR.TMods
+    - Drasil.GlassBR.Unitals
+    - Drasil.GlassBR.Units
 
   hghc:
     main: Drasil.HGHC.Main
