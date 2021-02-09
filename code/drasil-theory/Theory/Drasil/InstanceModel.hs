@@ -42,19 +42,18 @@ setMk :: ModelKinds -> Setter' QDefinition a -> Setter' RelationConcept a -> a -
 -- setMk (DEModel q)         _ g x = DEModel $ set g x q
 setMk (ExistingModel q)        _ g x = ExistingModel $ set g x q
 
--- TODO: NAME SHADOWING PROBLEM!!!!!!!!
 lensMk :: forall a. Lens' QDefinition a -> Lens' RelationConcept a -> Lens' InstanceModel a
 lensMk lq lr = lens g s
     where g :: InstanceModel -> a
-          g ima = elimMk lq lr (ima ^. mk)
+          g im_ = elimMk lq lr (im_ ^. mk)
           s :: InstanceModel -> a -> InstanceModel
-          s ima x = set mk (setMk (ima ^. mk) lq lr x) ima
+          s im_ x = set mk (setMk (im_ ^. mk) lq lr x) im_
 
 instance HasUID             InstanceModel where uid = lensMk uid uid
 instance NamedIdea          InstanceModel where term = lensMk term term
 instance Idea               InstanceModel where getA = elimMk (to getA) (to getA) . view mk
 instance Definition         InstanceModel where defn = lensMk defn defn
-instance ConceptDomain      InstanceModel where cdom = cdom -- TODO
+instance ConceptDomain      InstanceModel where cdom = cdom -- TODO: this needs to get filled in properly!
 instance ExprRelat          InstanceModel where relat = elimMk (to relat) (to relat) . view mk
 instance HasDerivation      InstanceModel where derivations = deri
 instance HasReference       InstanceModel where getReferences = ref
