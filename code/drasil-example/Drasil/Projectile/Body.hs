@@ -48,6 +48,7 @@ import Drasil.Projectile.Requirements (funcReqs, nonfuncReqs)
 import Drasil.Projectile.TMods (tMods)
 import Drasil.Projectile.Unitals (acronyms, constants, constrained, inConstraints,
   inputs, launAngle, outConstraints, outputs, symbols, unitalIdeas, unitalQuants)
+import Theory.Drasil (getEqMod)
 
 srs :: Document
 srs = mkDoc mkSRS (for'' titleize phrase) si
@@ -111,7 +112,7 @@ si = SI {
   _quants      = symbols,
   _concepts    = [] :: [DefinedQuantityDict],
   -- TODO: remove relToQD
-  _definitions = map (relToQD symbMap) iMods ++ map (relToQD symbMap) genDefns,
+  _definitions = getEqMod iMods ++ map (relToQD symbMap) genDefns,
   _datadefs    = dataDefs,
   _configFiles = [],
   _inputs      = inputs,

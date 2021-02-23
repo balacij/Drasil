@@ -7,7 +7,7 @@ module Theory.Drasil (
   -- GenDefn
   , GenDefn, gd, gdNoRefs
   -- InstanceModel
-  , InstanceModel, getEqMod
+  , InstanceModel, ModelKinds(..), getEqMod
   , im, imNoDeriv, imNoRefs, imNoDerivNoRefs
   , qwUC, qwC
   -- Theory
@@ -20,6 +20,7 @@ import Theory.Drasil.DataDefinition (DataDefinition, mkQuantDef, mkQuantDef',
 import Theory.Drasil.GenDefn
 import Theory.Drasil.InstanceModel
     ( InstanceModel,
+      ModelKinds(..),
       im,
       imNoDeriv,
       imNoRefs,

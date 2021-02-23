@@ -105,7 +105,7 @@ flightDurConcept = cc' C.flightDur
 
 ---
 message :: QuantityDict
-message = vc "message" (nounPhraseSent (S "output message as a string")) lS String
+message = vc "message" (nounPhraseSent (S "output message")) lS String
 
 ---
 tol :: QDefinition

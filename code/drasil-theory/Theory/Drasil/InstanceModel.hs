@@ -1,6 +1,6 @@
 {-# LANGUAGE TemplateHaskell, Rank2Types, ScopedTypeVariables  #-}
 module Theory.Drasil.InstanceModel
-  ( InstanceModel
+  ( InstanceModel, ModelKinds(..)
   , im, imNoDeriv, imNoRefs, imNoDerivNoRefs
   , qwUC, qwC, getEqMod
   ) where
@@ -17,7 +17,8 @@ type Inputs = [Input]
 type Output = QuantityDict
 type OutputConstraints = [RealInterval Expr Expr]
 
-newtype ModelKinds = ExistingModel RelationConcept
+data ModelKinds = EquationalModel QDefinition 
+                | ExistingModel RelationConcept
 
 -- | An Instance Model is a RelationConcept that may have specific input/output
 -- constraints. It also has attributes like derivation, source, etc.
@@ -33,12 +34,12 @@ data InstanceModel = IM { _mk :: ModelKinds -- _rc :: RelationConcept
 makeLenses ''InstanceModel
 
 elimMk :: Getter QDefinition a -> Getter RelationConcept a -> ModelKinds -> a
--- elimMk l _ (EquationalModel q) = q ^. l
+elimMk l _ (EquationalModel q) = q ^. l
 -- elimMk _ l (DEModel q)         = q ^. l
 elimMk _ l (ExistingModel q)        = q ^. l
 
 setMk :: ModelKinds -> Setter' QDefinition a -> Setter' RelationConcept a -> a -> ModelKinds
--- setMk (EquationalModel q) f _ x = EquationalModel $ set f x q
+setMk (EquationalModel q) f _ x = EquationalModel $ set f x q
 -- setMk (DEModel q)         _ g x = DEModel $ set g x q
 setMk (ExistingModel q)        _ g x = ExistingModel $ set g x q
 
@@ -75,30 +76,28 @@ instance HasSpace           InstanceModel where typ = output . typ
 instance MayHaveUnit        InstanceModel where getUnit = getUnit . view output
 
 -- | Smart constructor for instance models with everything defined
-im :: RelationConcept -> Inputs -> Output ->
+im :: ModelKinds -> Inputs -> Output ->
   OutputConstraints -> [Reference] -> Maybe Derivation -> String -> [Sentence] -> InstanceModel
-im rcon _  _ _  [] _  _  = error $ "Source field of " ++ rcon ^. uid ++ " is empty"
-im rcon i o oc r der sn =
-  IM (ExistingModel rcon) i (o, oc) r der (shortname' sn) (prependAbrv inModel sn)
+-- TODO: add "instance HasUID ModelKinds..."
+-- im mkind _  _ _  [] _  _  = error $ "Source field of " ++ mkind ^. uid ++ " is empty"
+im mkind i o oc r der sn = IM mkind i (o, oc) r der (shortname' sn) (prependAbrv inModel sn)
 
 -- | Smart constructor for instance models; no derivation
-imNoDeriv :: RelationConcept -> Inputs -> Output ->
+imNoDeriv :: ModelKinds -> Inputs -> Output ->
   OutputConstraints -> [Reference] -> String -> [Sentence] -> InstanceModel
-imNoDeriv rcon _  _ _ [] _  = error $ "Source field of " ++ rcon ^. uid ++ " is empty"
-imNoDeriv rcon i o oc r sn =
-  IM (ExistingModel rcon) i (o, oc) r Nothing (shortname' sn) (prependAbrv inModel sn)
+-- TODO: add "instance HasUID ModelKinds..."
+-- imNoDeriv mkind _  _ _ [] _  = error $ "Source field of " ++ mkind ^. uid ++ " is empty"
+imNoDeriv mkind i o oc r sn = IM mkind i (o, oc) r Nothing (shortname' sn) (prependAbrv inModel sn)
 
 -- | Smart constructor for instance models; no references
-imNoRefs :: RelationConcept -> Inputs -> Output ->
+imNoRefs :: ModelKinds -> Inputs -> Output ->
   OutputConstraints -> Maybe Derivation -> String -> [Sentence] -> InstanceModel
-imNoRefs rcon i o oc der sn =
-  IM (ExistingModel rcon) i (o, oc) [] der (shortname' sn) (prependAbrv inModel sn)
+imNoRefs mkind i o oc der sn = IM mkind i (o, oc) [] der (shortname' sn) (prependAbrv inModel sn)
 
 -- | Smart constructor for instance models; no derivations or references
-imNoDerivNoRefs :: RelationConcept -> Inputs -> Output ->
+imNoDerivNoRefs :: ModelKinds -> Inputs -> Output ->
   OutputConstraints -> String -> [Sentence] -> InstanceModel
-imNoDerivNoRefs rcon i o oc sn =
-  IM (ExistingModel rcon) i (o, oc) [] Nothing (shortname' sn) (prependAbrv inModel sn)
+imNoDerivNoRefs mkind i o oc sn = IM mkind i (o, oc) [] Nothing (shortname' sn) (prependAbrv inModel sn)
 
 -- | For building a quantity with no constraint
 qwUC :: (Quantity q, MayHaveUnit q) => q -> Input
@@ -111,5 +110,5 @@ qwC x y = (qw x, Just y)
 getEqMod :: [InstanceModel] -> [QDefinition]
 getEqMod = mapMaybe (isEqMod . view mk)
   where
-    -- isEqMod (EquationalModel f) = Just f
+    isEqMod (EquationalModel f) = Just f
     isEqMod _                   = Nothing

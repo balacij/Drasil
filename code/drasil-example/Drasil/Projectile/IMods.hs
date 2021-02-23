@@ -3,7 +3,7 @@ module Drasil.Projectile.IMods (iMods, landPosIM, messageIM, offsetIM, timeIM) w
 import Prelude hiding (cos, sin)
 
 import Language.Drasil
-import Theory.Drasil (InstanceModel, imNoDerivNoRefs, imNoRefs, qwC)
+import Theory.Drasil (InstanceModel, ModelKinds(..), imNoDerivNoRefs, imNoRefs, qwC, mkQuantDef)
 import Utils.Drasil
 
 import qualified Drasil.DocLang.SRS as SRS (valsOfAuxCons)
@@ -29,15 +29,21 @@ iMods = [timeIM, landPosIM, offsetIM, messageIM]
 
 ---
 timeIM :: InstanceModel
-timeIM = imNoRefs timeRC 
+timeIM = imNoRefs (EquationalModel timeQDef) 
   [qwC launSpeed $ UpFrom (Exc, 0)
   ,qwC launAngle $ Bounded (Exc, 0) (Exc, sy pi_ / 2)]
   (qw flightDur) [UpFrom (Exc, 0)]
   (Just timeDeriv) "calOfLandingTime" [angleConstraintNote, gravitationalAccelConstNote, timeConsNote]
 
-timeRC :: RelationConcept
-timeRC = makeRC "timeRC" (nounPhraseSP "calculation of landing time")
-  EmptyS $ sy flightDur $= 2 * sy launSpeed * sin (sy launAngle) / sy gravitationalAccelConst
+timeQDef :: QDefinition 
+timeQDef = mkQuantDef flightDur timeExpr
+
+timeExpr :: Expr
+timeExpr = 2 * sy launSpeed * sin (sy launAngle) / sy gravitationalAccelConst
+
+-- timeRC :: RelationConcept
+-- timeRC = makeRC "timeRC" (nounPhraseSP "calculation of landing time")
+--   EmptyS $ sy flightDur $= 2 * sy launSpeed * sin (sy launAngle) / sy gravitationalAccelConst
 
 timeDeriv :: Derivation
 timeDeriv = mkDerivName (phrase flightDur) (weave [timeDerivSents, map E timeDerivEqns])
@@ -76,19 +82,22 @@ timeDerivEqn5 = sy flightDur $= 2 * sy launSpeed * sin (sy launAngle) / sy gravi
 
 ---
 landPosIM :: InstanceModel
-landPosIM = imNoRefs landPosRC 
+landPosIM = imNoRefs (EquationalModel landPosQDef) 
   [qwC launSpeed $ UpFrom (Exc, 0), 
    qwC launAngle $ Bounded (Exc, 0) (Exc, sy pi_ / 2)]
   (qw landPos) [UpFrom (Exc, 0)]
   (Just landPosDeriv) "calOfLandingDist" [angleConstraintNote, gravitationalAccelConstNote, landPosConsNote]
 
-landPosExpr :: Expr
-landPosExpr = sy landPos $= 2 * square (sy launSpeed) * sin (sy launAngle) *
-                                cos (sy launAngle) / sy gravitationalAccelConst
+landPosQDef :: QDefinition 
+landPosQDef = mkQuantDef landPos landPosExpr
 
-landPosRC :: RelationConcept
-landPosRC = makeRC "landPosRC" (nounPhraseSP "calculation of landing position")
-  landPosConsNote landPosExpr
+landPosExpr :: Expr
+landPosExpr = 2 * square (sy launSpeed) * sin (sy launAngle) * cos (sy launAngle) / sy gravitationalAccelConst
+
+-- TODO: Specifically written as "Calculation of landing position" in the build HTML & TeX. Is this what we want or should we be defaulting to what is written in for landPos?
+-- landPosRC :: RelationConcept
+-- landPosRC = makeRC "landPosRC" (nounPhraseSP "calculation of landing position")
+--   landPosConsNote landPosExpr
 
 landPosDeriv :: Derivation
 landPosDeriv = mkDerivName (phrase landPos) (weave [landPosDerivSents, map E landPosDerivEqns])
@@ -121,25 +130,36 @@ landPosDerivEqn3 = sy landPos $= sy launSpeed * cos (sy launAngle) * 2 * sy laun
 
 ---
 offsetIM :: InstanceModel
-offsetIM = imNoDerivNoRefs offsetRC
+offsetIM = imNoDerivNoRefs (EquationalModel offsetQDef)
   [qwC landPos $ UpFrom (Exc, 0), qwC targPos $ UpFrom (Exc, 0)]
   (qw offset) [] "offsetIM" [landPosNote, landAndTargPosConsNote]
 
-offsetRC :: RelationConcept
-offsetRC = makeRC "offsetRC" (nounPhraseSP "offset") 
-  EmptyS $ sy offset $= sy landPos - sy targPos
+offsetQDef :: QDefinition 
+offsetQDef = mkQuantDef offset offsetExpr
+
+offsetExpr :: Expr
+offsetExpr = sy landPos - sy targPos
 
 ---
 messageIM :: InstanceModel
-messageIM = imNoDerivNoRefs messageRC 
+messageIM = imNoDerivNoRefs (EquationalModel messageQDef) 
   [qwC offset $ UpFrom (Exc, negate (sy landPos))
   ,qwC targPos $ UpFrom (Exc, 0)]
   (qw message)
   [] "messageIM" [offsetNote, targPosConsNote, offsetConsNote, tolNote]
 
-messageRC :: RelationConcept
-messageRC = makeRC "messageRC" (nounPhraseSP "output message") 
-  EmptyS $ sy message $= completeCase [case1, case2, case3]
+-- messageRC :: RelationConcept
+-- messageRC = makeRC "messageRC" (nounPhraseSP "output message") 
+--   EmptyS $ sy message $= completeCase [case1, case2, case3]
+--   where case1 = (Str "The target was hit.",        abs (sy offset / sy targPos) $< sy tol)
+--         case2 = (Str "The projectile fell short.", sy offset $< 0)
+--         case3 = (Str "The projectile went long.",  sy offset $> 0)
+
+messageQDef :: QDefinition 
+messageQDef = mkQuantDef message messageExpr
+
+messageExpr :: Expr
+messageExpr = completeCase [case1, case2, case3]
   where case1 = (Str "The target was hit.",        abs (sy offset / sy targPos) $< sy tol)
         case2 = (Str "The projectile fell short.", sy offset $< 0)
         case3 = (Str "The projectile went long.",  sy offset $> 0)
