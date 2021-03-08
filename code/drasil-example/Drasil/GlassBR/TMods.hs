@@ -19,26 +19,26 @@ tMods = [pbIsSafe, lrIsSafe]
 
 
 lrIsSafe :: TheoryModel
-lrIsSafe = tm (cw lrIsSafeRC)
+lrIsSafe = tm (cw lrIsSafeQDef)
    [qw isSafeLoad, qw tmLRe, qw tmDemand] ([] :: [ConceptChunk])
-   [lrIsSafeRC] [sy isSafeLoad $= sy tmLRe $> sy tmDemand] [] [makeCite astm2009] 
+   [lrIsSafeQDef] [sy isSafeLoad $= sy tmLRe $> sy tmDemand] [] [makeCite astm2009] 
    "isSafeLoad" [lrIsSafeDesc]
 
-lrIsSafeRC :: QDefinition
-lrIsSafeRC = fromEqn' "safetyLoad" (nounPhraseSP "Safety Load")
+lrIsSafeQDef :: QDefinition
+lrIsSafeQDef = fromEqn' "safetyLoad" (nounPhraseSP "Safety Load")
  lrIsSafeDesc (eqSymb isSafeLoad) Boolean (sy tmLRe $> sy tmDemand)
 
 lrIsSafeDesc :: Sentence
 lrIsSafeDesc = tModDesc isSafeLoad
 
 pbIsSafe :: TheoryModel
-pbIsSafe = tm (cw pbIsSafeRC) 
+pbIsSafe = tm (cw pbIsSafeQDef) 
   [qw isSafeProb, qw probFail, qw pbTolfail] ([] :: [ConceptChunk])
-  [pbIsSafeRC] [sy isSafeProb $= sy probFail $< sy pbTolfail] [] [makeCite astm2009]
+  [pbIsSafeQDef] [sy isSafeProb $= sy probFail $< sy pbTolfail] [] [makeCite astm2009]
   "isSafeProb" [pbIsSafeDesc]
 
-pbIsSafeRC :: QDefinition
-pbIsSafeRC = fromEqn' "safetyProbability" (nounPhraseSP "Safety Probability") 
+pbIsSafeQDef :: QDefinition
+pbIsSafeQDef = fromEqn' "safetyProbability" (nounPhraseSP "Safety Probability") 
   pbIsSafeDesc (eqSymb isSafeProb) Boolean (sy probFail $< sy pbTolfail)
 
 pbIsSafeDesc :: Sentence

@@ -19,8 +19,7 @@ PACKAGE_GEN_TARGET = BUILD DOC GRAPH
 #####
 
 # Current list of examples
-# TODO: add back "projectile" to SRC_EXAMPLES
-SRC_EXAMPLES = projectile glassbr nopcm 
+SRC_EXAMPLES = glassbr nopcm projectile 
 EXAMPLES = $(SRC_EXAMPLES) hghc swhs ssp gamephysics template dblpendulum
 GOOLTEST = gooltest
 

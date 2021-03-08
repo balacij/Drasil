@@ -65,7 +65,7 @@ instance Referable TheoryModel where
   renderRef l = RP (prepend $ abrv l) (getRefAdd l)
 
 -- This "smart" constructor is really quite awful, it takes way too many arguments.
--- This should likely be re-arranged somehow. Especially since since of the arguments
+-- This should likely be re-arranged somehow. Especially since some of the arguments
 -- have the same type!
 tm :: (Concept c0, Quantity q, MayHaveUnit q, Concept c1) => c0 ->
     [q] -> [c1] -> [QDefinition] ->
