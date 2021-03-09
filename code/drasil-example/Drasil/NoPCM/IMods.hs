@@ -31,7 +31,7 @@ iMods = [eBalanceOnWtr, heatEInWtr]
 ---------
 -- FIXME: comment on reference?
 eBalanceOnWtr :: InstanceModel
-eBalanceOnWtr = im (ExistingModel eBalanceOnWtrRC) 
+eBalanceOnWtr = im (OthModel eBalanceOnWtrRC) 
   [qwC tempC $ UpFrom (Inc, sy tempInit)
   , qwUC tempInit, qwUC timeFinal, qwUC coilSA, qwUC coilHTC, qwUC htCapW, qwUC wMass] 
   (qw tempW) []

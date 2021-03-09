@@ -1,8 +1,8 @@
-module Drasil.Projectile.GenDefs (genDefns, posVecGD) where
+module Drasil.Projectile.GenDefs (genDefns, posVecGD, genDefns0) where
 
 import Prelude hiding (cos, sin)
 import Language.Drasil
-import Theory.Drasil (GenDefn, TheoryModel, gd, gdNoRefs)
+import Theory.Drasil (GenDefn, TheoryModel, gd, gdNoRefs, ModelKinds (EquationalModel), mkQuantDef)
 import Utils.Drasil
 
 import Data.Drasil.Concepts.Documentation (coordinate, symbol_)
@@ -17,13 +17,17 @@ import qualified Data.Drasil.Quantities.Physics as QP (constAccel)
 import Drasil.Projectile.Assumptions (cartSyst, constAccel, pointMass, timeStartZero, twoDMotion)
 import Drasil.Projectile.References (hibbeler2004)
 import Drasil.Projectile.TMods (accelerationTM, velocityTM)
+import Theory.Drasil
 
 genDefns :: [GenDefn]
 genDefns = [rectVelGD, rectPosGD, velVecGD, posVecGD]
 
+genDefns0 :: [GenDefn]
+genDefns0 = [rectPosGD, velVecGD, posVecGD]
+
 ----------
 rectVelGD :: GenDefn
-rectVelGD = gd rectVelRC (getUnit speed) (Just rectVelDeriv)
+rectVelGD = gdMK (OthModel rectVelRC) (getUnit speed) (Just rectVelDeriv)
   [makeCiteInfo hibbeler2004 $ Page [8]] "rectVel" [{-Notes-}]
 
 rectVelRC :: RelationConcept
@@ -32,8 +36,18 @@ rectVelRC = makeRC "rectVelRC" (nounPhraseSent $ foldlSent_
              S "as a function" `sOf` phrase time, S "for", phrase QP.constAccel])
             EmptyS rectVelRel
 
+-- TODO: using this definition, the entry in the traceability matrix is changed to velMag
+-- rectVelQDef :: QDefinition 
+-- rectVelQDef = mkQuantDef' speed (nounPhraseSent $ foldlSent_ 
+--             [atStart rectilinear, sParen $ getAcc oneD, phrase velocity,
+--              S "as a function" `sOf` phrase time, S "for", phrase QP.constAccel])
+--             rectVelExpr
+
+rectVelExpr :: Expr
+rectVelExpr = sy iSpeed + sy QP.constAccel * sy time
+
 rectVelRel :: Relation
-rectVelRel = sy speed $= sy iSpeed + sy QP.constAccel * sy time
+rectVelRel = sy speed $= rectVelExpr
 
 rectVelDeriv :: Derivation
 rectVelDeriv = mkDerivName (phrase rectilinear +:+ phrase velocity)
@@ -46,7 +60,7 @@ rectVelDerivSents = [rectDeriv velocity acceleration motSent iVel accelerationTM
                          S "with a", phrase QP.constAccel `sC` S "represented by", E (sy QP.constAccel)]
 
 rectVelDerivEqns :: [Expr]
-rectVelDerivEqns = [rectVelDerivEqn1, rectVelDerivEqn2, rectVelRel]
+rectVelDerivEqns = [rectVelDerivEqn1, rectVelDerivEqn2, rectVelRel] -- TODO: temp
 
 rectVelDerivEqn1, rectVelDerivEqn2 :: Expr
 rectVelDerivEqn1 = sy QP.constAccel $= deriv (sy speed) time

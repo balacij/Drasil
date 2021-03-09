@@ -41,10 +41,6 @@ timeQDef = mkQuantDef flightDur timeExpr
 timeExpr :: Expr
 timeExpr = 2 * sy launSpeed * sin (sy launAngle) / sy gravitationalAccelConst
 
--- timeRC :: RelationConcept
--- timeRC = makeRC "timeRC" (nounPhraseSP "calculation of landing time")
---   EmptyS $ sy flightDur $= 2 * sy launSpeed * sin (sy launAngle) / sy gravitationalAccelConst
-
 timeDeriv :: Derivation
 timeDeriv = mkDerivName (phrase flightDur) (weave [timeDerivSents, map E timeDerivEqns])
 

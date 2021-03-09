@@ -23,7 +23,7 @@ iMods = [angularDisplacementIM]
 
 ---
 angularDisplacementIM :: InstanceModel
-angularDisplacementIM = imNoRefs (ExistingModel angularDisplacementRC) 
+angularDisplacementIM = imNoRefs (OthModel angularDisplacementRC) 
   [qwC lenRod $ UpFrom (Exc, 0)
   ,qwC initialPendAngle $ UpFrom (Exc, 0)
   , qwC gravitationalAccel $ UpFrom (Exc, 0)]

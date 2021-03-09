@@ -48,7 +48,7 @@ iMods = [fctSfty, nrmShrFor, nrmShrForNum, nrmShrForDen, intsliceFs, crtSlpId]
 --
 
 fctSfty :: InstanceModel
-fctSfty = im (ExistingModel fctSftyRC) 
+fctSfty = im (OthModel fctSftyRC) 
  [qwUC slopeDist, qwUC slopeHght, qwUC waterHght, qwUC effCohesion, qwUC fricAngle,
   qwUC dryWeight, qwUC satWeight, qwUC waterWeight, qwUC slipDist, qwUC slipHght, qwUC constF]
   (qw fs) [] (map makeCite [chen2005, karchewski2012])
@@ -367,7 +367,7 @@ fctSftyDerivEqn18 = sy fs * (idx (sy mobShrC) (sy numbSlices - int 1) *
 ------------------------------------------------------------------------
 
 nrmShrFor :: InstanceModel
-nrmShrFor = im (ExistingModel nrmShrForRC) [qwUC slopeDist, qwUC slopeHght, qwUC waterHght, 
+nrmShrFor = im (OthModel nrmShrForRC) [qwUC slopeDist, qwUC slopeHght, qwUC waterHght, 
   qwUC waterWeight, qwUC slipDist, qwUC slipHght, qwUC constF]
   (qw normToShear) [] (map makeCite [chen2005, karchewski2012])
   (Just nrmShrDeriv) "nrmShrFor" [nrmShrFDesc]
@@ -452,7 +452,7 @@ nrmShrDerivEqn4 = sy normToShear $= sum1toN
 ---------------------------------------------------------------------
 
 nrmShrForNum :: InstanceModel
-nrmShrForNum = im (ExistingModel nrmShrForNumRC) [qwUC slopeDist, qwUC slopeHght, qwUC waterHght, 
+nrmShrForNum = im (OthModel nrmShrForNumRC) [qwUC slopeDist, qwUC slopeHght, qwUC waterHght, 
   qwUC waterWeight, qwUC slipDist, qwUC slipHght]
   (qw nrmShearNum) [] (map makeCite [chen2005, karchewski2012])
   (Just nrmShrFNumDeriv) "nrmShrForNum" [nrmShrFNumDesc]
@@ -491,7 +491,7 @@ nrmShrFNumDesc = foldlSent [ch baseWthX, S "is defined in",
 ---------------------------------------------------------------------------
 
 nrmShrForDen :: InstanceModel
-nrmShrForDen = im (ExistingModel nrmShrForDenRC) [qwUC slipDist, qwUC constF]
+nrmShrForDen = im (OthModel nrmShrForDenRC) [qwUC slipDist, qwUC constF]
   (qw nrmShearDen) [] (map makeCite [chen2005, karchewski2012])
   (Just nrmShrFDenDeriv) "nrmShrForDen" [nrmShrFDenDesc]
 
@@ -521,7 +521,7 @@ nrmShrFDenDesc = foldlSent [ch baseWthX, S "is defined in",
 --------------------------------------------------------------------------
 
 intsliceFs :: InstanceModel
-intsliceFs = im (ExistingModel intsliceFsRC) [qwUC slopeDist, qwUC slopeHght, qwUC waterHght
+intsliceFs = im (OthModel intsliceFsRC) [qwUC slopeDist, qwUC slopeHght, qwUC waterHght
   , qwUC effCohesion, qwUC fricAngle, qwUC dryWeight, qwUC satWeight, qwUC waterWeight
   , qwUC slipDist, qwUC slipHght, qwUC constF]
   (qw intNormForce) [] [makeCite chen2005] (Just intrSlcDeriv) "intsliceFs" [sliceFsDesc]
@@ -582,7 +582,7 @@ intrSlcDerivEqn = inxi intNormForce $=
 
 --------------------------------------------------------------------------
 crtSlpId :: InstanceModel
-crtSlpId = imNoDeriv (ExistingModel crtSlpIdRC) [qwUC slopeDist, qwUC slopeHght, qwUC waterDist, 
+crtSlpId = imNoDeriv (OthModel crtSlpIdRC) [qwUC slopeDist, qwUC slopeHght, qwUC waterDist, 
   qwUC waterHght, qwUC effCohesion, qwUC fricAngle, qwUC dryWeight, qwUC satWeight,
   qwUC waterWeight, qwUC constF] (qw fsMin) [] [makeCite li2010] "crtSlpId" 
   [crtSlpIdDesc]

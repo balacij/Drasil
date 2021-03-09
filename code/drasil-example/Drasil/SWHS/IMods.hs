@@ -36,7 +36,7 @@ iMods = [eBalanceOnWtr, eBalanceOnPCM, heatEInWtr, heatEInPCM]
 -- IM1 --
 ---------
 eBalanceOnWtr :: InstanceModel
-eBalanceOnWtr = im (ExistingModel eBalanceOnWtrRC) 
+eBalanceOnWtr = im (OthModel eBalanceOnWtrRC) 
   [qwUC wMass ,qwUC htCapW, qwUC coilHTC, qwUC pcmSA, qwUC pcmHTC, qwUC coilSA
   ,qwUC tempPCM, qwUC timeFinal, qwC tempC $ UpFrom (Exc, sy tempInit)
   ,qwUC tempInit]
@@ -185,7 +185,7 @@ eBalanceOnWtrDerivEqnsIM1 = [eBalanceOnWtrDerivEqn1, eBalanceOnWtrDerivEqn2,
 -- IM2 --
 ---------
 eBalanceOnPCM :: InstanceModel
-eBalanceOnPCM = im (ExistingModel eBalanceOnPCMRC) [qwC tempMeltP $ UpFrom (Exc, sy tempInit)
+eBalanceOnPCM = im (OthModel eBalanceOnPCMRC) [qwC tempMeltP $ UpFrom (Exc, sy tempInit)
   , qwUC timeFinal, qwUC tempInit, qwUC pcmSA
   , qwUC pcmHTC, qwUC pcmMass, qwUC htCapSP, qwUC htCapLP]
   (qw tempPCM) []
@@ -313,7 +313,7 @@ eBalanceOnPCMDerivEqnsIM2 = [eBalanceOnPCMEqn1, eBalanceOnPCMEqn2,
 -- IM3 --
 ---------
 heatEInWtr :: InstanceModel
-heatEInWtr = imNoDeriv (ExistingModel heatEInWtrRC) 
+heatEInWtr = imNoDeriv (OthModel heatEInWtrRC) 
   [qwUC tempInit, qwUC wMass, qwUC htCapW, qwUC wMass] 
   (qw watE) [] [makeCite koothoor2013]
   "heatEInWtr" htWtrNotes
@@ -340,7 +340,7 @@ htWtrNotes = map foldlSent [
 -- IM4 --
 ---------
 heatEInPCM :: InstanceModel
-heatEInPCM = imNoDeriv (ExistingModel heatEInPCMRC) [qwC tempMeltP $ UpFrom (Exc, sy tempInit)
+heatEInPCM = imNoDeriv (OthModel heatEInPCMRC) [qwC tempMeltP $ UpFrom (Exc, sy tempInit)
   , qwUC timeFinal, qwUC tempInit, qwUC pcmSA, qwUC pcmHTC
   , qwUC pcmMass, qwUC htCapSP, qwUC htCapLP, qwUC tempPCM, qwUC htFusion, qwUC tInitMelt]
   (qw pcmE)

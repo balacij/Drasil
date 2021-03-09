@@ -40,7 +40,7 @@ import Drasil.Projectile.Concepts (concepts, projectileTitle, landingPos,
   launcher, projectile, target)
 import Drasil.Projectile.DataDefs (dataDefs)
 import Drasil.Projectile.Figures (figLaunch)
-import Drasil.Projectile.GenDefs (genDefns)
+import Drasil.Projectile.GenDefs (genDefns, genDefns0)
 import Drasil.Projectile.Goals (goals)
 import Drasil.Projectile.IMods (iMods)
 import Drasil.Projectile.References (citations)
@@ -48,7 +48,7 @@ import Drasil.Projectile.Requirements (funcReqs, nonfuncReqs)
 import Drasil.Projectile.TMods (tMods)
 import Drasil.Projectile.Unitals (acronyms, constants, constrained, inConstraints,
   inputs, launAngle, outConstraints, outputs, symbols, unitalIdeas, unitalQuants)
-import Theory.Drasil (getEqMod)
+import Theory.Drasil (imGetEqMods, gdGetEqMods)
 
 srs :: Document
 srs = mkDoc mkSRS (for'' titleize phrase) si
@@ -112,7 +112,7 @@ si = SI {
   _quants      = symbols,
   _concepts    = [] :: [DefinedQuantityDict],
   -- TODO: remove relToQD
-  _definitions = getEqMod iMods ++ map (relToQD symbMap) genDefns,
+  _definitions = imGetEqMods iMods ++ gdGetEqMods genDefns ++ map (relToQD symbMap) genDefns,
   _datadefs    = dataDefs,
   _configFiles = [],
   _inputs      = inputs,
