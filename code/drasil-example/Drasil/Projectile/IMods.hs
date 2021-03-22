@@ -1,9 +1,9 @@
-module Drasil.Projectile.IMods (iMods, landPosIM, messageIM, offsetIM, timeIM) where
+module Drasil.Projectile.IMods (iMods, iMods0, landPosIM, messageIM, offsetIM, timeIM) where
 
 import Prelude hiding (cos, sin)
 
 import Language.Drasil
-import Theory.Drasil (InstanceModel, imNoDerivNoRefs, imNoRefs, qwC, ModelKinds (OthModel))
+import Theory.Drasil (InstanceModel, imNoDerivNoRefs, imNoRefs, qwC, ModelKinds (OthModel, EquationalModel), mkQuantDef')
 import Utils.Drasil
 
 import qualified Drasil.DocLang.SRS as SRS (valsOfAuxCons)
@@ -26,6 +26,9 @@ import Drasil.Projectile.Unitals (flightDur, landPos, launAngle, launSpeed,
 
 iMods :: [InstanceModel]
 iMods = [timeIM, landPosIM, offsetIM, messageIM]
+
+iMods0 :: [InstanceModel]
+iMods0 = [timeIM, offsetIM, messageIM]
 
 ---
 timeIM :: InstanceModel
@@ -76,19 +79,18 @@ timeDerivEqn5 = sy flightDur $= 2 * sy launSpeed * sin (sy launAngle) / sy gravi
 
 ---
 landPosIM :: InstanceModel
-landPosIM = imNoRefs (OthModel landPosRC) 
+landPosIM = imNoRefs (EquationalModel landPosQD) 
   [qwC launSpeed $ UpFrom (Exc, 0), 
    qwC launAngle $ Bounded (Exc, 0) (Exc, sy pi_ / 2)]
   (qw landPos) [UpFrom (Exc, 0)]
   (Just landPosDeriv) "calOfLandingDist" [angleConstraintNote, gravitationalAccelConstNote, landPosConsNote]
 
 landPosExpr :: Expr
-landPosExpr = sy landPos $= 2 * square (sy launSpeed) * sin (sy launAngle) *
-                                cos (sy launAngle) / sy gravitationalAccelConst
+landPosExpr = 2 * square (sy launSpeed) * sin (sy launAngle) *
+                  cos (sy launAngle) / sy gravitationalAccelConst
 
-landPosRC :: RelationConcept
-landPosRC = makeRC "landPosRC" (nounPhraseSP "calculation of landing position")
-  landPosConsNote landPosExpr
+landPosQD :: QDefinition
+landPosQD = mkQuantDef' landPos (nounPhraseSP "landing position") landPosExpr
 
 landPosDeriv :: Derivation
 landPosDeriv = mkDerivName (phrase landPos) (weave [landPosDerivSents, map E landPosDerivEqns])
@@ -112,7 +114,7 @@ landPosDerivSent4 = S "Rearranging this gives us the required" +: phrase equatio
 
 
 landPosDerivEqns :: [Expr]
-landPosDerivEqns = [landPosDerivEqn1, landPosDerivEqn2, landPosDerivEqn3, landPosExpr]
+landPosDerivEqns = [landPosDerivEqn1, landPosDerivEqn2, landPosDerivEqn3, sy landPos $= landPosExpr]
 
 landPosDerivEqn1, landPosDerivEqn2, landPosDerivEqn3 :: Expr
 landPosDerivEqn1 = sy xPos $= sy ixVel * sy time

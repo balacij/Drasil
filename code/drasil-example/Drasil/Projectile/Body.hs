@@ -42,13 +42,13 @@ import Drasil.Projectile.DataDefs (dataDefs)
 import Drasil.Projectile.Figures (figLaunch)
 import Drasil.Projectile.GenDefs (genDefns, genDefns0)
 import Drasil.Projectile.Goals (goals)
-import Drasil.Projectile.IMods (iMods)
+import Drasil.Projectile.IMods (iMods, iMods0)
 import Drasil.Projectile.References (citations)
 import Drasil.Projectile.Requirements (funcReqs, nonfuncReqs)
 import Drasil.Projectile.TMods (tMods)
 import Drasil.Projectile.Unitals (acronyms, constants, constrained, inConstraints,
   inputs, launAngle, outConstraints, outputs, symbols, unitalIdeas, unitalQuants)
-import Theory.Drasil (getEqModQdsFromGd)
+import Theory.Drasil (getEqModQdsFromGd, getEqModQdsFromIm)
 
 srs :: Document
 srs = mkDoc mkSRS (for'' titleize phrase) si
@@ -111,7 +111,8 @@ si = SI {
   _purpose     = [],
   _quants      = symbols,
   _concepts    = [] :: [DefinedQuantityDict],
-  _definitions = map (relToQD symbMap) iMods
+  _definitions = map (relToQD symbMap) iMods0
+                 ++ getEqModQdsFromIm iMods
                  ++ map (relToQD symbMap) genDefns0
                  ++ getEqModQdsFromGd genDefns,
   _datadefs    = dataDefs,
