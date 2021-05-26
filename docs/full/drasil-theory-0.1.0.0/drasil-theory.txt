@@ -15,16 +15,6 @@ genDefn :: CI
 inModel :: CI
 thModel :: CI
 
-module Paths_drasil_theory
-version :: Version
-getBinDir :: IO FilePath
-getLibDir :: IO FilePath
-getDynLibDir :: IO FilePath
-getDataDir :: IO FilePath
-getLibexecDir :: IO FilePath
-getDataFileName :: FilePath -> IO FilePath
-getSysconfDir :: IO FilePath
-
 
 -- | Defining all the classes which represent knowledge-about-theories
 module Theory.Drasil.Classes

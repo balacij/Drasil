@@ -151,13 +151,3 @@ mkOSVar :: VarName -> VarVal -> VarVal -> VarVal -> MakeString
 
 -- | Generates the makefile by calling <a>build</a> after <a>toMake</a>
 genMake :: RuleTransformer c => [c] -> Doc
-
-module Paths_drasil_build
-version :: Version
-getBinDir :: IO FilePath
-getLibDir :: IO FilePath
-getDynLibDir :: IO FilePath
-getDataDir :: IO FilePath
-getLibexecDir :: IO FilePath
-getDataFileName :: FilePath -> IO FilePath
-getSysconfDir :: IO FilePath

@@ -4813,13 +4813,3 @@ getCu :: UnitEquation -> [UID]
 -- | Types may contain a unit (<a>UnitDefn</a>).
 class MayHaveUnit u
 getUnit :: MayHaveUnit u => u -> Maybe UnitDefn
-
-module Paths_drasil_lang
-version :: Version
-getBinDir :: IO FilePath
-getLibDir :: IO FilePath
-getDynLibDir :: IO FilePath
-getDataDir :: IO FilePath
-getLibexecDir :: IO FilePath
-getDataFileName :: FilePath -> IO FilePath
-getSysconfDir :: IO FilePath

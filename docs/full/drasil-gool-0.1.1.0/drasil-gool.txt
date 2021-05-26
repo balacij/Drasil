@@ -2301,13 +2301,3 @@ cppName :: String
 cppVersion :: String
 swiftName :: String
 swiftVersion :: String
-
-module Paths_drasil_gool
-version :: Version
-getBinDir :: IO FilePath
-getLibDir :: IO FilePath
-getDynLibDir :: IO FilePath
-getDataDir :: IO FilePath
-getLibexecDir :: IO FilePath
-getDataFileName :: FilePath -> IO FilePath
-getSysconfDir :: IO FilePath

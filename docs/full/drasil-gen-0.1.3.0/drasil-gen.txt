@@ -50,13 +50,3 @@ SRS :: DocType
 Website :: DocType
 data DocSpec
 DocSpec :: DocType -> Filename -> DocSpec
-
-module Paths_drasil_gen
-version :: Version
-getBinDir :: IO FilePath
-getLibDir :: IO FilePath
-getDynLibDir :: IO FilePath
-getDataDir :: IO FilePath
-getLibexecDir :: IO FilePath
-getDataFileName :: FilePath -> IO FilePath
-getSysconfDir :: IO FilePath

@@ -241,13 +241,3 @@ data SystemInformation
 citeDB :: SystemInformation -> BibRef
 rdb :: BibRef -> [ConceptInstance] -> ReferenceDB
 simpleMap :: HasUID a => [a] -> RefMap a
-
-module Paths_drasil_database
-version :: Version
-getBinDir :: IO FilePath
-getLibDir :: IO FilePath
-getDynLibDir :: IO FilePath
-getDataDir :: IO FilePath
-getLibexecDir :: IO FilePath
-getDataFileName :: FilePath -> IO FilePath
-getSysconfDir :: IO FilePath

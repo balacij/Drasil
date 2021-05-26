@@ -834,13 +834,3 @@ htFlux :: UnitalChunk
 latentHeat :: UnitalChunk
 meltPt :: UnitalChunk
 sensHeat :: UnitalChunk
-
-module Paths_drasil_data
-version :: Version
-getBinDir :: IO FilePath
-getLibDir :: IO FilePath
-getDynLibDir :: IO FilePath
-getDataDir :: IO FilePath
-getLibexecDir :: IO FilePath
-getDataFileName :: FilePath -> IO FilePath
-getSysconfDir :: IO FilePath

@@ -665,13 +665,3 @@ data Notation
 Scientific :: Notation
 Engineering :: Notation
 defaultConfiguration :: PrintingConfiguration
-
-module Paths_drasil_printers
-version :: Version
-getBinDir :: IO FilePath
-getLibDir :: IO FilePath
-getDynLibDir :: IO FilePath
-getDataDir :: IO FilePath
-getLibexecDir :: IO FilePath
-getDataFileName :: FilePath -> IO FilePath
-getSysconfDir :: IO FilePath
