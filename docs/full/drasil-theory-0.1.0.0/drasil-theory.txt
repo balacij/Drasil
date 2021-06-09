@@ -10,27 +10,71 @@
 @version 0.1.0.0
 
 module Data.Drasil.TheoryConcepts
+
+-- | Data definition.
+--   
+--   These are internal-to-Drasil common ideas, and need to be defined at
+--   the same time as theories.
 dataDefn :: CI
+
+-- | General definition.
+--   
+--   These are internal-to-Drasil common ideas, and need to be defined at
+--   the same time as theories.
 genDefn :: CI
+
+-- | Instance model.
+--   
+--   These are internal-to-Drasil common ideas, and need to be defined at
+--   the same time as theories.
 inModel :: CI
+
+-- | Theoretical model.
+--   
+--   These are internal-to-Drasil common ideas, and need to be defined at
+--   the same time as theories.
 thModel :: CI
 
 
--- | Defining all the classes which represent knowledge-about-theories
+-- | Defining all the classes which represent knowledge-about-theories.
 module Theory.Drasil.Classes
+
+-- | Members of this class may have inputs.
 class HasInputs c
+
+-- | Provides a <tt>Lens</tt> that holds a <a>QuantityDict</a> and maybe
+--   constraints.
 inputs :: HasInputs c => Lens' c [(QuantityDict, Maybe (RealInterval Expr Expr))]
+
+-- | Members of this class may have outputs.
 class HasOutput c
+
+-- | Provides a <tt>Lens</tt> that holds a <a>QuantityDict</a> for output.
 output :: HasOutput c => Lens' c QuantityDict
+
+-- | Provides a <tt>Lens</tt> that holds constraints on the output.
 out_constraints :: HasOutput c => Lens' c [RealInterval Expr Expr]
 
 module Theory.Drasil.DataDefinition
+
+-- | A scope is an indirect reference to a <a>UID</a>.
 newtype Scope
 Scp :: UID -> Scope
 [_spec] :: Scope -> UID
+
+-- | Determines the scope of data.
 data ScopeType
+
+-- | Only visible within a limited scope.
 Local :: Scope -> ScopeType
+
+-- | Visible everywhere.
 Global :: ScopeType
+
+-- | A data definition is a <a>QDefinition</a> that may have additional
+--   notes: the scope, any references, maybe a derivation, a label
+--   (<a>ShortName</a>), a reference address, and other notes
+--   (<a>Sentence</a>s).
 data DataDefinition
 DatDef :: QDefinition -> ScopeType -> [Reference] -> Maybe Derivation -> ShortName -> String -> [Sentence] -> DataDefinition
 [_qd] :: DataDefinition -> QDefinition
@@ -46,11 +90,13 @@ qd :: Lens' DataDefinition QDefinition
 notes :: Lens' DataDefinition [Sentence]
 deri :: Lens' DataDefinition (Maybe Derivation)
 
--- | Smart constructor for data definitions
+-- | Smart constructor for data definitions.
 dd :: QDefinition -> [Reference] -> Maybe Derivation -> String -> [Sentence] -> DataDefinition
 
--- | Smart constructor for data definitions with no references
+-- | Smart constructor for data definitions with no references.
 ddNoRefs :: QDefinition -> Maybe Derivation -> String -> [Sentence] -> DataDefinition
+
+-- | Extracts the <a>QDefinition</a> from a <a>DataDefinition</a>.
 qdFromDD :: DataDefinition -> QDefinition
 instance Language.Drasil.Classes.Core.HasUID Theory.Drasil.DataDefinition.DataDefinition
 instance Language.Drasil.Classes.NamedIdea Theory.Drasil.DataDefinition.DataDefinition
@@ -70,14 +116,82 @@ instance Language.Drasil.Classes.ConceptDomain Theory.Drasil.DataDefinition.Data
 instance Language.Drasil.Classes.CommonIdea Theory.Drasil.DataDefinition.DataDefinition
 instance Language.Drasil.Classes.Referable Theory.Drasil.DataDefinition.DataDefinition
 
+module Theory.Drasil.MultiDefn
+
+-- | <a>MultiDefn</a>s are QDefinition factories, used for showing one or
+--   more ways we can define a QDefinition.
+data MultiDefn
+
+-- | <a>DefiningExpr</a> are the data that make up a (quantity) definition,
+--   namely the description, the defining (rhs) expression and the context
+--   domain(s). These are meant to be <tt>alternate</tt> but equivalent
+--   definitions for a single concept.
+data DefiningExpr
+
+-- | Smart constructor for MultiDefns, does nothing special at the moment
+mkMultiDefn :: UID -> QuantityDict -> Sentence -> NonEmpty DefiningExpr -> MultiDefn
+
+-- | Smart constructor for MultiDefns defining UIDs using that of the
+--   QuantityDict
+mkMultiDefnForQuant :: QuantityDict -> Sentence -> NonEmpty DefiningExpr -> MultiDefn
+
+-- | Smart constructor for DefiningExprs
+mkDefiningExpr :: UID -> [UID] -> Sentence -> Expr -> DefiningExpr
+
+-- | Convert MultiDefns into QDefinitions via a specific DefiningExpr
+multiDefnGenQD :: MultiDefn -> DefiningExpr -> QDefinition
+
+-- | Convert MultiDefns into QDefinitions via a specific DefiningExpr (by
+--   UID)
+multiDefnGenQDByUID :: MultiDefn -> UID -> QDefinition
+instance Language.Drasil.Classes.Core.HasUID Theory.Drasil.MultiDefn.MultiDefn
+instance Language.Drasil.Classes.Core.HasSymbol Theory.Drasil.MultiDefn.MultiDefn
+instance Language.Drasil.Classes.NamedIdea Theory.Drasil.MultiDefn.MultiDefn
+instance Language.Drasil.Classes.Idea Theory.Drasil.MultiDefn.MultiDefn
+instance Language.Drasil.Classes.HasSpace Theory.Drasil.MultiDefn.MultiDefn
+instance Language.Drasil.Classes.Quantity Theory.Drasil.MultiDefn.MultiDefn
+instance Language.Drasil.Chunk.UnitDefn.MayHaveUnit Theory.Drasil.MultiDefn.MultiDefn
+instance Language.Drasil.Classes.ConceptDomain Theory.Drasil.MultiDefn.MultiDefn
+instance Language.Drasil.Classes.Definition Theory.Drasil.MultiDefn.MultiDefn
+instance Language.Drasil.Classes.ExprRelat Theory.Drasil.MultiDefn.MultiDefn
+instance GHC.Classes.Eq Theory.Drasil.MultiDefn.DefiningExpr
+instance Language.Drasil.Classes.Core.HasUID Theory.Drasil.MultiDefn.DefiningExpr
+instance Language.Drasil.Classes.ConceptDomain Theory.Drasil.MultiDefn.DefiningExpr
+instance Language.Drasil.Classes.Definition Theory.Drasil.MultiDefn.DefiningExpr
+
 module Theory.Drasil.ModelKinds
+
+-- | Models can be of different kinds:
+--   
+--   <ul>
+--   <li><a>EquationalModel</a>s represent quantities that are calculated
+--   via a single definition/<a>QDefinition</a>.</li>
+--   <li><a>EquationalRealm</a>s represent MultiDefns; quantities that may
+--   be calculated using any one of many <tt>DefiningExpr</tt>s (e.g., 'x =
+--   A = ... = Z')</li>
+--   <li><a>DEModel</a>s represent differential equations as
+--   <a>RelationConcept</a>s</li>
+--   <li><a>OthModel</a>s are placeholders for models. No new
+--   <a>OthModel</a>s should be created, they should be using one of the
+--   other kinds.</li>
+--   </ul>
 data ModelKinds
 EquationalModel :: QDefinition -> ModelKinds
+EquationalRealm :: MultiDefn -> ModelKinds
 DEModel :: RelationConcept -> ModelKinds
 OthModel :: RelationConcept -> ModelKinds
-setMk :: ModelKinds -> Setter' QDefinition a -> Setter' RelationConcept a -> a -> ModelKinds
-elimMk :: Getter QDefinition a -> Getter RelationConcept a -> ModelKinds -> a
-lensMk :: forall a. Lens' QDefinition a -> Lens' RelationConcept a -> Lens' ModelKinds a
+
+-- | Map into internal representations of ModelKinds
+setMk :: ModelKinds -> Setter' QDefinition a -> Setter' MultiDefn a -> Setter' RelationConcept a -> a -> ModelKinds
+
+-- | Retrieve internal data from ModelKinds
+elimMk :: Getter QDefinition a -> Getter MultiDefn a -> Getter RelationConcept a -> ModelKinds -> a
+
+-- | Make a <tt>Lens</tt> for <a>ModelKinds</a>.
+lensMk :: forall a. Lens' QDefinition a -> Lens' MultiDefn a -> Lens' RelationConcept a -> Lens' ModelKinds a
+
+-- | Extract a list of <a>QDefinition</a>s from a list of
+--   <a>ModelKinds</a>.
 getEqModQds :: [ModelKinds] -> [QDefinition]
 instance Language.Drasil.Classes.Core.HasUID Theory.Drasil.ModelKinds.ModelKinds
 instance Language.Drasil.Classes.NamedIdea Theory.Drasil.ModelKinds.ModelKinds
@@ -88,29 +202,47 @@ instance Language.Drasil.Classes.ExprRelat Theory.Drasil.ModelKinds.ModelKinds
 
 module Theory.Drasil.InstanceModel
 
--- | An Instance Model is a ModelKind that may have specific input/output
---   constraints. It also has attributes like derivation, source, etc.
+-- | An instance model is a ModelKind that may have specific inputs,
+--   outputs, and output constraints. It also has attributes like
+--   references, derivation, labels (<a>ShortName</a>), reference address,
+--   and notes.
 data InstanceModel
 
--- | Smart constructor for instance models with everything defined
+-- | Smart constructor for instance models with everything defined.
 im :: ModelKinds -> Inputs -> Output -> OutputConstraints -> [Reference] -> Maybe Derivation -> String -> [Sentence] -> InstanceModel
 
--- | Smart constructor for instance models; no derivation
+-- | Smart constructor for instance models with no derivation.
 imNoDeriv :: ModelKinds -> Inputs -> Output -> OutputConstraints -> [Reference] -> String -> [Sentence] -> InstanceModel
 
--- | Smart constructor for instance models; no references
+-- | Smart constructor for instance models with no references.
 imNoRefs :: ModelKinds -> Inputs -> Output -> OutputConstraints -> Maybe Derivation -> String -> [Sentence] -> InstanceModel
 
--- | Smart constructor for instance models; no derivations or references
+-- | Smart constructor for instance models with no derivations or
+--   references.
 imNoDerivNoRefs :: ModelKinds -> Inputs -> Output -> OutputConstraints -> String -> [Sentence] -> InstanceModel
 
--- | Grab all related QDefinitions from a list of instance models
+-- | Smart constructor for instance models with everything defined.
+im' :: ModelKinds -> NP -> Inputs -> Output -> OutputConstraints -> [Reference] -> Maybe Derivation -> String -> [Sentence] -> InstanceModel
+
+-- | Smart constructor for instance models with a custom term, and no
+--   derivation.
+imNoDeriv' :: ModelKinds -> NP -> Inputs -> Output -> OutputConstraints -> [Reference] -> String -> [Sentence] -> InstanceModel
+
+-- | Smart constructor for instance models with a custom term, and no
+--   references.
+imNoRefs' :: ModelKinds -> NP -> Inputs -> Output -> OutputConstraints -> Maybe Derivation -> String -> [Sentence] -> InstanceModel
+
+-- | Smart constructor for instance models with a custom term, and no
+--   derivations or references.
+imNoDerivNoRefs' :: ModelKinds -> NP -> Inputs -> Output -> OutputConstraints -> String -> [Sentence] -> InstanceModel
+
+-- | Grab all related <a>QDefinition</a>s from a list of instance models.
 getEqModQdsFromIm :: [InstanceModel] -> [QDefinition]
 
--- | For building a quantity with no constraint
+-- | For building a quantity with no constraint.
 qwUC :: (Quantity q, MayHaveUnit q) => q -> Input
 
--- | For building a quantity with a constraint
+-- | For building a quantity with a constraint.
 qwC :: (Quantity q, MayHaveUnit q) => q -> RealInterval Expr Expr -> Input
 instance Language.Drasil.Classes.Core.HasUID Theory.Drasil.InstanceModel.InstanceModel
 instance Language.Drasil.Classes.NamedIdea Theory.Drasil.InstanceModel.InstanceModel
@@ -134,16 +266,25 @@ instance Language.Drasil.Chunk.UnitDefn.MayHaveUnit Theory.Drasil.InstanceModel.
 
 module Theory.Drasil.GenDefn
 
--- | A GenDefn is a ModelKind that may have units
+-- | A general definition is a <tt>ModelKind</tt> that may have units, a
+--   derivation, references, a shortname, a reference address, and notes.
 data GenDefn
 
--- | Smart constructor for general definitions
+-- | Smart constructor for general definitions derived from ModelKinds.
 gd :: IsUnit u => ModelKinds -> Maybe u -> Maybe Derivation -> [Reference] -> String -> [Sentence] -> GenDefn
 
--- | Smart constructor for general definitions; no references
+-- | Smart constructor for general definitions with no references, derived
+--   from ModelKinds.
 gdNoRefs :: IsUnit u => ModelKinds -> Maybe u -> Maybe Derivation -> String -> [Sentence] -> GenDefn
 
--- | Grab all related QDefinitions from a list of general definitions
+-- | Smart constructor for general definitions.
+gd' :: IsUnit u => UID -> ModelKinds -> Maybe u -> Maybe Derivation -> [Reference] -> String -> [Sentence] -> GenDefn
+
+-- | Smart constructor for general definitions with no references.
+gdNoRefs' :: IsUnit u => UID -> ModelKinds -> Maybe u -> Maybe Derivation -> String -> [Sentence] -> GenDefn
+
+-- | Grab all related <tt>QDefinitions</tt> from a list of general
+--   definitions.
 getEqModQdsFromGd :: [GenDefn] -> [QDefinition]
 instance Language.Drasil.Classes.Core.HasUID Theory.Drasil.GenDefn.GenDefn
 instance Language.Drasil.Classes.NamedIdea Theory.Drasil.GenDefn.GenDefn
@@ -161,6 +302,9 @@ instance Language.Drasil.Classes.CommonIdea Theory.Drasil.GenDefn.GenDefn
 instance Language.Drasil.Classes.Referable Theory.Drasil.GenDefn.GenDefn
 
 module Theory.Drasil.Theory
+
+-- | Theories are the basis for building models with context, spaces,
+--   quantities, operations, invariants, etc.
 class Theory t
 valid_context :: Theory t => Lens' t [TheoryModel]
 spaces :: Theory t => Lens' t [SpaceDefn]
@@ -169,9 +313,42 @@ operations :: Theory t => Lens' t [ConceptChunk]
 defined_quant :: Theory t => Lens' t [QDefinition]
 invariants :: Theory t => Lens' t [Relation]
 defined_fun :: Theory t => Lens' t [QDefinition]
+
+-- | A TheoryModel is a collection of:
+--   
+--   <ul>
+--   <li>tUid - a UID,</li>
+--   <li>con - a ConceptChunk,</li>
+--   <li>vctx - definition context (<a>TheoryModel</a>s),</li>
+--   <li>spc - type definitions (<a>SpaceDefn</a>s),</li>
+--   <li>quan - quantities (<a>QuantityDict</a>s),</li>
+--   <li>ops - operations (<a>ConceptChunk</a>s),</li>
+--   <li>defq - definitions (<a>QDefinition</a>s),</li>
+--   <li>invs - invariants (<a>Relation</a>s),</li>
+--   <li>dfun - defined functions (<a>QDefinition</a>s),</li>
+--   <li>ref - accompanying references (<a>Reference</a>s),</li>
+--   <li>lb - a label (<a>SpaceDefn</a>),</li>
+--   <li>ra - reference address (<a>SpaceDefn</a>),</li>
+--   <li>notes - additional notes (<a>Sentence</a>s).</li>
+--   </ul>
+--   
+--   Right now, neither the definition context (vctx) nor the spaces (spc)
+--   are ever defined.
 data TheoryModel
+
+-- | Constructor for theory models.
 tm :: (Quantity q, MayHaveUnit q, Concept c) => ModelKinds -> [q] -> [c] -> [QDefinition] -> [Relation] -> [QDefinition] -> [Reference] -> String -> [Sentence] -> TheoryModel
+
+-- | Constructor for theory models with no references.
 tmNoRefs :: (Quantity q, MayHaveUnit q, Concept c) => ModelKinds -> [q] -> [c] -> [QDefinition] -> [Relation] -> [QDefinition] -> String -> [Sentence] -> TheoryModel
+
+-- | Constructor for theory models. Must have a source. Uses the shortname
+--   of the reference address.
+tm' :: (Quantity q, MayHaveUnit q, Concept c) => UID -> ModelKinds -> [q] -> [c] -> [QDefinition] -> [Relation] -> [QDefinition] -> [Reference] -> String -> [Sentence] -> TheoryModel
+
+-- | Constructor for theory models. Uses the shortname of the reference
+--   address.
+tmNoRefs' :: (Quantity q, MayHaveUnit q, Concept c) => UID -> ModelKinds -> [q] -> [c] -> [QDefinition] -> [Relation] -> [QDefinition] -> String -> [Sentence] -> TheoryModel
 instance Language.Drasil.Classes.Core.HasUID Theory.Drasil.Theory.TheoryModel
 instance Language.Drasil.Classes.NamedIdea Theory.Drasil.Theory.TheoryModel
 instance Language.Drasil.Classes.Idea Theory.Drasil.Theory.TheoryModel
@@ -186,61 +363,155 @@ instance Language.Drasil.Classes.CommonIdea Theory.Drasil.Theory.TheoryModel
 instance Language.Drasil.Classes.Referable Theory.Drasil.Theory.TheoryModel
 
 module Theory.Drasil
+
+-- | Members of this class may have inputs.
 class HasInputs c
+
+-- | Provides a <tt>Lens</tt> that holds a <a>QuantityDict</a> and maybe
+--   constraints.
 inputs :: HasInputs c => Lens' c [(QuantityDict, Maybe (RealInterval Expr Expr))]
+
+-- | Members of this class may have outputs.
 class HasOutput c
+
+-- | Provides a <tt>Lens</tt> that holds a <a>QuantityDict</a> for output.
 output :: HasOutput c => Lens' c QuantityDict
+
+-- | Provides a <tt>Lens</tt> that holds constraints on the output.
 out_constraints :: HasOutput c => Lens' c [RealInterval Expr Expr]
+
+-- | A data definition is a <a>QDefinition</a> that may have additional
+--   notes: the scope, any references, maybe a derivation, a label
+--   (<a>ShortName</a>), a reference address, and other notes
+--   (<a>Sentence</a>s).
 data DataDefinition
 
--- | Smart constructor for data definitions
+-- | Smart constructor for data definitions.
 dd :: QDefinition -> [Reference] -> Maybe Derivation -> String -> [Sentence] -> DataDefinition
 
--- | Smart constructor for data definitions with no references
+-- | Smart constructor for data definitions with no references.
 ddNoRefs :: QDefinition -> Maybe Derivation -> String -> [Sentence] -> DataDefinition
+
+-- | Extracts the <a>QDefinition</a> from a <a>DataDefinition</a>.
 qdFromDD :: DataDefinition -> QDefinition
 
--- | A GenDefn is a ModelKind that may have units
+-- | A general definition is a <tt>ModelKind</tt> that may have units, a
+--   derivation, references, a shortname, a reference address, and notes.
 data GenDefn
 
--- | Smart constructor for general definitions
+-- | Smart constructor for general definitions derived from ModelKinds.
 gd :: IsUnit u => ModelKinds -> Maybe u -> Maybe Derivation -> [Reference] -> String -> [Sentence] -> GenDefn
 
--- | Smart constructor for general definitions; no references
+-- | Smart constructor for general definitions with no references, derived
+--   from ModelKinds.
 gdNoRefs :: IsUnit u => ModelKinds -> Maybe u -> Maybe Derivation -> String -> [Sentence] -> GenDefn
 
--- | Grab all related QDefinitions from a list of general definitions
+-- | Smart constructor for general definitions.
+gd' :: IsUnit u => UID -> ModelKinds -> Maybe u -> Maybe Derivation -> [Reference] -> String -> [Sentence] -> GenDefn
+
+-- | Smart constructor for general definitions with no references.
+gdNoRefs' :: IsUnit u => UID -> ModelKinds -> Maybe u -> Maybe Derivation -> String -> [Sentence] -> GenDefn
+
+-- | Grab all related <tt>QDefinitions</tt> from a list of general
+--   definitions.
 getEqModQdsFromGd :: [GenDefn] -> [QDefinition]
+
+-- | <a>MultiDefn</a>s are QDefinition factories, used for showing one or
+--   more ways we can define a QDefinition.
+data MultiDefn
+
+-- | <a>DefiningExpr</a> are the data that make up a (quantity) definition,
+--   namely the description, the defining (rhs) expression and the context
+--   domain(s). These are meant to be <tt>alternate</tt> but equivalent
+--   definitions for a single concept.
+data DefiningExpr
+
+-- | Smart constructor for MultiDefns, does nothing special at the moment
+mkMultiDefn :: UID -> QuantityDict -> Sentence -> NonEmpty DefiningExpr -> MultiDefn
+
+-- | Smart constructor for MultiDefns defining UIDs using that of the
+--   QuantityDict
+mkMultiDefnForQuant :: QuantityDict -> Sentence -> NonEmpty DefiningExpr -> MultiDefn
+
+-- | Smart constructor for DefiningExprs
+mkDefiningExpr :: UID -> [UID] -> Sentence -> Expr -> DefiningExpr
+
+-- | Convert MultiDefns into QDefinitions via a specific DefiningExpr
+multiDefnGenQD :: MultiDefn -> DefiningExpr -> QDefinition
+
+-- | Convert MultiDefns into QDefinitions via a specific DefiningExpr (by
+--   UID)
+multiDefnGenQDByUID :: MultiDefn -> UID -> QDefinition
+
+-- | Models can be of different kinds:
+--   
+--   <ul>
+--   <li><a>EquationalModel</a>s represent quantities that are calculated
+--   via a single definition/<a>QDefinition</a>.</li>
+--   <li><a>EquationalRealm</a>s represent MultiDefns; quantities that may
+--   be calculated using any one of many <tt>DefiningExpr</tt>s (e.g., 'x =
+--   A = ... = Z')</li>
+--   <li><a>DEModel</a>s represent differential equations as
+--   <a>RelationConcept</a>s</li>
+--   <li><a>OthModel</a>s are placeholders for models. No new
+--   <a>OthModel</a>s should be created, they should be using one of the
+--   other kinds.</li>
+--   </ul>
 data ModelKinds
 EquationalModel :: QDefinition -> ModelKinds
+EquationalRealm :: MultiDefn -> ModelKinds
 DEModel :: RelationConcept -> ModelKinds
 OthModel :: RelationConcept -> ModelKinds
+
+-- | Extract a list of <a>QDefinition</a>s from a list of
+--   <a>ModelKinds</a>.
 getEqModQds :: [ModelKinds] -> [QDefinition]
 
--- | An Instance Model is a ModelKind that may have specific input/output
---   constraints. It also has attributes like derivation, source, etc.
+-- | An instance model is a ModelKind that may have specific inputs,
+--   outputs, and output constraints. It also has attributes like
+--   references, derivation, labels (<a>ShortName</a>), reference address,
+--   and notes.
 data InstanceModel
 
--- | Smart constructor for instance models with everything defined
+-- | Smart constructor for instance models with everything defined.
 im :: ModelKinds -> Inputs -> Output -> OutputConstraints -> [Reference] -> Maybe Derivation -> String -> [Sentence] -> InstanceModel
 
--- | Smart constructor for instance models; no derivation
+-- | Smart constructor for instance models with no derivation.
 imNoDeriv :: ModelKinds -> Inputs -> Output -> OutputConstraints -> [Reference] -> String -> [Sentence] -> InstanceModel
 
--- | Smart constructor for instance models; no references
+-- | Smart constructor for instance models with no references.
 imNoRefs :: ModelKinds -> Inputs -> Output -> OutputConstraints -> Maybe Derivation -> String -> [Sentence] -> InstanceModel
 
--- | Smart constructor for instance models; no derivations or references
+-- | Smart constructor for instance models with no derivations or
+--   references.
 imNoDerivNoRefs :: ModelKinds -> Inputs -> Output -> OutputConstraints -> String -> [Sentence] -> InstanceModel
 
--- | For building a quantity with no constraint
+-- | Smart constructor for instance models with everything defined.
+im' :: ModelKinds -> NP -> Inputs -> Output -> OutputConstraints -> [Reference] -> Maybe Derivation -> String -> [Sentence] -> InstanceModel
+
+-- | Smart constructor for instance models with a custom term, and no
+--   derivation.
+imNoDeriv' :: ModelKinds -> NP -> Inputs -> Output -> OutputConstraints -> [Reference] -> String -> [Sentence] -> InstanceModel
+
+-- | Smart constructor for instance models with a custom term, and no
+--   references.
+imNoRefs' :: ModelKinds -> NP -> Inputs -> Output -> OutputConstraints -> Maybe Derivation -> String -> [Sentence] -> InstanceModel
+
+-- | Smart constructor for instance models with a custom term, and no
+--   derivations or references.
+imNoDerivNoRefs' :: ModelKinds -> NP -> Inputs -> Output -> OutputConstraints -> String -> [Sentence] -> InstanceModel
+
+-- | For building a quantity with no constraint.
 qwUC :: (Quantity q, MayHaveUnit q) => q -> Input
 
--- | For building a quantity with a constraint
+-- | For building a quantity with a constraint.
 qwC :: (Quantity q, MayHaveUnit q) => q -> RealInterval Expr Expr -> Input
 
--- | Grab all related QDefinitions from a list of instance models
+-- | Grab all related <a>QDefinition</a>s from a list of instance models.
 getEqModQdsFromIm :: [InstanceModel] -> [QDefinition]
+
+-- | Theories are the basis for building models with context, spaces,
+--   quantities, operations, invariants, etc.
 class Theory t
 valid_context :: Theory t => Lens' t [TheoryModel]
 spaces :: Theory t => Lens' t [SpaceDefn]
@@ -249,6 +520,39 @@ operations :: Theory t => Lens' t [ConceptChunk]
 defined_quant :: Theory t => Lens' t [QDefinition]
 invariants :: Theory t => Lens' t [Relation]
 defined_fun :: Theory t => Lens' t [QDefinition]
+
+-- | A TheoryModel is a collection of:
+--   
+--   <ul>
+--   <li>tUid - a UID,</li>
+--   <li>con - a ConceptChunk,</li>
+--   <li>vctx - definition context (<a>TheoryModel</a>s),</li>
+--   <li>spc - type definitions (<a>SpaceDefn</a>s),</li>
+--   <li>quan - quantities (<a>QuantityDict</a>s),</li>
+--   <li>ops - operations (<a>ConceptChunk</a>s),</li>
+--   <li>defq - definitions (<a>QDefinition</a>s),</li>
+--   <li>invs - invariants (<a>Relation</a>s),</li>
+--   <li>dfun - defined functions (<a>QDefinition</a>s),</li>
+--   <li>ref - accompanying references (<a>Reference</a>s),</li>
+--   <li>lb - a label (<a>SpaceDefn</a>),</li>
+--   <li>ra - reference address (<a>SpaceDefn</a>),</li>
+--   <li>notes - additional notes (<a>Sentence</a>s).</li>
+--   </ul>
+--   
+--   Right now, neither the definition context (vctx) nor the spaces (spc)
+--   are ever defined.
 data TheoryModel
+
+-- | Constructor for theory models.
 tm :: (Quantity q, MayHaveUnit q, Concept c) => ModelKinds -> [q] -> [c] -> [QDefinition] -> [Relation] -> [QDefinition] -> [Reference] -> String -> [Sentence] -> TheoryModel
+
+-- | Constructor for theory models with no references.
 tmNoRefs :: (Quantity q, MayHaveUnit q, Concept c) => ModelKinds -> [q] -> [c] -> [QDefinition] -> [Relation] -> [QDefinition] -> String -> [Sentence] -> TheoryModel
+
+-- | Constructor for theory models. Must have a source. Uses the shortname
+--   of the reference address.
+tm' :: (Quantity q, MayHaveUnit q, Concept c) => UID -> ModelKinds -> [q] -> [c] -> [QDefinition] -> [Relation] -> [QDefinition] -> [Reference] -> String -> [Sentence] -> TheoryModel
+
+-- | Constructor for theory models. Uses the shortname of the reference
+--   address.
+tmNoRefs' :: (Quantity q, MayHaveUnit q, Concept c) => UID -> ModelKinds -> [q] -> [c] -> [QDefinition] -> [Relation] -> [QDefinition] -> String -> [Sentence] -> TheoryModel
