@@ -9,6 +9,77 @@
 @package drasil-lang
 @version 0.1.60.0
 
+module Language.Drasil.Display
+
+-- | Decorations on symbols/characters such as hats or Vector
+--   representations (determines bolding, italics, etc).
+data Decoration
+Hat :: Decoration
+Vector :: Decoration
+Prime :: Decoration
+
+-- | A <a>Symbol</a> is actually going to be a graphical description of
+--   what gets rendered as a (unique) symbol. This is actually NOT based on
+--   semantics at all, but just a description of how things look.
+--   
+--   Symbols can be:
+--   
+--   <ul>
+--   <li><tt><a>Variable</a></tt> (string such as "x" that represent a
+--   value that can vary)</li>
+--   <li><tt><a>Label</a></tt> (strings such as "max" or "target" that
+--   represent a single idea)</li>
+--   <li><tt><a>Special</a></tt> characters (ex. unicode)</li>
+--   <li><tt>Decorated</tt> symbols</li>
+--   <li><tt>Concatenations</tt> of symbols, including subscripts and
+--   superscripts</li>
+--   <li><tt><a>Empty</a></tt>! (this is to give this a monoid-like
+--   flavour)</li>
+--   </ul>
+data Symbol
+Variable :: String -> Symbol
+Label :: String -> Symbol
+Integ :: Int -> Symbol
+Special :: Special -> Symbol
+Atop :: Decoration -> Symbol -> Symbol
+
+-- | Order of Symbols: upleft lowleft upright lowright base
+--   
+--   <pre>
+--   Corners [1]   [2]   [3]   [4]   [5]
+--   </pre>
+--   
+--   <pre>
+--   Visually:  [1]   [3]
+--   
+--                 [5]
+--   
+--              [2]   [4]
+--   </pre>
+Corners :: [Symbol] -> [Symbol] -> [Symbol] -> [Symbol] -> Symbol -> Symbol
+
+-- | Concatentation of two symbols: <tt>[s1, s2] -&gt; s1s2</tt>
+Concat :: [Symbol] -> Symbol
+Empty :: Symbol
+
+-- | The default compare function that sorts all the lower case symbols
+--   after the upper case ones.
+--   
+--   Comparation is used twice for each <tt>Atomic</tt> case, once for
+--   making sure they are the same letter, once for case sensitive. As far
+--   as this comparison is considered, <tt>Δ</tt> is a "decoration" and
+--   ignored unless the compared symbols are the exact same, in which case
+--   it is ordered after the undecorated symbol.
+--   
+--   Superscripts and subscripts are ordered after the base symbols
+--   (because they add additional context to a symbol). For example:
+--   `v_f^{AB}` (expressed in LaTeX notation for clarity), where
+--   <tt>v_f</tt> is a final velocity, and the `^{AB}` adds context that it
+--   is the final velocity between points <tt>A</tt> and <tt>B</tt>. In
+--   these cases, the sorting of `v_f^{AB}` should be following
+--   <tt>v_f</tt> as it is logical to place it with its parent concept.
+compsy :: Symbol -> Symbol -> Ordering
+
 
 -- | Alphabet of capital/lowercase English letters as symbols
 module Language.Drasil.ShortHands
@@ -446,6 +517,25 @@ phraseNP :: NounPhrase n => n -> Sentence
 -- | Retrieves plural form of term. Ex. "the quick brown foxes".
 pluralNP :: NounPhrase n => n -> PluralForm
 
+-- | A variant of the expression language that allows for extensions of
+--   Expr that wouldn't normally type check, or that we only care for
+--   displaying.
+data DisplayExpr
+[AlgebraicExpr] :: Expr -> DisplayExpr
+[SpaceExpr] :: Space -> DisplayExpr
+[BinOp] :: DisplayBinOp -> DisplayExpr -> DisplayExpr -> DisplayExpr
+[AssocBinOp] :: DisplayAssocBinOp -> [DisplayExpr] -> DisplayExpr
+
+-- | Binary Display Operations.
+data DisplayBinOp
+Defines :: DisplayBinOp
+IsIn :: DisplayBinOp
+
+-- | Associative Binary Display Operations.
+data DisplayAssocBinOp
+And :: DisplayAssocBinOp
+Equivalence :: DisplayAssocBinOp
+
 -- | Negation operator (not).
 data UFuncB
 Not :: UFuncB
@@ -494,30 +584,33 @@ data VVNBinOp
 Dot :: VVNBinOp
 
 -- | Get dependencies from an equation.
-dep :: Expr -> [String]
+eDep :: Expr -> [String]
 
 -- | Generic traverse of all expressions that could lead to names.
-names :: Expr -> [String]
+eNames :: Expr -> [String]
 
--- | Generic traverse of all positions that could lead to names without
---   functions. FIXME : this should really be done via post-facto
+-- | Generic traverse of all positions that could lead to <a>eNames</a>
+--   without functions. FIXME : this should really be done via post-facto
 --   filtering, but right now the information needed to do this is not
 --   available!
-names' :: Expr -> [String]
+eNames' :: Expr -> [String]
 
 -- | Generic traversal of everything that could come from an interval to
---   names (similar to <a>names</a>).
-namesRI :: RealInterval Expr Expr -> [String]
+--   names (similar to <a>eNames</a>).
+eNamesRI :: RealInterval Expr Expr -> [String]
 
--- | This is to collect <a>UID</a>s that are printed out as a
---   <tt>Symbol</tt>.
+-- | Get dependencies from display expressions.
+deDep :: DisplayExpr -> [String]
+
+-- | This is to collect <i>symbolic</i> <a>UID</a>s that are printed out as
+--   a <tt>Symbol</tt>.
 sdep :: Sentence -> [UID]
 
--- | Generic traverse of all positions that could lead to reference
+-- | Generic traverse of all positions that could lead to <i>reference</i>
 --   <a>UID</a>s from <a>Sentence</a>s.
 lnames :: Sentence -> [UID]
 
--- | Get reference <a>UID</a>s from <a>Sentence</a>s.
+-- | Get <i>reference</i> <a>UID</a>s from <a>Sentence</a>s.
 lnames' :: [Sentence] -> [UID]
 
 -- | precA - precedence for arithmetic-related Binary-Associative
@@ -530,6 +623,12 @@ precB :: AssocBoolOper -> Int
 
 -- | eprec - <a>Expression</a> precedence.
 eprec :: Expr -> Int
+
+-- | dePrec - "Display Expression" precedence.
+dePrec :: DisplayExpr -> Int
+
+-- | dePrecAssoc - precedence for associative binary operators.
+dePrecAssoc :: DisplayAssocBinOp -> Int
 
 module Language.Drasil
 
@@ -575,25 +674,6 @@ data Expr
 --   <li>F(x,n=y) would be (FCall F [x] [(n,y)]).</li>
 --   </ul>
 [FCall] :: UID -> [Expr] -> [(UID, Expr)] -> Expr
-
--- | Actor creation given <a>UID</a>, parameters, and named parameters.
-[New] :: UID -> [Expr] -> [(UID, Expr)] -> Expr
-
--- | Message an actor:
---   
---   <ul>
---   <li>1st <a>UID</a> is the actor,</li>
---   <li>2nd <a>UID</a> is the method.</li>
---   </ul>
-[Message] :: UID -> UID -> [Expr] -> [(UID, Expr)] -> Expr
-
--- | Access a field of an actor:
---   
---   <ul>
---   <li>1st <a>UID</a> is the actor,</li>
---   <li>2nd <a>UID</a> is the field.</li>
---   </ul>
-[Field] :: UID -> UID -> Expr
 
 -- | For multi-case expressions, each pair represents one case.
 [Case] :: Completeness -> [(Expr, Relation)] -> Expr
@@ -641,11 +721,9 @@ data Expr
 --   Summation is represented via <tt>Add</tt> over a discrete domain.
 [Operator] :: AssocArithOper -> DomainDesc Expr Expr -> Expr -> Expr
 
--- | The expression is an element of a space.
-[IsIn] :: Expr -> Space -> Expr
-
--- | A different kind of <a>IsIn</a>. A <a>UID</a> is an element of an
---   interval.
+-- | The expression is an element of a space. IsIn :: Expr -&gt; Space
+--   -&gt; Expr | A different kind of <tt>IsIn</tt>. A <a>UID</a> is an
+--   element of an interval.
 [RealI] :: UID -> RealInterval Expr Expr -> Expr
 
 -- | Unary functions (abs, log, ln, sin, etc.).
@@ -790,9 +868,6 @@ mulI :: Expr -> Expr -> Expr
 -- | Multiply two expressions (Real numbers).
 mulRe :: Expr -> Expr -> Expr
 
--- | Get dependencies from an equation.
-dep :: Expr -> [String]
-
 -- | Smart constructor for taking the absolute value of an expression.
 abs_ :: Expr -> Expr
 
@@ -890,11 +965,6 @@ str :: String -> Expr
 -- | Smart constructors for percents.
 perc :: Integer -> Integer -> Expr
 
--- | Smart constructor for set membership. FIXME: first argument really
---   ought to be restricted to a <tt>Variable</tt>, as <a>IsIn</a> should
---   only be used as a type proxy.
-isin :: Expr -> Space -> Expr
-
 -- | Smart constructor for case statement with complete set of cases.
 completeCase :: [(Expr, Relation)] -> Expr
 
@@ -964,6 +1034,24 @@ vec2D :: Expr -> Expr -> Expr
 -- | Matrix helper function.
 dgnl2x2 :: Expr -> Expr -> Expr
 
+-- | A variant of the expression language that allows for extensions of
+--   Expr that wouldn't normally type check, or that we only care for
+--   displaying.
+data DisplayExpr
+
+-- | One expression is "defined" by another.
+defines :: (Display a, Display b) => a -> b -> DisplayExpr
+
+-- | Bring a Space into the DisplayExpr.
+spaceDE :: Space -> DisplayExpr
+isIn :: Display a => a -> DisplayExpr -> DisplayExpr
+
+-- | Binary associative <a>And</a>.
+andDEs :: Display d => [d] -> DisplayExpr
+
+-- | Binary associative <a>Equivalence</a>.
+equivDEs :: Display a => [a] -> DisplayExpr
+
 -- | Special characters include partial derivatives and the degree circle.
 data Special
 Partial :: Special
@@ -983,12 +1071,6 @@ class HasUID c
 -- | Provides a <i>unique</i> id for internal Drasil use.
 uid :: HasUID c => Lens' c UID
 
--- | A <a>ShortName</a> is the text to be displayed for a link. Used for
---   referencing within a document that can include symbols and whatnot if
---   required. Visible in the typeset documents (pdf).
-class HasShortName s
-shortname :: HasShortName s => s -> ShortName
-
 -- | Members must have a reference address.
 class HasRefAddress b
 
@@ -1000,6 +1082,22 @@ class HasSymbol c
 
 -- | Provides the <a>Symbol</a> for a particular stage of generation.
 symbol :: HasSymbol c => c -> Stage -> Symbol
+
+-- | Members of this class have the ability to be referenced.
+class HasUID s => Referable s
+
+-- | The referencing address (what we're linking to). Only visible in the
+--   source (tex/html).
+refAdd :: Referable s => s -> String
+
+-- | Alternate form of reference.
+renderRef :: Referable s => s -> LblType
+
+-- | A <a>ShortName</a> is the text to be displayed for a link. Used for
+--   referencing within a document that can include symbols and whatnot if
+--   required. Visible in the typeset documents (pdf).
+class HasShortName s
+shortname :: HasShortName s => s -> ShortName
 
 -- | <tt>Citation</tt>s should have a fields (<a>CiteField</a>).
 class HasFields c
@@ -1096,20 +1194,18 @@ abrv :: CommonIdea c => c -> String
 --   It does not enforce <a>Quantity</a> at this point.
 class Constrained c
 
--- | Provides a <tt>Lens</tt> to the <a>Constraint</a>s.
-constraints :: Constrained c => Lens' c [Constraint]
+-- | Provides a <tt>Lens</tt> to the <tt>Constraint</tt>s.
+constraints :: Constrained c => Lens' c [ConstraintE]
 
--- | Has a function that turns into a <a>Relation</a>.
-class ExprRelat c
-
--- | Holds a relation.
-relat :: ExprRelat c => c -> Relation
-
--- | A better version of <a>ExprRelat</a> that holds an <a>Expr</a>.
+-- | A better version of <tt>ExprRelat</tt> that holds an <a>Expr</a>.
 class DefiningExpr c
 
 -- | Provides a <tt>Lens</tt> to the expression.
 defnExpr :: DefiningExpr c => Lens' c Expr
+
+-- | Data that can convert into a Displayable <a>Expr</a>.
+class Display c
+toDispExpr :: Display c => c -> DisplayExpr
 
 -- | HasUncertainty is just a chunk with some uncertainty associated to it.
 --   This uncertainty is represented as a decimal value between 0 and 1
@@ -1209,32 +1305,35 @@ nw :: Idea c => c -> IdeaDict
 
 -- | Smart constructor for range of <a>Physical</a> constraints between two
 --   given expressions.
-physc :: RealInterval Expr Expr -> Constraint
+physc :: RealInterval Expr Expr -> ConstraintE
 
 -- | Smart constructor for range of <a>Software</a> constraints between two
 --   given expressions.
-sfwrc :: RealInterval Expr Expr -> Constraint
+sfwrc :: RealInterval Expr Expr -> ConstraintE
 
 -- | Smart constructor for enumeration of values, default reason for
 --   constraint is <a>Physical</a>.
-enumc :: [Double] -> Constraint
+enumc :: [Double] -> ConstraintE
 
 -- | Helpful for filtering for Physical constraints. True if constraint is
 --   <a>Physical</a>.
-isPhysC :: Constraint -> Bool
+isPhysC :: Constraint e -> Bool
 
 -- | Helpful for filtering for Software constraints. True if constraint is
 --   <a>Software</a>.
-isSfwrC :: Constraint -> Bool
+isSfwrC :: Constraint e -> Bool
 
 -- | Holds constraints. May occur between an interval of <a>Expr</a>, a
 --   list of <a>Double</a>s, or a list of <a>String</a>s.
-data Constraint
+data Constraint a
 
 -- | By default, physical and software constraints are ranges.
-[Range] :: ConstraintReason -> RealInterval Expr Expr -> Constraint
-[EnumeratedReal] :: ConstraintReason -> [Double] -> Constraint
-[EnumeratedStr] :: ConstraintReason -> [String] -> Constraint
+[Range] :: ConstraintReason -> RealInterval a a -> Constraint a
+[EnumeratedReal] :: ConstraintReason -> [Double] -> Constraint a
+[EnumeratedStr] :: ConstraintReason -> [String] -> Constraint a
+
+-- | Type synonym for <a>ConstraintE</a>
+type ConstraintE = Constraint Expr
 
 -- | The reason behind the constraint's existence.
 data ConstraintReason
@@ -1242,49 +1341,49 @@ Physical :: ConstraintReason
 Software :: ConstraintReason
 
 -- | ConstrainedChunks are symbolic quantities (<a>QuantityDict</a>) with
---   <a>Constraint</a>s and maybe a typical value (<a>Maybe</a>
+--   <tt>Constraint</tt>s and maybe a typical value (<a>Maybe</a>
 --   <a>Expr</a>).
 data ConstrainedChunk
-ConstrainedChunk :: QuantityDict -> [Constraint] -> Maybe Expr -> ConstrainedChunk
+ConstrainedChunk :: QuantityDict -> [ConstraintE] -> Maybe Expr -> ConstrainedChunk
 [_qd] :: ConstrainedChunk -> QuantityDict
-[_constr] :: ConstrainedChunk -> [Constraint]
+[_constr] :: ConstrainedChunk -> [ConstraintE]
 [_reasV] :: ConstrainedChunk -> Maybe Expr
 
 -- | ConstrConcepts are conceptual symbolic quantities
---   (<a>DefinedQuantityDict</a>) with <a>Constraint</a>s and maybe a
+--   (<a>DefinedQuantityDict</a>) with <tt>Constraint</tt>s and maybe a
 --   reasonable value (no units!).
 data ConstrConcept
-ConstrConcept :: DefinedQuantityDict -> [Constraint] -> Maybe Expr -> ConstrConcept
+ConstrConcept :: DefinedQuantityDict -> [ConstraintE] -> Maybe Expr -> ConstrConcept
 [_defq] :: ConstrConcept -> DefinedQuantityDict
-[_constr'] :: ConstrConcept -> [Constraint]
+[_constr'] :: ConstrConcept -> [ConstraintE]
 [_reasV'] :: ConstrConcept -> Maybe Expr
 
 -- | Creates a constrained unitary chunk from a <tt>UID</tt>, term
---   (<a>NP</a>), <a>Symbol</a>, unit, <a>Space</a>, <a>Constraint</a>s,
+--   (<a>NP</a>), <a>Symbol</a>, unit, <a>Space</a>, <tt>Constraint</tt>s,
 --   and an <a>Expr</a>.
-cuc :: IsUnit u => String -> NP -> Symbol -> u -> Space -> [Constraint] -> Expr -> ConstrainedChunk
+cuc :: IsUnit u => String -> NP -> Symbol -> u -> Space -> [ConstraintE] -> Expr -> ConstrainedChunk
 
 -- | Creates a constrained unitary chunk from a <tt>UID</tt>, term
---   (<a>NP</a>), <a>Symbol</a>, <a>Space</a>, <a>Constraint</a>s, and a
+--   (<a>NP</a>), <a>Symbol</a>, <a>Space</a>, <tt>Constraint</tt>s, and a
 --   <a>Maybe</a> <a>Expr</a> (Similar to <a>cuc</a> but no units).
-cvc :: String -> NP -> Symbol -> Space -> [Constraint] -> Maybe Expr -> ConstrainedChunk
+cvc :: String -> NP -> Symbol -> Space -> [ConstraintE] -> Maybe Expr -> ConstrainedChunk
 
 -- | Creates a <a>ConstrConcept</a> with a quantitative concept, a list of
---   <a>Constraint</a>s and an <a>Expr</a>.
-constrained' :: (Concept c, MayHaveUnit c, Quantity c) => c -> [Constraint] -> Expr -> ConstrConcept
+--   <tt>Constraint</tt>s and an <a>Expr</a>.
+constrained' :: (Concept c, MayHaveUnit c, Quantity c) => c -> [ConstraintE] -> Expr -> ConstrConcept
 
 -- | Creates a constrained unitary chunk from a <tt>UID</tt>, term
 --   (<a>NP</a>), description (<a>String</a>), <a>Symbol</a>, unit,
---   <a>Space</a>, <a>Constraint</a>s, and an <a>Expr</a>.
-cuc' :: IsUnit u => String -> NP -> String -> Symbol -> u -> Space -> [Constraint] -> Expr -> ConstrConcept
+--   <a>Space</a>, <tt>Constraint</tt>s, and an <a>Expr</a>.
+cuc' :: IsUnit u => String -> NP -> String -> Symbol -> u -> Space -> [ConstraintE] -> Expr -> ConstrConcept
 
 -- | Similar to <a>cuc'</a>, but <a>Symbol</a> is dependent on
 --   <a>Stage</a>.
-cuc'' :: IsUnit u => String -> NP -> String -> (Stage -> Symbol) -> u -> Space -> [Constraint] -> Expr -> ConstrConcept
+cuc'' :: IsUnit u => String -> NP -> String -> (Stage -> Symbol) -> u -> Space -> [ConstraintE] -> Expr -> ConstrConcept
 
 -- | Similar to <a>constrained'</a>, but defaults <a>Maybe</a> <a>Expr</a>
 --   to <a>Nothing</a>.
-constrainedNRV' :: (Concept c, MayHaveUnit c, Quantity c) => c -> [Constraint] -> ConstrConcept
+constrainedNRV' :: (Concept c, MayHaveUnit c, Quantity c) => c -> [ConstraintE] -> ConstrConcept
 
 -- | Creates a new ConstrainedChunk from either a <a>ConstrainedChunk</a>,
 --   <a>ConstrConcept</a>, <tt>UncertainChunk</tt>, or an <tt>UncertQ</tt>.
@@ -1398,7 +1497,7 @@ ccs :: (Idea c, Concept d) => c -> Sentence -> [d] -> ConceptChunk
 --   tagging.
 cc :: Idea c => c -> String -> ConceptChunk
 
--- | Same as cc, except definition is a <a>Sentence</a>.
+-- | Same as <a>cc</a>, except definition is a <a>Sentence</a>.
 cc' :: Idea c => c -> Sentence -> ConceptChunk
 
 -- | Constructor for a <a>ConceptInstance</a>. Takes in the Reference
@@ -1424,10 +1523,10 @@ data UncertQ
 uq :: (Quantity c, Constrained c, Concept c, HasReasVal c, MayHaveUnit c) => c -> Uncertainty -> UncertQ
 
 -- | Uncertainty quantity (<a>uq</a>) but with a constraint.
-uqc :: IsUnit u => String -> NP -> String -> Symbol -> u -> Space -> [Constraint] -> Expr -> Uncertainty -> UncertQ
+uqc :: IsUnit u => String -> NP -> String -> Symbol -> u -> Space -> [ConstraintE] -> Expr -> Uncertainty -> UncertQ
 
 -- | Uncertainty quantity constraint (<a>uqc</a>) without a description.
-uqcND :: IsUnit u => String -> NP -> Symbol -> u -> Space -> [Constraint] -> Expr -> Uncertainty -> UncertQ
+uqcND :: IsUnit u => String -> NP -> Symbol -> u -> Space -> [ConstraintE] -> Expr -> Uncertainty -> UncertQ
 
 -- | Smart constructor that can project to an <a>UncertainChunk</a> (also
 --   given an <a>Uncertainty</a>).
@@ -1436,7 +1535,7 @@ uncrtnChunk :: (Quantity c, Constrained c, HasReasVal c, MayHaveUnit c) => c -> 
 -- | Creates an uncertain variable chunk. Takes <tt>UID</tt>, term
 --   (<a>NP</a>), <a>Symbol</a>, <a>Space</a>, <tt>Constrains</tt>,
 --   <a>Expr</a>, and <a>Uncertainty</a>.
-uvc :: String -> NP -> Symbol -> Space -> [Constraint] -> Expr -> Uncertainty -> UncertainChunk
+uvc :: String -> NP -> Symbol -> Space -> [ConstraintE] -> Expr -> Uncertainty -> UncertainChunk
 
 -- | Projection function into an <a>UncertainChunk</a> from <a>UncertQ</a>
 --   or an <a>UncertainChunk</a>.
@@ -1565,10 +1664,10 @@ mkDerivNoHeader :: [Sentence] -> Derivation
 data ShortName
 
 -- | Smart constructor for making a <a>String</a> into a <a>ShortName</a>.
-shortname' :: String -> ShortName
+shortname' :: Sentence -> ShortName
 
 -- | Pulls the short form (as a <a>String</a>) out of a <a>ShortName</a>.
-getStringSN :: ShortName -> String
+getSentSN :: ShortName -> Sentence
 
 -- | All citations require a unique identifier used by the Drasil chunk. We
 --   will re-use the <a>UID</a> part as an EntryID (<a>String</a>) used for
@@ -1722,10 +1821,12 @@ data Sentence
 [P] :: Symbol -> Sentence
 
 -- | Lifts an expression into a Sentence.
-[E] :: Expr -> Sentence
+[E] :: DisplayExpr -> Sentence
 
--- | Lifts a Reference into a Sentence.
-[Ref] :: Reference -> Sentence
+-- | Takes a <a>UID</a> to a reference, a display name (<a>Sentence</a>),
+--   and any additional reference display information (<a>RefInfo</a>).
+--   Resolves the reference later (similar to Ch).
+[Ref] :: UID -> Sentence -> RefInfo -> Sentence
 
 -- | Adds quotation marks around a Sentence.
 [Quote] :: Sentence -> Sentence
@@ -1770,6 +1871,7 @@ capSent :: Sentence -> Sentence
 
 -- | Gets a symbol and places it in a <a>Sentence</a>.
 ch :: (HasUID c, HasSymbol c) => c -> Sentence
+eS :: Display d => d -> Sentence
 
 -- | Helper for concatenating two <a>Sentence</a>s with a comma and space
 --   between them.
@@ -1782,24 +1884,10 @@ sDash :: Sentence -> Sentence -> Sentence
 -- | Helper for wrapping <a>Sentence</a>s in parentheses.
 sParen :: Sentence -> Sentence
 
--- | This is to collect <a>UID</a>s that are printed out as a
---   <tt>Symbol</tt>.
+-- | This is to collect <i>symbolic</i> <a>UID</a>s that are printed out as
+--   a <tt>Symbol</tt>.
 sdep :: Sentence -> [UID]
 shortdep :: Sentence -> [UID]
-
--- | A Reference contains the identifier (<a>UID</a>), a reference address
---   (<a>LblType</a>), a human-readable shortname (<a>ShortName</a>), and
---   any extra information about the reference (<a>RefInfo</a>).
-data Reference
-Reference :: UID -> LblType -> ShortName -> RefInfo -> Reference
-
--- | Holds any extra information needed for a <a>Reference</a>, be it an
---   equation, pages, a note, or nothing.
-data RefInfo
-None :: RefInfo
-Equation :: [Int] -> RefInfo
-Page :: [Int] -> RefInfo
-RefNote :: String -> RefInfo
 class NounPhrase n
 
 -- | Retrieves singular form of term. Ex. "the quick brown fox".
@@ -1998,16 +2086,6 @@ nounPhraseSP :: String -> NP
 --   referencing. Plural case is just <a>AddS</a>.
 nounPhraseSent :: Sentence -> NP
 
--- | Members of this class have the ability to be referenced.
-class HasUID s => Referable s
-
--- | The referencing address (what we're linking to). Only visible in the
---   source (tex/html).
-refAdd :: Referable s => s -> String
-
--- | Alternate form of reference.
-renderRef :: Referable s => s -> LblType
-
 -- | A Document has a Title (<a>Sentence</a>), Author(s) (<a>Sentence</a>),
 --   and <a>Section</a>s which hold the contents of the document.
 data Document
@@ -2048,10 +2126,11 @@ Bullet :: [(ItemType, Maybe String)] -> ListType
 -- | Enumerated list.
 Numeric :: [(ItemType, Maybe String)] -> ListType
 
--- | Simple list with items denoted by <tt>-</tt>.
+-- | Simple list with items denoted by <tt>:</tt>. Renders as "Title: Item"
 Simple :: [ListTuple] -> ListType
 
--- | Descriptive list, renders as "Title: Item" (see <a>ListTuple</a>).
+-- | Descriptive list, renders as "<b>Title: Item</b>" (see
+--   <a>ListTuple</a>).
 Desc :: [ListTuple] -> ListType
 
 -- | Renders a list of "<tt><a>Title</a></tt> is the <tt>Item</tt>".
@@ -2065,7 +2144,7 @@ Flat :: Sentence -> ItemType
 
 -- | Nest a list (<a>ListType</a>) as an item.
 Nested :: Header -> ListType -> ItemType
-type ListTuple = (Title, ItemType, Maybe String) " Formats as Title: Item."
+type ListTuple = (Title, ItemType, Maybe String) " Formats as Title: Item. For use in lists."
 
 -- | Contains a <a>Reference</a> and <a>RawContent</a>.
 data LabelledContent
@@ -2130,7 +2209,7 @@ Table :: [Sentence] -> [[Sentence]] -> Title -> Bool -> RawContent
 Paragraph :: Sentence -> RawContent
 
 -- | Block of Equations holds an expression.
-EqnBlock :: Expr -> RawContent
+EqnBlock :: DisplayExpr -> RawContent
 
 -- | Grants the ability to label a group of <a>RawContent</a>.
 DerivBlock :: Sentence -> [RawContent] -> RawContent
@@ -2141,15 +2220,14 @@ Enumeration :: ListType -> RawContent
 -- | Defines something with a type, identifier, and <a>Contents</a>.
 Defini :: DType -> [(Identifier, [Contents])] -> RawContent
 
--- | Should use relative file path.
+-- | For creating figures in a document. Should use relative file path.
 Figure :: Lbl -> Filepath -> MaxWidthPercent -> RawContent
 
 -- | Grants the ability to reference something.
 Bib :: BibRef -> RawContent
 
 -- | Contain a graph with coordinates (<a>Sentence</a>s), maybe a width and
---   height, and a label (<a>Sentence</a>). TODO: Fill this one in. | An
---   identifier is just a <a>String</a>.
+--   height, and a label (<a>Sentence</a>). TODO: Fill this one in.
 Graph :: [(Sentence, Sentence)] -> Maybe Width -> Maybe Height -> Lbl -> RawContent
 
 -- | Smart constructor that wraps <a>LabelledContent</a> into
@@ -2166,11 +2244,11 @@ makeFigRef :: String -> Reference
 
 -- | Create a reference for a section. Takes in the name of a section and a
 --   shortname for the section.
-makeSecRef :: String -> String -> Reference
+makeSecRef :: String -> Sentence -> Reference
 
 -- | Create a reference for a list. Takes in the name of the list and a
 --   shortname for the list.
-makeLstRef :: String -> String -> Reference
+makeLstRef :: String -> Sentence -> Reference
 
 -- | Create a reference for a <a>URI</a>.
 makeURI :: UID -> String -> ShortName -> Reference
@@ -2229,9 +2307,6 @@ getInnerSpace :: Space -> Space
 -- | Decorations on symbols/characters such as hats or Vector
 --   representations (determines bolding, italics, etc).
 data Decoration
-Hat :: Decoration
-Vector :: Decoration
-Prime :: Decoration
 
 -- | A <a>Symbol</a> is actually going to be a graphical description of
 --   what gets rendered as a (unique) symbol. This is actually NOT based on
@@ -2252,48 +2327,6 @@ Prime :: Decoration
 --   flavour)</li>
 --   </ul>
 data Symbol
-Variable :: String -> Symbol
-Label :: String -> Symbol
-Integ :: Int -> Symbol
-Special :: Special -> Symbol
-Atop :: Decoration -> Symbol -> Symbol
-
--- | Order of Symbols: upleft lowleft upright lowright base
---   
---   <pre>
---   Corners [1]   [2]   [3]   [4]   [5]
---   </pre>
---   
---   <pre>
---   Visually:  [1]   [3]
---   
---                 [5]
---   
---              [2]   [4]
---   </pre>
-Corners :: [Symbol] -> [Symbol] -> [Symbol] -> [Symbol] -> Symbol -> Symbol
-
--- | Concatentation of two symbols: <tt>[s1, s2] -&gt; s1s2</tt>
-Concat :: [Symbol] -> Symbol
-Empty :: Symbol
-
--- | The default compare function that sorts all the lower case symbols
---   after the upper case ones.
---   
---   Comparation is used twice for each <tt>Atomic</tt> case, once for
---   making sure they are the same letter, once for case sensitive. As far
---   as this comparison is considered, <tt>Δ</tt> is a "decoration" and
---   ignored unless the compared symbols are the exact same, in which case
---   it is ordered after the undecorated symbol.
---   
---   Superscripts and subscripts are ordered after the base symbols
---   (because they add additional context to a symbol). For example:
---   `v_f^{AB}` (expressed in LaTeX notation for clarity), where
---   <tt>v_f</tt> is a final velocity, and the `^{AB}` adds context that it
---   is the final velocity between points <tt>A</tt> and <tt>B</tt>. In
---   these cases, the sorting of `v_f^{AB}` should be following
---   <tt>v_f</tt> as it is logical to place it with its parent concept.
-compsy :: Symbol -> Symbol -> Ordering
 
 -- | Create a table body (not including header row) by applying the given
 --   functions to the column elements of the table rows (in order). The
@@ -2414,28 +2447,52 @@ upperLeft :: Symbol -> Symbol -> Symbol
 -- | Helper for creating a Vector symbol.
 vec :: Symbol -> Symbol
 
--- | Makes a reference from the given argument and then wraps it into a
---   <a>Sentence</a>.
-makeRef2S :: (Referable l, HasShortName l) => l -> Sentence
+-- | Label smart constructor, requires non-empty labels
+label :: String -> Symbol
 
--- | Similar to <a>makeRef2</a>, but only turns a citation into a
---   reference.
-makeCite :: Citation -> Reference
+-- | Variable smart constructor, requires non-empty variables
+variable :: String -> Symbol
 
--- | Similar to <a>makeRef2S</a>, but only takes a citation.
-makeCiteS :: Citation -> Sentence
+-- | Holds any extra information needed for a <tt>Reference</tt>, be it an
+--   equation, pages, a note, or nothing.
+data RefInfo
+None :: RefInfo
+Equation :: [Int] -> RefInfo
+Page :: [Int] -> RefInfo
+RefNote :: String -> RefInfo
+
+-- | A Reference contains the identifier (<a>UID</a>), a reference address
+--   (<a>LblType</a>), a human-readable shortname (<a>ShortName</a>), and
+--   any extra information about the reference (<a>RefInfo</a>).
+data Reference
+Reference :: UID -> LblType -> ShortName -> RefInfo -> Reference
 
 -- | Projector function that creates a <a>Reference</a> from something
 --   <a>Referable</a>.
-makeRef2 :: (Referable l, HasShortName l) => l -> Reference
+ref :: (Referable r, HasShortName r) => r -> Reference
 
--- | Makes a <a>Reference</a> from a <a>Citation</a> with additional
---   information.
-makeCiteInfo :: Citation -> RefInfo -> Reference
+-- | Projector function that creates a <a>Reference</a> from something
+--   <a>Referable</a>. Also accepts <a>RefInfo</a>.
+refInfo :: (Referable r, HasShortName r) => r -> RefInfo -> Reference
 
--- | Makes a <a>Reference</a> from a <a>Citation</a> with additional
---   information and then wraps into <a>Sentence</a> form.
-makeCiteInfoS :: Citation -> RefInfo -> Sentence
+-- | Takes the reference <a>UID</a> and wraps it into a <a>Sentence</a>.
+refS :: (Referable r, HasShortName r) => r -> Sentence
+
+-- | Takes a <a>Reference</a> with a name to be displayed and wraps it into
+--   a <a>Sentence</a>. Does not overwrite the shortname contained in the
+--   reference, but will only display as the given <a>Sentence</a>.
+namedRef :: (Referable r, HasShortName r) => r -> Sentence -> Sentence
+
+-- | Takes a <a>Reference</a> with additional display info. Uses the
+--   internal shortname for its display name.
+complexRef :: (Referable r, HasShortName r) => r -> RefInfo -> Sentence
+
+-- | Takes a <a>Reference</a> with a name to be displayed and any
+--   additional information and wraps it into a <a>Sentence</a>. Does not
+--   overwrite the shortname contained in the reference, but will only
+--   display as the given <a>Sentence</a> along with the given
+--   <a>RefInfo</a>.
+namedComplexRef :: (Referable r, HasShortName r) => r -> Sentence -> RefInfo -> Sentence
 
 -- | Retrieves the <a>String</a> contained in a <a>LblType</a>.
 getAdd :: LblType -> String
@@ -2454,16 +2511,17 @@ URI :: String -> LblType
 -- | Created for different forms of references. Used in <a>LblType</a>.
 data IRefProg
 
--- | Deferred lookup; done later
+-- | Deferred lookup; done later. Used for domains in a
+--   <tt>ConceptInstance</tt>.
 Deferred :: UID -> IRefProg
 
--- | Lifts a <a>String</a> into a <tt>RefProg</tt>
+-- | Lifts a <a>String</a> into a <tt>RefProg</tt>.
 RS :: String -> IRefProg
 
--- | Concatenates with two subprograms
+-- | Concatenates with two subprograms.
 RConcat :: IRefProg -> IRefProg -> IRefProg
 
--- | The <tt>Symbol</tt> to insert the <tt>ShortName</tt> directly
+-- | The <tt>Symbol</tt> to insert the <tt>ShortName</tt> directly.
 Name :: IRefProg
 
 -- | Helper for common pattern of introducing the title-case version of a

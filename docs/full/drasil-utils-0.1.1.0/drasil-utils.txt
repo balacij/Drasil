@@ -28,6 +28,15 @@ capitalize :: String -> String
 -- | Comma separated list with "and" before final item.
 stringList :: [String] -> String
 
+module Utils.Drasil.Lists
+
+-- | Replaces all elements of a target list that belong to a provided "bad"
+--   input list.
+replaceAll :: Eq a => [a] -> a -> [a] -> [a]
+
+-- | Checks if the first set is a subset of the second.
+subsetOf :: Eq a => [a] -> [a] -> Bool
+
 module Utils.Drasil.Sentence
 
 -- | Inserts the words "and its" between two Sentences.
@@ -265,7 +274,7 @@ List :: FoldType
 Options :: FoldType
 
 -- | Helper for formatting constraints.
-foldConstraints :: Quantity c => c -> [Constraint] -> Sentence
+foldConstraints :: Quantity c => c -> [ConstraintE] -> Sentence
 
 -- | Creates a list of elements with "enumerators" in "wrappers" using
 --   foldlList.
@@ -354,7 +363,7 @@ eqN :: Int -> Sentence
 
 -- | Takes an expression and a <a>Referable</a> and outputs as a Sentence
 --   "expression (source)".
-eqnWSource :: (Referable r, HasShortName r) => Expr -> r -> Sentence
+eqnWSource :: (Display e, Referable r, HasShortName r) => e -> r -> Sentence
 
 -- | Takes a <a>Referable</a> source and a <a>UnitalChunk</a> and outputs
 --   as a <a>Sentence</a>: "From <tt>source</tt> we can replace
@@ -510,10 +519,10 @@ enumSimple :: Reference -> Integer -> Sentence -> [Sentence] -> LabelledContent
 enumSimpleU :: Integer -> Sentence -> [Sentence] -> Contents
 
 -- | Constructs <a>LabelledContent</a> from an expression and a reference.
-eqUnR :: Expr -> Reference -> LabelledContent
+lbldExpr :: Display c => c -> Reference -> LabelledContent
 
--- | Same as <a>eqUnR</a> except content is unlabelled.
-eqUnR' :: Expr -> Contents
+-- | Same as <tt>eqUnR</tt> except content is unlabelled.
+unlbldExpr :: Display c => c -> Contents
 
 -- | Convenience function for transforming types which are instances of the
 --   constraints <a>Referable</a>, <a>HasShortName</a>, and
@@ -542,16 +551,16 @@ enumSimple :: Reference -> Integer -> Sentence -> [Sentence] -> LabelledContent
 -- | Same as <a>enumSimple</a> but unlabelled.
 enumSimpleU :: Integer -> Sentence -> [Sentence] -> Contents
 
--- | Constructs <a>LabelledContent</a> from an expression and a reference.
-eqUnR :: Expr -> Reference -> LabelledContent
-
--- | Same as <a>eqUnR</a> except content is unlabelled.
-eqUnR' :: Expr -> Contents
-
 -- | Convenience function for transforming types which are instances of the
 --   constraints <a>Referable</a>, <a>HasShortName</a>, and
 --   <a>Definition</a>, into Simple-type <a>Enumeration</a>s.
 mkEnumSimpleD :: (Referable c, HasShortName c, Definition c) => [c] -> [Contents]
+
+-- | Constructs <a>LabelledContent</a> from an expression and a reference.
+lbldExpr :: Display c => c -> Reference -> LabelledContent
+
+-- | Same as <tt>eqUnR</tt> except content is unlabelled.
+unlbldExpr :: Display c => c -> Contents
 
 -- | Creates a blank document with no text.
 blank :: Doc
@@ -593,7 +602,7 @@ List :: FoldType
 Options :: FoldType
 
 -- | Helper for formatting constraints.
-foldConstraints :: Quantity c => c -> [Constraint] -> Sentence
+foldConstraints :: Quantity c => c -> [ConstraintE] -> Sentence
 
 -- | Creates a list of elements with "enumerators" in "wrappers" using
 --   foldlList.
@@ -633,6 +642,13 @@ foldNums :: String -> [Int] -> Sentence
 -- | Parses a list of integers into a list of strings (ie. ["1", "4-7",
 --   "13"]).
 numList :: String -> [Int] -> [String]
+
+-- | Replaces all elements of a target list that belong to a provided "bad"
+--   input list.
+replaceAll :: Eq a => [a] -> a -> [a] -> [a]
+
+-- | Checks if the first set is a subset of the second.
+subsetOf :: Eq a => [a] -> [a] -> Bool
 
 -- | Converts input to a <a>Sentence</a> and appends %.
 addPercent :: Show a => a -> Sentence
@@ -680,7 +696,7 @@ eqN :: Int -> Sentence
 
 -- | Takes an expression and a <a>Referable</a> and outputs as a Sentence
 --   "expression (source)".
-eqnWSource :: (Referable r, HasShortName r) => Expr -> r -> Sentence
+eqnWSource :: (Display e, Referable r, HasShortName r) => e -> r -> Sentence
 
 -- | Takes a <a>Referable</a> source and a <a>UnitalChunk</a> and outputs
 --   as a <a>Sentence</a>: "From <tt>source</tt> we can replace
@@ -1012,3 +1028,9 @@ combineNPNI :: NamedIdea c => NP -> c -> NP
 
 -- | Similar to <a>combineNINP</a> but takes two <a>NamedIdea</a>s.
 combineNINI :: (NamedIdea c, NamedIdea d) => c -> d -> NP
+
+module Utils.Drasil.Strings
+
+-- | Replace occurences of special characters
+--   (",~`-=!@#$%^&amp;*+[]\;'/|"&lt;&gt;? ") with underscores ("_").
+toPlainName :: String -> String

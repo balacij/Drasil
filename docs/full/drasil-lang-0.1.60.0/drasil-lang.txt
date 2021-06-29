@@ -268,18 +268,15 @@ class HasFields c
 -- | Provides a <tt>Lens</tt> to <a>CiteField</a>s.
 getFields :: HasFields c => Lens' c [CiteField]
 
-module Language.Drasil.ShortName
+module Language.Drasil.RefProg
 
--- | Used for holding the short form of a name (as a String with a
---   wrapper).
-newtype ShortName
-ShortNm :: String -> ShortName
-
--- | Pulls the short form (as a <a>String</a>) out of a <a>ShortName</a>.
-getStringSN :: ShortName -> String
-
--- | Smart constructor for making a <a>String</a> into a <a>ShortName</a>.
-shortname' :: String -> ShortName
+-- | Holds any extra information needed for a <tt>Reference</tt>, be it an
+--   equation, pages, a note, or nothing.
+data RefInfo
+None :: RefInfo
+Equation :: [Int] -> RefInfo
+Page :: [Int] -> RefInfo
+RefNote :: String -> RefInfo
 
 module Language.Drasil.Stages
 
@@ -314,16 +311,17 @@ URI :: String -> LblType
 -- | Created for different forms of references. Used in <a>LblType</a>.
 data IRefProg
 
--- | Deferred lookup; done later
+-- | Deferred lookup; done later. Used for domains in a
+--   <tt>ConceptInstance</tt>.
 Deferred :: UID -> IRefProg
 
--- | Lifts a <a>String</a> into a <tt>RefProg</tt>
+-- | Lifts a <a>String</a> into a <tt>RefProg</tt>.
 RS :: String -> IRefProg
 
--- | Concatenates with two subprograms
+-- | Concatenates with two subprograms.
 RConcat :: IRefProg -> IRefProg -> IRefProg
 
--- | The <tt>Symbol</tt> to insert the <tt>ShortName</tt> directly
+-- | The <tt>Symbol</tt> to insert the <tt>ShortName</tt> directly.
 Name :: IRefProg
 
 -- | Retrieves the <a>String</a> contained in a <a>LblType</a>.
@@ -670,25 +668,6 @@ data Expr
 --   </ul>
 [FCall] :: UID -> [Expr] -> [(UID, Expr)] -> Expr
 
--- | Actor creation given <a>UID</a>, parameters, and named parameters.
-[New] :: UID -> [Expr] -> [(UID, Expr)] -> Expr
-
--- | Message an actor:
---   
---   <ul>
---   <li>1st <a>UID</a> is the actor,</li>
---   <li>2nd <a>UID</a> is the method.</li>
---   </ul>
-[Message] :: UID -> UID -> [Expr] -> [(UID, Expr)] -> Expr
-
--- | Access a field of an actor:
---   
---   <ul>
---   <li>1st <a>UID</a> is the actor,</li>
---   <li>2nd <a>UID</a> is the field.</li>
---   </ul>
-[Field] :: UID -> UID -> Expr
-
 -- | For multi-case expressions, each pair represents one case.
 [Case] :: Completeness -> [(Expr, Relation)] -> Expr
 
@@ -735,11 +714,9 @@ data Expr
 --   Summation is represented via <tt>Add</tt> over a discrete domain.
 [Operator] :: AssocArithOper -> DomainDesc Expr Expr -> Expr -> Expr
 
--- | The expression is an element of a space.
-[IsIn] :: Expr -> Space -> Expr
-
--- | A different kind of <a>IsIn</a>. A <a>UID</a> is an element of an
---   interval.
+-- | The expression is an element of a space. IsIn :: Expr -&gt; Space
+--   -&gt; Expr | A different kind of <tt>IsIn</tt>. A <a>UID</a> is an
+--   element of an interval.
 [RealI] :: UID -> RealInterval Expr Expr -> Expr
 
 -- | Smart constructor for equating two expressions.
@@ -836,6 +813,31 @@ instance GHC.Classes.Eq Language.Drasil.Expr.EqBinOp
 instance GHC.Classes.Eq Language.Drasil.Expr.ArithBinOp
 instance GHC.Classes.Eq Language.Drasil.Expr.Expr
 
+module Language.Drasil.DisplayExpr
+
+-- | A variant of the expression language that allows for extensions of
+--   Expr that wouldn't normally type check, or that we only care for
+--   displaying.
+data DisplayExpr
+[AlgebraicExpr] :: Expr -> DisplayExpr
+[SpaceExpr] :: Space -> DisplayExpr
+[BinOp] :: DisplayBinOp -> DisplayExpr -> DisplayExpr -> DisplayExpr
+[AssocBinOp] :: DisplayAssocBinOp -> [DisplayExpr] -> DisplayExpr
+
+-- | Binary Display Operations.
+data DisplayBinOp
+Defines :: DisplayBinOp
+IsIn :: DisplayBinOp
+
+-- | Associative Binary Display Operations.
+data DisplayAssocBinOp
+And :: DisplayAssocBinOp
+Equivalence :: DisplayAssocBinOp
+instance GHC.Show.Show Language.Drasil.DisplayExpr.DisplayAssocBinOp
+instance GHC.Classes.Eq Language.Drasil.DisplayExpr.DisplayAssocBinOp
+instance GHC.Show.Show Language.Drasil.DisplayExpr.DisplayBinOp
+instance GHC.Classes.Eq Language.Drasil.DisplayExpr.DisplayBinOp
+
 module Language.Drasil.Expr.Precedence
 
 -- | prec2Arith - precedence for arithmetic-related binary operations.
@@ -881,34 +883,83 @@ prec1Vec :: UFuncVec -> Int
 -- | eprec - <a>Expression</a> precedence.
 eprec :: Expr -> Int
 
+-- | dePrec - "Display Expression" precedence.
+dePrec :: DisplayExpr -> Int
+
+-- | dePrecB - precedence for binary operators.
+dePrecB :: DisplayBinOp -> Int
+
+-- | dePrecAssoc - precedence for associative binary operators.
+dePrecAssoc :: DisplayAssocBinOp -> Int
+
 module Language.Drasil.Expr.Extract
 
--- | Get dependencies from an equation.
-dep :: Expr -> [String]
+-- | Generic traverse of all display expressions that could lead to names.
+deNames :: DisplayExpr -> [String]
 
 -- | Generic traverse of all expressions that could lead to names.
-names :: Expr -> [String]
-
--- | Generic traverse of all positions that could lead to names without
---   functions. FIXME : this should really be done via post-facto
---   filtering, but right now the information needed to do this is not
---   available!
-names' :: Expr -> [String]
+eNames :: Expr -> [String]
 
 -- | Generic traversal of everything that could come from an interval to
---   names (similar to <a>names</a>).
-namesRI :: RealInterval Expr Expr -> [String]
+--   names (similar to <a>eNames</a>).
+eNamesRI :: RealInterval Expr Expr -> [String]
+
+-- | Generic traverse of all display expressions that could lead to names
+--   (same as <a>deNames</a>).
+deNames' :: DisplayExpr -> [String]
+
+-- | Generic traverse of all positions that could lead to <a>eNames</a>
+--   without functions. FIXME : this should really be done via post-facto
+--   filtering, but right now the information needed to do this is not
+--   available!
+eNames' :: Expr -> [String]
+
+-- | Generic traversal of everything that could come from an interval to
+--   names without functions (similar to <a>eNames'</a>).
+eNamesRI' :: RealInterval Expr Expr -> [String]
+
+-- | Get dependencies from an equation.
+eDep :: Expr -> [String]
+
+-- | Get dependencies from display expressions.
+deDep :: DisplayExpr -> [String]
+
+module Language.Drasil.DisplayClasses
+
+-- | Data that can convert into a Displayable <a>Expr</a>.
+class Display c
+toDispExpr :: Display c => c -> DisplayExpr
+instance Language.Drasil.DisplayClasses.Display Language.Drasil.Expr.Expr
+instance Language.Drasil.DisplayClasses.Display Language.Drasil.DisplayExpr.DisplayExpr
+
+module Language.Drasil.Expr.Display
+
+-- | One expression is "defined" by another.
+defines :: (Display a, Display b) => a -> b -> DisplayExpr
+
+-- | Bring a Space into the DisplayExpr.
+spaceDE :: Space -> DisplayExpr
+isIn :: Display a => a -> DisplayExpr -> DisplayExpr
+
+-- | Binary associative <a>And</a>.
+andDEs :: Display d => [d] -> DisplayExpr
+
+-- | Binary associative <a>Equivalence</a>.
+equivDEs :: Display a => [a] -> DisplayExpr
 
 module Language.Drasil.Constraint
 
 -- | Holds constraints. May occur between an interval of <a>Expr</a>, a
 --   list of <a>Double</a>s, or a list of <a>String</a>s.
-data Constraint
+data Constraint a
 
 -- | By default, physical and software constraints are ranges.
-[Range] :: ConstraintReason -> RealInterval Expr Expr -> Constraint
-[EnumeratedReal] :: ConstraintReason -> [Double] -> Constraint
-[EnumeratedStr] :: ConstraintReason -> [String] -> Constraint
+[Range] :: ConstraintReason -> RealInterval a a -> Constraint a
+[EnumeratedReal] :: ConstraintReason -> [Double] -> Constraint a
+[EnumeratedStr] :: ConstraintReason -> [String] -> Constraint a
+
+-- | Type synonym for <a>ConstraintE</a>
+type ConstraintE = Constraint Expr
 
 -- | The reason behind the constraint's existence.
 data ConstraintReason
@@ -917,23 +968,180 @@ Software :: ConstraintReason
 
 -- | Smart constructor for range of <a>Physical</a> constraints between two
 --   given expressions.
-physc :: RealInterval Expr Expr -> Constraint
+physc :: RealInterval Expr Expr -> ConstraintE
 
 -- | Smart constructor for range of <a>Software</a> constraints between two
 --   given expressions.
-sfwrc :: RealInterval Expr Expr -> Constraint
+sfwrc :: RealInterval Expr Expr -> ConstraintE
 
 -- | Smart constructor for enumeration of values, default reason for
 --   constraint is <a>Physical</a>.
-enumc :: [Double] -> Constraint
+enumc :: [Double] -> ConstraintE
 
 -- | Helpful for filtering for Physical constraints. True if constraint is
 --   <a>Physical</a>.
-isPhysC :: Constraint -> Bool
+isPhysC :: Constraint e -> Bool
 
 -- | Helpful for filtering for Software constraints. True if constraint is
 --   <a>Software</a>.
-isSfwrC :: Constraint -> Bool
+isSfwrC :: Constraint e -> Bool
+
+module Language.Drasil.Display
+
+-- | Decorations on symbols/characters such as hats or Vector
+--   representations (determines bolding, italics, etc).
+data Decoration
+Hat :: Decoration
+Vector :: Decoration
+Prime :: Decoration
+
+-- | A <a>Symbol</a> is actually going to be a graphical description of
+--   what gets rendered as a (unique) symbol. This is actually NOT based on
+--   semantics at all, but just a description of how things look.
+--   
+--   Symbols can be:
+--   
+--   <ul>
+--   <li><tt><a>Variable</a></tt> (string such as "x" that represent a
+--   value that can vary)</li>
+--   <li><tt><a>Label</a></tt> (strings such as "max" or "target" that
+--   represent a single idea)</li>
+--   <li><tt><a>Special</a></tt> characters (ex. unicode)</li>
+--   <li><tt>Decorated</tt> symbols</li>
+--   <li><tt>Concatenations</tt> of symbols, including subscripts and
+--   superscripts</li>
+--   <li><tt><a>Empty</a></tt>! (this is to give this a monoid-like
+--   flavour)</li>
+--   </ul>
+data Symbol
+Variable :: String -> Symbol
+Label :: String -> Symbol
+Integ :: Int -> Symbol
+Special :: Special -> Symbol
+Atop :: Decoration -> Symbol -> Symbol
+
+-- | Order of Symbols: upleft lowleft upright lowright base
+--   
+--   <pre>
+--   Corners [1]   [2]   [3]   [4]   [5]
+--   </pre>
+--   
+--   <pre>
+--   Visually:  [1]   [3]
+--   
+--                 [5]
+--   
+--              [2]   [4]
+--   </pre>
+Corners :: [Symbol] -> [Symbol] -> [Symbol] -> [Symbol] -> Symbol -> Symbol
+
+-- | Concatentation of two symbols: <tt>[s1, s2] -&gt; s1s2</tt>
+Concat :: [Symbol] -> Symbol
+Empty :: Symbol
+
+-- | The default compare function that sorts all the lower case symbols
+--   after the upper case ones.
+--   
+--   Comparation is used twice for each <tt>Atomic</tt> case, once for
+--   making sure they are the same letter, once for case sensitive. As far
+--   as this comparison is considered, <tt>Δ</tt> is a "decoration" and
+--   ignored unless the compared symbols are the exact same, in which case
+--   it is ordered after the undecorated symbol.
+--   
+--   Superscripts and subscripts are ordered after the base symbols
+--   (because they add additional context to a symbol). For example:
+--   `v_f^{AB}` (expressed in LaTeX notation for clarity), where
+--   <tt>v_f</tt> is a final velocity, and the `^{AB}` adds context that it
+--   is the final velocity between points <tt>A</tt> and <tt>B</tt>. In
+--   these cases, the sorting of `v_f^{AB}` should be following
+--   <tt>v_f</tt> as it is logical to place it with its parent concept.
+compsy :: Symbol -> Symbol -> Ordering
+
+
+-- | Defining the core classes which represent knowledge-about-knowledge
+module Language.Drasil.Classes.Core
+
+-- | The most basic item: having a unique identifier key, here a UID.
+class HasUID c
+
+-- | Provides a <i>unique</i> id for internal Drasil use.
+uid :: HasUID c => Lens' c UID
+
+-- | Members must have a reference address.
+class HasRefAddress b
+
+-- | Provides the ability to hold a reference address.
+getRefAdd :: HasRefAddress b => b -> String
+
+-- | A HasSymbol is anything which has a <a>Symbol</a>.
+class HasSymbol c
+
+-- | Provides the <a>Symbol</a> for a particular stage of generation.
+symbol :: HasSymbol c => c -> Stage -> Symbol
+
+-- | Members of this class have the ability to be referenced.
+class HasUID s => Referable s
+
+-- | The referencing address (what we're linking to). Only visible in the
+--   source (tex/html).
+refAdd :: Referable s => s -> String
+
+-- | Alternate form of reference.
+renderRef :: Referable s => s -> LblType
+
+
+-- | Routines to help with Symbols and Stages.
+module Language.Drasil.Symbol.Helpers
+
+-- | Helper function for getting a symbol in the Equational Stage.
+eqSymb :: HasSymbol q => q -> Symbol
+
+-- | Helper function for getting a symbol in the Implementation Stage.
+codeSymb :: HasSymbol q => q -> Symbol
+
+-- | Finds if a <a>Stage</a> symbol is real or Empty. True if real.
+hasStageSymbol :: HasSymbol q => q -> Stage -> Bool
+
+-- | Helper for creating a symbol with Unicode in it.
+autoStage :: Symbol -> Stage -> Symbol
+
+-- | Helper for creating a symbol with a hat ("^") atop it.
+hat :: Symbol -> Symbol
+
+-- | Helper for creating a Vector symbol.
+prime :: Symbol -> Symbol
+
+-- | Helper for creating a symbol that depends on the stage.
+staged :: Symbol -> Symbol -> Stage -> Symbol
+
+-- | Helper for creating a symbol with a subscript to the right. Arguments:
+--   Base symbol, then subscripted symbol.
+sub :: Symbol -> Symbol -> Symbol
+
+-- | Helper for a common case of subscript, with a string Arguments: Base
+--   symbol, then subscript <a>String</a>.
+subStr :: Symbol -> String -> Symbol
+
+-- | Helper for creating a symbol with a superscript to the right.
+--   Arguments: Base symbol, then superscripted symbol.
+sup :: Symbol -> Symbol -> Symbol
+
+-- | Helper for autoStage that applies unicodeString to all <a>Symbol</a>s
+--   with <a>String</a>s.
+unicodeConv :: Symbol -> Symbol
+
+-- | Helper for creating a symbol with a superscript on the left side of
+--   the symbol. Arguments: Base symbol, then superscripted symbol.
+upperLeft :: Symbol -> Symbol -> Symbol
+
+-- | Helper for creating a Vector symbol.
+vec :: Symbol -> Symbol
+
+-- | Label smart constructor, requires non-empty labels
+label :: String -> Symbol
+
+-- | Variable smart constructor, requires non-empty variables
+variable :: String -> Symbol
 
 
 -- | Alphabet of capital/lowercase English letters as symbols
@@ -1363,101 +1571,6 @@ lPosInf :: Symbol
 --   <i>lowercase</i>.
 lNegInf :: Symbol
 
-
--- | Defining the core classes which represent knowledge-about-knowledge
-module Language.Drasil.Classes.Core
-
--- | The most basic item: having a unique identifier key, here a UID.
-class HasUID c
-
--- | Provides a <i>unique</i> id for internal Drasil use.
-uid :: HasUID c => Lens' c UID
-
--- | A <a>ShortName</a> is the text to be displayed for a link. Used for
---   referencing within a document that can include symbols and whatnot if
---   required. Visible in the typeset documents (pdf).
-class HasShortName s
-shortname :: HasShortName s => s -> ShortName
-
--- | Members must have a reference address.
-class HasRefAddress b
-
--- | Provides the ability to hold a reference address.
-getRefAdd :: HasRefAddress b => b -> String
-
--- | A HasSymbol is anything which has a <a>Symbol</a>.
-class HasSymbol c
-
--- | Provides the <a>Symbol</a> for a particular stage of generation.
-symbol :: HasSymbol c => c -> Stage -> Symbol
-
-
--- | Routines to help with Symbols and Stages.
-module Language.Drasil.Symbol.Helpers
-
--- | Helper function for getting a symbol in the Equational Stage.
-eqSymb :: HasSymbol q => q -> Symbol
-
--- | Helper function for getting a symbol in the Implementation Stage.
-codeSymb :: HasSymbol q => q -> Symbol
-
--- | Finds if a <a>Stage</a> symbol is real or Empty. True if real.
-hasStageSymbol :: HasSymbol q => q -> Stage -> Bool
-
--- | Helper for creating a symbol with Unicode in it.
-autoStage :: Symbol -> Stage -> Symbol
-
--- | Helper for creating a symbol with a hat ("^") atop it.
-hat :: Symbol -> Symbol
-
--- | Helper for creating a Vector symbol.
-prime :: Symbol -> Symbol
-
--- | Helper for creating a symbol that depends on the stage.
-staged :: Symbol -> Symbol -> Stage -> Symbol
-
--- | Helper for creating a symbol with a subscript to the right. Arguments:
---   Base symbol, then subscripted symbol.
-sub :: Symbol -> Symbol -> Symbol
-
--- | Helper for a common case of subscript, with a string Arguments: Base
---   symbol, then subscript <a>String</a>.
-subStr :: Symbol -> String -> Symbol
-
--- | Helper for creating a symbol with a superscript to the right.
---   Arguments: Base symbol, then superscripted symbol.
-sup :: Symbol -> Symbol -> Symbol
-
--- | Helper for autoStage that applies unicodeString to all <a>Symbol</a>s
---   with <a>String</a>s.
-unicodeConv :: Symbol -> Symbol
-
--- | Helper for creating a symbol with a superscript on the left side of
---   the symbol. Arguments: Base symbol, then superscripted symbol.
-upperLeft :: Symbol -> Symbol -> Symbol
-
--- | Helper for creating a Vector symbol.
-vec :: Symbol -> Symbol
-
-module Language.Drasil.RefProg
-
--- | A Reference contains the identifier (<a>UID</a>), a reference address
---   (<a>LblType</a>), a human-readable shortname (<a>ShortName</a>), and
---   any extra information about the reference (<a>RefInfo</a>).
-data Reference
-Reference :: UID -> LblType -> ShortName -> RefInfo -> Reference
-
--- | Holds any extra information needed for a <a>Reference</a>, be it an
---   equation, pages, a note, or nothing.
-data RefInfo
-None :: RefInfo
-Equation :: [Int] -> RefInfo
-Page :: [Int] -> RefInfo
-RefNote :: String -> RefInfo
-instance Language.Drasil.Classes.Core.HasUID Language.Drasil.RefProg.Reference
-instance Language.Drasil.Classes.Core.HasRefAddress Language.Drasil.RefProg.Reference
-instance Language.Drasil.Classes.Core.HasShortName Language.Drasil.RefProg.Reference
-
 module Language.Drasil.UnitLang
 
 -- | Language of units (how to build them up into a unit symbol). Of the
@@ -1531,10 +1644,12 @@ data Sentence
 [P] :: Symbol -> Sentence
 
 -- | Lifts an expression into a Sentence.
-[E] :: Expr -> Sentence
+[E] :: DisplayExpr -> Sentence
 
--- | Lifts a Reference into a Sentence.
-[Ref] :: Reference -> Sentence
+-- | Takes a <a>UID</a> to a reference, a display name (<a>Sentence</a>),
+--   and any additional reference display information (<a>RefInfo</a>).
+--   Resolves the reference later (similar to Ch).
+[Ref] :: UID -> Sentence -> RefInfo -> Sentence
 
 -- | Adds quotation marks around a Sentence.
 [Quote] :: Sentence -> Sentence
@@ -1579,6 +1694,7 @@ capSent :: Sentence -> Sentence
 
 -- | Gets a symbol and places it in a <a>Sentence</a>.
 ch :: (HasUID c, HasSymbol c) => c -> Sentence
+eS :: Display d => d -> Sentence
 
 -- | Helper for concatenating two <a>Sentence</a>s with a comma and space
 --   between them.
@@ -1613,19 +1729,82 @@ sParen :: Sentence -> Sentence
 instance GHC.Base.Semigroup Language.Drasil.Sentence.Sentence
 instance GHC.Base.Monoid Language.Drasil.Sentence.Sentence
 
+module Language.Drasil.ShortName
+
+-- | Used for holding the short form of a name (as a String with a
+--   wrapper).
+newtype ShortName
+ShortNm :: Sentence -> ShortName
+
+-- | Pulls the short form (as a <a>String</a>) out of a <a>ShortName</a>.
+getSentSN :: ShortName -> Sentence
+
+-- | Smart constructor for making a <a>String</a> into a <a>ShortName</a>.
+shortname' :: Sentence -> ShortName
+
+
+-- | Defining the core classes which represent knowledge-about-knowledge
+module Language.Drasil.Classes.Core2
+
+-- | A <a>ShortName</a> is the text to be displayed for a link. Used for
+--   referencing within a document that can include symbols and whatnot if
+--   required. Visible in the typeset documents (pdf).
+class HasShortName s
+shortname :: HasShortName s => s -> ShortName
+
 module Language.Drasil.Sentence.Extract
 
--- | This is to collect <a>UID</a>s that are printed out as a
---   <tt>Symbol</tt>.
+-- | This is to collect <i>symbolic</i> <a>UID</a>s that are printed out as
+--   a <tt>Symbol</tt>.
 sdep :: Sentence -> [UID]
 shortdep :: Sentence -> [UID]
 
--- | Generic traverse of all positions that could lead to reference
+-- | Generic traverse of all positions that could lead to <i>reference</i>
 --   <a>UID</a>s from <a>Sentence</a>s.
 lnames :: Sentence -> [UID]
 
--- | Get reference <a>UID</a>s from <a>Sentence</a>s.
+-- | Get <i>reference</i> <a>UID</a>s from <a>Sentence</a>s.
 lnames' :: [Sentence] -> [UID]
+
+module Language.Drasil.Reference
+
+-- | A Reference contains the identifier (<a>UID</a>), a reference address
+--   (<a>LblType</a>), a human-readable shortname (<a>ShortName</a>), and
+--   any extra information about the reference (<a>RefInfo</a>).
+data Reference
+Reference :: UID -> LblType -> ShortName -> RefInfo -> Reference
+
+-- | Projector function that creates a <a>Reference</a> from something
+--   <a>Referable</a>.
+ref :: (Referable r, HasShortName r) => r -> Reference
+
+-- | Takes the reference <a>UID</a> and wraps it into a <a>Sentence</a>.
+refS :: (Referable r, HasShortName r) => r -> Sentence
+
+-- | Takes a <a>Reference</a> with a name to be displayed and wraps it into
+--   a <a>Sentence</a>. Does not overwrite the shortname contained in the
+--   reference, but will only display as the given <a>Sentence</a>.
+namedRef :: (Referable r, HasShortName r) => r -> Sentence -> Sentence
+
+-- | Takes a <a>Reference</a> with additional display info. Uses the
+--   internal shortname for its display name.
+complexRef :: (Referable r, HasShortName r) => r -> RefInfo -> Sentence
+
+-- | Takes a <a>Reference</a> with a name to be displayed and any
+--   additional information and wraps it into a <a>Sentence</a>. Does not
+--   overwrite the shortname contained in the reference, but will only
+--   display as the given <a>Sentence</a> along with the given
+--   <a>RefInfo</a>.
+namedComplexRef :: (Referable r, HasShortName r) => r -> Sentence -> RefInfo -> Sentence
+
+-- | Projector function that creates a <a>Reference</a> from something
+--   <a>Referable</a>. Also accepts <a>RefInfo</a>.
+refInfo :: (Referable r, HasShortName r) => r -> RefInfo -> Reference
+instance GHC.Classes.Eq Language.Drasil.Reference.Reference
+instance Language.Drasil.Classes.Core.HasUID Language.Drasil.Reference.Reference
+instance Language.Drasil.Classes.Core.HasRefAddress Language.Drasil.Reference.Reference
+instance Language.Drasil.Classes.Core2.HasShortName Language.Drasil.Reference.Reference
+instance Language.Drasil.Classes.Core.Referable Language.Drasil.Reference.Reference
 
 module Language.Drasil.NounPhrase.Core
 
@@ -1890,6 +2069,25 @@ phraseNP :: NounPhrase n => n -> Sentence
 -- | Retrieves plural form of term. Ex. "the quick brown foxes".
 pluralNP :: NounPhrase n => n -> PluralForm
 
+-- | A variant of the expression language that allows for extensions of
+--   Expr that wouldn't normally type check, or that we only care for
+--   displaying.
+data DisplayExpr
+[AlgebraicExpr] :: Expr -> DisplayExpr
+[SpaceExpr] :: Space -> DisplayExpr
+[BinOp] :: DisplayBinOp -> DisplayExpr -> DisplayExpr -> DisplayExpr
+[AssocBinOp] :: DisplayAssocBinOp -> [DisplayExpr] -> DisplayExpr
+
+-- | Binary Display Operations.
+data DisplayBinOp
+Defines :: DisplayBinOp
+IsIn :: DisplayBinOp
+
+-- | Associative Binary Display Operations.
+data DisplayAssocBinOp
+And :: DisplayAssocBinOp
+Equivalence :: DisplayAssocBinOp
+
 -- | Negation operator (not).
 data UFuncB
 Not :: UFuncB
@@ -1938,30 +2136,33 @@ data VVNBinOp
 Dot :: VVNBinOp
 
 -- | Get dependencies from an equation.
-dep :: Expr -> [String]
+eDep :: Expr -> [String]
 
 -- | Generic traverse of all expressions that could lead to names.
-names :: Expr -> [String]
+eNames :: Expr -> [String]
 
--- | Generic traverse of all positions that could lead to names without
---   functions. FIXME : this should really be done via post-facto
+-- | Generic traverse of all positions that could lead to <a>eNames</a>
+--   without functions. FIXME : this should really be done via post-facto
 --   filtering, but right now the information needed to do this is not
 --   available!
-names' :: Expr -> [String]
+eNames' :: Expr -> [String]
 
 -- | Generic traversal of everything that could come from an interval to
---   names (similar to <a>names</a>).
-namesRI :: RealInterval Expr Expr -> [String]
+--   names (similar to <a>eNames</a>).
+eNamesRI :: RealInterval Expr Expr -> [String]
 
--- | This is to collect <a>UID</a>s that are printed out as a
---   <tt>Symbol</tt>.
+-- | Get dependencies from display expressions.
+deDep :: DisplayExpr -> [String]
+
+-- | This is to collect <i>symbolic</i> <a>UID</a>s that are printed out as
+--   a <tt>Symbol</tt>.
 sdep :: Sentence -> [UID]
 
--- | Generic traverse of all positions that could lead to reference
+-- | Generic traverse of all positions that could lead to <i>reference</i>
 --   <a>UID</a>s from <a>Sentence</a>s.
 lnames :: Sentence -> [UID]
 
--- | Get reference <a>UID</a>s from <a>Sentence</a>s.
+-- | Get <i>reference</i> <a>UID</a>s from <a>Sentence</a>s.
 lnames' :: [Sentence] -> [UID]
 
 -- | precA - precedence for arithmetic-related Binary-Associative
@@ -1974,6 +2175,12 @@ precB :: AssocBoolOper -> Int
 
 -- | eprec - <a>Expression</a> precedence.
 eprec :: Expr -> Int
+
+-- | dePrec - "Display Expression" precedence.
+dePrec :: DisplayExpr -> Int
+
+-- | dePrecAssoc - precedence for associative binary operators.
+dePrecAssoc :: DisplayAssocBinOp -> Int
 
 module Language.Drasil.Derivation
 
@@ -1992,6 +2199,352 @@ mkDerivName :: Sentence -> [Sentence] -> Derivation
 
 -- | Similar to <a>mkDeriv</a>, but without a header <a>Sentence</a>.
 mkDerivNoHeader :: [Sentence] -> Derivation
+
+module Language.Drasil.Chunk.Citation
+
+-- | All citations require a unique identifier used by the Drasil chunk. We
+--   will re-use the <a>UID</a> part as an EntryID (<a>String</a>) used for
+--   creating reference links. Finally we will have the reference
+--   information (<a>CitationKind</a>, <a>CiteField</a>s, and a
+--   <a>ShortName</a>).
+data Citation
+type BibRef = [Citation] " A list of 'Citation's."
+type EntryID = String " A 'String' that should contain no spaces."
+citeID :: Lens' Citation UID
+citeKind :: Lens' Citation CitationKind
+
+-- | Article citation requires author(s), title, journal, year. Optional
+--   fields can be: volume, number, pages, month, and note. Implicitly uses
+--   the EntryID as the chunk id.
+cArticle :: People -> String -> String -> Int -> [CiteField] -> String -> Citation
+
+-- | Book citation by author.
+--   
+--   Book citation requires author or editor, title, publisher, year.
+--   Optional fields can be volume or number, series, address, edition,
+--   month, and note. Implicitly uses the EntryID as the chunk id.
+cBookA :: People -> String -> String -> Int -> [CiteField] -> String -> Citation
+
+-- | Book citation by editor.
+--   
+--   Book citation requires author or editor, title, publisher, year.
+--   Optional fields can be volume or number, series, address, edition,
+--   month, and note. Implicitly uses the EntryID as the chunk id.
+cBookE :: People -> String -> String -> Int -> [CiteField] -> String -> Citation
+
+-- | Booklet citation requires title. Optional fields can be author, how
+--   published, address, month, year, note. Implicitly uses the EntryID as
+--   the chunk id.
+cBooklet :: String -> [CiteField] -> String -> Citation
+
+-- | InBook citation by author.
+--   
+--   InBook citation requires author or editor, title, chapter and/or
+--   pages, publisher, year. Optional fields can be volume or number,
+--   series, type, address, edition, month, and note. Implicitly uses the
+--   EntryID as the chunk id. This smart constructor includes both chapter
+--   and page numbers.
+cInBookACP :: People -> String -> Int -> [Int] -> String -> Int -> [CiteField] -> String -> Citation
+
+-- | InBook citation by editor.
+--   
+--   InBook citation requires author or editor, title, chapter and/or
+--   pages, publisher, year. Optional fields can be volume or number,
+--   series, type, address, edition, month, and note. Implicitly uses the
+--   EntryID as the chunk id. This smart constructor includes both chapter
+--   and page numbers.
+cInBookECP :: People -> String -> Int -> [Int] -> String -> Int -> [CiteField] -> String -> Citation
+
+-- | Otherwise identical to <a>cInBookACP</a>.
+--   
+--   InBook citation excluding page numbers.
+cInBookAC :: People -> String -> Int -> String -> Int -> [CiteField] -> String -> Citation
+
+-- | Otherwise identical to <a>cInBookECP</a>.
+--   
+--   InBook citation excluding page numbers.
+cInBookEC :: People -> String -> Int -> String -> Int -> [CiteField] -> String -> Citation
+
+-- | Otherwise identical to <a>cInBookACP</a>.
+--   
+--   InBook citation excluding chapter.
+cInBookAP :: People -> String -> [Int] -> String -> Int -> [CiteField] -> String -> Citation
+
+-- | Otherwise identical to <a>cInBookECP</a>.
+--   
+--   InBook citation excluding chapter.
+cInBookEP :: People -> String -> [Int] -> String -> Int -> [CiteField] -> String -> Citation
+
+-- | InCollection citation requires author, title, bookTitle, publisher,
+--   year. Optional fields can be editor, volume or number, series, type,
+--   chapter, pages, address, edition, month, and note. Implicitly uses the
+--   EntryID as the chunk id.
+cInCollection :: People -> String -> String -> String -> Int -> [CiteField] -> String -> Citation
+
+-- | InProceedings citation requires author, title, bookTitle, year.
+--   Optional fields can be editor, volume or number, series, pages,
+--   address, month, organization, publisher, and note. Implicitly uses the
+--   EntryID as the chunk id.
+cInProceedings :: People -> String -> String -> Int -> [CiteField] -> String -> Citation
+
+-- | Manual (technical documentation) citation requires title. Optional
+--   fields can be author, organization, address, edition, month, year, and
+--   note. Implicitly uses the EntryID as the chunk id.
+cManual :: String -> [CiteField] -> String -> Citation
+
+-- | Master's Thesis citation requires author, title, school, and year.
+--   Optional fields can be type, address, month, and note. Implicitly uses
+--   the EntryID as the chunk id.
+cMThesis :: People -> String -> String -> Int -> [CiteField] -> String -> Citation
+
+-- | Misc citation requires nothing. Optional fields can be author, title,
+--   howpublished, month, year, and note. Implicitly uses the EntryID as
+--   the chunk id.
+cMisc :: [CiteField] -> String -> Citation
+
+-- | PhD Thesis citation requires author, title, school, and year. Optional
+--   fields can be type, address, month, and note. Implicitly uses the
+--   EntryID as the chunk id.
+cPhDThesis :: People -> String -> String -> Int -> [CiteField] -> String -> Citation
+
+-- | Proceedings citation requires title and year. Optional fields can be
+--   editor, volume or number, series, address, publisher, note, month, and
+--   organization. Implicitly uses the EntryID as the chunk id.
+cProceedings :: String -> Int -> [CiteField] -> String -> Citation
+
+-- | Technical Report citation requires author, title, institution, and
+--   year. Optional fields can be type, number, address, month, and note.
+--   Implicitly uses the EntryID as the chunk id.
+cTechReport :: People -> String -> String -> Int -> [CiteField] -> String -> Citation
+
+-- | Unpublished citation requires author, title, and note. Optional fields
+--   can be month and year. Implicitly uses the EntryID as the chunk id.
+cUnpublished :: People -> String -> String -> [CiteField] -> String -> Citation
+instance Language.Drasil.Classes.Core.HasUID Language.Drasil.Chunk.Citation.Citation
+instance Language.Drasil.Classes.Core2.HasShortName Language.Drasil.Chunk.Citation.Citation
+instance Language.Drasil.Classes.Citations.HasFields Language.Drasil.Chunk.Citation.Citation
+instance Language.Drasil.Classes.Core.Referable Language.Drasil.Chunk.Citation.Citation
+instance Language.Drasil.Classes.Core.HasRefAddress Language.Drasil.Chunk.Citation.Citation
+
+module Language.Drasil.Document.Core
+
+-- | Denotes the different possible types that can be used as a list.
+data ListType
+
+-- | Bulleted list.
+Bullet :: [(ItemType, Maybe String)] -> ListType
+
+-- | Enumerated list.
+Numeric :: [(ItemType, Maybe String)] -> ListType
+
+-- | Simple list with items denoted by <tt>:</tt>. Renders as "Title: Item"
+Simple :: [ListTuple] -> ListType
+
+-- | Descriptive list, renders as "<b>Title: Item</b>" (see
+--   <a>ListTuple</a>).
+Desc :: [ListTuple] -> ListType
+
+-- | Renders a list of "<tt><a>Title</a></tt> is the <tt>Item</tt>".
+Definitions :: [ListTuple] -> ListType
+
+-- | Denotes how something should behave in a list (<a>ListType</a>).
+data ItemType
+
+-- | Standard singular item.
+Flat :: Sentence -> ItemType
+
+-- | Nest a list (<a>ListType</a>) as an item.
+Nested :: Header -> ListType -> ItemType
+
+-- | MaxWidthPercent should be kept in the range 1-100. Values outside this
+--   range may have unexpected results. Used for specifying max figure
+--   width as <tt>pagewidth*MaxWidthPercent/100</tt>.
+type MaxWidthPercent = Float
+type Title = Sentence
+type Author = Sentence
+type Header = Sentence " Used when creating sublists."
+type Depth = Int
+type Width = Float
+type Height = Float
+type ListTuple = (Title, ItemType, Maybe String) " Formats as Title: Item. For use in lists."
+type Filepath = String
+type Lbl = Sentence " Label."
+
+-- | Contents may be labelled or unlabelled.
+data Contents
+UlC :: UnlabelledContent -> Contents
+LlC :: LabelledContent -> Contents
+
+-- | Types of definitions (general, instance, theory, or data).
+data DType
+General :: DType
+Instance :: DType
+Theory :: DType
+Data :: DType
+
+-- | Types of layout objects we deal with explicitly.
+data RawContent
+
+-- | table has: header-row, data(rows), label/caption, and a bool that
+--   determines whether or not to show label.
+Table :: [Sentence] -> [[Sentence]] -> Title -> Bool -> RawContent
+
+-- | Paragraphs are just sentences.
+Paragraph :: Sentence -> RawContent
+
+-- | Block of Equations holds an expression.
+EqnBlock :: DisplayExpr -> RawContent
+
+-- | Grants the ability to label a group of <a>RawContent</a>.
+DerivBlock :: Sentence -> [RawContent] -> RawContent
+
+-- | For enumerated lists.
+Enumeration :: ListType -> RawContent
+
+-- | Defines something with a type, identifier, and <a>Contents</a>.
+Defini :: DType -> [(Identifier, [Contents])] -> RawContent
+
+-- | For creating figures in a document. Should use relative file path.
+Figure :: Lbl -> Filepath -> MaxWidthPercent -> RawContent
+
+-- | Grants the ability to reference something.
+Bib :: BibRef -> RawContent
+
+-- | Contain a graph with coordinates (<a>Sentence</a>s), maybe a width and
+--   height, and a label (<a>Sentence</a>). TODO: Fill this one in.
+Graph :: [(Sentence, Sentence)] -> Maybe Width -> Maybe Height -> Lbl -> RawContent
+
+-- | An identifier is just a <a>String</a>.
+type Identifier = String
+
+-- | Contains a <a>Reference</a> and <a>RawContent</a>.
+data LabelledContent
+LblC :: Reference -> RawContent -> LabelledContent
+[_ref] :: LabelledContent -> Reference
+[_ctype] :: LabelledContent -> RawContent
+
+-- | Only contains <a>RawContent</a>.
+newtype UnlabelledContent
+UnlblC :: RawContent -> UnlabelledContent
+[_cntnts] :: UnlabelledContent -> RawContent
+ref :: Lens' LabelledContent Reference
+ctype :: Lens' LabelledContent RawContent
+cntnts :: Iso' UnlabelledContent RawContent
+
+-- | Members of this class must have <a>RawContent</a>.
+class HasContents c
+
+-- | Provides a <tt>Lens</tt> to the <a>RawContent</a>.
+accessContents :: HasContents c => Lens' c RawContent
+
+-- | Helper to prepend labels to <a>LabelledContent</a> when referencing.
+prependLabel :: RawContent -> IRefProg
+instance Language.Drasil.Document.Core.HasContents Language.Drasil.Document.Core.LabelledContent
+instance Language.Drasil.Document.Core.HasContents Language.Drasil.Document.Core.UnlabelledContent
+instance Language.Drasil.Document.Core.HasContents Language.Drasil.Document.Core.Contents
+instance Language.Drasil.Classes.Core.HasUID Language.Drasil.Document.Core.LabelledContent
+instance Language.Drasil.Classes.Core.HasRefAddress Language.Drasil.Document.Core.LabelledContent
+instance Language.Drasil.Classes.Core2.HasShortName Language.Drasil.Document.Core.LabelledContent
+instance Language.Drasil.Classes.Core.Referable Language.Drasil.Document.Core.LabelledContent
+
+
+-- | Document Description Language
+module Language.Drasil.Document
+
+-- | Section Contents are split into subsections or contents, where
+--   contents are standard layout objects (see <a>Contents</a>).
+data SecCons
+Sub :: Section -> SecCons
+Con :: Contents -> SecCons
+
+-- | Sections have a title (<a>Sentence</a>), a list of contents
+--   (<a>SecCons</a>) and a shortname (<a>Reference</a>).
+data Section
+Section :: Title -> [SecCons] -> Reference -> Section
+[tle] :: Section -> Title
+[cons] :: Section -> [SecCons]
+[_lab] :: Section -> Reference
+lab :: Lens' Section Reference
+
+-- | A Document has a Title (<a>Sentence</a>), Author(s) (<a>Sentence</a>),
+--   and <a>Section</a>s which hold the contents of the document.
+data Document
+Document :: Title -> Author -> [Section] -> Document
+
+-- | Smart constructor for labelled content chunks.
+llcc :: Reference -> RawContent -> LabelledContent
+
+-- | Smart constructor for unlabelled content chunks (no <a>Reference</a>).
+ulcc :: RawContent -> UnlabelledContent
+
+-- | Smart constructor that wraps <a>UnlabelledContent</a> into
+--   <a>Contents</a>.
+mkParagraph :: Sentence -> Contents
+
+-- | Smart constructor that wraps <a>LabelledContent</a> into
+--   <a>Contents</a>.
+mkFig :: Reference -> RawContent -> Contents
+
+-- | Smart constructor similar to <a>llcc</a>, but takes in
+--   <a>RawContent</a> first.
+mkRawLC :: RawContent -> Reference -> LabelledContent
+
+-- | Smart constructor for creating <a>Section</a>s with a title
+--   (<a>Sentence</a>), introductory contents (ie. paragraphs, tables,
+--   etc.), a list of subsections, and a shortname (<a>Reference</a>).
+section :: Sentence -> [Contents] -> [Section] -> Reference -> Section
+
+-- | Smart constructor for retrieving the contents (<a>Section</a>s) from a
+--   <a>Document</a>.
+extractSection :: Document -> [Section]
+
+-- | Smart constructor for retrieving the subsections (<a>Section</a>s)
+--   within a <a>Section</a>.
+getSec :: Section -> [Section]
+
+-- | Helper to retrieve subsections (<a>Section</a>s) from section contents
+--   (<a>SecCons</a>).
+getSecCons :: SecCons -> [Section]
+
+-- | <a>Figure</a> smart constructor with a <a>Lbl</a> and a
+--   <a>Filepath</a>. Assumes 100% of page width as max width.
+fig :: Lbl -> Filepath -> RawContent
+
+-- | <a>Figure</a> smart constructor that allows for customized max widths.
+figWithWidth :: Lbl -> Filepath -> MaxWidthPercent -> RawContent
+
+-- | Create a reference for a table. Takes in the name of a table (which
+--   will also be used for its shortname).
+makeTabRef :: String -> Reference
+
+-- | Create a reference for a figure. Takes in the name of a figure (which
+--   will also be used for its shortname).
+makeFigRef :: String -> Reference
+
+-- | Create a reference for a section. Takes in the name of a section and a
+--   shortname for the section.
+makeSecRef :: String -> Sentence -> Reference
+
+-- | Create a reference for a list. Takes in the name of the list and a
+--   shortname for the list.
+makeLstRef :: String -> Sentence -> Reference
+
+-- | Create a reference for a <a>URI</a>.
+makeURI :: UID -> String -> ShortName -> Reference
+instance Language.Drasil.Classes.Core.HasUID Language.Drasil.Document.Section
+instance Language.Drasil.Classes.Core2.HasShortName Language.Drasil.Document.Section
+instance Language.Drasil.Classes.Core.Referable Language.Drasil.Document.Section
+instance Language.Drasil.Classes.Core.HasRefAddress Language.Drasil.Document.Section
+
+
+-- | Defining classes that represent knowledge about Documents
+module Language.Drasil.Classes.Document
+
+-- | Some documents, as well as some pieces of knowledge, have citations.
+class HasCitation c
+
+-- | Provides a <tt>Lens</tt> to the citations.
+getCitations :: HasCitation c => Lens' c [Citation]
 
 
 -- | Defining all the classes which represent knowledge-about-knowledge
@@ -2068,14 +2621,8 @@ cdom :: ConceptDomain c => c -> [UID]
 --   It does not enforce <a>Quantity</a> at this point.
 class Constrained c
 
--- | Provides a <tt>Lens</tt> to the <a>Constraint</a>s.
-constraints :: Constrained c => Lens' c [Constraint]
-
--- | Has a function that turns into a <a>Relation</a>.
-class ExprRelat c
-
--- | Holds a relation.
-relat :: ExprRelat c => c -> Relation
+-- | Provides a <tt>Lens</tt> to the <tt>Constraint</tt>s.
+constraints :: Constrained c => Lens' c [ConstraintE]
 
 -- | CommonIdea is a <a>NamedIdea</a> with the additional constraint that
 --   it <b>must</b> have an abbreviation.
@@ -2084,11 +2631,15 @@ class NamedIdea c => CommonIdea c
 -- | Introduces abrv which necessarily provides an abbreviation.
 abrv :: CommonIdea c => c -> String
 
--- | A better version of <a>ExprRelat</a> that holds an <a>Expr</a>.
+-- | A better version of <tt>ExprRelat</tt> that holds an <a>Expr</a>.
 class DefiningExpr c
 
 -- | Provides a <tt>Lens</tt> to the expression.
 defnExpr :: DefiningExpr c => Lens' c Expr
+
+-- | Data that can convert into a Displayable <a>Expr</a>.
+class Display c
+toDispExpr :: Display c => c -> DisplayExpr
 
 -- | A Quantity is an <a>Idea</a> with a <a>Space</a> and a
 --   <tt>Symbol</tt>. In theory, it should also restrict to being a part of
@@ -2106,16 +2657,6 @@ unc :: HasUncertainty c => Lens' c Uncertainty
 
 -- | Concepts are <a>Idea</a>s with definitions and domains.
 type Concept c = (Idea c, Definition c, ConceptDomain c)
-
--- | Members of this class have the ability to be referenced.
-class HasUID s => Referable s
-
--- | The referencing address (what we're linking to). Only visible in the
---   source (tex/html).
-refAdd :: Referable s => s -> String
-
--- | Alternate form of reference.
-renderRef :: Referable s => s -> LblType
 
 -- | Some chunks can be called like functions.
 class (HasSymbol c) => Callable c
@@ -2236,11 +2777,6 @@ str :: String -> Expr
 
 -- | Smart constructors for percents.
 perc :: Integer -> Integer -> Expr
-
--- | Smart constructor for set membership. FIXME: first argument really
---   ought to be restricted to a <tt>Variable</tt>, as <a>IsIn</a> should
---   only be used as a type proxy.
-isin :: Expr -> Space -> Expr
 
 -- | Smart constructor for the summation, product, and integral functions
 --   over an interval.
@@ -2474,9 +3010,9 @@ instance Language.Drasil.Classes.NamedIdea Language.Drasil.Chunk.Concept.Core.Co
 instance Language.Drasil.Classes.Idea Language.Drasil.Chunk.Concept.Core.ConceptInstance
 instance Language.Drasil.Classes.Definition Language.Drasil.Chunk.Concept.Core.ConceptInstance
 instance Language.Drasil.Classes.ConceptDomain Language.Drasil.Chunk.Concept.Core.ConceptInstance
-instance Language.Drasil.Classes.Core.HasShortName Language.Drasil.Chunk.Concept.Core.ConceptInstance
+instance Language.Drasil.Classes.Core2.HasShortName Language.Drasil.Chunk.Concept.Core.ConceptInstance
 instance Language.Drasil.Classes.Core.HasRefAddress Language.Drasil.Chunk.Concept.Core.ConceptInstance
-instance Language.Drasil.Classes.Referable Language.Drasil.Chunk.Concept.Core.ConceptInstance
+instance Language.Drasil.Classes.Core.Referable Language.Drasil.Chunk.Concept.Core.ConceptInstance
 instance GHC.Classes.Eq Language.Drasil.Chunk.Concept.Core.CommonConcept
 instance Language.Drasil.Classes.Core.HasUID Language.Drasil.Chunk.Concept.Core.CommonConcept
 instance Language.Drasil.Classes.NamedIdea Language.Drasil.Chunk.Concept.Core.CommonConcept
@@ -2519,7 +3055,7 @@ dccWDS' :: String -> NP -> Sentence -> String -> CommonConcept
 --   tagging.
 cc :: Idea c => c -> String -> ConceptChunk
 
--- | Same as cc, except definition is a <a>Sentence</a>.
+-- | Same as <a>cc</a>, except definition is a <a>Sentence</a>.
 cc' :: Idea c => c -> Sentence -> ConceptChunk
 
 -- | Similar to <a>cc'</a>, but allows explicit tagging.
@@ -2554,380 +3090,12 @@ makeRC :: UID -> NP -> Sentence -> Relation -> RelationConcept
 --   a <a>Concept</a>, new <a>UID</a> and relation.
 addRelToCC :: Concept c => c -> UID -> Relation -> RelationConcept
 instance Language.Drasil.Classes.Core.HasUID Language.Drasil.Chunk.Relation.RelationConcept
+instance GHC.Classes.Eq Language.Drasil.Chunk.Relation.RelationConcept
 instance Language.Drasil.Classes.NamedIdea Language.Drasil.Chunk.Relation.RelationConcept
 instance Language.Drasil.Classes.Idea Language.Drasil.Chunk.Relation.RelationConcept
 instance Language.Drasil.Classes.Definition Language.Drasil.Chunk.Relation.RelationConcept
 instance Language.Drasil.Classes.ConceptDomain Language.Drasil.Chunk.Relation.RelationConcept
-instance Language.Drasil.Classes.ExprRelat Language.Drasil.Chunk.Relation.RelationConcept
-instance GHC.Classes.Eq Language.Drasil.Chunk.Relation.RelationConcept
-
-module Language.Drasil.Chunk.Citation
-
--- | All citations require a unique identifier used by the Drasil chunk. We
---   will re-use the <a>UID</a> part as an EntryID (<a>String</a>) used for
---   creating reference links. Finally we will have the reference
---   information (<a>CitationKind</a>, <a>CiteField</a>s, and a
---   <a>ShortName</a>).
-data Citation
-type BibRef = [Citation] " A list of 'Citation's."
-type EntryID = String " A 'String' that should contain no spaces."
-citeID :: Lens' Citation UID
-citeKind :: Lens' Citation CitationKind
-
--- | Article citation requires author(s), title, journal, year. Optional
---   fields can be: volume, number, pages, month, and note. Implicitly uses
---   the EntryID as the chunk id.
-cArticle :: People -> String -> String -> Int -> [CiteField] -> String -> Citation
-
--- | Book citation by author.
---   
---   Book citation requires author or editor, title, publisher, year.
---   Optional fields can be volume or number, series, address, edition,
---   month, and note. Implicitly uses the EntryID as the chunk id.
-cBookA :: People -> String -> String -> Int -> [CiteField] -> String -> Citation
-
--- | Book citation by editor.
---   
---   Book citation requires author or editor, title, publisher, year.
---   Optional fields can be volume or number, series, address, edition,
---   month, and note. Implicitly uses the EntryID as the chunk id.
-cBookE :: People -> String -> String -> Int -> [CiteField] -> String -> Citation
-
--- | Booklet citation requires title. Optional fields can be author, how
---   published, address, month, year, note. Implicitly uses the EntryID as
---   the chunk id.
-cBooklet :: String -> [CiteField] -> String -> Citation
-
--- | InBook citation by author.
---   
---   InBook citation requires author or editor, title, chapter and/or
---   pages, publisher, year. Optional fields can be volume or number,
---   series, type, address, edition, month, and note. Implicitly uses the
---   EntryID as the chunk id. This smart constructor includes both chapter
---   and page numbers.
-cInBookACP :: People -> String -> Int -> [Int] -> String -> Int -> [CiteField] -> String -> Citation
-
--- | InBook citation by editor.
---   
---   InBook citation requires author or editor, title, chapter and/or
---   pages, publisher, year. Optional fields can be volume or number,
---   series, type, address, edition, month, and note. Implicitly uses the
---   EntryID as the chunk id. This smart constructor includes both chapter
---   and page numbers.
-cInBookECP :: People -> String -> Int -> [Int] -> String -> Int -> [CiteField] -> String -> Citation
-
--- | Otherwise identical to <a>cInBookACP</a>.
---   
---   InBook citation excluding page numbers.
-cInBookAC :: People -> String -> Int -> String -> Int -> [CiteField] -> String -> Citation
-
--- | Otherwise identical to <a>cInBookECP</a>.
---   
---   InBook citation excluding page numbers.
-cInBookEC :: People -> String -> Int -> String -> Int -> [CiteField] -> String -> Citation
-
--- | Otherwise identical to <a>cInBookACP</a>.
---   
---   InBook citation excluding chapter.
-cInBookAP :: People -> String -> [Int] -> String -> Int -> [CiteField] -> String -> Citation
-
--- | Otherwise identical to <a>cInBookECP</a>.
---   
---   InBook citation excluding chapter.
-cInBookEP :: People -> String -> [Int] -> String -> Int -> [CiteField] -> String -> Citation
-
--- | InCollection citation requires author, title, bookTitle, publisher,
---   year. Optional fields can be editor, volume or number, series, type,
---   chapter, pages, address, edition, month, and note. Implicitly uses the
---   EntryID as the chunk id.
-cInCollection :: People -> String -> String -> String -> Int -> [CiteField] -> String -> Citation
-
--- | InProceedings citation requires author, title, bookTitle, year.
---   Optional fields can be editor, volume or number, series, pages,
---   address, month, organization, publisher, and note. Implicitly uses the
---   EntryID as the chunk id.
-cInProceedings :: People -> String -> String -> Int -> [CiteField] -> String -> Citation
-
--- | Manual (technical documentation) citation requires title. Optional
---   fields can be author, organization, address, edition, month, year, and
---   note. Implicitly uses the EntryID as the chunk id.
-cManual :: String -> [CiteField] -> String -> Citation
-
--- | Master's Thesis citation requires author, title, school, and year.
---   Optional fields can be type, address, month, and note. Implicitly uses
---   the EntryID as the chunk id.
-cMThesis :: People -> String -> String -> Int -> [CiteField] -> String -> Citation
-
--- | Misc citation requires nothing. Optional fields can be author, title,
---   howpublished, month, year, and note. Implicitly uses the EntryID as
---   the chunk id.
-cMisc :: [CiteField] -> String -> Citation
-
--- | PhD Thesis citation requires author, title, school, and year. Optional
---   fields can be type, address, month, and note. Implicitly uses the
---   EntryID as the chunk id.
-cPhDThesis :: People -> String -> String -> Int -> [CiteField] -> String -> Citation
-
--- | Proceedings citation requires title and year. Optional fields can be
---   editor, volume or number, series, address, publisher, note, month, and
---   organization. Implicitly uses the EntryID as the chunk id.
-cProceedings :: String -> Int -> [CiteField] -> String -> Citation
-
--- | Technical Report citation requires author, title, institution, and
---   year. Optional fields can be type, number, address, month, and note.
---   Implicitly uses the EntryID as the chunk id.
-cTechReport :: People -> String -> String -> Int -> [CiteField] -> String -> Citation
-
--- | Unpublished citation requires author, title, and note. Optional fields
---   can be month and year. Implicitly uses the EntryID as the chunk id.
-cUnpublished :: People -> String -> String -> [CiteField] -> String -> Citation
-instance Language.Drasil.Classes.Core.HasUID Language.Drasil.Chunk.Citation.Citation
-instance Language.Drasil.Classes.Core.HasShortName Language.Drasil.Chunk.Citation.Citation
-instance Language.Drasil.Classes.Citations.HasFields Language.Drasil.Chunk.Citation.Citation
-instance Language.Drasil.Classes.Referable Language.Drasil.Chunk.Citation.Citation
-
-module Language.Drasil.Reference
-
--- | Projector function that creates a <a>Reference</a> from something
---   <a>Referable</a>.
-makeRef2 :: (Referable l, HasShortName l) => l -> Reference
-
--- | Makes a reference from the given argument and then wraps it into a
---   <a>Sentence</a>.
-makeRef2S :: (Referable l, HasShortName l) => l -> Sentence
-
--- | Similar to <a>makeRef2</a>, but only turns a citation into a
---   reference.
-makeCite :: Citation -> Reference
-
--- | Similar to <a>makeRef2S</a>, but only takes a citation.
-makeCiteS :: Citation -> Sentence
-
--- | Makes a <a>Reference</a> from a <a>Citation</a> with additional
---   information.
-makeCiteInfo :: Citation -> RefInfo -> Reference
-
--- | Makes a <a>Reference</a> from a <a>Citation</a> with additional
---   information and then wraps into <a>Sentence</a> form.
-makeCiteInfoS :: Citation -> RefInfo -> Sentence
-
-module Language.Drasil.Document.Core
-
--- | Denotes the different possible types that can be used as a list.
-data ListType
-
--- | Bulleted list.
-Bullet :: [(ItemType, Maybe String)] -> ListType
-
--- | Enumerated list.
-Numeric :: [(ItemType, Maybe String)] -> ListType
-
--- | Simple list with items denoted by <tt>-</tt>.
-Simple :: [ListTuple] -> ListType
-
--- | Descriptive list, renders as "Title: Item" (see <a>ListTuple</a>).
-Desc :: [ListTuple] -> ListType
-
--- | Renders a list of "<tt><a>Title</a></tt> is the <tt>Item</tt>".
-Definitions :: [ListTuple] -> ListType
-
--- | Denotes how something should behave in a list (<a>ListType</a>).
-data ItemType
-
--- | Standard singular item.
-Flat :: Sentence -> ItemType
-
--- | Nest a list (<a>ListType</a>) as an item.
-Nested :: Header -> ListType -> ItemType
-
--- | MaxWidthPercent should be kept in the range 1-100. Values outside this
---   range may have unexpected results. Used for specifying max figure
---   width as <tt>pagewidth*MaxWidthPercent/100</tt>.
-type MaxWidthPercent = Float
-type Title = Sentence
-type Author = Sentence
-type Header = Sentence " Used when creating sublists."
-type Depth = Int
-type Width = Float
-type Height = Float
-type ListTuple = (Title, ItemType, Maybe String) " Formats as Title: Item."
-type Filepath = String
-type Lbl = Sentence
-
--- | Contents may be labelled or unlabelled.
-data Contents
-UlC :: UnlabelledContent -> Contents
-LlC :: LabelledContent -> Contents
-
--- | Types of definitions (general, instance, theory, or data).
-data DType
-General :: DType
-Instance :: DType
-Theory :: DType
-Data :: DType
-
--- | Types of layout objects we deal with explicitly.
-data RawContent
-
--- | table has: header-row, data(rows), label/caption, and a bool that
---   determines whether or not to show label.
-Table :: [Sentence] -> [[Sentence]] -> Title -> Bool -> RawContent
-
--- | Paragraphs are just sentences.
-Paragraph :: Sentence -> RawContent
-
--- | Block of Equations holds an expression.
-EqnBlock :: Expr -> RawContent
-
--- | Grants the ability to label a group of <a>RawContent</a>.
-DerivBlock :: Sentence -> [RawContent] -> RawContent
-
--- | For enumerated lists.
-Enumeration :: ListType -> RawContent
-
--- | Defines something with a type, identifier, and <a>Contents</a>.
-Defini :: DType -> [(Identifier, [Contents])] -> RawContent
-
--- | Should use relative file path.
-Figure :: Lbl -> Filepath -> MaxWidthPercent -> RawContent
-
--- | Grants the ability to reference something.
-Bib :: BibRef -> RawContent
-
--- | Contain a graph with coordinates (<a>Sentence</a>s), maybe a width and
---   height, and a label (<a>Sentence</a>). TODO: Fill this one in. | An
---   identifier is just a <a>String</a>.
-Graph :: [(Sentence, Sentence)] -> Maybe Width -> Maybe Height -> Lbl -> RawContent
-type Identifier = String
-
--- | Contains a <a>Reference</a> and <a>RawContent</a>.
-data LabelledContent
-LblC :: Reference -> RawContent -> LabelledContent
-[_ref] :: LabelledContent -> Reference
-[_ctype] :: LabelledContent -> RawContent
-
--- | Only contains <a>RawContent</a>.
-newtype UnlabelledContent
-UnlblC :: RawContent -> UnlabelledContent
-[_cntnts] :: UnlabelledContent -> RawContent
-ref :: Lens' LabelledContent Reference
-ctype :: Lens' LabelledContent RawContent
-cntnts :: Iso' UnlabelledContent RawContent
-
--- | Members of this class must have <a>RawContent</a>.
-class HasContents c
-
--- | Provides a <tt>Lens</tt> to the <a>RawContent</a>.
-accessContents :: HasContents c => Lens' c RawContent
-
--- | Reference the different types of <a>RawContent</a> in different
---   manners.
-refLabelledCon :: RawContent -> IRefProg
-instance Language.Drasil.Document.Core.HasContents Language.Drasil.Document.Core.LabelledContent
-instance Language.Drasil.Document.Core.HasContents Language.Drasil.Document.Core.UnlabelledContent
-instance Language.Drasil.Document.Core.HasContents Language.Drasil.Document.Core.Contents
-instance Language.Drasil.Classes.Core.HasUID Language.Drasil.Document.Core.LabelledContent
-instance Language.Drasil.Classes.Core.HasRefAddress Language.Drasil.Document.Core.LabelledContent
-instance Language.Drasil.Classes.Core.HasShortName Language.Drasil.Document.Core.LabelledContent
-instance Language.Drasil.Classes.Referable Language.Drasil.Document.Core.LabelledContent
-
-
--- | Document Description Language
-module Language.Drasil.Document
-
--- | Section Contents are split into subsections or contents, where
---   contents are standard layout objects (see <a>Contents</a>).
-data SecCons
-Sub :: Section -> SecCons
-Con :: Contents -> SecCons
-
--- | Sections have a title (<a>Sentence</a>), a list of contents
---   (<a>SecCons</a>) and a shortname (<a>Reference</a>).
-data Section
-Section :: Title -> [SecCons] -> Reference -> Section
-[tle] :: Section -> Title
-[cons] :: Section -> [SecCons]
-[_lab] :: Section -> Reference
-lab :: Lens' Section Reference
-
--- | A Document has a Title (<a>Sentence</a>), Author(s) (<a>Sentence</a>),
---   and <a>Section</a>s which hold the contents of the document.
-data Document
-Document :: Title -> Author -> [Section] -> Document
-
--- | Smart constructor for labelled content chunks.
-llcc :: Reference -> RawContent -> LabelledContent
-
--- | Smart constructor for unlabelled content chunks (no <a>Reference</a>).
-ulcc :: RawContent -> UnlabelledContent
-
--- | Smart constructor that wraps <a>UnlabelledContent</a> into
---   <a>Contents</a>.
-mkParagraph :: Sentence -> Contents
-
--- | Smart constructor that wraps <a>LabelledContent</a> into
---   <a>Contents</a>.
-mkFig :: Reference -> RawContent -> Contents
-
--- | Smart constructor similar to <a>llcc</a>, but takes in
---   <a>RawContent</a> first.
-mkRawLC :: RawContent -> Reference -> LabelledContent
-
--- | Smart constructor for creating <a>Section</a>s with a title
---   (<a>Sentence</a>), introductory contents (ie. paragraphs, tables,
---   etc.), a list of subsections, and a shortname (<a>Reference</a>).
-section :: Sentence -> [Contents] -> [Section] -> Reference -> Section
-
--- | Smart constructor for retrieving the contents (<a>Section</a>s) from a
---   <a>Document</a>.
-extractSection :: Document -> [Section]
-
--- | Smart constructor for retrieving the subsections (<a>Section</a>s)
---   within a <a>Section</a>.
-getSec :: Section -> [Section]
-
--- | Helper to retrieve subsections (<a>Section</a>s) from section contents
---   (<a>SecCons</a>).
-getSecCons :: SecCons -> [Section]
-
--- | <a>Figure</a> smart constructor with a <a>Lbl</a> and a
---   <a>Filepath</a>. Assumes 100% of page width as max width.
-fig :: Lbl -> Filepath -> RawContent
-
--- | <a>Figure</a> smart constructor that allows for customized max widths.
-figWithWidth :: Lbl -> Filepath -> MaxWidthPercent -> RawContent
-
--- | Create a reference for a table. Takes in the name of a table (which
---   will also be used for its shortname).
-makeTabRef :: String -> Reference
-
--- | Create a reference for a figure. Takes in the name of a figure (which
---   will also be used for its shortname).
-makeFigRef :: String -> Reference
-
--- | Create a reference for a section. Takes in the name of a section and a
---   shortname for the section.
-makeSecRef :: String -> String -> Reference
-
--- | Create a reference for a list. Takes in the name of the list and a
---   shortname for the list.
-makeLstRef :: String -> String -> Reference
-
--- | Create a reference for a <a>URI</a>.
-makeURI :: UID -> String -> ShortName -> Reference
-instance Language.Drasil.Classes.Core.HasUID Language.Drasil.Document.Section
-instance Language.Drasil.Classes.Core.HasShortName Language.Drasil.Document.Section
-instance Language.Drasil.Classes.Referable Language.Drasil.Document.Section
-
-
--- | Defining classes that represent knowledge about Documents
-module Language.Drasil.Classes.Document
-
--- | Some documents, as well as some pieces of knowledge, have citations.
-class HasCitation c
-
--- | Provides a <tt>Lens</tt> to the citations.
-getCitations :: HasCitation c => Lens' c [Citation]
+instance Language.Drasil.DisplayClasses.Display Language.Drasil.Chunk.Relation.RelationConcept
 
 module Language.Drasil.Chunk.UnitDefn
 
@@ -3100,6 +3268,7 @@ instance Language.Drasil.Classes.Core.HasSymbol Language.Drasil.Chunk.Quantity.Q
 instance Language.Drasil.Classes.Quantity Language.Drasil.Chunk.Quantity.QuantityDict
 instance GHC.Classes.Eq Language.Drasil.Chunk.Quantity.QuantityDict
 instance Language.Drasil.Chunk.UnitDefn.MayHaveUnit Language.Drasil.Chunk.Quantity.QuantityDict
+instance Language.Drasil.DisplayClasses.Display Language.Drasil.Chunk.Quantity.QuantityDict
 
 module Language.Drasil.Chunk.Unitary
 
@@ -3221,7 +3390,7 @@ instance Language.Drasil.Classes.Quantity Language.Drasil.Chunk.Eq.QDefinition
 instance Language.Drasil.Classes.DefiningExpr Language.Drasil.Chunk.Eq.QDefinition
 instance GHC.Classes.Eq Language.Drasil.Chunk.Eq.QDefinition
 instance Language.Drasil.Chunk.UnitDefn.MayHaveUnit Language.Drasil.Chunk.Eq.QDefinition
-instance Language.Drasil.Classes.ExprRelat Language.Drasil.Chunk.Eq.QDefinition
+instance Language.Drasil.DisplayClasses.Display Language.Drasil.Chunk.Eq.QDefinition
 instance Language.Drasil.Classes.ConceptDomain Language.Drasil.Chunk.Eq.QDefinition
 
 module Language.Drasil.Chunk.DefinedQuantity
@@ -3261,6 +3430,7 @@ instance Language.Drasil.Classes.HasSpace Language.Drasil.Chunk.DefinedQuantity.
 instance Language.Drasil.Classes.Core.HasSymbol Language.Drasil.Chunk.DefinedQuantity.DefinedQuantityDict
 instance Language.Drasil.Classes.Quantity Language.Drasil.Chunk.DefinedQuantity.DefinedQuantityDict
 instance Language.Drasil.Chunk.UnitDefn.MayHaveUnit Language.Drasil.Chunk.DefinedQuantity.DefinedQuantityDict
+instance Language.Drasil.DisplayClasses.Display Language.Drasil.Chunk.DefinedQuantity.DefinedQuantityDict
 
 module Language.Drasil.Chunk.Unital
 
@@ -3307,25 +3477,26 @@ instance Language.Drasil.Classes.Quantity Language.Drasil.Chunk.Unital.UnitalChu
 instance Language.Drasil.Chunk.Unitary.Unitary Language.Drasil.Chunk.Unital.UnitalChunk
 instance Language.Drasil.Chunk.UnitDefn.MayHaveUnit Language.Drasil.Chunk.Unital.UnitalChunk
 instance GHC.Classes.Eq Language.Drasil.Chunk.Unital.UnitalChunk
+instance Language.Drasil.DisplayClasses.Display Language.Drasil.Chunk.Unital.UnitalChunk
 
 module Language.Drasil.Chunk.Constrained
 
 -- | ConstrainedChunks are symbolic quantities (<a>QuantityDict</a>) with
---   <a>Constraint</a>s and maybe a typical value (<a>Maybe</a>
+--   <tt>Constraint</tt>s and maybe a typical value (<a>Maybe</a>
 --   <a>Expr</a>).
 data ConstrainedChunk
-ConstrainedChunk :: QuantityDict -> [Constraint] -> Maybe Expr -> ConstrainedChunk
+ConstrainedChunk :: QuantityDict -> [ConstraintE] -> Maybe Expr -> ConstrainedChunk
 [_qd] :: ConstrainedChunk -> QuantityDict
-[_constr] :: ConstrainedChunk -> [Constraint]
+[_constr] :: ConstrainedChunk -> [ConstraintE]
 [_reasV] :: ConstrainedChunk -> Maybe Expr
 
 -- | ConstrConcepts are conceptual symbolic quantities
---   (<a>DefinedQuantityDict</a>) with <a>Constraint</a>s and maybe a
+--   (<a>DefinedQuantityDict</a>) with <tt>Constraint</tt>s and maybe a
 --   reasonable value (no units!).
 data ConstrConcept
-ConstrConcept :: DefinedQuantityDict -> [Constraint] -> Maybe Expr -> ConstrConcept
+ConstrConcept :: DefinedQuantityDict -> [ConstraintE] -> Maybe Expr -> ConstrConcept
 [_defq] :: ConstrConcept -> DefinedQuantityDict
-[_constr'] :: ConstrConcept -> [Constraint]
+[_constr'] :: ConstrConcept -> [ConstraintE]
 [_reasV'] :: ConstrConcept -> Maybe Expr
 
 -- | Creates a new ConstrainedChunk from either a <a>ConstrainedChunk</a>,
@@ -3336,31 +3507,31 @@ cnstrw :: (Quantity c, Constrained c, HasReasVal c, MayHaveUnit c) => c -> Const
 cnstrw' :: (Quantity c, Concept c, Constrained c, HasReasVal c, MayHaveUnit c) => c -> ConstrConcept
 
 -- | Creates a <a>ConstrConcept</a> with a quantitative concept, a list of
---   <a>Constraint</a>s and an <a>Expr</a>.
-constrained' :: (Concept c, MayHaveUnit c, Quantity c) => c -> [Constraint] -> Expr -> ConstrConcept
+--   <tt>Constraint</tt>s and an <a>Expr</a>.
+constrained' :: (Concept c, MayHaveUnit c, Quantity c) => c -> [ConstraintE] -> Expr -> ConstrConcept
 
 -- | Similar to <a>constrained'</a>, but defaults <a>Maybe</a> <a>Expr</a>
 --   to <a>Nothing</a>.
-constrainedNRV' :: (Concept c, MayHaveUnit c, Quantity c) => c -> [Constraint] -> ConstrConcept
+constrainedNRV' :: (Concept c, MayHaveUnit c, Quantity c) => c -> [ConstraintE] -> ConstrConcept
 
 -- | Creates a constrained unitary chunk from a <tt>UID</tt>, term
---   (<a>NP</a>), <a>Symbol</a>, unit, <a>Space</a>, <a>Constraint</a>s,
+--   (<a>NP</a>), <a>Symbol</a>, unit, <a>Space</a>, <tt>Constraint</tt>s,
 --   and an <a>Expr</a>.
-cuc :: IsUnit u => String -> NP -> Symbol -> u -> Space -> [Constraint] -> Expr -> ConstrainedChunk
+cuc :: IsUnit u => String -> NP -> Symbol -> u -> Space -> [ConstraintE] -> Expr -> ConstrainedChunk
 
 -- | Creates a constrained unitary chunk from a <tt>UID</tt>, term
 --   (<a>NP</a>), description (<a>String</a>), <a>Symbol</a>, unit,
---   <a>Space</a>, <a>Constraint</a>s, and an <a>Expr</a>.
-cuc' :: IsUnit u => String -> NP -> String -> Symbol -> u -> Space -> [Constraint] -> Expr -> ConstrConcept
+--   <a>Space</a>, <tt>Constraint</tt>s, and an <a>Expr</a>.
+cuc' :: IsUnit u => String -> NP -> String -> Symbol -> u -> Space -> [ConstraintE] -> Expr -> ConstrConcept
 
 -- | Similar to <a>cuc'</a>, but <a>Symbol</a> is dependent on
 --   <a>Stage</a>.
-cuc'' :: IsUnit u => String -> NP -> String -> (Stage -> Symbol) -> u -> Space -> [Constraint] -> Expr -> ConstrConcept
+cuc'' :: IsUnit u => String -> NP -> String -> (Stage -> Symbol) -> u -> Space -> [ConstraintE] -> Expr -> ConstrConcept
 
 -- | Creates a constrained unitary chunk from a <tt>UID</tt>, term
---   (<a>NP</a>), <a>Symbol</a>, <a>Space</a>, <a>Constraint</a>s, and a
+--   (<a>NP</a>), <a>Symbol</a>, <a>Space</a>, <tt>Constraint</tt>s, and a
 --   <a>Maybe</a> <a>Expr</a> (Similar to <a>cuc</a> but no units).
-cvc :: String -> NP -> Symbol -> Space -> [Constraint] -> Maybe Expr -> ConstrainedChunk
+cvc :: String -> NP -> Symbol -> Space -> [ConstraintE] -> Maybe Expr -> ConstrainedChunk
 instance Language.Drasil.Classes.Core.HasUID Language.Drasil.Chunk.Constrained.ConstrConcept
 instance Language.Drasil.Classes.NamedIdea Language.Drasil.Chunk.Constrained.ConstrConcept
 instance Language.Drasil.Classes.Idea Language.Drasil.Chunk.Constrained.ConstrConcept
@@ -3373,6 +3544,7 @@ instance Language.Drasil.Classes.Constrained Language.Drasil.Chunk.Constrained.C
 instance Language.Drasil.Classes.HasReasVal Language.Drasil.Chunk.Constrained.ConstrConcept
 instance GHC.Classes.Eq Language.Drasil.Chunk.Constrained.ConstrConcept
 instance Language.Drasil.Chunk.UnitDefn.MayHaveUnit Language.Drasil.Chunk.Constrained.ConstrConcept
+instance Language.Drasil.DisplayClasses.Display Language.Drasil.Chunk.Constrained.ConstrConcept
 instance Language.Drasil.Classes.Core.HasUID Language.Drasil.Chunk.Constrained.ConstrainedChunk
 instance Language.Drasil.Classes.NamedIdea Language.Drasil.Chunk.Constrained.ConstrainedChunk
 instance Language.Drasil.Classes.Idea Language.Drasil.Chunk.Constrained.ConstrainedChunk
@@ -3404,10 +3576,10 @@ UCh :: ConstrainedChunk -> Uncertainty -> UncertainChunk
 uq :: (Quantity c, Constrained c, Concept c, HasReasVal c, MayHaveUnit c) => c -> Uncertainty -> UncertQ
 
 -- | Uncertainty quantity (<a>uq</a>) but with a constraint.
-uqc :: IsUnit u => String -> NP -> String -> Symbol -> u -> Space -> [Constraint] -> Expr -> Uncertainty -> UncertQ
+uqc :: IsUnit u => String -> NP -> String -> Symbol -> u -> Space -> [ConstraintE] -> Expr -> Uncertainty -> UncertQ
 
 -- | Uncertainty quantity constraint (<a>uqc</a>) without a description.
-uqcND :: IsUnit u => String -> NP -> Symbol -> u -> Space -> [Constraint] -> Expr -> Uncertainty -> UncertQ
+uqcND :: IsUnit u => String -> NP -> Symbol -> u -> Space -> [ConstraintE] -> Expr -> Uncertainty -> UncertQ
 
 -- | Smart constructor that can project to an <a>UncertainChunk</a> (also
 --   given an <a>Uncertainty</a>).
@@ -3416,7 +3588,7 @@ uncrtnChunk :: (Quantity c, Constrained c, HasReasVal c, MayHaveUnit c) => c -> 
 -- | Creates an uncertain variable chunk. Takes <tt>UID</tt>, term
 --   (<a>NP</a>), <a>Symbol</a>, <a>Space</a>, <tt>Constrains</tt>,
 --   <a>Expr</a>, and <a>Uncertainty</a>.
-uvc :: String -> NP -> Symbol -> Space -> [Constraint] -> Expr -> Uncertainty -> UncertainChunk
+uvc :: String -> NP -> Symbol -> Space -> [ConstraintE] -> Expr -> Uncertainty -> UncertainChunk
 
 -- | Projection function into an <a>UncertainChunk</a> from <a>UncertQ</a>
 --   or an <a>UncertainChunk</a>.
@@ -3434,6 +3606,7 @@ instance Language.Drasil.Classes.HasReasVal Language.Drasil.Chunk.UncertainQuant
 instance Language.Drasil.Classes.Definition Language.Drasil.Chunk.UncertainQuantity.UncertQ
 instance Language.Drasil.Classes.ConceptDomain Language.Drasil.Chunk.UncertainQuantity.UncertQ
 instance Language.Drasil.Chunk.UnitDefn.MayHaveUnit Language.Drasil.Chunk.UncertainQuantity.UncertQ
+instance Language.Drasil.DisplayClasses.Display Language.Drasil.Chunk.UncertainQuantity.UncertQ
 instance Language.Drasil.Classes.Core.HasUID Language.Drasil.Chunk.UncertainQuantity.UncertainChunk
 instance GHC.Classes.Eq Language.Drasil.Chunk.UncertainQuantity.UncertainChunk
 instance Language.Drasil.Classes.NamedIdea Language.Drasil.Chunk.UncertainQuantity.UncertainChunk
@@ -3491,25 +3664,6 @@ data Expr
 --   </ul>
 [FCall] :: UID -> [Expr] -> [(UID, Expr)] -> Expr
 
--- | Actor creation given <a>UID</a>, parameters, and named parameters.
-[New] :: UID -> [Expr] -> [(UID, Expr)] -> Expr
-
--- | Message an actor:
---   
---   <ul>
---   <li>1st <a>UID</a> is the actor,</li>
---   <li>2nd <a>UID</a> is the method.</li>
---   </ul>
-[Message] :: UID -> UID -> [Expr] -> [(UID, Expr)] -> Expr
-
--- | Access a field of an actor:
---   
---   <ul>
---   <li>1st <a>UID</a> is the actor,</li>
---   <li>2nd <a>UID</a> is the field.</li>
---   </ul>
-[Field] :: UID -> UID -> Expr
-
 -- | For multi-case expressions, each pair represents one case.
 [Case] :: Completeness -> [(Expr, Relation)] -> Expr
 
@@ -3556,11 +3710,9 @@ data Expr
 --   Summation is represented via <tt>Add</tt> over a discrete domain.
 [Operator] :: AssocArithOper -> DomainDesc Expr Expr -> Expr -> Expr
 
--- | The expression is an element of a space.
-[IsIn] :: Expr -> Space -> Expr
-
--- | A different kind of <a>IsIn</a>. A <a>UID</a> is an element of an
---   interval.
+-- | The expression is an element of a space. IsIn :: Expr -&gt; Space
+--   -&gt; Expr | A different kind of <tt>IsIn</tt>. A <a>UID</a> is an
+--   element of an interval.
 [RealI] :: UID -> RealInterval Expr Expr -> Expr
 
 -- | Unary functions (abs, log, ln, sin, etc.).
@@ -3705,9 +3857,6 @@ mulI :: Expr -> Expr -> Expr
 -- | Multiply two expressions (Real numbers).
 mulRe :: Expr -> Expr -> Expr
 
--- | Get dependencies from an equation.
-dep :: Expr -> [String]
-
 -- | Smart constructor for taking the absolute value of an expression.
 abs_ :: Expr -> Expr
 
@@ -3805,11 +3954,6 @@ str :: String -> Expr
 -- | Smart constructors for percents.
 perc :: Integer -> Integer -> Expr
 
--- | Smart constructor for set membership. FIXME: first argument really
---   ought to be restricted to a <tt>Variable</tt>, as <a>IsIn</a> should
---   only be used as a type proxy.
-isin :: Expr -> Space -> Expr
-
 -- | Smart constructor for case statement with complete set of cases.
 completeCase :: [(Expr, Relation)] -> Expr
 
@@ -3879,6 +4023,24 @@ vec2D :: Expr -> Expr -> Expr
 -- | Matrix helper function.
 dgnl2x2 :: Expr -> Expr -> Expr
 
+-- | A variant of the expression language that allows for extensions of
+--   Expr that wouldn't normally type check, or that we only care for
+--   displaying.
+data DisplayExpr
+
+-- | One expression is "defined" by another.
+defines :: (Display a, Display b) => a -> b -> DisplayExpr
+
+-- | Bring a Space into the DisplayExpr.
+spaceDE :: Space -> DisplayExpr
+isIn :: Display a => a -> DisplayExpr -> DisplayExpr
+
+-- | Binary associative <a>And</a>.
+andDEs :: Display d => [d] -> DisplayExpr
+
+-- | Binary associative <a>Equivalence</a>.
+equivDEs :: Display a => [a] -> DisplayExpr
+
 -- | Special characters include partial derivatives and the degree circle.
 data Special
 Partial :: Special
@@ -3898,12 +4060,6 @@ class HasUID c
 -- | Provides a <i>unique</i> id for internal Drasil use.
 uid :: HasUID c => Lens' c UID
 
--- | A <a>ShortName</a> is the text to be displayed for a link. Used for
---   referencing within a document that can include symbols and whatnot if
---   required. Visible in the typeset documents (pdf).
-class HasShortName s
-shortname :: HasShortName s => s -> ShortName
-
 -- | Members must have a reference address.
 class HasRefAddress b
 
@@ -3915,6 +4071,22 @@ class HasSymbol c
 
 -- | Provides the <a>Symbol</a> for a particular stage of generation.
 symbol :: HasSymbol c => c -> Stage -> Symbol
+
+-- | Members of this class have the ability to be referenced.
+class HasUID s => Referable s
+
+-- | The referencing address (what we're linking to). Only visible in the
+--   source (tex/html).
+refAdd :: Referable s => s -> String
+
+-- | Alternate form of reference.
+renderRef :: Referable s => s -> LblType
+
+-- | A <a>ShortName</a> is the text to be displayed for a link. Used for
+--   referencing within a document that can include symbols and whatnot if
+--   required. Visible in the typeset documents (pdf).
+class HasShortName s
+shortname :: HasShortName s => s -> ShortName
 
 -- | <tt>Citation</tt>s should have a fields (<a>CiteField</a>).
 class HasFields c
@@ -4011,20 +4183,18 @@ abrv :: CommonIdea c => c -> String
 --   It does not enforce <a>Quantity</a> at this point.
 class Constrained c
 
--- | Provides a <tt>Lens</tt> to the <a>Constraint</a>s.
-constraints :: Constrained c => Lens' c [Constraint]
+-- | Provides a <tt>Lens</tt> to the <tt>Constraint</tt>s.
+constraints :: Constrained c => Lens' c [ConstraintE]
 
--- | Has a function that turns into a <a>Relation</a>.
-class ExprRelat c
-
--- | Holds a relation.
-relat :: ExprRelat c => c -> Relation
-
--- | A better version of <a>ExprRelat</a> that holds an <a>Expr</a>.
+-- | A better version of <tt>ExprRelat</tt> that holds an <a>Expr</a>.
 class DefiningExpr c
 
 -- | Provides a <tt>Lens</tt> to the expression.
 defnExpr :: DefiningExpr c => Lens' c Expr
+
+-- | Data that can convert into a Displayable <a>Expr</a>.
+class Display c
+toDispExpr :: Display c => c -> DisplayExpr
 
 -- | HasUncertainty is just a chunk with some uncertainty associated to it.
 --   This uncertainty is represented as a decimal value between 0 and 1
@@ -4124,32 +4294,35 @@ nw :: Idea c => c -> IdeaDict
 
 -- | Smart constructor for range of <a>Physical</a> constraints between two
 --   given expressions.
-physc :: RealInterval Expr Expr -> Constraint
+physc :: RealInterval Expr Expr -> ConstraintE
 
 -- | Smart constructor for range of <a>Software</a> constraints between two
 --   given expressions.
-sfwrc :: RealInterval Expr Expr -> Constraint
+sfwrc :: RealInterval Expr Expr -> ConstraintE
 
 -- | Smart constructor for enumeration of values, default reason for
 --   constraint is <a>Physical</a>.
-enumc :: [Double] -> Constraint
+enumc :: [Double] -> ConstraintE
 
 -- | Helpful for filtering for Physical constraints. True if constraint is
 --   <a>Physical</a>.
-isPhysC :: Constraint -> Bool
+isPhysC :: Constraint e -> Bool
 
 -- | Helpful for filtering for Software constraints. True if constraint is
 --   <a>Software</a>.
-isSfwrC :: Constraint -> Bool
+isSfwrC :: Constraint e -> Bool
 
 -- | Holds constraints. May occur between an interval of <a>Expr</a>, a
 --   list of <a>Double</a>s, or a list of <a>String</a>s.
-data Constraint
+data Constraint a
 
 -- | By default, physical and software constraints are ranges.
-[Range] :: ConstraintReason -> RealInterval Expr Expr -> Constraint
-[EnumeratedReal] :: ConstraintReason -> [Double] -> Constraint
-[EnumeratedStr] :: ConstraintReason -> [String] -> Constraint
+[Range] :: ConstraintReason -> RealInterval a a -> Constraint a
+[EnumeratedReal] :: ConstraintReason -> [Double] -> Constraint a
+[EnumeratedStr] :: ConstraintReason -> [String] -> Constraint a
+
+-- | Type synonym for <a>ConstraintE</a>
+type ConstraintE = Constraint Expr
 
 -- | The reason behind the constraint's existence.
 data ConstraintReason
@@ -4157,49 +4330,49 @@ Physical :: ConstraintReason
 Software :: ConstraintReason
 
 -- | ConstrainedChunks are symbolic quantities (<a>QuantityDict</a>) with
---   <a>Constraint</a>s and maybe a typical value (<a>Maybe</a>
+--   <tt>Constraint</tt>s and maybe a typical value (<a>Maybe</a>
 --   <a>Expr</a>).
 data ConstrainedChunk
-ConstrainedChunk :: QuantityDict -> [Constraint] -> Maybe Expr -> ConstrainedChunk
+ConstrainedChunk :: QuantityDict -> [ConstraintE] -> Maybe Expr -> ConstrainedChunk
 [_qd] :: ConstrainedChunk -> QuantityDict
-[_constr] :: ConstrainedChunk -> [Constraint]
+[_constr] :: ConstrainedChunk -> [ConstraintE]
 [_reasV] :: ConstrainedChunk -> Maybe Expr
 
 -- | ConstrConcepts are conceptual symbolic quantities
---   (<a>DefinedQuantityDict</a>) with <a>Constraint</a>s and maybe a
+--   (<a>DefinedQuantityDict</a>) with <tt>Constraint</tt>s and maybe a
 --   reasonable value (no units!).
 data ConstrConcept
-ConstrConcept :: DefinedQuantityDict -> [Constraint] -> Maybe Expr -> ConstrConcept
+ConstrConcept :: DefinedQuantityDict -> [ConstraintE] -> Maybe Expr -> ConstrConcept
 [_defq] :: ConstrConcept -> DefinedQuantityDict
-[_constr'] :: ConstrConcept -> [Constraint]
+[_constr'] :: ConstrConcept -> [ConstraintE]
 [_reasV'] :: ConstrConcept -> Maybe Expr
 
 -- | Creates a constrained unitary chunk from a <tt>UID</tt>, term
---   (<a>NP</a>), <a>Symbol</a>, unit, <a>Space</a>, <a>Constraint</a>s,
+--   (<a>NP</a>), <a>Symbol</a>, unit, <a>Space</a>, <tt>Constraint</tt>s,
 --   and an <a>Expr</a>.
-cuc :: IsUnit u => String -> NP -> Symbol -> u -> Space -> [Constraint] -> Expr -> ConstrainedChunk
+cuc :: IsUnit u => String -> NP -> Symbol -> u -> Space -> [ConstraintE] -> Expr -> ConstrainedChunk
 
 -- | Creates a constrained unitary chunk from a <tt>UID</tt>, term
---   (<a>NP</a>), <a>Symbol</a>, <a>Space</a>, <a>Constraint</a>s, and a
+--   (<a>NP</a>), <a>Symbol</a>, <a>Space</a>, <tt>Constraint</tt>s, and a
 --   <a>Maybe</a> <a>Expr</a> (Similar to <a>cuc</a> but no units).
-cvc :: String -> NP -> Symbol -> Space -> [Constraint] -> Maybe Expr -> ConstrainedChunk
+cvc :: String -> NP -> Symbol -> Space -> [ConstraintE] -> Maybe Expr -> ConstrainedChunk
 
 -- | Creates a <a>ConstrConcept</a> with a quantitative concept, a list of
---   <a>Constraint</a>s and an <a>Expr</a>.
-constrained' :: (Concept c, MayHaveUnit c, Quantity c) => c -> [Constraint] -> Expr -> ConstrConcept
+--   <tt>Constraint</tt>s and an <a>Expr</a>.
+constrained' :: (Concept c, MayHaveUnit c, Quantity c) => c -> [ConstraintE] -> Expr -> ConstrConcept
 
 -- | Creates a constrained unitary chunk from a <tt>UID</tt>, term
 --   (<a>NP</a>), description (<a>String</a>), <a>Symbol</a>, unit,
---   <a>Space</a>, <a>Constraint</a>s, and an <a>Expr</a>.
-cuc' :: IsUnit u => String -> NP -> String -> Symbol -> u -> Space -> [Constraint] -> Expr -> ConstrConcept
+--   <a>Space</a>, <tt>Constraint</tt>s, and an <a>Expr</a>.
+cuc' :: IsUnit u => String -> NP -> String -> Symbol -> u -> Space -> [ConstraintE] -> Expr -> ConstrConcept
 
 -- | Similar to <a>cuc'</a>, but <a>Symbol</a> is dependent on
 --   <a>Stage</a>.
-cuc'' :: IsUnit u => String -> NP -> String -> (Stage -> Symbol) -> u -> Space -> [Constraint] -> Expr -> ConstrConcept
+cuc'' :: IsUnit u => String -> NP -> String -> (Stage -> Symbol) -> u -> Space -> [ConstraintE] -> Expr -> ConstrConcept
 
 -- | Similar to <a>constrained'</a>, but defaults <a>Maybe</a> <a>Expr</a>
 --   to <a>Nothing</a>.
-constrainedNRV' :: (Concept c, MayHaveUnit c, Quantity c) => c -> [Constraint] -> ConstrConcept
+constrainedNRV' :: (Concept c, MayHaveUnit c, Quantity c) => c -> [ConstraintE] -> ConstrConcept
 
 -- | Creates a new ConstrainedChunk from either a <a>ConstrainedChunk</a>,
 --   <a>ConstrConcept</a>, <tt>UncertainChunk</tt>, or an <tt>UncertQ</tt>.
@@ -4313,7 +4486,7 @@ ccs :: (Idea c, Concept d) => c -> Sentence -> [d] -> ConceptChunk
 --   tagging.
 cc :: Idea c => c -> String -> ConceptChunk
 
--- | Same as cc, except definition is a <a>Sentence</a>.
+-- | Same as <a>cc</a>, except definition is a <a>Sentence</a>.
 cc' :: Idea c => c -> Sentence -> ConceptChunk
 
 -- | Constructor for a <a>ConceptInstance</a>. Takes in the Reference
@@ -4339,10 +4512,10 @@ data UncertQ
 uq :: (Quantity c, Constrained c, Concept c, HasReasVal c, MayHaveUnit c) => c -> Uncertainty -> UncertQ
 
 -- | Uncertainty quantity (<a>uq</a>) but with a constraint.
-uqc :: IsUnit u => String -> NP -> String -> Symbol -> u -> Space -> [Constraint] -> Expr -> Uncertainty -> UncertQ
+uqc :: IsUnit u => String -> NP -> String -> Symbol -> u -> Space -> [ConstraintE] -> Expr -> Uncertainty -> UncertQ
 
 -- | Uncertainty quantity constraint (<a>uqc</a>) without a description.
-uqcND :: IsUnit u => String -> NP -> Symbol -> u -> Space -> [Constraint] -> Expr -> Uncertainty -> UncertQ
+uqcND :: IsUnit u => String -> NP -> Symbol -> u -> Space -> [ConstraintE] -> Expr -> Uncertainty -> UncertQ
 
 -- | Smart constructor that can project to an <a>UncertainChunk</a> (also
 --   given an <a>Uncertainty</a>).
@@ -4351,7 +4524,7 @@ uncrtnChunk :: (Quantity c, Constrained c, HasReasVal c, MayHaveUnit c) => c -> 
 -- | Creates an uncertain variable chunk. Takes <tt>UID</tt>, term
 --   (<a>NP</a>), <a>Symbol</a>, <a>Space</a>, <tt>Constrains</tt>,
 --   <a>Expr</a>, and <a>Uncertainty</a>.
-uvc :: String -> NP -> Symbol -> Space -> [Constraint] -> Expr -> Uncertainty -> UncertainChunk
+uvc :: String -> NP -> Symbol -> Space -> [ConstraintE] -> Expr -> Uncertainty -> UncertainChunk
 
 -- | Projection function into an <a>UncertainChunk</a> from <a>UncertQ</a>
 --   or an <a>UncertainChunk</a>.
@@ -4480,10 +4653,10 @@ mkDerivNoHeader :: [Sentence] -> Derivation
 data ShortName
 
 -- | Smart constructor for making a <a>String</a> into a <a>ShortName</a>.
-shortname' :: String -> ShortName
+shortname' :: Sentence -> ShortName
 
 -- | Pulls the short form (as a <a>String</a>) out of a <a>ShortName</a>.
-getStringSN :: ShortName -> String
+getSentSN :: ShortName -> Sentence
 
 -- | All citations require a unique identifier used by the Drasil chunk. We
 --   will re-use the <a>UID</a> part as an EntryID (<a>String</a>) used for
@@ -4637,10 +4810,12 @@ data Sentence
 [P] :: Symbol -> Sentence
 
 -- | Lifts an expression into a Sentence.
-[E] :: Expr -> Sentence
+[E] :: DisplayExpr -> Sentence
 
--- | Lifts a Reference into a Sentence.
-[Ref] :: Reference -> Sentence
+-- | Takes a <a>UID</a> to a reference, a display name (<a>Sentence</a>),
+--   and any additional reference display information (<a>RefInfo</a>).
+--   Resolves the reference later (similar to Ch).
+[Ref] :: UID -> Sentence -> RefInfo -> Sentence
 
 -- | Adds quotation marks around a Sentence.
 [Quote] :: Sentence -> Sentence
@@ -4685,6 +4860,7 @@ capSent :: Sentence -> Sentence
 
 -- | Gets a symbol and places it in a <a>Sentence</a>.
 ch :: (HasUID c, HasSymbol c) => c -> Sentence
+eS :: Display d => d -> Sentence
 
 -- | Helper for concatenating two <a>Sentence</a>s with a comma and space
 --   between them.
@@ -4697,24 +4873,10 @@ sDash :: Sentence -> Sentence -> Sentence
 -- | Helper for wrapping <a>Sentence</a>s in parentheses.
 sParen :: Sentence -> Sentence
 
--- | This is to collect <a>UID</a>s that are printed out as a
---   <tt>Symbol</tt>.
+-- | This is to collect <i>symbolic</i> <a>UID</a>s that are printed out as
+--   a <tt>Symbol</tt>.
 sdep :: Sentence -> [UID]
 shortdep :: Sentence -> [UID]
-
--- | A Reference contains the identifier (<a>UID</a>), a reference address
---   (<a>LblType</a>), a human-readable shortname (<a>ShortName</a>), and
---   any extra information about the reference (<a>RefInfo</a>).
-data Reference
-Reference :: UID -> LblType -> ShortName -> RefInfo -> Reference
-
--- | Holds any extra information needed for a <a>Reference</a>, be it an
---   equation, pages, a note, or nothing.
-data RefInfo
-None :: RefInfo
-Equation :: [Int] -> RefInfo
-Page :: [Int] -> RefInfo
-RefNote :: String -> RefInfo
 class NounPhrase n
 
 -- | Retrieves singular form of term. Ex. "the quick brown fox".
@@ -4913,16 +5075,6 @@ nounPhraseSP :: String -> NP
 --   referencing. Plural case is just <a>AddS</a>.
 nounPhraseSent :: Sentence -> NP
 
--- | Members of this class have the ability to be referenced.
-class HasUID s => Referable s
-
--- | The referencing address (what we're linking to). Only visible in the
---   source (tex/html).
-refAdd :: Referable s => s -> String
-
--- | Alternate form of reference.
-renderRef :: Referable s => s -> LblType
-
 -- | A Document has a Title (<a>Sentence</a>), Author(s) (<a>Sentence</a>),
 --   and <a>Section</a>s which hold the contents of the document.
 data Document
@@ -4963,10 +5115,11 @@ Bullet :: [(ItemType, Maybe String)] -> ListType
 -- | Enumerated list.
 Numeric :: [(ItemType, Maybe String)] -> ListType
 
--- | Simple list with items denoted by <tt>-</tt>.
+-- | Simple list with items denoted by <tt>:</tt>. Renders as "Title: Item"
 Simple :: [ListTuple] -> ListType
 
--- | Descriptive list, renders as "Title: Item" (see <a>ListTuple</a>).
+-- | Descriptive list, renders as "<b>Title: Item</b>" (see
+--   <a>ListTuple</a>).
 Desc :: [ListTuple] -> ListType
 
 -- | Renders a list of "<tt><a>Title</a></tt> is the <tt>Item</tt>".
@@ -4980,7 +5133,7 @@ Flat :: Sentence -> ItemType
 
 -- | Nest a list (<a>ListType</a>) as an item.
 Nested :: Header -> ListType -> ItemType
-type ListTuple = (Title, ItemType, Maybe String) " Formats as Title: Item."
+type ListTuple = (Title, ItemType, Maybe String) " Formats as Title: Item. For use in lists."
 
 -- | Contains a <a>Reference</a> and <a>RawContent</a>.
 data LabelledContent
@@ -5045,7 +5198,7 @@ Table :: [Sentence] -> [[Sentence]] -> Title -> Bool -> RawContent
 Paragraph :: Sentence -> RawContent
 
 -- | Block of Equations holds an expression.
-EqnBlock :: Expr -> RawContent
+EqnBlock :: DisplayExpr -> RawContent
 
 -- | Grants the ability to label a group of <a>RawContent</a>.
 DerivBlock :: Sentence -> [RawContent] -> RawContent
@@ -5056,15 +5209,14 @@ Enumeration :: ListType -> RawContent
 -- | Defines something with a type, identifier, and <a>Contents</a>.
 Defini :: DType -> [(Identifier, [Contents])] -> RawContent
 
--- | Should use relative file path.
+-- | For creating figures in a document. Should use relative file path.
 Figure :: Lbl -> Filepath -> MaxWidthPercent -> RawContent
 
 -- | Grants the ability to reference something.
 Bib :: BibRef -> RawContent
 
 -- | Contain a graph with coordinates (<a>Sentence</a>s), maybe a width and
---   height, and a label (<a>Sentence</a>). TODO: Fill this one in. | An
---   identifier is just a <a>String</a>.
+--   height, and a label (<a>Sentence</a>). TODO: Fill this one in.
 Graph :: [(Sentence, Sentence)] -> Maybe Width -> Maybe Height -> Lbl -> RawContent
 
 -- | Smart constructor that wraps <a>LabelledContent</a> into
@@ -5081,11 +5233,11 @@ makeFigRef :: String -> Reference
 
 -- | Create a reference for a section. Takes in the name of a section and a
 --   shortname for the section.
-makeSecRef :: String -> String -> Reference
+makeSecRef :: String -> Sentence -> Reference
 
 -- | Create a reference for a list. Takes in the name of the list and a
 --   shortname for the list.
-makeLstRef :: String -> String -> Reference
+makeLstRef :: String -> Sentence -> Reference
 
 -- | Create a reference for a <a>URI</a>.
 makeURI :: UID -> String -> ShortName -> Reference
@@ -5144,9 +5296,6 @@ getInnerSpace :: Space -> Space
 -- | Decorations on symbols/characters such as hats or Vector
 --   representations (determines bolding, italics, etc).
 data Decoration
-Hat :: Decoration
-Vector :: Decoration
-Prime :: Decoration
 
 -- | A <a>Symbol</a> is actually going to be a graphical description of
 --   what gets rendered as a (unique) symbol. This is actually NOT based on
@@ -5167,48 +5316,6 @@ Prime :: Decoration
 --   flavour)</li>
 --   </ul>
 data Symbol
-Variable :: String -> Symbol
-Label :: String -> Symbol
-Integ :: Int -> Symbol
-Special :: Special -> Symbol
-Atop :: Decoration -> Symbol -> Symbol
-
--- | Order of Symbols: upleft lowleft upright lowright base
---   
---   <pre>
---   Corners [1]   [2]   [3]   [4]   [5]
---   </pre>
---   
---   <pre>
---   Visually:  [1]   [3]
---   
---                 [5]
---   
---              [2]   [4]
---   </pre>
-Corners :: [Symbol] -> [Symbol] -> [Symbol] -> [Symbol] -> Symbol -> Symbol
-
--- | Concatentation of two symbols: <tt>[s1, s2] -&gt; s1s2</tt>
-Concat :: [Symbol] -> Symbol
-Empty :: Symbol
-
--- | The default compare function that sorts all the lower case symbols
---   after the upper case ones.
---   
---   Comparation is used twice for each <tt>Atomic</tt> case, once for
---   making sure they are the same letter, once for case sensitive. As far
---   as this comparison is considered, <tt>Δ</tt> is a "decoration" and
---   ignored unless the compared symbols are the exact same, in which case
---   it is ordered after the undecorated symbol.
---   
---   Superscripts and subscripts are ordered after the base symbols
---   (because they add additional context to a symbol). For example:
---   `v_f^{AB}` (expressed in LaTeX notation for clarity), where
---   <tt>v_f</tt> is a final velocity, and the `^{AB}` adds context that it
---   is the final velocity between points <tt>A</tt> and <tt>B</tt>. In
---   these cases, the sorting of `v_f^{AB}` should be following
---   <tt>v_f</tt> as it is logical to place it with its parent concept.
-compsy :: Symbol -> Symbol -> Ordering
 
 -- | Create a table body (not including header row) by applying the given
 --   functions to the column elements of the table rows (in order). The
@@ -5329,28 +5436,52 @@ upperLeft :: Symbol -> Symbol -> Symbol
 -- | Helper for creating a Vector symbol.
 vec :: Symbol -> Symbol
 
--- | Makes a reference from the given argument and then wraps it into a
---   <a>Sentence</a>.
-makeRef2S :: (Referable l, HasShortName l) => l -> Sentence
+-- | Label smart constructor, requires non-empty labels
+label :: String -> Symbol
 
--- | Similar to <a>makeRef2</a>, but only turns a citation into a
---   reference.
-makeCite :: Citation -> Reference
+-- | Variable smart constructor, requires non-empty variables
+variable :: String -> Symbol
 
--- | Similar to <a>makeRef2S</a>, but only takes a citation.
-makeCiteS :: Citation -> Sentence
+-- | Holds any extra information needed for a <tt>Reference</tt>, be it an
+--   equation, pages, a note, or nothing.
+data RefInfo
+None :: RefInfo
+Equation :: [Int] -> RefInfo
+Page :: [Int] -> RefInfo
+RefNote :: String -> RefInfo
+
+-- | A Reference contains the identifier (<a>UID</a>), a reference address
+--   (<a>LblType</a>), a human-readable shortname (<a>ShortName</a>), and
+--   any extra information about the reference (<a>RefInfo</a>).
+data Reference
+Reference :: UID -> LblType -> ShortName -> RefInfo -> Reference
 
 -- | Projector function that creates a <a>Reference</a> from something
 --   <a>Referable</a>.
-makeRef2 :: (Referable l, HasShortName l) => l -> Reference
+ref :: (Referable r, HasShortName r) => r -> Reference
 
--- | Makes a <a>Reference</a> from a <a>Citation</a> with additional
---   information.
-makeCiteInfo :: Citation -> RefInfo -> Reference
+-- | Projector function that creates a <a>Reference</a> from something
+--   <a>Referable</a>. Also accepts <a>RefInfo</a>.
+refInfo :: (Referable r, HasShortName r) => r -> RefInfo -> Reference
 
--- | Makes a <a>Reference</a> from a <a>Citation</a> with additional
---   information and then wraps into <a>Sentence</a> form.
-makeCiteInfoS :: Citation -> RefInfo -> Sentence
+-- | Takes the reference <a>UID</a> and wraps it into a <a>Sentence</a>.
+refS :: (Referable r, HasShortName r) => r -> Sentence
+
+-- | Takes a <a>Reference</a> with a name to be displayed and wraps it into
+--   a <a>Sentence</a>. Does not overwrite the shortname contained in the
+--   reference, but will only display as the given <a>Sentence</a>.
+namedRef :: (Referable r, HasShortName r) => r -> Sentence -> Sentence
+
+-- | Takes a <a>Reference</a> with additional display info. Uses the
+--   internal shortname for its display name.
+complexRef :: (Referable r, HasShortName r) => r -> RefInfo -> Sentence
+
+-- | Takes a <a>Reference</a> with a name to be displayed and any
+--   additional information and wraps it into a <a>Sentence</a>. Does not
+--   overwrite the shortname contained in the reference, but will only
+--   display as the given <a>Sentence</a> along with the given
+--   <a>RefInfo</a>.
+namedComplexRef :: (Referable r, HasShortName r) => r -> Sentence -> RefInfo -> Sentence
 
 -- | Retrieves the <a>String</a> contained in a <a>LblType</a>.
 getAdd :: LblType -> String
@@ -5369,16 +5500,17 @@ URI :: String -> LblType
 -- | Created for different forms of references. Used in <a>LblType</a>.
 data IRefProg
 
--- | Deferred lookup; done later
+-- | Deferred lookup; done later. Used for domains in a
+--   <tt>ConceptInstance</tt>.
 Deferred :: UID -> IRefProg
 
--- | Lifts a <a>String</a> into a <tt>RefProg</tt>
+-- | Lifts a <a>String</a> into a <tt>RefProg</tt>.
 RS :: String -> IRefProg
 
--- | Concatenates with two subprograms
+-- | Concatenates with two subprograms.
 RConcat :: IRefProg -> IRefProg -> IRefProg
 
--- | The <tt>Symbol</tt> to insert the <tt>ShortName</tt> directly
+-- | The <tt>Symbol</tt> to insert the <tt>ShortName</tt> directly.
 Name :: IRefProg
 
 -- | Helper for common pattern of introducing the title-case version of a
