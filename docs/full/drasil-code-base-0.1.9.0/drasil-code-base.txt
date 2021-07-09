@@ -80,14 +80,18 @@ Exp :: UFunc
 Sqrt :: UFunc
 Neg :: UFunc
 
--- | Negation operator (not).
+-- | <tt>Bool -&gt; Bool</tt> operators.
 data UFuncB
 Not :: UFuncB
 
--- | Data for vectors (normal, dimensions).
-data UFuncVec
-Norm :: UFuncVec
-Dim :: UFuncVec
+-- | <tt>Vector -&gt; Vector</tt> operators.
+data UFuncVV
+NegV :: UFuncVV
+
+-- | <tt>Vector -&gt; Number</tt> operators.
+data UFuncVN
+Norm :: UFuncVN
+Dim :: UFuncVN
 
 -- | A one-to-one clone of Expr, with extra OO/code-related functionality.
 data CodeExpr
@@ -107,16 +111,11 @@ data CodeExpr
 -- | Turns two integers into a fraction (or percent).
 [Perc] :: Integer -> Integer -> CodeExpr
 
--- | Takes an associative aritmetic operator with a list of expressions.
+-- | Takes an associative arithmetic operator with a list of expressions.
 [AssocA] :: AssocArithOper -> [CodeExpr] -> CodeExpr
 
 -- | Takes an associative boolean operator with a list of expressions.
 [AssocB] :: AssocBoolOper -> [CodeExpr] -> CodeExpr
-
--- | Derivative syntax is: Type (<tt>Part</tt>ial or <tt>Total</tt>) -&gt;
---   principal part of change -&gt; with respect to For example: Deriv Part
---   y x1 would be (dy/dx1).
-[Deriv] :: DerivType -> CodeExpr -> UID -> CodeExpr
 
 -- | C stands for <a>Chunk</a>, for referring to a chunk in an expression.
 --   Implicitly assumes that the chunk has a symbol.
@@ -160,12 +159,14 @@ data CodeExpr
 -- | Unary operation for most functions (eg. sin, cos, log, etc.).
 [UnaryOp] :: UFunc -> CodeExpr -> CodeExpr
 
--- | Unary operation for negation.
+-- | Unary operation for <tt>Bool -&gt; Bool</tt> operations.
 [UnaryOpB] :: UFuncB -> CodeExpr -> CodeExpr
 
--- | Unary operation for vectors (holds whether a vector is normal or used
---   for dimensions).
-[UnaryOpVec] :: UFuncVec -> CodeExpr -> CodeExpr
+-- | Unary operation for <tt>Vector -&gt; Vector</tt> operations.
+[UnaryOpVV] :: UFuncVV -> CodeExpr -> CodeExpr
+
+-- | Unary operation for <tt>Vector -&gt; Number</tt> operations.
+[UnaryOpVN] :: UFuncVN -> CodeExpr -> CodeExpr
 
 -- | Binary operator for arithmetic between expressions (fractional, power,
 --   and subtraction).
@@ -201,7 +202,8 @@ data CodeExpr
 --   -&gt; Expr | A different kind of <tt>IsIn</tt>. A <a>UID</a> is an
 --   element of an interval.
 [RealI] :: UID -> RealInterval CodeExpr CodeExpr -> CodeExpr
-instance GHC.Classes.Eq Language.Drasil.Code.Expr.UFuncVec
+instance GHC.Classes.Eq Language.Drasil.Code.Expr.UFuncVN
+instance GHC.Classes.Eq Language.Drasil.Code.Expr.UFuncVV
 instance GHC.Classes.Eq Language.Drasil.Code.Expr.UFuncB
 instance GHC.Classes.Eq Language.Drasil.Code.Expr.UFunc
 instance GHC.Classes.Eq Language.Drasil.Code.Expr.AssocBoolOper
@@ -375,16 +377,11 @@ data CodeExpr
 -- | Turns two integers into a fraction (or percent).
 [Perc] :: Integer -> Integer -> CodeExpr
 
--- | Takes an associative aritmetic operator with a list of expressions.
+-- | Takes an associative arithmetic operator with a list of expressions.
 [AssocA] :: AssocArithOper -> [CodeExpr] -> CodeExpr
 
 -- | Takes an associative boolean operator with a list of expressions.
 [AssocB] :: AssocBoolOper -> [CodeExpr] -> CodeExpr
-
--- | Derivative syntax is: Type (<tt>Part</tt>ial or <tt>Total</tt>) -&gt;
---   principal part of change -&gt; with respect to For example: Deriv Part
---   y x1 would be (dy/dx1).
-[Deriv] :: DerivType -> CodeExpr -> UID -> CodeExpr
 
 -- | C stands for <a>Chunk</a>, for referring to a chunk in an expression.
 --   Implicitly assumes that the chunk has a symbol.
@@ -428,12 +425,14 @@ data CodeExpr
 -- | Unary operation for most functions (eg. sin, cos, log, etc.).
 [UnaryOp] :: UFunc -> CodeExpr -> CodeExpr
 
--- | Unary operation for negation.
+-- | Unary operation for <tt>Bool -&gt; Bool</tt> operations.
 [UnaryOpB] :: UFuncB -> CodeExpr -> CodeExpr
 
--- | Unary operation for vectors (holds whether a vector is normal or used
---   for dimensions).
-[UnaryOpVec] :: UFuncVec -> CodeExpr -> CodeExpr
+-- | Unary operation for <tt>Vector -&gt; Vector</tt> operations.
+[UnaryOpVV] :: UFuncVV -> CodeExpr -> CodeExpr
+
+-- | Unary operation for <tt>Vector -&gt; Number</tt> operations.
+[UnaryOpVN] :: UFuncVN -> CodeExpr -> CodeExpr
 
 -- | Binary operator for arithmetic between expressions (fractional, power,
 --   and subtraction).
@@ -539,14 +538,18 @@ Exp :: UFunc
 Sqrt :: UFunc
 Neg :: UFunc
 
--- | Negation operator (not).
+-- | <tt>Bool -&gt; Bool</tt> operators.
 data UFuncB
 Not :: UFuncB
 
--- | Data for vectors (normal, dimensions).
-data UFuncVec
-Norm :: UFuncVec
-Dim :: UFuncVec
+-- | <tt>Vector -&gt; Vector</tt> operators.
+data UFuncVV
+NegV :: UFuncVV
+
+-- | <tt>Vector -&gt; Number</tt> operators.
+data UFuncVN
+Norm :: UFuncVN
+Dim :: UFuncVN
 
 -- | Get dependencies from an equation.
 eDep :: CodeExpr -> [String]

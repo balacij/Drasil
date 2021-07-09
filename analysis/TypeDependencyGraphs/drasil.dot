@@ -910,8 +910,11 @@ digraph alltypes {
 		subgraph ufuncb{
 		UFuncB	[shape=oval, color=darkviolet, label=UFuncB];
 		}
-		subgraph ufuncvec{
-		UFuncVec	[shape=oval, color=darkviolet, label=UFuncVec];
+		subgraph ufuncvv{
+		UFuncVV	[shape=oval, color=darkviolet, label=UFuncVV];
+		}
+		subgraph ufuncvn{
+		UFuncVN	[shape=oval, color=darkviolet, label=UFuncVN];
 		}
 		subgraph codeexpr{
 		CodeExpr -> Double;
@@ -920,12 +923,12 @@ digraph alltypes {
 		CodeExpr -> String;
 		CodeExpr -> AssocArithOper;
 		CodeExpr -> AssocBoolOper;
-		CodeExpr -> DerivType;
 		CodeExpr -> UID;
 		CodeExpr -> Completeness;
 		CodeExpr -> UFunc;
 		CodeExpr -> UFuncB;
-		CodeExpr -> UFuncVec;
+		CodeExpr -> UFuncVV;
+		CodeExpr -> UFuncVN;
 		CodeExpr -> ArithBinOp;
 		CodeExpr -> BoolBinOp;
 		CodeExpr -> EqBinOp;
@@ -1333,6 +1336,8 @@ digraph alltypes {
 		ModelDB	[shape=oval, color=cyan3, label=ModelDB];
 		}
 	}
+	subgraph traceabilitygraph {
+	}
 	subgraph traceabilitymatrix {
 		subgraph traceviewcat{
 		TraceViewCat -> UIDChunkDBUID;
@@ -1479,6 +1484,8 @@ digraph alltypes {
 	subgraph concepts {
 	}
 	subgraph datadefs {
+	}
+	subgraph expresionss {
 	}
 	subgraph gdefs {
 	}
@@ -3123,7 +3130,8 @@ digraph alltypes {
 		Constrainta -> RealInterval;
 		Constrainta -> a;
 		Constrainta -> Constraint;
-		Constrainta -> Double;
+		Constrainta -> Expr;
+		Constrainta -> ConstraintE;
 		Constrainta	[shape=oval, color=darkviolet, label=Constrainta];
 		}
 		subgraph constrainte{
@@ -3166,6 +3174,11 @@ digraph alltypes {
 		Section -> SecCons;
 		Section -> Reference;
 		Section	[shape=oval, color=cyan3, label=Section];
+		}
+		subgraph seccons{
+		SecCons -> Section;
+		SecCons -> Contents;
+		SecCons	[shape=oval, color=darkviolet, label=SecCons];
 		}
 		subgraph document{
 		Document -> Title;
@@ -3211,8 +3224,11 @@ digraph alltypes {
 		subgraph ufuncb{
 		UFuncB	[shape=oval, color=darkviolet, label=UFuncB];
 		}
-		subgraph ufuncvec{
-		UFuncVec	[shape=oval, color=darkviolet, label=UFuncVec];
+		subgraph ufuncvv{
+		UFuncVV	[shape=oval, color=darkviolet, label=UFuncVV];
+		}
+		subgraph ufuncvn{
+		UFuncVN	[shape=oval, color=darkviolet, label=UFuncVN];
 		}
 		subgraph completeness{
 		Completeness	[shape=oval, color=darkviolet, label=Completeness];
@@ -3230,7 +3246,8 @@ digraph alltypes {
 		Expr -> ExprRelation;
 		Expr -> UFunc;
 		Expr -> UFuncB;
-		Expr -> UFuncVec;
+		Expr -> UFuncVV;
+		Expr -> UFuncVN;
 		Expr -> ArithBinOp;
 		Expr -> BoolBinOp;
 		Expr -> EqBinOp;
@@ -3300,8 +3317,12 @@ digraph alltypes {
 		subgraph sentencestyle{
 		SentenceStyle	[shape=oval, color=darkviolet, label=SentenceStyle];
 		}
+		subgraph termcapitalization{
+		TermCapitalization	[shape=oval, color=darkviolet, label=TermCapitalization];
+		}
 		subgraph sentence{
 		Sentence -> SentenceStyle;
+		Sentence -> TermCapitalization;
 		Sentence -> UID;
 		Sentence -> Sentence;
 		Sentence -> USymb;
@@ -3395,6 +3416,27 @@ digraph alltypes {
 	subgraph drails {
 	}
 	subgraph domains {
+	}
+	subgraph print {
+		subgraph nodefamily{
+		NodeFamily -> UID;
+		NodeFamily -> Label;
+		NodeFamily -> Colour;
+		NodeFamily	[shape=oval, color=cyan3, label=NodeFamily];
+		}
+		subgraph graphinfo{
+		GraphInfo -> NodeFamily;
+		GraphInfo -> UID;
+		GraphInfo	[shape=oval, color=cyan3, label=GraphInfo];
+		}
+		subgraph colour{
+		Colour -> String;
+		Colour	[shape=oval, color=red2, label=Colour];
+		}
+		subgraph label{
+		Label -> String;
+		Label	[shape=oval, color=red2, label=Label];
+		}
 	}
 	subgraph css {
 	}

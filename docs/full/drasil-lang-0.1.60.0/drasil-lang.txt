@@ -611,14 +611,18 @@ Exp :: UFunc
 Sqrt :: UFunc
 Neg :: UFunc
 
--- | Negation operator (not).
+-- | <tt>Bool -&gt; Bool</tt> operators.
 data UFuncB
 Not :: UFuncB
 
--- | Data for vectors (normal, dimensions).
-data UFuncVec
-Norm :: UFuncVec
-Dim :: UFuncVec
+-- | <tt>Vector -&gt; Vector</tt> operators.
+data UFuncVV
+NegV :: UFuncVV
+
+-- | <tt>Vector -&gt; Number</tt> operators.
+data UFuncVN
+Norm :: UFuncVN
+Dim :: UFuncVN
 
 -- | For case expressions (either complete or incomplete).
 data Completeness
@@ -643,7 +647,7 @@ data Expr
 -- | Turns two integers into a fraction (or percent).
 [Perc] :: Integer -> Integer -> Expr
 
--- | Takes an associative aritmetic operator with a list of expressions.
+-- | Takes an associative arithmetic operator with a list of expressions.
 [AssocA] :: AssocArithOper -> [Expr] -> Expr
 
 -- | Takes an associative boolean operator with a list of expressions.
@@ -677,12 +681,14 @@ data Expr
 -- | Unary operation for most functions (eg. sin, cos, log, etc.).
 [UnaryOp] :: UFunc -> Expr -> Expr
 
--- | Unary operation for negation.
+-- | Unary operation for <tt>Bool -&gt; Bool</tt> operations.
 [UnaryOpB] :: UFuncB -> Expr -> Expr
 
--- | Unary operation for vectors (holds whether a vector is normal or used
---   for dimensions).
-[UnaryOpVec] :: UFuncVec -> Expr -> Expr
+-- | Unary operation for <tt>Vector -&gt; Vector</tt> operations.
+[UnaryOpVV] :: UFuncVV -> Expr -> Expr
+
+-- | Unary operation for <tt>Vector -&gt; Number</tt> operations.
+[UnaryOpVN] :: UFuncVN -> Expr -> Expr
 
 -- | Binary operator for arithmetic between expressions (fractional, power,
 --   and subtraction).
@@ -714,9 +720,8 @@ data Expr
 --   Summation is represented via <tt>Add</tt> over a discrete domain.
 [Operator] :: AssocArithOper -> DomainDesc Expr Expr -> Expr -> Expr
 
--- | The expression is an element of a space. IsIn :: Expr -&gt; Space
---   -&gt; Expr | A different kind of <tt>IsIn</tt>. A <a>UID</a> is an
---   element of an interval.
+-- | A different kind of <tt>IsIn</tt>. A <a>UID</a> is an element of an
+--   interval.
 [RealI] :: UID -> RealInterval Expr Expr -> Expr
 
 -- | Smart constructor for equating two expressions.
@@ -799,7 +804,8 @@ Part :: DerivType
 Total :: DerivType
 instance GHC.Classes.Eq Language.Drasil.Expr.DerivType
 instance GHC.Classes.Eq Language.Drasil.Expr.Completeness
-instance GHC.Classes.Eq Language.Drasil.Expr.UFuncVec
+instance GHC.Classes.Eq Language.Drasil.Expr.UFuncVN
+instance GHC.Classes.Eq Language.Drasil.Expr.UFuncVV
 instance GHC.Classes.Eq Language.Drasil.Expr.UFuncB
 instance GHC.Classes.Eq Language.Drasil.Expr.UFunc
 instance GHC.Classes.Eq Language.Drasil.Expr.AssocBoolOper
@@ -877,8 +883,11 @@ prec1 :: UFunc -> Int
 -- | prec1B - precedence of boolean-related unary operators.
 prec1B :: UFuncB -> Int
 
--- | prec1Vec - precedence of vector-related unary operators.
-prec1Vec :: UFuncVec -> Int
+-- | prec1VV - precedence of vector-vector-related unary operators.
+prec1VV :: UFuncVV -> Int
+
+-- | prec1Vec - precedence of vector-number-related unary operators.
+prec1VN :: UFuncVN -> Int
 
 -- | eprec - <a>Expression</a> precedence.
 eprec :: Expr -> Int
@@ -955,8 +964,6 @@ data Constraint a
 
 -- | By default, physical and software constraints are ranges.
 [Range] :: ConstraintReason -> RealInterval a a -> Constraint a
-[EnumeratedReal] :: ConstraintReason -> [Double] -> Constraint a
-[EnumeratedStr] :: ConstraintReason -> [String] -> Constraint a
 
 -- | Type synonym for <a>ConstraintE</a>
 type ConstraintE = Constraint Expr
@@ -973,10 +980,6 @@ physc :: RealInterval Expr Expr -> ConstraintE
 -- | Smart constructor for range of <a>Software</a> constraints between two
 --   given expressions.
 sfwrc :: RealInterval Expr Expr -> ConstraintE
-
--- | Smart constructor for enumeration of values, default reason for
---   constraint is <a>Physical</a>.
-enumc :: [Double] -> ConstraintE
 
 -- | Helpful for filtering for Physical constraints. True if constraint is
 --   <a>Physical</a>.
@@ -1629,9 +1632,14 @@ module Language.Drasil.Sentence
 --   </ul>
 data Sentence
 
--- | Among other things, Ch allows Sentences to hold plural forms of
---   <tt>NounPhrase</tt>s and <tt>NamedIdea</tt>s.
-[Ch] :: SentenceStyle -> UID -> Sentence
+-- | Ch looks up the term for a given <a>UID</a> and displays the term with
+--   a given <a>SentenceStyle</a> and <tt>CapitalizationRule</tt>. This
+--   allows Sentences to hold plural forms of <tt>NounPhrase</tt>s and
+--   <tt>NamedIdea</tt>s.
+[Ch] :: SentenceStyle -> TermCapitalization -> UID -> Sentence
+
+-- | A branch of Ch dedicated to SymbolStyle only.
+[SyCh] :: UID -> Sentence
 
 -- | Converts a unit symbol into a usable Sentence form.
 [Sy] :: USymb -> Sentence
@@ -1664,12 +1672,11 @@ data Sentence
 [EmptyS] :: Sentence
 infixr 5 :+:
 
--- | Used in <a>Ch</a> constructor to determine the state of a
---   <a>Sentence</a> (can record whether something is in plural form, a
---   symbol, a singular term, or in short form).
+-- | Used in <a>Ch</a> constructor to determine the state of a term (can
+--   record whether something is in plural form, a singular term, or in
+--   short form).
 data SentenceStyle
 PluralTerm :: SentenceStyle
-SymbolStyle :: SentenceStyle
 TermStyle :: SentenceStyle
 ShortStyle :: SentenceStyle
 
@@ -1726,6 +1733,16 @@ sentenceTerm :: UID -> Sentence
 
 -- | Helper for wrapping <a>Sentence</a>s in parentheses.
 sParen :: Sentence -> Sentence
+
+-- | Used in <a>Ch</a> constructor to determine the capitalization of a
+--   term. CapF is for capitalizing the first word from the <a>UID</a> of
+--   the given term. CapW is for capitalizing all words from the <a>UID</a>
+--   of the given term. Mirrors <tt>CapFirst</tt> and <tt>CapWords</tt>
+--   from <tt>CapitalizationRule</tt>.
+data TermCapitalization
+CapF :: TermCapitalization
+CapW :: TermCapitalization
+NoCap :: TermCapitalization
 instance GHC.Base.Semigroup Language.Drasil.Sentence.Sentence
 instance GHC.Base.Monoid Language.Drasil.Sentence.Sentence
 
@@ -1976,7 +1993,7 @@ compoundPhraseP1 :: NP -> NP -> NP
 nounPhrase :: String -> PluralString -> NP
 
 -- | Similar to <a>nounPhrase</a>, but takes a specified capitalization
---   rule.
+--   rule for the sentence case.
 nounPhrase' :: String -> PluralString -> CapitalizationRule -> NP
 
 -- | Custom noun phrase constructor that takes a singular form
@@ -2088,14 +2105,18 @@ data DisplayAssocBinOp
 And :: DisplayAssocBinOp
 Equivalence :: DisplayAssocBinOp
 
--- | Negation operator (not).
+-- | <tt>Bool -&gt; Bool</tt> operators.
 data UFuncB
 Not :: UFuncB
 
--- | Data for vectors (normal, dimensions).
-data UFuncVec
-Norm :: UFuncVec
-Dim :: UFuncVec
+-- | <tt>Vector -&gt; Vector</tt> operators.
+data UFuncVV
+NegV :: UFuncVV
+
+-- | <tt>Vector -&gt; Number</tt> operators.
+data UFuncVN
+Norm :: UFuncVN
+Dim :: UFuncVN
 
 -- | Arithmetic operators (fractional, power, and subtraction).
 data ArithBinOp
@@ -2456,6 +2477,10 @@ module Language.Drasil.Document
 data SecCons
 Sub :: Section -> SecCons
 Con :: Contents -> SecCons
+data Partition
+Sections :: Partition
+Part :: Partition
+Chapter :: Partition
 
 -- | Sections have a title (<a>Sentence</a>), a list of contents
 --   (<a>SecCons</a>) and a shortname (<a>Reference</a>).
@@ -2750,6 +2775,9 @@ dim :: Expr -> Expr
 
 -- | Smart constructor for calculating the normal form of a vector.
 norm :: Expr -> Expr
+
+-- | Smart constructor for negating vectors.
+negVec :: Expr -> Expr
 
 -- | Smart constructor for applying logical negation to an expression.
 not_ :: Expr -> Expr
@@ -3639,7 +3667,7 @@ data Expr
 -- | Turns two integers into a fraction (or percent).
 [Perc] :: Integer -> Integer -> Expr
 
--- | Takes an associative aritmetic operator with a list of expressions.
+-- | Takes an associative arithmetic operator with a list of expressions.
 [AssocA] :: AssocArithOper -> [Expr] -> Expr
 
 -- | Takes an associative boolean operator with a list of expressions.
@@ -3673,12 +3701,14 @@ data Expr
 -- | Unary operation for most functions (eg. sin, cos, log, etc.).
 [UnaryOp] :: UFunc -> Expr -> Expr
 
--- | Unary operation for negation.
+-- | Unary operation for <tt>Bool -&gt; Bool</tt> operations.
 [UnaryOpB] :: UFuncB -> Expr -> Expr
 
--- | Unary operation for vectors (holds whether a vector is normal or used
---   for dimensions).
-[UnaryOpVec] :: UFuncVec -> Expr -> Expr
+-- | Unary operation for <tt>Vector -&gt; Vector</tt> operations.
+[UnaryOpVV] :: UFuncVV -> Expr -> Expr
+
+-- | Unary operation for <tt>Vector -&gt; Number</tt> operations.
+[UnaryOpVN] :: UFuncVN -> Expr -> Expr
 
 -- | Binary operator for arithmetic between expressions (fractional, power,
 --   and subtraction).
@@ -3710,9 +3740,8 @@ data Expr
 --   Summation is represented via <tt>Add</tt> over a discrete domain.
 [Operator] :: AssocArithOper -> DomainDesc Expr Expr -> Expr -> Expr
 
--- | The expression is an element of a space. IsIn :: Expr -&gt; Space
---   -&gt; Expr | A different kind of <tt>IsIn</tt>. A <a>UID</a> is an
---   element of an interval.
+-- | A different kind of <tt>IsIn</tt>. A <a>UID</a> is an element of an
+--   interval.
 [RealI] :: UID -> RealInterval Expr Expr -> Expr
 
 -- | Unary functions (abs, log, ln, sin, etc.).
@@ -3733,11 +3762,14 @@ Exp :: UFunc
 Sqrt :: UFunc
 Neg :: UFunc
 
--- | Negation operator (not).
+-- | <tt>Bool -&gt; Bool</tt> operators.
 data UFuncB
 
--- | Data for vectors (normal, dimensions).
-data UFuncVec
+-- | <tt>Vector -&gt; Vector</tt> operators.
+data UFuncVV
+
+-- | <tt>Vector -&gt; Number</tt> operators.
+data UFuncVN
 
 -- | Arithmetic operators (fractional, power, and subtraction).
 data ArithBinOp
@@ -3862,6 +3894,9 @@ abs_ :: Expr -> Expr
 
 -- | Smart constructor for negating an expression.
 neg :: Expr -> Expr
+
+-- | Smart constructor for negating vectors.
+negVec :: Expr -> Expr
 
 -- | Smart constructor to take the log of an expression.
 log :: Expr -> Expr
@@ -4300,10 +4335,6 @@ physc :: RealInterval Expr Expr -> ConstraintE
 --   given expressions.
 sfwrc :: RealInterval Expr Expr -> ConstraintE
 
--- | Smart constructor for enumeration of values, default reason for
---   constraint is <a>Physical</a>.
-enumc :: [Double] -> ConstraintE
-
 -- | Helpful for filtering for Physical constraints. True if constraint is
 --   <a>Physical</a>.
 isPhysC :: Constraint e -> Bool
@@ -4318,8 +4349,6 @@ data Constraint a
 
 -- | By default, physical and software constraints are ranges.
 [Range] :: ConstraintReason -> RealInterval a a -> Constraint a
-[EnumeratedReal] :: ConstraintReason -> [Double] -> Constraint a
-[EnumeratedStr] :: ConstraintReason -> [String] -> Constraint a
 
 -- | Type synonym for <a>ConstraintE</a>
 type ConstraintE = Constraint Expr
@@ -4795,9 +4824,14 @@ getCitations :: HasCitation c => Lens' c [Citation]
 --   </ul>
 data Sentence
 
--- | Among other things, Ch allows Sentences to hold plural forms of
---   <tt>NounPhrase</tt>s and <tt>NamedIdea</tt>s.
-[Ch] :: SentenceStyle -> UID -> Sentence
+-- | Ch looks up the term for a given <a>UID</a> and displays the term with
+--   a given <a>SentenceStyle</a> and <tt>CapitalizationRule</tt>. This
+--   allows Sentences to hold plural forms of <tt>NounPhrase</tt>s and
+--   <tt>NamedIdea</tt>s.
+[Ch] :: SentenceStyle -> TermCapitalization -> UID -> Sentence
+
+-- | A branch of Ch dedicated to SymbolStyle only.
+[SyCh] :: UID -> Sentence
 
 -- | Converts a unit symbol into a usable Sentence form.
 [Sy] :: USymb -> Sentence
@@ -4830,14 +4864,23 @@ data Sentence
 [EmptyS] :: Sentence
 infixr 5 :+:
 
--- | Used in <a>Ch</a> constructor to determine the state of a
---   <a>Sentence</a> (can record whether something is in plural form, a
---   symbol, a singular term, or in short form).
+-- | Used in <a>Ch</a> constructor to determine the state of a term (can
+--   record whether something is in plural form, a singular term, or in
+--   short form).
 data SentenceStyle
 PluralTerm :: SentenceStyle
-SymbolStyle :: SentenceStyle
 TermStyle :: SentenceStyle
 ShortStyle :: SentenceStyle
+
+-- | Used in <a>Ch</a> constructor to determine the capitalization of a
+--   term. CapF is for capitalizing the first word from the <a>UID</a> of
+--   the given term. CapW is for capitalizing all words from the <a>UID</a>
+--   of the given term. Mirrors <tt>CapFirst</tt> and <tt>CapWords</tt>
+--   from <tt>CapitalizationRule</tt>.
+data TermCapitalization
+CapF :: TermCapitalization
+CapW :: TermCapitalization
+NoCap :: TermCapitalization
 
 -- | Helper for concatenating two <a>Sentence</a>s with a space between
 --   them.
@@ -4980,7 +5023,7 @@ cnUM :: String -> NP
 nounPhrase :: String -> PluralString -> NP
 
 -- | Similar to <a>nounPhrase</a>, but takes a specified capitalization
---   rule.
+--   rule for the sentence case.
 nounPhrase' :: String -> PluralString -> CapitalizationRule -> NP
 
 -- | Capitalization rules.
