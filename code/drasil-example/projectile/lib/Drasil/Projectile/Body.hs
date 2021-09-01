@@ -71,10 +71,10 @@ mkSRS = [TableOfContents,
         , Goals [(phrase iVel +:+ S "vector") `S.the_ofThe` phrase projectile]]
       , SSDSolChSpec $ SCSProg
         [ Assumptions
-        , TMs [] (Label : stdFields)
-        , GDs [] ([Label, Units] ++ stdFields) ShowDerivation
-        , DDs [] ([Label, Symbol, Units] ++ stdFields) ShowDerivation
-        , IMs [] ([Label, Input, Output, InConstraints, OutConstraints] ++ stdFields) ShowDerivation
+        , TMs [] Nothing (Label : stdFields)
+        , GDs [] Nothing ([Label, Units] ++ stdFields) ShowDerivation
+        , DDs [] Nothing ([Label, Symbol, Units] ++ stdFields) ShowDerivation
+        , IMs [] Nothing ([Label, Input, Output, InConstraints, OutConstraints] ++ stdFields) ShowDerivation
         , Constraints EmptyS inConstraints
         , CorrSolnPpties outConstraints []
         ]

@@ -83,10 +83,11 @@ mkSRS
                Goals sysGoalInput],
           SSDSolChSpec $
             SCSProg
-              [Assumptions, TMs [] (Label : stdFields),
-               GDs [] (Label : stdFields) HideDerivation,
-               DDs [] ([Label, Symbol, Units] ++ stdFields) ShowDerivation,
-               IMs []
+              [Assumptions, 
+               TMs [] Nothing (Label : stdFields),
+               GDs [] Nothing (Label : stdFields) HideDerivation,
+               DDs [] Nothing ([Label, Symbol, Units] ++ stdFields) ShowDerivation,
+               IMs [] Nothing 
                  ([Label, Input, Output, InConstraints, OutConstraints] ++
                     stdFields)
                  ShowDerivation,

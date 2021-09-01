@@ -2,7 +2,7 @@
 -- | Document declaration types and functions for generating Software Requirement Specifications.
 module Drasil.DocDecl where
 
-import Drasil.DocumentLanguage.Core (DocDesc)
+import Drasil.DocumentLanguage.Core (DocDesc, ModelOrder)
 import Drasil.DocumentLanguage.Definitions (Fields)
 import qualified Drasil.DocumentLanguage.Core as DL (DocSection(..), RefSec(..),
   IntroSec(..), StkhldrSec(..), GSDSec(..), SSDSec(..), SSDSub(..),
@@ -74,13 +74,13 @@ data SCSSub where
   -- | Assumptions.
   Assumptions    :: SCSSub
   -- | Theory models.
-  TMs            :: [Sentence] -> Fields  -> SCSSub
+  TMs            :: [Sentence] -> ModelOrder -> Fields -> SCSSub
   -- | General definitions.
-  GDs            :: [Sentence] -> Fields  -> DL.DerivationDisplay -> SCSSub
+  GDs            :: [Sentence] -> ModelOrder -> Fields -> DL.DerivationDisplay -> SCSSub
   -- | Data definitions.
-  DDs            :: [Sentence] -> Fields  -> DL.DerivationDisplay -> SCSSub
+  DDs            :: [Sentence] -> ModelOrder -> Fields -> DL.DerivationDisplay -> SCSSub
   -- | Instance models.
-  IMs            :: [Sentence] -> Fields  -> DL.DerivationDisplay -> SCSSub
+  IMs            :: [Sentence] -> ModelOrder -> Fields -> DL.DerivationDisplay -> SCSSub
   -- | Constraints.
   Constraints    :: (HasUncertainty c, Quantity c, Constrained c, HasReasVal c, MayHaveUnit c) => Sentence -> [c] -> SCSSub
   -- | Properties of a correct solution.
@@ -131,10 +131,10 @@ mkDocDesc SI{_inputs = is, _sysinfodb = db} = map sec where
   pdSub (Goals s) = DL.Goals s $ fromConcInsDB goalStmtDom
   scsSub :: SCSSub -> DL.SCSSub
   scsSub Assumptions = DL.Assumptions $ fromConcInsDB assumpDom
-  scsSub (TMs s f) = DL.TMs s f $ allInDB theoryModelTable
-  scsSub (GDs s f dd) = DL.GDs s f (allInDB gendefTable) dd
-  scsSub (DDs s f dd) = DL.DDs s f (allInDB eDataDefnTable) (allInDB meDataDefnTable) dd
-  scsSub (IMs s f dd) = DL.IMs s f (allInDB insmodelTable) dd
+  scsSub (TMs s mo f)    = DL.TMs s mo f $ allInDB theoryModelTable
+  scsSub (GDs s mo f dd) = DL.GDs s mo f (allInDB gendefTable) dd
+  scsSub (DDs s mo f dd) = DL.DDs s mo f (allInDB eDataDefnTable) (allInDB meDataDefnTable) dd
+  scsSub (IMs s mo f dd) = DL.IMs s mo f (allInDB insmodelTable) dd
   scsSub (Constraints s c) = DL.Constraints s c
   scsSub (CorrSolnPpties c cs) = DL.CorrSolnPpties c cs
   expandFromDB :: ([a] -> [a]) -> Getting (UMap a) ChunkDB (UMap a) -> [a]

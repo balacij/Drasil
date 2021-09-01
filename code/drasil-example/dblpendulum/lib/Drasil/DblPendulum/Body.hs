@@ -80,10 +80,10 @@ mkSRS = [TableOfContents, -- This creates the Table of Contents
       , Goals goalsInputs] -- This adds a goals section and goals input is defined for the preample of the goal.
       , SSDSolChSpec $ SCSProg --This creates the solution characteristics section with a preamble
         [ Assumptions
-        , TMs [] (Label : stdFields)
-        , GDs [] ([Label, Units] ++ stdFields) ShowDerivation
-        , DDs [] ([Label, Symbol, Units] ++ stdFields) ShowDerivation
-        , IMs [] ([Label, Input, Output, InConstraints, OutConstraints] ++ stdFields) ShowDerivation
+        , TMs [] Nothing (Label : stdFields)
+        , GDs [] Nothing ([Label, Units] ++ stdFields) ShowDerivation
+        , DDs [] Nothing ([Label, Symbol, Units] ++ stdFields) ShowDerivation
+        , IMs [] Nothing ([Label, Input, Output, InConstraints, OutConstraints] ++ stdFields) ShowDerivation
         , Constraints EmptyS inConstraints
         , CorrSolnPpties outConstraints []
        ]

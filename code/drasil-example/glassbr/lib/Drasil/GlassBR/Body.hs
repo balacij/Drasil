@@ -107,10 +107,10 @@ mkSRS = [TableOfContents,
         , Goals goalInputs],
        SSDSolChSpec $ SCSProg
         [ Assumptions
-        , TMs [] (Label : stdFields)
-        , GDs [] [] HideDerivation -- No Gen Defs for GlassBR
-        , DDs [] ([Label, Symbol, Units] ++ stdFields) ShowDerivation
-        , IMs [instModIntro] ([Label, Input, Output, InConstraints, OutConstraints] ++ stdFields) HideDerivation
+        , TMs [] Nothing (Label : stdFields)
+        , GDs [] Nothing [] HideDerivation -- No Gen Defs for GlassBR
+        , DDs [] Nothing ([Label, Symbol, Units] ++ stdFields) ShowDerivation
+        , IMs [instModIntro] Nothing ([Label, Input, Output, InConstraints, OutConstraints] ++ stdFields) HideDerivation
         , Constraints auxSpecSent inputDataConstraints
         , CorrSolnPpties [probBr, stressDistFac] []
         ]

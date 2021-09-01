@@ -139,10 +139,10 @@ mkSRS = [TableOfContents,
         , Goals goalInputs]
       , SSDSolChSpec $ SCSProg
         [ Assumptions
-        , TMs [] (Label : stdFields)
-        , GDs [] ([Label, Units] ++ stdFields) ShowDerivation
-        , DDs [] ([Label, Symbol, Units] ++ stdFields) ShowDerivation
-        , IMs [instModIntro] ([Label, Input, Output, InConstraints, OutConstraints] ++ stdFields) ShowDerivation
+        , TMs [] Nothing (Label : stdFields)
+        , GDs [] Nothing ([Label, Units] ++ stdFields) ShowDerivation
+        , DDs [] Nothing ([Label, Symbol, Units] ++ stdFields) ShowDerivation
+        , IMs [instModIntro] Nothing ([Label, Input, Output, InConstraints, OutConstraints] ++ stdFields) ShowDerivation
         , Constraints dataConTail inputConstraints
         , CorrSolnPpties outputConstraints propsDeriv
         ]
