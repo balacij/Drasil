@@ -13,7 +13,7 @@ module Language.Drasil (
   , UFunc, UFuncB, UFuncVV, UFuncVN
   , ArithBinOp, BoolBinOp, EqBinOp, LABinOp, OrdBinOp, VVVBinOp, VVNBinOp
   , AssocArithOper, AssocBoolOper
-  , DerivType, Completeness, Relation
+  , Completeness, Relation
   , ($=), ($<), ($<=), ($>), ($>=), ($^), ($&&), ($||), ($=>), ($<=>), ($.)
   , ($-), ($/), addI, addRe, mulI, mulRe
   -- ** Math Functions
@@ -28,7 +28,6 @@ module Language.Drasil (
   , dim, idx, int, dbl, exactDbl, frac, str, perc, completeCase, incompleteCase
   , sumAll, defsum, prodAll, defprod, defint, intAll
   , realInterval
-  , deriv, pderiv
   , sy -- old "Chunk" constructor C
   , apply, apply1, apply2, applyWithNamedArgs
   , cross, m2x2, vec2D, dgnl2x2
@@ -37,7 +36,9 @@ module Language.Drasil (
 
   -- Language.Drasil.Expr.ModelExpr
   , ModelExpr
+  , DerivType
   , defines, space, isIn, andMEs, equivMEs
+  , deriv, pderiv
   -- ** Unicode symbols
   -- | Some expressions need special unicode characters.
 
@@ -95,7 +96,8 @@ module Language.Drasil (
   -- *** Basic types
   , UID
   -- Language.Drasil.Chunk.NamedIdea
-  , NamedChunk, nc, IdeaDict , mkIdea
+  , (+++), (+++.), (+++!)
+  , NamedChunk, nc, ncUID, IdeaDict , mkIdea
   , nw -- bad name (historical)
   -- Language.Drasil.Chunk.CommonIdea
   , CI, commonIdea, getAcc, getAccStr, commonIdeaWithDict, prependAbrv
@@ -108,12 +110,12 @@ module Language.Drasil (
   , RelationConcept, makeRC, addRelToCC
   -- *** Quantities and Units
   -- Language.Drasil.Chunk.Quantity
-  , QuantityDict, qw, mkQuant, mkQuant', codeVC, implVar, implVar'
+  , QuantityDict, qw, mkQuant, mkQuant', codeVC, implVar, implVar', implVarUID, implVarUID'
   , vc, vc'', vcSt, vcUnit
   -- Language.Drasil.Chunk.NamedArgument
   , NamedArgument, narg
   -- Language.Drasil.Chunk.Eq
-  , QDefinition, fromEqn, fromEqn', fromEqnSt, fromEqnSt'
+  , QDefinition, fromEqn, fromEqn', fromEqnSt, fromEqnSt', fromEqnSt''
   , mkQDefSt, mkQuantDef, mkQuantDef', ec
   , mkFuncDef, mkFuncDef', mkFuncDefByQ
   -- Language.Drasil.Chunk.Unitary
@@ -222,6 +224,7 @@ module Language.Drasil (
   , RawContent(..)
   , mkFig
   , makeTabRef, makeFigRef, makeSecRef, makeEqnRef, makeURI
+  , makeTabRef', makeFigRef', makeSecRef', makeEqnRef', makeURI'
   -- * Symbols, Stages, Spaces
   -- | Used for rendering mathematical symbols in Drasil.
 
@@ -243,34 +246,24 @@ module Language.Drasil (
 ) where
 
 import Prelude hiding (log, sin, cos, tan, sqrt, id, return, print, break, exp, product)
-import Language.Drasil.Expr (Expr(..), UFunc(..), UFuncB, UFuncVV, UFuncVN,
-          ArithBinOp, BoolBinOp, EqBinOp, LABinOp, OrdBinOp, VVVBinOp, VVNBinOp,
-          AssocArithOper(..), AssocBoolOper(..), 
-          DerivType(..), Completeness(..), Relation,
-          ($=), ($<), ($<=), ($>), ($>=), ($^), ($&&), ($||), ($=>), ($<=>), ($.),
-          ($-), ($/), addI, addRe, mulI, mulRe)
-import Language.Drasil.Expr.Math (abs_, neg, negVec, log, ln, sin, cos, tan, sqrt, sec, 
-          csc, cot, arcsin, arccos, arctan, exp,
-          dim, norm, not_, idx, int, dbl, exactDbl, frac, str, perc,
-          square, half, oneHalf, oneThird, recip_,
-          completeCase, incompleteCase,
-          sumAll, defsum, prodAll, defprod,
-          realInterval,
-          apply, apply1, apply2, applyWithNamedArgs,
-          sy, deriv, pderiv,
-          cross, m2x2, vec2D, dgnl2x2, euclidean, defint, intAll)
-import Language.Drasil.ModelExpr (ModelExpr)
-import Language.Drasil.ModelExpr.Math (defines, space, isIn, andMEs, equivMEs)
+import Language.Drasil.Expr
+import Language.Drasil.Expr.Lang
+import Language.Drasil.ModelExpr (space, isIn, defines
+  , andMEs, equivMEs
+  , deriv, pderiv)
+import Language.Drasil.ModelExpr.Lang (ModelExpr, DerivType)
 import Language.Drasil.Document (section, fig, figWithWidth
   , Section(..), SecCons(..) , llcc, ulcc, Document(..)
   , mkParagraph, mkFig, mkRawLC, ShowTableOfContents(..), checkToC, extractSection
-  , makeTabRef, makeFigRef, makeSecRef, makeEqnRef, makeURI)
+  , makeTabRef, makeFigRef, makeSecRef, makeEqnRef, makeURI
+  , makeTabRef', makeFigRef', makeSecRef', makeEqnRef', makeURI')
 import Language.Drasil.Document.Core (Contents(..), ListType(..), ItemType(..), DType(..)
   , RawContent(..), ListTuple, MaxWidthPercent
   , HasContents(accessContents)
   , LabelledContent(..), UnlabelledContent(..) )
 import Language.Drasil.Unicode -- all of it
 import Language.Drasil.UID (UID)
+import Language.Drasil.UID.Core ((+++), (+++.), (+++!))
 import Language.Drasil.Classes.Core (HasUID(uid), HasSymbol(symbol),
   HasRefAddress(getRefAdd), Referable(refAdd, renderRef))
 import Language.Drasil.Classes.Core2 (HasShortName(shortname))
@@ -305,7 +298,7 @@ import Language.Drasil.Constraint (physc, sfwrc, isPhysC, isSfwrC,
   Constraint(..), ConstraintE, ConstraintReason(..))
 import Language.Drasil.Chunk.DefinedQuantity
 import Language.Drasil.Chunk.Eq (QDefinition, fromEqn, fromEqn', fromEqnSt, 
-  fromEqnSt', mkQDefSt, mkQuantDef, mkQuantDef', ec,
+  fromEqnSt', fromEqnSt'', mkQDefSt, mkQuantDef, mkQuantDef', ec,
   mkFuncDef, mkFuncDef', mkFuncDefByQ)
 import Language.Drasil.Chunk.NamedArgument (NamedArgument, narg)
 import Language.Drasil.Chunk.NamedIdea

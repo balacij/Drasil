@@ -4,7 +4,12 @@ module Drasil.SWHS.TMods (PhaseChange(Liquid), consThermE, latentHtE,
 
 import qualified Data.List.NonEmpty as NE
 
-import Language.Drasil
+import Language.Drasil (ConceptChunk, dccWDS, fromEqnSt'', mkFuncDefByQ, qw, dRef,
+  dRefInfo, atStart, phrase, plural, makeURI, atStartNP, nounPhraseSP, refS,
+  (!.), (+:), (+:+), (+:+.), ch, eS, sC, sParen, shortname', eqSymb, QDefinition,
+  Definition(..), HasSpace(..), HasSymbol(..), Express(..),
+  Reference, RefInfo(Page), Sentence(S, (:+:), E))
+import Language.Drasil.ModelExpr
 import Control.Lens ((^.))
 import Theory.Drasil (ConstraintSet, mkConstraintSet,
   TheoryModel, tm, equationalModel', equationalConstraints',
@@ -44,13 +49,13 @@ consThermE = tm (equationalConstraints' consThermECS)
     qw density, qw heatCapSpec, qw temp, qw time] ([] :: [ConceptChunk])
   [] [express consThermERel] [] [dRef consThemESrc] "consThermE" consThermENotes
 
-consThermECS :: ConstraintSet
+consThermECS :: ConstraintSet ModelExpr
 consThermECS = mkConstraintSet consCC rels
   where consCC = dccWDS "consThermECS"
           (nounPhraseSP "Conservation of thermal energy") (lawConsEnergy ^. defn)
         rels   = NE.fromList [consThermERel]
 
-consThermERel :: Relation
+consThermERel :: ModelExpr
 consThermERel = negVec (sy gradient) $. sy thFluxVect `addRe` sy volHtGen $=
   sy density `mulRe` sy heatCapSpec `mulRe` pderiv (sy temp) time
 
@@ -87,8 +92,8 @@ sensHtETemplate pc desc = tm (equationalModel' qd)
       eqn = sensHtEEqn pc
 
 
-sensHtEQD :: PhaseChange -> Expr -> Sentence -> QDefinition
-sensHtEQD pc eqn desc = fromEqnSt' "sensHeat" np desc (symbol sensHeat) (sensHeat ^. typ) eqn
+sensHtEQD :: PhaseChange -> ModelExpr -> Sentence -> QDefinition ModelExpr
+sensHtEQD pc eqn desc = fromEqnSt'' "sensHeat" np desc (symbol sensHeat) (sensHeat ^. typ) eqn
   where np = nounPhraseSP ("Sensible heat energy" ++ case pc of
                                                        Liquid -> " (no state change)"
                                                        AllPhases -> "")
@@ -98,7 +103,7 @@ sensHtESrc = makeURI "sensHtESrc"
   "http://en.wikipedia.org/wiki/Sensible_heat" $
   shortname' $ S "Definition of Sensible Heat"
 
-sensHtEEqn :: PhaseChange -> Expr
+sensHtEEqn :: PhaseChange -> ModelExpr
 sensHtEEqn pChange = case pChange of
   Liquid -> liquidFormula
   AllPhases -> incompleteCase [(sy htCapS `mulRe` sy mass `mulRe` sy deltaT,
@@ -134,14 +139,14 @@ latentHtE = tm latentHtEMK
   [qw latentHeat, qw time, qw tau] ([] :: [ConceptChunk])
   [] [express latentHtEFD] [] [dRef latHtESrc] "latentHtE" latentHtENotes
 
-latentHtEMK :: ModelKind
+latentHtEMK :: ModelKind ModelExpr
 latentHtEMK = equationalModel "latentHtETM"
   (nounPhraseSP "Latent heat energy") latentHtEFD
 
-latentHtEFD :: QDefinition
+latentHtEFD :: QDefinition ModelExpr
 latentHtEFD = mkFuncDefByQ latentHeat [time] latentHtEExpr
 
-latentHtEExpr :: Expr
+latentHtEExpr :: ModelExpr
 latentHtEExpr = defint (eqSymb tau) (exactDbl 0) (sy time) (deriv (apply1 latentHeat tau) tau)
 
 -- Integrals need dTau at end
@@ -171,14 +176,14 @@ nwtnCooling = tm nwtnCoolingMK
   [] [express nwtnCoolingFD] [] [dRefInfo incroperaEtAl2007 $ Page [8]]
   "nwtnCooling" nwtnCoolingNotes
 
-nwtnCoolingMK :: ModelKind
+nwtnCoolingMK :: ModelKind ModelExpr
 nwtnCoolingMK = equationalModel "nwtnCoolingTM"
   (nounPhraseSP "Newton's law of cooling") nwtnCoolingFD
 
-nwtnCoolingFD :: QDefinition
+nwtnCoolingFD :: QDefinition ModelExpr
 nwtnCoolingFD = mkFuncDefByQ htFlux [time] nwtnCoolingExpr
 
-nwtnCoolingExpr :: Expr
+nwtnCoolingExpr :: ModelExpr
 nwtnCoolingExpr = sy htTransCoeff `mulRe` apply1 deltaT time
 
 nwtnCoolingNotes :: [Sentence]

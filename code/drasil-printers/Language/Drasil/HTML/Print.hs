@@ -1,4 +1,12 @@
-module Language.Drasil.HTML.Print(genHTML, renderCite, OpenClose(Open, Close), fence) where
+-- | Defines all functions needed to print HTML files. For more information on each of the helper functions, please view the [source files](https://jacquescarette.github.io/Drasil/docs/full/drasil-printers-0.1.10.0/src/Language.Drasil.HTML.Print.html).
+module Language.Drasil.HTML.Print(
+  -- * Main Function
+  genHTML,
+  -- * Citation Renderer
+  renderCite,
+  -- * Term Fencing Helpers
+  OpenClose(Open, Close), 
+  fence) where
 
 import Prelude hiding (print, (<>))
 import Data.List (sortBy)
@@ -44,6 +52,7 @@ genHTML :: PrintingInformation -> String -> L.Document -> Doc
 genHTML sm fn doc = build fn (makeDocument sm doc)
 --         ^^ -- should really be of type Filename, but that's not in scope
 
+-- TODO: Use our JSON printer here to create this code snippet.
 -- | Variable to include MathJax in our HTML files so we can render equations in LaTeX.
 mathJaxScript :: Doc
 mathJaxScript =

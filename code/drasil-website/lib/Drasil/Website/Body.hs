@@ -67,9 +67,9 @@ si fl = SI {
     _configFiles = [],
     _inputs      = [] :: [QuantityDict],
     _outputs     = [] :: [QuantityDict],
-    _defSequence = [] :: [Block QDefinition],
+    _defSequence = [] :: [Block (QDefinition Expr)],
     _constraints = [] :: [ConstrainedChunk],
-    _constants   = [] :: [QDefinition],
+    _constants   = [] :: [QDefinition Expr],
     _sysinfodb   = symbMap fl,
     _usedinfodb  = usedDB,
     refdb        = rdb [] []
@@ -84,7 +84,7 @@ sections fl = [headerSec, introSec (ref caseStudySec) (ref $ docsSec $ docsRt fl
 -- | Needed for references and terms to work.
 symbMap :: FolderLocation -> ChunkDB
 symbMap fl = cdb ([] :: [QuantityDict]) (map nw [webName, web] ++ map getSysName allExampleSI)
-  ([] :: [ConceptChunk]) ([] :: [UnitDefn]) [] [] [] [] [] [] [] $ allRefs fl
+  ([] :: [ConceptChunk]) ([] :: [UnitDefn]) [] [] [] [] [] [] [] [] $ allRefs fl
 
 -- | Helper to get the system name as an 'IdeaDict' from 'SystemInformation'.
 getSysName :: SystemInformation -> IdeaDict
@@ -93,7 +93,7 @@ getSysName SI{_sys = nm} = nw nm
 -- | Empty database needed for 'si' to work.
 usedDB :: ChunkDB
 usedDB = cdb ([] :: [QuantityDict]) ([] :: [IdeaDict])
-           ([] :: [ConceptChunk]) ([] :: [UnitDefn]) [] [] [] [] [] [] [] ([] :: [Reference])
+           ([] :: [ConceptChunk]) ([] :: [UnitDefn]) [] [] [] [] [] [] [] [] ([] :: [Reference])
 
 -- | Holds all references and links used in the website.
 allRefs :: FolderLocation -> [Reference]
@@ -123,9 +123,9 @@ imageContent = llcc (makeFigRef "Drasil") $ figWithWidth EmptyS imagePath 50
 
 -- | Used for the repository link.
 gitHubRef :: Reference
-gitHubRef = Reference "gitHubRepo" (URI gitHubInfoURL) (shortname' $ S "gitHubRepo")
+gitHubRef = makeURI "gitHubRepo" gitHubInfoURL (shortname' $ S "gitHubRepo")
 wikiRef :: Reference
-wikiRef = Reference "gitHubWiki" (URI $ gitHubInfoURL ++ "/wiki") (shortname' $ S "gitHubWiki")
+wikiRef = makeURI "gitHubWiki" (gitHubInfoURL ++ "/wiki") (shortname' $ S "gitHubWiki")
 
 -- | Hardcoded info for the title, URL, and image path.
 websiteTitle :: String

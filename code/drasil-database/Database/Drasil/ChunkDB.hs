@@ -1,12 +1,27 @@
 {-# LANGUAGE TemplateHaskell #-}
+-- | Defines types and functions to create a chunk database within Drasil.
 module Database.Drasil.ChunkDB (
-  ChunkDB(symbolTable, termTable, defTable, CDB), RefbyMap, TraceMap, UMap,
-  asOrderedList, cdb, collectUnits, conceptMap, conceptinsLookup,
-  conceptinsTable, dataDefnTable, datadefnLookup, defResolve, gendefLookup,
-  gendefTable, generateRefbyMap, idMap, termMap, insmodelLookup, insmodelTable, -- idMap, termMap for docLang
-  labelledconLookup, labelledcontentTable, refbyLookup, refbyTable, refResolve, refTable,
-  sectionLookup, sectionTable, symbResolve, termResolve, unitTable,
-  theoryModelLookup, theoryModelTable, traceLookup, traceMap, traceTable) where
+  -- * Types
+  -- ** 'ChunkDB'
+  -- | Main database type
+  ChunkDB(CDB, symbolTable, termTable, defTable),
+  -- ** Maps
+  -- | Exported for external use.
+  RefbyMap, TraceMap, UMap,
+  -- * Functions
+  -- ** Constructors
+  cdb, idMap, termMap, conceptMap, traceMap, generateRefbyMap, -- idMap, termMap for docLang
+  -- ** Lookup Functions
+  asOrderedList, collectUnits,
+  termResolve, defResolve, symbResolve,
+  traceLookup, refbyLookup,
+  datadefnLookup, insmodelLookup, gendefLookup, theoryModelLookup,
+  conceptinsLookup, sectionLookup, labelledconLookup, refResolve,
+  -- ** Lenses
+  unitTable, traceTable, refbyTable,
+  eDataDefnTable, meDataDefnTable, insmodelTable, gendefTable, theoryModelTable,
+  conceptinsTable, sectionTable, labelledcontentTable, refTable
+  ) where
 
 import Language.Drasil
 import Theory.Drasil (DataDefinition, GenDefn, InstanceModel, TheoryModel)
@@ -42,7 +57,7 @@ type TraceMap = Map.Map UID [UID]
 -- | A reference map, used to hold a 'UID' and where it is referenced ('UID's).
 type RefbyMap = Map.Map UID [UID]
 -- | Data definitions map. Contains all data definitions ('DataDefinition').
-type DatadefnMap = UMap DataDefinition
+type DatadefnMap e = UMap (DataDefinition e)
 -- | Instance model map. Contains all instance models ('InstanceModel').
 type InsModelMap = UMap InstanceModel
 -- | General definitions map. Contains all general definitions ('GenDefn').
@@ -93,7 +108,7 @@ getUnitLup m c = getUnit $ symbResolve m (c ^. uid)
 -- | Looks up a 'UID' in a 'UMap' table. If nothing is found, an error is thrown.
 uMapLookup :: String -> String -> UID -> UMap a -> a
 uMapLookup tys ms u t = getFM $ Map.lookup u t
-  where getFM = maybe (error $ tys ++ ": " ++ u ++ " not found in " ++ ms) fst
+  where getFM = maybe (error $ tys ++ ": " ++ show u ++ " not found in " ++ ms) fst
 
 -- | Looks up a 'UID' in the symbol table from the 'ChunkDB'. If nothing is found, an error is thrown.
 symbResolve :: ChunkDB -> UID -> QuantityDict
@@ -116,7 +131,7 @@ defResolve :: ChunkDB -> UID -> ConceptChunk
 defResolve m x = uMapLookup "Concept" "ConceptMap" x $ defTable m
 
 -- | Looks up a 'UID' in the datadefinition table. If nothing is found, an error is thrown.
-datadefnLookup :: UID -> DatadefnMap -> DataDefinition
+datadefnLookup :: UID -> DatadefnMap e -> DataDefinition e
 datadefnLookup = uMapLookup "DataDefinition" "DatadefnMap"
 
 -- | Looks up a 'UID' in the instance model table. If nothing is found, an error is thrown.
@@ -150,21 +165,22 @@ asOrderedList = map fst . sortOn snd . map snd . Map.toList
 -- | Our chunk databases. \Must contain all maps needed in an example.\
 -- In turn, these maps must contain every chunk definition or concept 
 -- used in its respective example, else an error is thrown.
-data ChunkDB = CDB { symbolTable :: SymbolMap
-                   , termTable :: TermMap 
-                   , defTable  :: ConceptMap
-                   , _unitTable :: UnitMap
-                   , _traceTable :: TraceMap
-                   , _refbyTable :: RefbyMap
-                   , _dataDefnTable  :: DatadefnMap
-                   , _insmodelTable   :: InsModelMap
-                   , _gendefTable   :: GendefMap
-                   , _theoryModelTable :: TheoryModelMap
-                   , _conceptinsTable :: ConceptInstanceMap
-                   , _sectionTable :: SectionMap
+data ChunkDB = CDB { symbolTable           :: SymbolMap
+                   , termTable             :: TermMap 
+                   , defTable              :: ConceptMap
+                   , _unitTable            :: UnitMap
+                   , _traceTable           :: TraceMap
+                   , _refbyTable           :: RefbyMap
+                   , _eDataDefnTable       :: DatadefnMap Expr
+                   , _meDataDefnTable      :: DatadefnMap ModelExpr
+                   , _insmodelTable        :: InsModelMap
+                   , _gendefTable          :: GendefMap
+                   , _theoryModelTable     :: TheoryModelMap
+                   , _conceptinsTable      :: ConceptInstanceMap
+                   , _sectionTable         :: SectionMap
                    , _labelledcontentTable :: LabelledContentMap
-                   , _refTable :: ReferenceMap
-                   } --TODO: Expand and add more databases
+                   , _refTable             :: ReferenceMap
+                   } -- TODO: Expand and add more databases
 makeLenses ''ChunkDB
 
 -- | Smart constructor for chunk databases. Takes in the following:
@@ -181,11 +197,11 @@ makeLenses ''ChunkDB
 --     * 'Section's (for 'SectionMap'),
 --     * 'LabelledContent's (for 'LabelledContentMap').
 cdb :: (Quantity q, MayHaveUnit q, Idea t, Concept c, IsUnit u) =>
-    [q] -> [t] -> [c] -> [u] -> [DataDefinition] -> [InstanceModel] ->
+    [q] -> [t] -> [c] -> [u] -> [DataDefinition Expr] -> [DataDefinition ModelExpr] -> [InstanceModel] ->
     [GenDefn] -> [TheoryModel] -> [ConceptInstance] -> [Section] ->
     [LabelledContent] -> [Reference] -> ChunkDB
-cdb s t c u d ins gd tm ci sect lc r = CDB (symbolMap s) (termMap t) (conceptMap c)
-  (unitMap u) Map.empty Map.empty (idMap d) (idMap ins) (idMap gd) (idMap tm)
+cdb s t c u dE dMe ins gd tm ci sect lc r = CDB (symbolMap s) (termMap t) (conceptMap c)
+  (unitMap u) Map.empty Map.empty (idMap dE) (idMap dMe) (idMap ins) (idMap gd) (idMap tm)
   (idMap ci) (idMap sect) (idMap lc) (idMap r)
 
 -- | Gets the units of a 'Quantity' as 'UnitDefn's.

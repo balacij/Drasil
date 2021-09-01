@@ -1,9 +1,21 @@
 {-# LANGUAGE GADTs, TemplateHaskell, RankNTypes #-}
-module Database.Drasil.SystemInformation(SystemInformation(..), Block(..),
-  citeDB, ReferenceDB, citationsFromBibMap, citationDB, rdb, RefMap, simpleMap,
-  conceptDB,
+-- | Define types and functions related to creating a system information database.
+module Database.Drasil.SystemInformation(
+  -- * System Information
+  -- ** Types
+  SystemInformation(..), Block(..),
+  -- ** Lenses
   instModels, datadefs, configFiles, inputs,
-  defSequence, constraints, constants, sysinfodb, usedinfodb
+  defSequence, constraints, constants, sysinfodb, usedinfodb,
+  -- ** Lookup Functions
+  citeDB, citationsFromBibMap,
+  -- * Reference Database
+  -- ** Types
+  ReferenceDB, RefMap,
+  -- ** Constructors
+  rdb, simpleMap,
+  -- ** Lenses
+  citationDB, conceptDB,
   ) where
 
 import Language.Drasil
@@ -33,13 +45,13 @@ data SystemInformation where
   , _quants      :: [e]
   , _concepts    :: [f]
   , _instModels  :: [InstanceModel]
-  , _datadefs    :: [DataDefinition]
+  , _datadefs    :: [DataDefinition Expr]
   , _configFiles :: [String]
   , _inputs      :: [h]
   , _outputs     :: [i]
-  , _defSequence :: [Block QDefinition]
+  , _defSequence :: [Block (QDefinition Expr)]
   , _constraints :: [j] --TODO: Add SymbolMap OR enough info to gen SymbolMap
-  , _constants   :: [QDefinition]
+  , _constants   :: [QDefinition Expr]
   , _sysinfodb   :: ChunkDB
   , _usedinfodb  :: ChunkDB
   , refdb        :: ReferenceDB

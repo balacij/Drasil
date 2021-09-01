@@ -1,4 +1,11 @@
-module Language.Drasil.Generate (gen, genDot, genCode, genLog, DocType(..), DocSpec(DocSpec), Format(TeX, HTML), DocChoices(DC), docChoices) where
+-- | Defines Drasil generator functions.
+module Language.Drasil.Generate (
+  -- * Generator Functions
+  gen, genDot, genCode, genLog,
+  -- * Types (Printing Options)
+  DocType(..), DocSpec(DocSpec), Format(TeX, HTML), DocChoices(DC),
+  -- * Constructor
+  docChoices) where
 
 import System.IO (hClose, hPutStrLn, openFile, IOMode(WriteMode))
 import Text.PrettyPrint.HughesPJ (Doc, render)
@@ -24,7 +31,7 @@ import Data.Char (isSpace)
 
 -- | Generate a number of artifacts based on a list of recipes.
 gen :: DocSpec -> Document -> PrintingInformation -> IO ()
-gen ds fn sm = prnt sm ds fn
+gen ds fn sm = prnt sm ds fn -- FIXME: 'prnt' is just 'gen' with the arguments reordered
 
 -- TODO: Include Jupyter into the SRS setup.
 -- | Generate the output artifacts (TeX+Makefile or HTML).
