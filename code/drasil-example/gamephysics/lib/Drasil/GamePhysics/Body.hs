@@ -35,7 +35,7 @@ import qualified Data.Drasil.Quantities.Physics as QP (force, time)
 import Drasil.GamePhysics.Assumptions (assumptions)
 import Drasil.GamePhysics.Changes (likelyChgs, unlikelyChgs)
 import Drasil.GamePhysics.Concepts (gamePhysics, acronyms, threeD, twoD)
-import Drasil.GamePhysics.DataDefs (eDataDefs, meDataDefs)
+import Drasil.GamePhysics.DataDefs (dataDefOrd, eDataDefs, meDataDefs)
 import Drasil.GamePhysics.Goals (goals)
 import Drasil.GamePhysics.IMods (iMods, instModIntro)
 import Drasil.GamePhysics.References (citations, koothoor2013, smithLai2005)
@@ -78,7 +78,7 @@ mkSRS = [TableOfContents,
         [ Assumptions
         , TMs [] Nothing (Label : stdFields)
         , GDs [] Nothing ([Label, Units] ++ stdFields) ShowDerivation
-        , DDs [] Nothing ([Label, Symbol, Units] ++ stdFields) ShowDerivation
+        , DDs [] (Just dataDefOrd) ([Label, Symbol, Units] ++ stdFields) ShowDerivation
         , IMs [instModIntro] Nothing ([Label, Input, Output, InConstraints, OutConstraints] ++ stdFields) ShowDerivation
         , Constraints EmptyS inputConstraints
         , CorrSolnPpties outputConstraints []

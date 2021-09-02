@@ -1,4 +1,4 @@
-module Drasil.GamePhysics.DataDefs (eDataDefs, meDataDefs, ctrOfMassDD,
+module Drasil.GamePhysics.DataDefs (dataDefOrd, eDataDefs, meDataDefs, ctrOfMassDD,
   linDispDD, linVelDD, linAccDD, angDispDD, angVelDD, angAccelDD, torqueDD,
   kEnergyDD, coeffRestitutionDD, reVelInCollDD, impulseVDD, momentOfInertiaDD,
   collisionAssump, rightHandAssump, rigidTwoDAssump, potEnergyDD,) where
@@ -27,6 +27,10 @@ import qualified Data.Drasil.Quantities.PhysicalProperties as QPP (mass)
 
 import Data.Drasil.Theories.Physics (torqueDD)
 ----- Data Definitions -----
+
+dataDefOrd :: [UID]
+dataDefOrd = ctrOfMassDD ^. uid : map (^. uid) meDataDefs
+  ++ map (^. uid) (tail eDataDefs)
 
 eDataDefs :: [DataDefinition Expr]
 eDataDefs = [ctrOfMassDD, chaslesDD, torqueDD, kEnergyDD,
