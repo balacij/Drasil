@@ -2,7 +2,7 @@
 -- | Document declaration types and functions for generating Software Requirement Specifications.
 module Drasil.DocDecl where
 
-import Drasil.DocumentLanguage.Core (DocDesc, ModelOrder)
+import Drasil.DocumentLanguage.Core (DocDesc, ModelOrder, DataDefn(DD))
 import Drasil.DocumentLanguage.Definitions (Fields)
 import qualified Drasil.DocumentLanguage.Core as DL (DocSection(..), RefSec(..),
   IntroSec(..), StkhldrSec(..), GSDSec(..), SSDSec(..), SSDSub(..),
@@ -11,7 +11,7 @@ import qualified Drasil.DocumentLanguage.Core as DL (DocSection(..), RefSec(..),
   AppndxSec(..), OffShelfSolnsSec(..), DerivationDisplay)
 import Drasil.Sections.Requirements (fullReqs, fullTables)
 
-import Database.Drasil 
+import Database.Drasil
 
 {- (ChunkDB, SystemInformation(SI), UMap, asOrderedList,
   _inputs, _sysinfodb, conceptinsTable, eDataDefnTable, meDataDefnTable, gendefTable,
@@ -143,7 +143,11 @@ mkDocDesc SI{_inputs = is, _sysinfodb = db} = map sec where
   scsSub Assumptions     = DL.Assumptions $ fromConcInsDB assumpDom
   scsSub (TMs s mo f)    = DL.TMs s f (orderedModels mo theoryModelTable theoryModelLookup)
   scsSub (GDs s mo f dd) = DL.GDs s f (orderedModels mo gendefTable gendefLookup) dd
-  scsSub (DDs s mo f dd) = _ -- DL.DDs s f (allInDB eDataDefnTable) (allInDB meDataDefnTable) dd
+  scsSub (DDs s mo f dd) = DL.DDs s f dds dd -- DL.DDs s f (allInDB eDataDefnTable) (allInDB meDataDefnTable) dd
+    where
+      find :: UID -> DataDefn
+      find x = either DD DD $ datadefnLookup' x (db ^. eDataDefnTable) (db ^. meDataDefnTable)
+      dds = maybe (map DD (allInDB eDataDefnTable) ++ map DD (allInDB meDataDefnTable)) (map find) mo
   scsSub (IMs s mo f dd) = DL.IMs s f (orderedModels mo insmodelTable insmodelLookup) dd
   scsSub (Constraints s c) = DL.Constraints s c
   scsSub (CorrSolnPpties c cs) = DL.CorrSolnPpties c cs

@@ -14,7 +14,7 @@ import Drasil.DocumentLanguage.Core (AppndxSec(..), AuxConstntSec(..),
   PDSub(..), ProblemDescription(..), RefSec(..), RefTab(..), ReqrmntSec(..),
   ReqsSub(..), SCSSub(..), StkhldrSec(..), StkhldrSub(..), SolChSpec(..),
   SSDSec(..), SSDSub(..), TraceabilitySec(..), TraceConfig(..),
-  TSIntro(..), UCsSec(..), getTraceConfigUID)
+  TSIntro(..), UCsSec(..), getTraceConfigUID, DataDefn(DD))
 import Drasil.DocumentLanguage.Definitions (ddefn, derivation, instanceModel,
   gdefn, tmodel)
 import Drasil.ExtractDocDesc (getDocDesc, egetDocDesc)
@@ -367,18 +367,18 @@ mkSolChSpec si (SCSProg l) =
     map (mkSubSCS si) l
   where
     mkSubSCS :: SystemInformation -> SCSSub -> Section
-    mkSubSCS _ (TMs _ _ [])      = error "There are no Theoretical Models"
-    mkSubSCS _ (GDs _ _ [] _)    = SSD.genDefnF []
-    mkSubSCS _ (DDs _ _ [] [] _) = error "There are no Data Definitions"
-    mkSubSCS _ (IMs _ _ [] _)    = error "There are no Instance Models"
+    mkSubSCS _ (TMs _ _ [])   = error "There are no Theoretical Models"
+    mkSubSCS _ (GDs _ _ [] _) = SSD.genDefnF []
+    mkSubSCS _ (DDs _ _ [] _) = error "There are no Data Definitions"
+    mkSubSCS _ (IMs _ _ [] _) = error "There are no Instance Models"
     mkSubSCS si' (TMs intro fields ts) =
       SSD.thModF (siSys si') $ map mkParagraph intro ++ map (LlC . tmodel fields si') ts
-    mkSubSCS si' (DDs intro fields ddes ddmes ShowDerivation) = -- FIXME: need to keep track of DD intro.
-      SSD.dataDefnF EmptyS $ map mkParagraph intro ++ concatMap f ddes ++ concatMap f ddmes
+    mkSubSCS si' (DDs intro fields dds ShowDerivation) = -- FIXME: need to keep track of DD intro.
+      SSD.dataDefnF EmptyS $ map mkParagraph intro ++ concatMap (\(DD d') -> f d') dds
       where
         f e = [LlC $ ddefn fields si' e, derivation e]
-    mkSubSCS si' (DDs intro fields ddes ddmes _) =
-      SSD.dataDefnF EmptyS $ map mkParagraph intro ++ map f ddes ++ map f ddmes
+    mkSubSCS si' (DDs intro fields dds _) =
+      SSD.dataDefnF EmptyS $ map mkParagraph intro ++ map (\(DD d') -> f d') dds
       where 
         f e = LlC $ ddefn fields si' e
     mkSubSCS si' (GDs intro fields gs' ShowDerivation) =

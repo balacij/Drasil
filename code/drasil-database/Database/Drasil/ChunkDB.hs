@@ -15,7 +15,7 @@ module Database.Drasil.ChunkDB (
   asOrderedList, collectUnits,
   termResolve, defResolve, symbResolve,
   traceLookup, refbyLookup,
-  datadefnLookup, insmodelLookup, gendefLookup, theoryModelLookup,
+  datadefnLookup, datadefnLookup', insmodelLookup, gendefLookup, theoryModelLookup,
   conceptinsLookup, sectionLookup, labelledconLookup, refResolve,
   -- ** Lenses
   unitTable, traceTable, refbyTable,
@@ -133,6 +133,9 @@ defResolve m x = uMapLookup "Concept" "ConceptMap" x $ defTable m
 -- | Looks up a 'UID' in the datadefinition table. If nothing is found, an error is thrown.
 datadefnLookup :: UID -> DatadefnMap e -> DataDefinition e
 datadefnLookup = uMapLookup "DataDefinition" "DatadefnMap"
+
+datadefnLookup' :: UID -> DatadefnMap Expr -> DatadefnMap ModelExpr -> Either (DataDefinition Expr) (DataDefinition ModelExpr)
+datadefnLookup' u dme dmme = maybe (Right $ datadefnLookup u dmme) (Left . fst) $ Map.lookup u dme 
 
 -- | Looks up a 'UID' in the instance model table. If nothing is found, an error is thrown.
 insmodelLookup :: UID -> InsModelMap -> InstanceModel
