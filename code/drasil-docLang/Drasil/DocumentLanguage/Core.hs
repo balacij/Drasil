@@ -178,13 +178,13 @@ data SCSSub where
   -- | Assumptions.
   Assumptions    :: [ConceptInstance] -> SCSSub
   -- | Theory Models.
-  TMs            :: [Sentence] -> ModelOrder -> Fields -> [TheoryModel] -> SCSSub
+  TMs            :: [Sentence] -> Fields -> [TheoryModel] -> SCSSub
   -- | General Definitions.
-  GDs            :: [Sentence] -> ModelOrder -> Fields -> [GenDefn] -> DerivationDisplay -> SCSSub
+  GDs            :: [Sentence] -> Fields -> [GenDefn] -> DerivationDisplay -> SCSSub
   -- | Data Definitions.
-  DDs            :: [Sentence] -> ModelOrder -> Fields -> [DataDefinition Expr] -> [DataDefinition ModelExpr] -> DerivationDisplay -> SCSSub -- (FIXME: Need DD intro).
+  DDs            :: [Sentence] -> Fields -> [DataDefinition Expr] -> [DataDefinition ModelExpr] -> DerivationDisplay -> SCSSub -- (FIXME: Need DD intro).
   -- | Instance Models.
-  IMs            :: [Sentence] -> ModelOrder -> Fields -> [InstanceModel] -> DerivationDisplay -> SCSSub
+  IMs            :: [Sentence] -> Fields -> [InstanceModel] -> DerivationDisplay -> SCSSub
   -- | Constraints.
   Constraints    :: (HasUncertainty c, Quantity c, Constrained c, HasReasVal c, MayHaveUnit c) => Sentence -> [c] -> SCSSub 
   --                  Sentence -> [LabelledContent] Fields  -> [UncertainWrapper] -> [ConstrainedChunk] -> SCSSub --FIXME: temporary definition?
@@ -314,10 +314,10 @@ instance Multiplate DLPlate where
     pd' (Goals s ci) = pure $ Goals s ci
     pd' (PhySysDesc nm s lc c) = pure $ PhySysDesc nm s lc c
     sc (Assumptions c) = pure (Assumptions c)
-    sc (TMs s mo f t) = pure $ TMs s mo f t
-    sc (GDs s mo f g d) = pure $ GDs s mo f g d
-    sc (DDs s mo f ddes ddmes d) = pure $ DDs s mo f ddes ddmes d
-    sc (IMs s mo f i d) = pure $ IMs s mo f i d 
+    sc (TMs s f t) = pure $ TMs s f t
+    sc (GDs s f g d) = pure $ GDs s f g d
+    sc (DDs s f ddes ddmes d) = pure $ DDs s f ddes ddmes d
+    sc (IMs s f i d) = pure $ IMs s f i d 
     sc (Constraints s c) = pure $ Constraints s c
     sc (CorrSolnPpties c cs) = pure $ CorrSolnPpties c cs
     rs (ReqsProg reqs) = ReqsProg <$> traverse (reqSub p) reqs

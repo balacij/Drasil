@@ -365,30 +365,30 @@ mkSolChSpec :: SystemInformation -> SolChSpec -> Section
 mkSolChSpec si (SCSProg l) =
   SRS.solCharSpec [SSD.solutionCharSpecIntro (siSys si) SSD.imStub] $
     map (mkSubSCS si) l
-  where -- TODO: USE MODEL ORDERING
+  where
     mkSubSCS :: SystemInformation -> SCSSub -> Section
-    mkSubSCS _ (TMs _ _ _ [])      = error "There are no Theoretical Models"
-    mkSubSCS _ (GDs _ _ _ [] _)    = SSD.genDefnF []
-    mkSubSCS _ (DDs _ _ _ [] [] _) = error "There are no Data Definitions"
-    mkSubSCS _ (IMs _ _ _ [] _)    = error "There are no Instance Models"
-    mkSubSCS si' (TMs intro mo fields ts) =
+    mkSubSCS _ (TMs _ _ [])      = error "There are no Theoretical Models"
+    mkSubSCS _ (GDs _ _ [] _)    = SSD.genDefnF []
+    mkSubSCS _ (DDs _ _ [] [] _) = error "There are no Data Definitions"
+    mkSubSCS _ (IMs _ _ [] _)    = error "There are no Instance Models"
+    mkSubSCS si' (TMs intro fields ts) =
       SSD.thModF (siSys si') $ map mkParagraph intro ++ map (LlC . tmodel fields si') ts
-    mkSubSCS si' (DDs intro mo fields ddes ddmes ShowDerivation) = --FIXME: need to keep track of DD intro.
+    mkSubSCS si' (DDs intro fields ddes ddmes ShowDerivation) = -- FIXME: need to keep track of DD intro.
       SSD.dataDefnF EmptyS $ map mkParagraph intro ++ concatMap f ddes ++ concatMap f ddmes
       where
         f e = [LlC $ ddefn fields si' e, derivation e]
-    mkSubSCS si' (DDs intro mo fields ddes ddmes _) =
+    mkSubSCS si' (DDs intro fields ddes ddmes _) =
       SSD.dataDefnF EmptyS $ map mkParagraph intro ++ map f ddes ++ map f ddmes
       where 
         f e = LlC $ ddefn fields si' e
-    mkSubSCS si' (GDs intro mo fields gs' ShowDerivation) =
+    mkSubSCS si' (GDs intro fields gs' ShowDerivation) =
       SSD.genDefnF $ map mkParagraph intro ++ concatMap (\x -> [LlC $ gdefn fields si' x, derivation x]) gs'
-    mkSubSCS si' (GDs intro mo fields gs' _) =
+    mkSubSCS si' (GDs intro fields gs' _) =
       SSD.genDefnF $ map mkParagraph intro ++ map (LlC . gdefn fields si') gs'
-    mkSubSCS si' (IMs intro mo fields ims ShowDerivation) =
+    mkSubSCS si' (IMs intro fields ims ShowDerivation) =
       SSD.inModelF SSD.pdStub SSD.ddStub SSD.tmStub (SRS.genDefn [] []) $ map mkParagraph intro ++
       concatMap (\x -> [LlC $ instanceModel fields si' x, derivation x]) ims
-    mkSubSCS si' (IMs intro mo fields ims _) =
+    mkSubSCS si' (IMs intro fields ims _) =
       SSD.inModelF SSD.pdStub SSD.ddStub SSD.tmStub (SRS.genDefn [] []) $ map mkParagraph intro ++
       map (LlC . instanceModel fields si') ims
     mkSubSCS si' (Assumptions ci) =

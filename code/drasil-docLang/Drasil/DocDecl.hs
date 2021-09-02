@@ -118,28 +118,36 @@ mkDocDesc SI{_inputs = is, _sysinfodb = db} = map sec where
   sec Bibliography = DL.Bibliography
   sec (AppndxSec a) = DL.AppndxSec a
   sec (OffShelfSolnsSec e) = DL.OffShelfSolnsSec e
+
   reqSec :: ReqsSub -> DL.ReqsSub
   reqSec (FReqsSub d t) = DL.FReqsSub (fullReqs is d $ fromConcInsDB funcReqDom) (fullTables is t)
   reqSec (FReqsSub' t) = DL.FReqsSub' (fromConcInsDB funcReqDom) t
   reqSec NonFReqsSub = DL.NonFReqsSub $ fromConcInsDB nonFuncReqDom
+
   ssdSec :: SSDSub -> DL.SSDSub
   ssdSec (SSDProblem (PDProg s ls p)) = DL.SSDProblem $ DL.PDProg s ls $ map pdSub p
   ssdSec (SSDSolChSpec (SCSProg scs)) = DL.SSDSolChSpec $ DL.SCSProg $ map scsSub scs
+
   pdSub :: PDSub -> DL.PDSub
   pdSub (TermsAndDefs s c) = DL.TermsAndDefs s c
   pdSub (PhySysDesc i s lc c) = DL.PhySysDesc i s lc c
   pdSub (Goals s) = DL.Goals s $ fromConcInsDB goalStmtDom
+
+  -- TODO: Here is where the lists should be sorted.
   scsSub :: SCSSub -> DL.SCSSub
   scsSub Assumptions = DL.Assumptions $ fromConcInsDB assumpDom
-  scsSub (TMs s mo f)    = DL.TMs s mo f $ allInDB theoryModelTable
-  scsSub (GDs s mo f dd) = DL.GDs s mo f (allInDB gendefTable) dd
-  scsSub (DDs s mo f dd) = DL.DDs s mo f (allInDB eDataDefnTable) (allInDB meDataDefnTable) dd
-  scsSub (IMs s mo f dd) = DL.IMs s mo f (allInDB insmodelTable) dd
+  scsSub (TMs s mo f)    = DL.TMs s f $ allInDB theoryModelTable
+  scsSub (GDs s mo f dd) = DL.GDs s f (allInDB gendefTable) dd
+  scsSub (DDs s mo f dd) = DL.DDs s f (allInDB eDataDefnTable) (allInDB meDataDefnTable) dd
+  scsSub (IMs s mo f dd) = DL.IMs s f (allInDB insmodelTable) dd
   scsSub (Constraints s c) = DL.Constraints s c
   scsSub (CorrSolnPpties c cs) = DL.CorrSolnPpties c cs
+
   expandFromDB :: ([a] -> [a]) -> Getting (UMap a) ChunkDB (UMap a) -> [a]
   expandFromDB f = f . asOrderedList . (db ^.)
+
   allInDB :: Getting (UMap a) ChunkDB (UMap a) -> [a]
   allInDB = expandFromDB id
+
   fromConcInsDB :: Concept c => c -> [ConceptInstance]
   fromConcInsDB c = expandFromDB (filter (\x -> sDom (cdom x) == c ^. uid)) conceptinsTable
