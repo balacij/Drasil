@@ -17,7 +17,7 @@ dblODEOptions = odeOptions RK45 (sy absTol) (sy relTol) (sy timeStep) (exactDbl 
 -- way scipy expects the function in python. 
 dblODEInfo :: ODEInfo
 dblODEInfo = odeInfo (quantvar time) -- Independent variable
-             (quantvar sysOdeVariables) -- Dependent variable
+             (quantvar sysOdeVariablesCon) -- Dependent variable
              [quantvar lenRodCon_1, quantvar lenRodCon_2, quantvar massCon_1, quantvar massCon_2] -- Other variables in the ODE
              (exactDbl 0) -- initial time
              (sy timeFinal) -- final time
@@ -26,38 +26,38 @@ dblODEInfo = odeInfo (quantvar time) -- Independent variable
              -- index 1 = theta2'
              -- index 2 = theta1
              -- index 3 = theta2
-             [idx (sy sysOdeVariables) (int 0), -- theta1'
-              idx (sy sysOdeVariables) (int 1), -- theta2'
+             [idx (sy sysOdeVariablesCon) (int 0), -- theta1'
+              idx (sy sysOdeVariablesCon) (int 1), -- theta2'
               neg(dbl 9.81) `mulRe`
-                   (exactDbl 2 `mulRe` sy massCon_1 `addRe` sy massCon_2) `mulRe` sin (idx (sy sysOdeVariables) (int 2) ) $-
+                   (exactDbl 2 `mulRe` sy massCon_1 `addRe` sy massCon_2) `mulRe` sin (idx (sy sysOdeVariablesCon) (int 2) ) $-
                    (sy massCon_2 `mulRe` dbl 9.81 `mulRe`
-                   sin (idx (sy sysOdeVariables) (int 2) $- (exactDbl 2 `mulRe` idx (sy sysOdeVariables) (int 3)))) $-
-                   ((exactDbl 2 `mulRe` sin (idx (sy sysOdeVariables) (int 2) $- idx (sy sysOdeVariables) (int 3) )) `mulRe` sy massCon_2 `mulRe`
+                   sin (idx (sy sysOdeVariablesCon) (int 2) $- (exactDbl 2 `mulRe` idx (sy sysOdeVariablesCon) (int 3)))) $-
+                   ((exactDbl 2 `mulRe` sin (idx (sy sysOdeVariablesCon) (int 2) $- idx (sy sysOdeVariablesCon) (int 3) )) `mulRe` sy massCon_2 `mulRe`
                    (
-                        idx (sy sysOdeVariables) (int 1)`mulRe` idx (sy sysOdeVariables) (int 1) `mulRe` sy lenRodCon_2 `addRe` 
-                        ((idx (sy sysOdeVariables) (int 0) `mulRe` idx (sy sysOdeVariables) (int 0)) `mulRe` sy lenRodCon_1 `mulRe` 
-                        cos (idx (sy sysOdeVariables) (int 2) $- idx (sy sysOdeVariables) (int 3)))
+                        idx (sy sysOdeVariablesCon) (int 1)`mulRe` idx (sy sysOdeVariablesCon) (int 1) `mulRe` sy lenRodCon_2 `addRe` 
+                        ((idx (sy sysOdeVariablesCon) (int 0) `mulRe` idx (sy sysOdeVariablesCon) (int 0)) `mulRe` sy lenRodCon_1 `mulRe` 
+                        cos (idx (sy sysOdeVariablesCon) (int 2) $- idx (sy sysOdeVariablesCon) (int 3)))
                    ))
                    $/
                    sy lenRodCon_1 `mulRe` 
                    (
                        exactDbl 2 `mulRe` sy massCon_1 `addRe` sy massCon_2 $- 
                        (sy massCon_2 `mulRe` 
-                       cos (exactDbl 2 `mulRe` idx (sy sysOdeVariables) (int 2)  $- (exactDbl 2 `mulRe` idx (sy sysOdeVariables) (int 3))))
+                       cos (exactDbl 2 `mulRe` idx (sy sysOdeVariablesCon) (int 2)  $- (exactDbl 2 `mulRe` idx (sy sysOdeVariablesCon) (int 3))))
                    ), -- theta1''
-              exactDbl 2 `mulRe` sin (idx (sy sysOdeVariables) (int 2) $- idx (sy sysOdeVariables) (int 3)) `mulRe`
+              exactDbl 2 `mulRe` sin (idx (sy sysOdeVariablesCon) (int 2) $- idx (sy sysOdeVariablesCon) (int 3)) `mulRe`
                    (
-                        (idx (sy sysOdeVariables) (int 1) `mulRe` idx (sy sysOdeVariables) (int 1)) `mulRe` sy lenRodCon_1 `mulRe` (sy massCon_1 `addRe` sy massCon_2 ) `addRe`
-                        (dbl 9.81 `mulRe` (sy massCon_1 `addRe` sy massCon_2 ) `mulRe` cos (idx (sy sysOdeVariables) (int 2))) `addRe`
-                        ((idx (sy sysOdeVariables) (int 0) `mulRe` idx (sy sysOdeVariables) (int 0)) `mulRe` sy lenRodCon_2 `mulRe` sy massCon_2 `mulRe` 
-                        cos (idx (sy sysOdeVariables) (int 2) $- idx (sy sysOdeVariables) (int 3) ))
+                        (idx (sy sysOdeVariablesCon) (int 1) `mulRe` idx (sy sysOdeVariablesCon) (int 1)) `mulRe` sy lenRodCon_1 `mulRe` (sy massCon_1 `addRe` sy massCon_2 ) `addRe`
+                        (dbl 9.81 `mulRe` (sy massCon_1 `addRe` sy massCon_2 ) `mulRe` cos (idx (sy sysOdeVariablesCon) (int 2))) `addRe`
+                        ((idx (sy sysOdeVariablesCon) (int 0) `mulRe` idx (sy sysOdeVariablesCon) (int 0)) `mulRe` sy lenRodCon_2 `mulRe` sy massCon_2 `mulRe` 
+                        cos (idx (sy sysOdeVariablesCon) (int 2) $- idx (sy sysOdeVariablesCon) (int 3) ))
                    )
                    $/
                    sy lenRodCon_2 `mulRe` 
                    (
                         exactDbl 2 `mulRe` sy massCon_1 `addRe` sy massCon_2 $- 
                         (sy massCon_2 `mulRe` 
-                        cos (exactDbl 2 `mulRe` idx (sy sysOdeVariables) (int 2)  $- (exactDbl 2 `mulRe` idx (sy sysOdeVariables) (int 3))))
+                        cos (exactDbl 2 `mulRe` idx (sy sysOdeVariablesCon) (int 2)  $- (exactDbl 2 `mulRe` idx (sy sysOdeVariablesCon) (int 3))))
                    )] -- theta2''
               -- ODE equations
              dblODEOptions
