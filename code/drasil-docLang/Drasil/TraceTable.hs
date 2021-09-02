@@ -20,12 +20,12 @@ dependencyPlate = preorderFold $ purePlate {
     (Goals _ c) -> getDependenciesOf [defs] c
     _ -> [],
   scsSub = Constant <$> \case
-    (Assumptions a)      -> getDependenciesOf [defs] a
-    (TMs _ _ t)          -> getDependenciesOf [\x -> map (^. defn) (x ^. defined_quant) ++
+    (Assumptions a) -> getDependenciesOf [defs] a
+    (TMs _ _ t)     -> getDependenciesOf [\x -> map (^. defn) (x ^. defined_quant) ++
       map (^. defn) (x ^. operations), notes] t
-    (DDs _ _ des dmes _) -> getDependenciesOf [derivs, notes] des ++ getDependenciesOf [derivs, notes] dmes
-    (GDs _ _ g _)        -> getDependenciesOf [defs, derivs, notes] g
-    (IMs _ _ i _)        -> getDependenciesOf [derivs, notes] i
+    (DDs _ _ d _) -> map (\(DD d') -> getDependencyOf [derivs, notes] d') d
+    (GDs _ _ g _) -> getDependenciesOf [defs, derivs, notes] g
+    (IMs _ _ i _) -> getDependenciesOf [derivs, notes] i
     _ -> [],
   reqSub = Constant . getDependenciesOf [defs] <$> \case
     (FReqsSub' c _) -> c
@@ -35,7 +35,9 @@ dependencyPlate = preorderFold $ purePlate {
   ucsSec = Constant . getDependenciesOf [defs] <$> \(UCsProg c) -> c
 } where
   getDependenciesOf :: HasUID a => [a -> [Sentence]] -> [a] -> [(UID, [UID])]
-  getDependenciesOf fs = map (\x -> (x ^. uid, concatMap (lnames' . ($ x)) fs))
+  getDependenciesOf fs = map (getDependencyOf fs)
+  getDependencyOf :: HasUID a => ([a -> [Sentence]] -> a -> (UID, [UID]))
+  getDependencyOf fs x = (x ^. uid, concatMap (lnames' . ($ x)) fs)
   defs :: Definition a => a -> [Sentence]
   defs x = [x ^. defn]
   derivs :: HasDerivation a => a -> [Sentence]

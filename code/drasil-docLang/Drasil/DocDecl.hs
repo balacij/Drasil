@@ -11,9 +11,11 @@ import qualified Drasil.DocumentLanguage.Core as DL (DocSection(..), RefSec(..),
   AppndxSec(..), OffShelfSolnsSec(..), DerivationDisplay)
 import Drasil.Sections.Requirements (fullReqs, fullTables)
 
-import Database.Drasil (ChunkDB, SystemInformation(SI), UMap, asOrderedList,
+import Database.Drasil 
+
+{- (ChunkDB, SystemInformation(SI), UMap, asOrderedList,
   _inputs, _sysinfodb, conceptinsTable, eDataDefnTable, meDataDefnTable, gendefTable,
-  insmodelTable, theoryModelTable)
+  insmodelTable, theoryModelTable, datadefnLookup) -}
 import Language.Drasil hiding (sec)
 
 import Data.Drasil.Concepts.Documentation (assumpDom, funcReqDom, goalStmtDom,
@@ -133,13 +135,16 @@ mkDocDesc SI{_inputs = is, _sysinfodb = db} = map sec where
   pdSub (PhySysDesc i s lc c) = DL.PhySysDesc i s lc c
   pdSub (Goals s) = DL.Goals s $ fromConcInsDB goalStmtDom
 
-  -- TODO: Here is where the lists should be sorted.
+  -- TODO: Sanity checks on the ModelOrder
+  orderedModels :: ModelOrder -> Getting (UMap a) ChunkDB (UMap a) -> (UID -> UMap a -> a) -> [a]
+  orderedModels mo trg find = maybe (allInDB trg) (map (`find` (db ^. trg))) mo
+
   scsSub :: SCSSub -> DL.SCSSub
-  scsSub Assumptions = DL.Assumptions $ fromConcInsDB assumpDom
-  scsSub (TMs s mo f)    = DL.TMs s f $ allInDB theoryModelTable
-  scsSub (GDs s mo f dd) = DL.GDs s f (allInDB gendefTable) dd
-  scsSub (DDs s mo f dd) = DL.DDs s f (allInDB eDataDefnTable) (allInDB meDataDefnTable) dd
-  scsSub (IMs s mo f dd) = DL.IMs s f (allInDB insmodelTable) dd
+  scsSub Assumptions     = DL.Assumptions $ fromConcInsDB assumpDom
+  scsSub (TMs s mo f)    = DL.TMs s f (orderedModels mo theoryModelTable theoryModelLookup)
+  scsSub (GDs s mo f dd) = DL.GDs s f (orderedModels mo gendefTable gendefLookup) dd
+  scsSub (DDs s mo f dd) = _ -- DL.DDs s f (allInDB eDataDefnTable) (allInDB meDataDefnTable) dd
+  scsSub (IMs s mo f dd) = DL.IMs s f (orderedModels mo insmodelTable insmodelLookup) dd
   scsSub (Constraints s c) = DL.Constraints s c
   scsSub (CorrSolnPpties c cs) = DL.CorrSolnPpties c cs
 
