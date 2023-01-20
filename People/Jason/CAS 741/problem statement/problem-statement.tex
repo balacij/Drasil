@@ -12,6 +12,30 @@
 \input{../comments}
 \input{../common}
 
+
+% Configure font and file encodings, and language as Canadian English
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[canadian]{babel}
+\usepackage{lmodern}
+\usepackage{anyfontsize}
+
+% Required for biblatex, but also adds functionality for quotation
+\usepackage{csquotes}
+
+% Credit to Gabriel Devenyi for this bibliography cfg:
+% github.com/gdevenyi/mcmaster.latex
+\usepackage[
+  style=numeric-comp,
+  backend=biber,
+  sorting=none,
+  backref=true,
+  maxnames=99,
+  alldates=iso,
+  seconds=true
+]{biblatex} % bibliography
+\addbibresource{references.bib}
+
 \begin{document}
 
 \maketitle
@@ -23,6 +47,7 @@
         \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}                       \\
         \midrule
         Jan. 20, 2023 & Jason                 & Template created \& committed to git. \\
+        Jan. 20, 2023 & Jason                 & Template filled in.                   \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -30,10 +55,33 @@
 \section{Problem Statement}
 \label{problem-statement}
 
+Beams safely support many constructions under load. Everything from bridges and
+skyscrapers to commercial and residential properties use beams to safely carry
+load by distributing the stress into their foundations and the ground\
+\cite{Moscovitch2020}. Beams are flat, horizontal structural elements. They bear
+load perpendicular to their horizon\ \cite{Moscovitch2020}.
 
+Typically, inhabitants of residential constructions expect their floors to be
+flat, balanced, and rigidly unmoving, or else they might feel uncomfortable in
+their space. As such, beams must be rigidly fixed in place and be capable of
+transferring all imposed loads down to the foundations of the buildings and the
+ground. However, for other applications, such as bridges and beds of machine
+tools, beams are free, within reason, to move horizontally\
+\cite{BirdChivers1993}. \textit{Simply-supported} beams are one kind of beams
+that are commonly found in these other applications.
+
+Simply-supported beams use only two supports: a \textit{pinned} support and a
+\textit{roller} support\ \cite{Lemonis2022}. The pinned support is fixed and
+unmoving, while the roller support allows the beam to expand or contract axially
+\cite{Lemonis2022}.
 
 \subsection{Problem}
 \label{problem-statement:problem}
+
+Under simplified assumptions (i.e., Euler-Bernoulli beam theory
+\cite{EulerBernoulliWiki}), to understand how various simply-supported beams can
+safely carry uniformly distributed loads, engineers must understand how beams
+deflect and how the ends react.
 
 \subsection{Inputs and Outputs}
 \label{problem-statement:inputs-and-outputs}
@@ -57,5 +105,9 @@
 
 \section{Potential Changes}
 \label{potential-changes}
+
+\newpage
+
+\printbibliography[heading=bibintoc]
 
 \end{document}

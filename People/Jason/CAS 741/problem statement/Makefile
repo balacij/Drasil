@@ -16,10 +16,10 @@ system_requirements:
 	@echo "System Requirements: LaTeX (latexmk + LuaLaTeX), Pygments, InkScape"
 
 build: # standard build -- '-output-directory=build' is a special name and is referenced from the '\usepackage{minted}' region in the main tex.
-	latexmk -output-directory=build -pdflatex=lualatex -pdf -interaction=nonstopmode "$(BUILD).tex" --shell-escape
+	latexmk -use-make -output-directory=build -pdflatex=lualatex -pdf -interaction=nonstopmode "$(BUILD).tex" --shell-escape
 
 debug: # for finding hard issues, this is an interactive version of 'build'
-	latexmk -output-directory=build -pdflatex=lualatex -pdf "$(BUILD).tex" --shell-escape
+	latexmk -use-make -output-directory=build -pdflatex=lualatex -pdf "$(BUILD).tex" --shell-escape
 
 clean:
 	rm -rf "build/"
