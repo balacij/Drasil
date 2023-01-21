@@ -1,18 +1,5 @@
 \documentclass{article}
 
-\usepackage{tabularx}
-\usepackage{booktabs}
-
-\title{Problem Statement and Goals\\\progname{}}
-
-\author{\authname}
-
-\date{}
-
-\input{../comments}
-\input{../common}
-
-
 % Configure font and file encodings, and language as Canadian English
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -25,16 +12,21 @@
 
 % Credit to Gabriel Devenyi for this bibliography cfg:
 % github.com/gdevenyi/mcmaster.latex
-\usepackage[
-  style=numeric-comp,
-  backend=biber,
-  sorting=none,
-  backref=true,
-  maxnames=99,
-  alldates=iso,
-  seconds=true
-]{biblatex} % bibliography
-\addbibresource{references.bib}
+\usepackage[ style=numeric-comp, backend=biber, sorting=none, backref=true,
+  maxnames=99, alldates=iso, seconds=true ]{biblatex} % bibliography
+\addbibresource{../references.bib}
+
+\usepackage{tabularx}
+\usepackage{booktabs}
+
+\title{Problem Statement and Goals\\\progname{}}
+
+\author{\authname}
+
+\date{}
+
+\input{../comments}
+\input{../common}
 
 \begin{document}
 
@@ -44,10 +36,12 @@
     \caption{Revision History} \label{TblRevisionHistory}
     \begin{tabularx}{\textwidth}{llX}
         \toprule
-        \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}                       \\
+        \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}                  \\
         \midrule
-        Jan. 20, 2023 & Jason                 & Template created \& committed to git. \\
-        Jan. 20, 2023 & Jason                 & Template filled in.                   \\
+        Jan. 20, 2023 & Jason                 & Template created \& committed to
+        git.
+        \\
+        Jan. 20, 2023 & Jason                 & Template filled in.              \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -97,11 +91,11 @@ essential aspects of \cite{Lemonis2022}:
 
 \begin{enumerate}
     \item Beam structural properties:
-        \begin{enumerate}
-            \item length,
-            \item material modulus of elasticity (Young's modulus), and
-            \item moment of inertia.
-        \end{enumerate}
+          \begin{enumerate}
+              \item length,
+              \item material modulus of elasticity (Young's modulus), and
+              \item moment of inertia.
+          \end{enumerate}
     \item Magnitude of uniformly imposed force/load.
 \end{enumerate}
 
@@ -109,17 +103,17 @@ essential aspects of \cite{Lemonis2022}:
 
 \begin{enumerate}
     \item At the supports, respectively:
-        \begin{enumerate}
-            \item force reactions, and
-            \item angle of rotation.
-        \end{enumerate}
-    
+          \begin{enumerate}
+              \item force reactions, and
+              \item angle of rotation.
+          \end{enumerate}
+
     \item Related to the beam:
-        \begin{enumerate}
-            \item maximum deflection distance,
-            \item bending moment, and
-            \item transverse shear force.
-        \end{enumerate}
+          \begin{enumerate}
+              \item maximum deflection distance,
+              \item bending moment, and
+              \item transverse shear force.
+          \end{enumerate}
 \end{enumerate}
 
 \subsection{Stakeholders}
@@ -152,11 +146,61 @@ allow for generating suitable software artifacts.
 \section{Goals}
 \label{goals}
 
-\section{Stretch Goals}
-\label{goals:stretch-goals}
+This primary purpose of this work is to be a learning experience for myself,
+Jason Balaci, about the development of Software Requirements Specifications
+(SRS) documents and Scientific Computing Software (SCS). The secondary purpose
+of this work is to create a new case study in Drasil whilst extending Drasil's
+captured mathematical knowledge to include boundary value problems.
 
-\section{Potential Changes}
-\label{potential-changes}
+The tangible goals of this case study are as follows:
+
+\begin{enumerate}
+    \item to extend Drasil's mathematical knowledge (at least to include
+          boundary value problems) and better understand it's current
+          limitations, and
+    \item to \textit{generate} a software artifact that conforms to the
+          requirements as described by a well-formed SRS document abstraction.
+          The SRS document abstraction will follow the needs of sufficiently
+          describing the ``problem'' as described earlier in
+          \autoref{problem-statement:problem}.
+\end{enumerate}
+
+\section{Stretch Goals}
+\label{stretch-goals}
+
+If time permits, there are also additional goals of this work, both related to
+Drasil and the specific case study, with some overlap.
+
+
+\begin{enumerate}
+    \item Related to Drasil:
+          \begin{enumerate}
+              \item extend Drasil to generating GNU Octave or Julia code,
+              \item create a guided, interactive tutorial on working with Drasil
+                    (as discussed in \cite{BalaciDrasilIssueComment3194}),
+              \item understanding the needs of building and manipulating
+                    ``chunks'' \cite{Drasil2023} in Drasil, in the context of my
+                    doctorate work (with particular focus on
+                    \cite{BalaciDrasilDiscussion3003}),
+              \item capture the idea of ``contexts'' to theories for Drasil to
+                    be able to specialize/refine contextual quantities,
+                    theories, and other chunks to particular contexts, and
+              \item to become better acquainted with the chunk structure of
+                    Drasil, potentially making contributions where applicable.
+          \end{enumerate}
+
+    \item Related to the case study:
+          \begin{enumerate}
+              \item build a family of case studies related to simply-supported
+                    beams for \textit{various kinds of loads},
+              \item build a family of case studies related to \textit{various
+                        types of beams} for \textit{various kinds of loads},
+              \item generate a visual diagram of the beam deflection at loading,
+                    and finally,
+              \item to solve the same problem with a system of linear equations
+                    instead of the boundary-value problem formation.
+          \end{enumerate}
+\end{enumerate}
 
 \newpage
 
