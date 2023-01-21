@@ -67,35 +67,87 @@ their space. As such, beams must be rigidly fixed in place and be capable of
 transferring all imposed loads down to the foundations of the buildings and the
 ground. However, for other applications, such as bridges and beds of machine
 tools, beams are free, within reason, to move horizontally\
-\cite{BirdChivers1993}. \textit{Simply-supported} beams are one kind of beams
+\cite{BirdChivers1993}. \textit{Simply supported} beams are one kind of beams
 that are commonly found in these other applications.
 
-Simply-supported beams use only two supports: a \textit{pinned} support and a
+Simply supported beams use only two supports: a \textit{pinned} support and a
 \textit{roller} support\ \cite{Lemonis2022}. The pinned support is fixed and
 unmoving, while the roller support allows the beam to expand or contract axially
-\cite{Lemonis2022}.
+\cite{Lemonis2022}. To understand how simply supported beams handle uniformly
+distributed loads, we aim to approximate the curve of deflection of a beam under
+various conditions.
 
 \subsection{Problem}
 \label{problem-statement:problem}
 
 Under simplified assumptions (i.e., Euler-Bernoulli beam theory
-\cite{EulerBernoulliWiki}), to understand how various simply-supported beams can
+\cite{EulerBernoulliWiki}), to understand how various simply supported beams can
 safely carry uniformly distributed loads, engineers must understand how beams
 deflect and how the ends react.
 
 \subsection{Inputs and Outputs}
 \label{problem-statement:inputs-and-outputs}
 
-\wss{Characterize the problem in terms of ``high level'' inputs and outputs.
-    Use abstraction so that you can avoid details.}
+As the scope of the work is relatively limited, the inputs and outputs are also
+relatively limited. The inputs and outputs are as follows, following the
+essential aspects of \cite{Lemonis2022}:
+
+\subsubsection{Inputs}
+\label{problem-statement:inputs-and-outputs:inputs}
+
+\begin{enumerate}
+    \item Beam structural properties:
+        \begin{enumerate}
+            \item length,
+            \item material modulus of elasticity (Young's modulus), and
+            \item moment of inertia.
+        \end{enumerate}
+    \item Magnitude of uniformly imposed force/load.
+\end{enumerate}
+
+\subsubsection{Outputs}
+
+\begin{enumerate}
+    \item At the supports, respectively:
+        \begin{enumerate}
+            \item force reactions, and
+            \item angle of rotation.
+        \end{enumerate}
+    
+    \item Related to the beam:
+        \begin{enumerate}
+            \item maximum deflection distance,
+            \item bending moment, and
+            \item transverse shear force.
+        \end{enumerate}
+\end{enumerate}
 
 \subsection{Stakeholders}
 \label{problem-statement:stakeholders}
 
+As this work is a task of CAS\ $741$, the stakeholders of this case study
+includes Dr.\ Spencer Smith (who will be reviewing the work), myself (Jason
+Balaci, who will be taking authorship of the work and whose grade is dependent
+on this work), and peers in CAS\ $741$ (notably, reviewers). Additionally, as
+this work is expected to be performed using, and contribute to, Drasil\
+\cite{Drasil2023}, Dr.\ Jacques Carette is another stakeholder in the final
+product and contributions to Drasil. Notably, as a colleague in CAS\ 741 and in
+the Drasil Research Team, Sam Crawford is also a stakeholder in this work.
+Finally, as this work will additionally become a case study under Drasil, the
+greater community related to Drasil is also a stakeholder.
+
 \subsection{Environment}
 \label{problem-statement:environment}
 
-\wss{Hardware and software}
+As this work will be built using Drasil, it will be made in Haskell according to
+the Haskell2010 language specification\ \cite{Haskell2010}, and it is limited to
+producing the software artifacts which Drasil is able to generate. Since Drasil
+already covers generating software artifacts for general-purpose programming
+languages that compile and run on major operating systems and Central Processing
+Unit (CPU) architectures, usability of the final software artifacts should not
+be an issue to the majority of users. However, should foreign hardware or
+software be desired as an environment, an extension should be built in Drasil to
+allow for generating suitable software artifacts.
 
 \section{Goals}
 \label{goals}
