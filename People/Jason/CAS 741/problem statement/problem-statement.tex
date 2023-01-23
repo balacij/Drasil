@@ -67,17 +67,17 @@ that are commonly found in these other applications.
 Simply supported beams use only two supports: a \textit{pinned} support and a
 \textit{roller} support\ \cite{Lemonis2022}. The pinned support is fixed and
 unmoving, while the roller support allows the beam to expand or contract axially
-\cite{Lemonis2022}. To understand how simply supported beams handle uniformly
-distributed loads, we aim to approximate the curve of deflection of a beam under
-various conditions.
+\cite{Lemonis2022}. To understand how simply supported beams handle distributed
+loads, we aim to approximate the curve of deflection of a beam under various
+conditions.
 
 \subsection{Problem}
 \label{problem-statement:problem}
 
 Under simplified assumptions (i.e., Euler-Bernoulli beam theory
 \cite{EulerBernoulliWiki}), to understand how various simply supported beams can
-safely carry uniformly distributed loads, engineers must understand how beams
-deflect and how the ends react.
+safely carry distributed loads, engineers must understand how beams deflect and
+how the ends react.
 
 \subsection{Inputs and Outputs}
 \label{problem-statement:inputs-and-outputs}
@@ -96,7 +96,9 @@ essential aspects of \cite{Lemonis2022}:
               \item material modulus of elasticity (Young's modulus), and
               \item moment of inertia.
           \end{enumerate}
-    \item Magnitude of uniformly imposed force/load.
+    \item Imposed load as a function of the distance from the left-side of the
+          beam. Note: this input value will need to be deeply embedded in the
+          Drasil encoding until Drasil is able to parse external expressions.
 \end{enumerate}
 
 \subsubsection{Outputs}
