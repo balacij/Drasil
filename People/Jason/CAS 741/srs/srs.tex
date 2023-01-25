@@ -6,7 +6,7 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{graphicx}
-\graphicspath{{../assets}} % Move 
+\graphicspath{{../assets}} % Bring in the assets
 
 \usepackage{colortbl}
 \usepackage{xr}
@@ -40,6 +40,7 @@
 
 \input{../comments}
 \input{../common}
+\input{../macros}
 
 % For easy change of table widths
 \newcommand{\colZwidth}{1.0\textwidth}
@@ -134,7 +135,7 @@
 
 \begin{document}
 
-\title{Software Requirements Specification for \progname: subtitle describing software}
+\title{Software Requirements Specification for \progname: examining a beam bending under load.}
 \author{\authname}
 \date{\today}
 
@@ -151,10 +152,10 @@
 \section*{Revision History}
 
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-    \toprule {\bf Date} & {\bf Version} & {\bf Notes} \\
+    \toprule {\bf Date} & {\bf Version} & {\bf Notes}        \\
     \midrule
-    Date 1              & 1.0           & Notes       \\
-    Date 2              & 1.1           & Notes       \\
+    Jan. 25, 2023       & 0.0           & Template imported. \\
+    Jan. 25, 2023       & 0.1           & Preliminary information added. \\
     \bottomrule
 \end{tabularx}
 
@@ -234,37 +235,27 @@ systems.  The symbols are listed in alphabetical order.
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{l l}
     \toprule
-    \textbf{symbol} & \textbf{description}                                                     \\
+    \textbf{symbol} & \textbf{description}                \\
     \midrule
-    A               & Assumption                                                               \\
-    DD              & Data Definition                                                          \\
-    GD              & General Definition                                                       \\
-    GS              & Goal Statement                                                           \\
-    IM              & Instance Model                                                           \\
-    LC              & Likely Change                                                            \\
-    PS              & Physical System Description                                              \\
-    R               & Requirement                                                              \\
-    SRS             & Software Requirements Specification                                      \\
-    \progname{}     & \plt{put an expanded version of your program name here (as appropriate)} \\
-    T               & Theoretical Model                                                        \\
+    A               & Assumption                          \\
+    DD              & Data Definition                     \\
+    GD              & General Definition                  \\
+    GS              & Goal Statement                      \\
+    IM              & Instance Model                      \\
+    LC              & Likely Change                       \\
+    PS              & Physical System Description         \\
+    R               & Requirement                         \\
+    SRS             & Software Requirements Specification \\
+    \progname{}     & Beam Bending                        \\
+    T               & Theoretical Model                   \\
     \bottomrule
 \end{tabular}\\
 
-\plt{Add any other abbreviations or acronyms that you add}
-
 \subsection{Mathematical Notation}
 
-\plt{This section is optional, but should be included for projects that make use
-    of notation to convey mathematical information.  For instance, if typographic
-    conventions (like bold face font) are used to distinguish matrices, this
-    should be stated here.  If symbols are used to show mathematical operations,
-    these should be summarized here.  In some cases the easiest way to summarize
-    the notation is to point to a text or other source that explains the
-    notation.}
-
-\plt{This section was added to the template because some students use very
-    domain specific notation.  This notation will not be readily understandable to
-    people outside of your domain.  It should be explained.}
+Vector symbols will be represented using the ``arrow'' notation, where a
+right-ward facing arrow is placed atop a symbol denoting a vector. For example,
+\(\vec{v}\) is a vector symbol.
 
 \newpage
 
