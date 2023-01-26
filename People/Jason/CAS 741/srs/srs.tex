@@ -157,6 +157,8 @@
     Jan. 25, 2023       & 0.0.0         & Template imported.             \\
     Jan. 25, 2023       & 0.1.0         & Preliminary information added. \\
     Jan. 25, 2023       & 0.1.1         & Table of units added.          \\
+    Jan. 25, 2023       & 0.1.2         & Table of symbols added.        \\
+    Jan. 25, 2023       & 0.1.3         & Refining above tables.         \\
     \bottomrule
 \end{tabularx}
 
@@ -173,19 +175,38 @@ as the unit system.  In addition to the basic units, several derived units are
 used as described below.  For each unit, the symbol is given followed by a
 description of the unit and the SI name. ~\newline
 
-\renewcommand{\arraystretch}{1.2}
-\noindent \begin{tabular}{l l l}
-    \toprule
-    \textbf{symbol}   & \textbf{unit} & \textbf{SI}                                            \\
-    \midrule
-    \si{\metre}       & length        & metre                                                  \\
-    \si{\gram}        & mass          & gram                                                   \\
-    \si{\kilogram}    & mass          & kilogram (\(\si{kilogram}=10^{3}\si{\gram}\))          \\
-    \si{\pascal}      & pressure      & pascal                                                 \\
-    \si{\giga\pascal} & pressure      & gigapascals (\(\si{\giga\pascal}=10^{9}\si{\pascal}\)) \\
-    \si{\radian}      & angle         & radian                                                 \\
-    \bottomrule
-\end{tabular}
+\begin{center}
+    \renewcommand{\arraystretch}{1.2}
+    \noindent \begin{tabular}{l l l}
+        \toprule
+        \textbf{symbol} & \textbf{unit} & \textbf{SI} \\
+        \midrule
+        \si{\metre}     & length        & metre       \\
+        \si{\gram}      & mass          & gram        \\
+        \si{\pascal}    & pressure      & pascal      \\
+        \si{\radian}    & angle         & radian      \\
+        \si{\newton}    & force         & newton      \\
+        \bottomrule
+    \end{tabular}\\
+\end{center}
+
+\noindent{}Note that we will also often use:
+
+\begin{itemize}
+
+    \item ``gigapascals'' (a unit of pressure, denoted by \si{\giga\pascal},
+          where \(\si{\giga\pascal}=10^{9}\si{\pascal}\)),
+
+    \item ``kilograms'' (a unit of mass, \si{\kilogram}, where
+          \(\si{\kilogram}=10^{3}\si{\gram}\)),
+
+    \item ``kilonewtons'' (a unit of force, denoted by \si{\kilo\newton}, where
+          \(\si{\kilo\newton}=10^{3}\si{\newton}\)), and
+
+    \item ``millimetres'' (a unit of length, denoted by \si{\milli\metre}, where
+          \(\si{\milli\metre}=10^{-5}\si{\metre}\)).
+
+\end{itemize}
 
 \subsection{Table of Symbols}
 
@@ -195,46 +216,58 @@ transfer literature and with existing documentation for solar water heating
 systems.  The symbols are listed in alphabetical order.
 
 \renewcommand{\arraystretch}{1.2}
-%\noindent \begin{tabularx}{1.0\textwidth}{l l X}
 \noindent \begin{longtable*}{l l p{12cm}} \toprule
     \textbf{symbol} & \textbf{unit} & \textbf{description}\\
     \midrule
-    $A_C$ & \si[per-mode=symbol] {\square\metre} & coil surface area
-    \\
-    $A_\text{in}$ & \si[per-mode=symbol] {\square\metre} & surface area over
-    which heat is transferred in
-    \\
+    \(L\) & \si{\metre} & length of the beam \\
+    \(E\) & \si{\giga\pascal} & Young's modulus (beam material modulus of elasticity) \\
+    \(I\) & \(\si{\metre{}}^{4}\) & moment of inertia \\
+    \(n\) & \textemdash{} & number of (imposed force, deflection) samples to take along the beam \\
+    \(x\) & \si{\metre} & distance of an arbitrary point along the beam, from the far left-side (at the pinned support) \\
+    \(W(x)\) & \si{\kilo\newton} & hypothetical force of the load applied at a specific point along the beam \\
+    \(f(x)\) & \si{\kilo\newton} & user-defined definition of the force of the load applied at a specific point along the beam \\
+    \(\mathit{Pinned}\) & \si{\metre} & 1-dimensional position of the pinned support \\
+    \(\mathit{Roller}\) & \si{\metre} & 1-dimensional position of the roller support \\
+    \(R_{\mathit{Pinned}}\) & \si{\kilo\newton} & reaction of the pinned support under loaded beam \\
+    \(R_{\mathit{Roller}}\) & \si{\kilo\newton} & reaction of the roller support under loaded beam \\
+    \(\theta{}_{\mathit{Pinned}}\) & \si{\radian} & slope of the angle between the beam and the pinned support under load \\
+    \(\theta{}_{\mathit{Roller}}\) & \si{\radian} & slope of the angle between the beam and the roller support under load \\
+    \(d(x)\) & \si{\milli\metre} & deflection of the loaded beam at a specific point along it \\
+    \(s\) & \si{\milli\metre} & loaded beam movement in the rightward direction of the roller support \\
+    \(\vec{r}\) & \textemdash{} & $n$-dimensional vector of equally-spaced $(W(x),d(x))$ samples along the beam \\
     \bottomrule
 \end{longtable*}
-\plt{Use your problems actual symbols.  The si package is a good idea to use for
-    units.}
 
 \subsection{Abbreviations and Acronyms}
 
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{l l}
-    \toprule
-    \textbf{symbol} & \textbf{description}                \\
-    \midrule
-    A               & Assumption                          \\
-    DD              & Data Definition                     \\
-    GD              & General Definition                  \\
-    GS              & Goal Statement                      \\
-    IM              & Instance Model                      \\
-    LC              & Likely Change                       \\
-    PS              & Physical System Description         \\
-    R               & Requirement                         \\
-    SRS             & Software Requirements Specification \\
-    \progname{}     & Beam Bending                        \\
-    T               & Theoretical Model                   \\
-    \bottomrule
-\end{tabular}\\
+
+\begin{center}
+    \begin{tabular}{l l}
+        \toprule
+        \textbf{symbol} & \textbf{description}                \\
+        \midrule
+        A               & Assumption                          \\
+        DD              & Data Definition                     \\
+        GD              & General Definition                  \\
+        GS              & Goal Statement                      \\
+        IM              & Instance Model                      \\
+        LC              & Likely Change                       \\
+        PS              & Physical System Description         \\
+        R               & Requirement                         \\
+        SRS             & Software Requirements Specification \\
+        \progname{}     & Beam Bending                        \\
+        TM              & Theoretical Model                   \\
+        \bottomrule
+    \end{tabular}
+\end{center}
 
 \subsection{Mathematical Notation}
 
 Vector symbols will be represented using the ``arrow'' notation, where a
 right-ward facing arrow is placed atop a symbol denoting a vector. For example,
-\(\vec{v}\) is a vector symbol.
+\(\vec{v}\) is a vector symbol. Additionally, the standard ``tuple'' notation
+will also be used to denote tuples.
 
 \newpage
 
@@ -295,7 +328,7 @@ right-ward facing arrow is placed atop a symbol denoting a vector. For example,
 Readers of this document should at least have an understanding of:
 \begin{itemize}
     \item at least a first-year university level physics concepts, such as
-          ``force,'' ``mass,'' ``elasticity,'' and ``units,''
+          ``force,'' ``mass,'' ``inertia,'' ``elasticity,'' and ``units,''
     \item first-year university level linear algebra and calculus concepts, such
           as derivatives, integration, continuous functions, and vectors.
 \end{itemize}
@@ -452,17 +485,25 @@ elements:
 
 \end{itemize}
 
-\plt{A figure here makes sense for most SRS documents}
+\begin{figure}[h!]
+\begin{center}
+%\rotatebox{-90}
+{
+ \includegraphics[width=0.9\textwidth]{temp/beam_bending_diagram.drawio.png}
+}
+\caption{\label{beam_bending_diagram} Diagram of a Simply Supported Beam}
+\end{center}
+\end{figure}
 
-% \begin{figure}[h!]
-% \begin{center}
-% %\rotatebox{-90}
-% {
-%  \includegraphics[width=0.5\textwidth]{<FigureName>}
-% }
-% \caption{\label{<Label>} <Caption>}
-% \end{center}
-% \end{figure}
+\begin{figure}[h!]
+\begin{center}
+%\rotatebox{-90}
+{
+ \includegraphics[width=0.9\textwidth]{temp/beam_bending_diagram_annotated.drawio.png}
+}
+\caption{\label{beam_bending_diagram_annotated} Diagram of a Simply Supported Beam Under Load}
+\end{center}
+\end{figure}
 
 \subsubsection{Goal Statements}
 
