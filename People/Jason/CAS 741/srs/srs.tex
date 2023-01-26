@@ -162,14 +162,15 @@
 \section*{Revision History}
 
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-    \toprule {\bf Date} & {\bf Version} & {\bf Notes}                    \\
+    \toprule {\bf Date} & {\bf Version} & {\bf Notes}                      \\
     \midrule
-    Jan. 25, 2023       & 0.0.0         & Template imported.             \\
-    Jan. 25, 2023       & 0.1.0         & Preliminary information added. \\
-    Jan. 25, 2023       & 0.1.1         & Table of units added.          \\
-    Jan. 25, 2023       & 0.1.2         & Table of symbols added.        \\
-    Jan. 25, 2023       & 0.1.3         & Refining above tables.         \\
-    Jan. 25, 2023       & 0.2.0         & Refined introduction.          \\
+    Jan. 25, 2023       & 0.0.0         & Template imported.               \\
+    Jan. 25, 2023       & 0.1.0         & Preliminary information added.   \\
+    Jan. 25, 2023       & 0.1.1         & Table of units added.            \\
+    Jan. 25, 2023       & 0.1.2         & Table of symbols added.          \\
+    Jan. 25, 2023       & 0.1.3         & Refining above tables.           \\
+    Jan. 25, 2023       & 0.2.0         & Refined introduction.            \\
+    Jan. 25, 2023       & 0.3.0         & Refining GSD, SSD, TMs, and IMs. \\
     \bottomrule
 \end{tabularx}
 
@@ -251,22 +252,25 @@ systems.  The symbols are listed in alphabetical order.
 \noindent\begin{longtable*}{l l p{12cm}} \toprule
     \textbf{symbol} & \textbf{unit} & \textbf{description}\\
     \midrule
-    \(L\) & \si{\metre} & length of the beam \\
-    \(E\) & \si{\giga\pascal} & Young's modulus (beam material modulus of elasticity) \\
-    \(I\) & \(\si{\metre{}}^{4}\) & moment of inertia \\
-    \(n\) & \textemdash{} & number of (imposed force, deflection) samples to take along the beam \\
-    \(x\) & \si{\metre} & distance of an arbitrary point along the beam, from the far left-side (at the pinned support) \\
-    \(W(x)\) & \si{\kilo\newton} & hypothetical force of the load applied at a specific point along the beam \\
+    \(L\) & \si{\metre} & abstract length of the beam \\
+    \(E\) & \si{\giga\pascal} & abstract Young's modulus (beam material modulus of elasticity) \\
+    \(I\) & \(\si{\metre{}}^{4}\) & abstract moment of inertia \\
+    \(L_{B}\) & \si{\metre} & user-defined length of the beam \\
+    \(E_{B}\) & \si{\giga\pascal} & user-defined Young's modulus (beam material modulus of elasticity) \\
+    \(I_{B}\) & \(\si{\metre{}}^{4}\) & user-defined moment of inertia of a cross-section of the beam \\
+    \(n\) & \textemdash{} & user-defined number of (imposed force, deflection) samples to take along the beam \\
     \(f(x)\) & \si{\kilo\newton} & user-defined definition of the force of the load applied at a specific point along the beam \\
+    \(x\) & \si{\metre} & distance of an arbitrary point along the beam, from the far left-side (at the pinned support) \\
+    \(w(x)\) & \si{\kilo\newton} & hypothetical force of the load applied at a specific point along the beam \\
     \(\mathit{Pinned}\) & \si{\metre} & 1-dimensional position of the pinned support \\
     \(\mathit{Roller}\) & \si{\metre} & 1-dimensional position of the roller support \\
     \(R_{\mathit{Pinned}}\) & \si{\kilo\newton} & reaction of the pinned support under loaded beam \\
     \(R_{\mathit{Roller}}\) & \si{\kilo\newton} & reaction of the roller support under loaded beam \\
     \(\theta{}_{\mathit{Pinned}}\) & \si{\radian} & slope of the angle between the beam and the pinned support under load \\
     \(\theta{}_{\mathit{Roller}}\) & \si{\radian} & slope of the angle between the beam and the roller support under load \\
-    \(d(x)\) & \si{\milli\metre} & deflection of the loaded beam at a specific point along it \\
+    \(y(x)\) & \si{\milli\metre} & deflection of the loaded beam at a specific point along it \\
     \(s\) & \si{\milli\metre} & loaded beam movement in the rightward direction of the roller support \\
-    \(\vec{r}\) & \textemdash{} & $n$-dimensional vector of equally-spaced $(W(x),d(x))$ samples along the beam \\
+    \(\vec{r}\) & \textemdash{} & $n+1$-dimensional vector of equally-spaced $(w(x),y(x))$ samples along the beam \\
     \bottomrule
 \end{longtable*}
 
@@ -280,6 +284,7 @@ systems.  The symbols are listed in alphabetical order.
         \textbf{symbol} & \textbf{description}                \\
         \midrule
         A               & Assumption                          \\
+        BVP             & Boundary Value Problem              \\
         DD              & Data Definition                     \\
         GD              & General Definition                  \\
         GS              & Goal Statement                      \\
@@ -315,11 +320,13 @@ For any structure carrying load, beams are used to safely distribute the stress
 of the load to the foundations of the structure. Unlike flooring in residential
 homes, we expect the beds of industrial-strength mechanical tools and bridges
 to, within reason, be vertically and horizontally flexible, reacting to imposed
-load such that they may hold with minimal columns. As such, the beams required
-are different. \textit{Simply supported} beams are one type of beam that are
-commonly found in bridges and beds of machine tools. We may use software to
-analyze the beams reaction under various loading scenarios. We call the software
-that performs this, ``BeamBending.''
+load such that they may hold with minimal columns. \textit{Simply supported}
+beams are one type of beam that are commonly found in bridges and beds of
+machine tools. It is important to understand how beams will react under load or
+else we risk damaging structures, floor bending (making inhabitants feel
+unsafe), or damaging loads. We may use software to analyze the beams reaction
+under various loading scenarios. We call the software that performs this,
+``BeamBending.''
 
 This document aims to develop a general scheme for understanding the reaction of
 a simply supported beam to imposed load under simplified conditions. This
@@ -437,16 +444,16 @@ system constraints.
 
               \item Interpret the output of the program taking this SRS document
                     into consideration and use an audited and reliable copy of a
-                    software related to this SRS. 
+                    software related to this SRS.
 
           \end{itemize}
 
     \item \progname{} Responsibilities:
           \begin{itemize}
-              
+
               \item Detect data type mismatches, such as a string of characters
                     instead of a floating point number.
-              
+
               \item Evaluate applicability of the input arguments to the
                     proposed ``solution'' outlined in this document, such as
                     numbers being above a certain threshold with respect to
@@ -464,23 +471,17 @@ system constraints.
 
 \subsection{User Characteristics} \label{SecUserCharacteristics}
 
-\plt{This section summarizes the knowledge/skills expected of the user.
-    Measuring usability, which is often a required non-function requirement,
-    requires knowledge of a typical user.  As mentioned above, the user is a
-    different role from the ``intended reader,'' as given in
-    Section~\ref{sec_IntendedReader}.  As in Section~\ref{sec_IntendedReader}, the
-    user characteristics should be specific an unambiguous.  For instance, ``The
-    end user of \progname{} should have an understanding of undergraduate Level 1
-    Calculus and Physics.''}
+The user of this software should be a civil engineer or equivalent, and have a
+working understanding of the deflection of beams, shear forces, bending moments,
+and related concepts. If applied in educational purposes, only an understanding
+of first-year physics and calculus is required to generally understand the
+program and simulate a simply-supported beam across various scenarios.
 
 \subsection{System Constraints}
 
-\plt{System constraints differ from other type of requirements because they
-    limit the developers' options in the system design and they identify how the
-    eventual system must fit into the world. This is the only place in the SRS
-    where design decisions can be specified.  That is, the quality requirement for
-    abstraction is relaxed here.  However, system constraints should only be
-    included if they are truly required.}
+The final software should be built using Drasil to encode the problem and
+generate a problem using a Boundary Value Problem (BVP) solver. There are no
+other system constraints.
 
 \newpage
 
@@ -498,8 +499,8 @@ the instance models.  \plt{Add any project specific details that are relevant
 
 \subsection{Problem Description} \label{Sec_pd}
 
-\progname{} is intended to solve ... \plt{What problem does your program solve?
-    The description here should be in the problem space, not the solution space.}
+\progname{} is intended to solve for the deflection a beam experiences given a
+load-application function and properties of the beam.
 
 \subsubsection{Terminology and  Definitions}
 
@@ -513,13 +514,40 @@ This subsection provides a list of terms that are used in the subsequent
 sections and their meaning, with the purpose of reducing ambiguity and making it
 easier to correctly understand the requirements:
 
+\an{I need to add in the definitions.}
+
 \begin{itemize}
 
-    \item
+    \item Deflection:
+
+    \item Shear force:
+
+    \item Bending moment:
+
+    \item Load:
+
+    \item Beam:
+
+    \item Simply supported beam:
+
+    \item Pinned support:
+
+    \item Roller support:
+
+    \item Young's modulus:
+
+    \item Moment of inertia:
 
 \end{itemize}
 
 \subsubsection{Physical System Description} \label{sec_phySystDescrip}
+
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=0.9\textwidth]{temp/beam_bending_diagram.drawio.png}
+        \caption{\label{beam_bending_diagram} Diagram of a Simply Supported Beam}
+    \end{center}
+\end{figure}
 
 \plt{The purpose of this section is to clearly and unambiguously state the
     physical system that is to be modelled. Effective problem solving requires a
@@ -534,25 +562,22 @@ easier to correctly understand the requirements:
     interactions between the elements and their physical environment; ii) the
     interactions between elements; and, iii) the initial or boundary conditions.}
 
-The physical system of \progname{}, as shown in Figure~?, includes the following
-elements:
+The physical system of \progname{}, as shown in
+\Cref{beam_bending_diagram_annotated}, includes the following elements:
 
 \begin{itemize}
 
-    \item[PS1:]
+    \item[PS1:] a slender beam,
 
-    \item[PS2:] ...
+    \item[PS2:] a pinned support,
+
+    \item[PS3:] a roller support, and
+
+    \item[PS4:] an applied load, with load across points captured by a function.
 
 \end{itemize}
 
-\begin{figure}[h!]
-    \begin{center}
-        \includegraphics[width=0.9\textwidth]{temp/beam_bending_diagram.drawio.png}
-        \caption{\label{beam_bending_diagram} Diagram of a Simply Supported Beam}
-    \end{center}
-\end{figure}
-
-\begin{figure}[h!]
+\begin{figure}[H]
     \begin{center}
         \includegraphics[width=0.9\textwidth]{temp/beam_bending_diagram_annotated.drawio.png}
         \caption{\label{beam_bending_diagram_annotated} Diagram of a Simply Supported Beam Under Load}
@@ -561,25 +586,24 @@ elements:
 
 \subsubsection{Goal Statements} \label{sssec_goals}
 
-\plt{The goal statements refine the ``Problem Description''
-    (Section~\ref{Sec_pd}).  A goal is a functional objective the system under
-    consideration should achieve. Goals provide criteria for sufficient
-    completeness of a requirements specification and for requirements
-    pertinence. Goals will be refined in Section “Instanced Models”
-    (Section~\ref{sec_instance}). Large and complex goals should be decomposed
-    into smaller sub-goals.  The goals are written abstractly, with a minimal
-    amount of technical language.  They should be understandable by non-domain
-    experts.}
-
-\noindent Given the \plt{inputs}, the goal statements are:
+\noindent Given the (constant) length, modulus of elasticity, and moment of
+inertia across cross-sections for the beam, and the applied load on the beam as
+a function from the distance of the leftward pinned support, the goal statements
+are:
 
 \begin{itemize}
 
-    \item[GS\refstepcounter{goalnum}\thegoalnum \label{G_meaningfulLabel}:] \plt{One
-            sentence description of the goal.  There may be more than one.  Each Goal
-            should have a meaningful label.}
+    \item[GS\refstepcounter{goalnum}\thegoalnum \label{deflection}:] Calculate
+        the deflection of the beam across $n$ equally spaced samples.
+
+    \item[GS\refstepcounter{goalnum}\thegoalnum \label{res}:] Coupled together,
+        calculate the deflection of the beam across $n$ equally spaced samples
+        with the related applied load at that same sampled point.
 
 \end{itemize}
+
+\an{I'm not sure if I should also work to capture the shear force and bending
+    moment diagrams too.}
 
 \subsection{Solution Characteristics Specification}
 
@@ -661,6 +685,14 @@ likely change [LC], in which the respective assumption is used.
 
 \end{itemize}
 
+\begin{itemize}
+    \item Prismatic beam (straight, flat beam with a uniform cross-section),
+    \item Slender beam (such that Euler-Bernoulli applies, 10:1 ratio of length
+          to width),
+    \item Constant modulus of elasticity and moment of inertia.
+    \item ...
+\end{itemize}
+
 \subsubsection{Theoretical Models}\label{sec_theoretical}
 
 \plt{Theoretical models are sets of abstract mathematical equations or axioms
@@ -677,40 +709,33 @@ on.  \plt{Modify the examples below for your problem, and add additional models
 \noindent
 \deftheory
 % #2 refname of theory
-{T:COE}
+{TM:EBBDE}
 % #3 label
-{Conservation of thermal energy}
+{Euler-Bernoulli Beam Deflection Equation}
 % #4 equation
 {
-$-{\bf \nabla \cdot q} + g$ = $\rho C \frac{\partial T}{\partial t}$
+    \(EI\frac{d^{4}y}{dx^{4}}=w(x)\)
 }
 % #5 description
-{
-The above equation gives the conservation of energy for transient heat transfer in a material
-of specific heat capacity $C$ (\si{\joule\per\kilogram\per\celsius}) and density $\rho$
-(\si{\kilogram\per\cubic\metre}), where $\bf q$ is the thermal flux vector (\si{\watt\per\square\metre}),
-$g$ is the volumetric heat generation
-(\si{\watt\per\cubic\metre}), $T$ is the temperature
-(\si{\celsius}),  $t$ is time (\si{\second}), and $\nabla$ is
-the gradient operator.  For this equation to apply, other forms
-of energy, such as mechanical energy, are assumed to be negligible in the
-system (\aref{A_OnlyThermalEnergy}).  In general, the material properties ($\rho$ and $C$) depend on temperature.
+{ The above equation describes the relationship between a beam's deflection
+    (\(y(x)\)) and the applied load (\(w(x)\)) for any point along the beam (\(x\)).
+    \an{Describe requirements and their relationship to the assumptions.}
 }
 % #6 Notes
 {
-None.
+    None.
 }
 % #7 Source
 {
-\url{http://www.efunda.com/formulae/heat_transfer/conduction/overview_cond.cfm}
+    \cite{EulerBernoulliWiki}
 }
 % #8 Referenced by
 {
-\dref{ROCT}
+    \dref{ROCT}
 }
 % #9 Preconditions
 {
-None
+    None
 }
 % #1 derivation - not applicable by default
 {}
@@ -908,31 +933,21 @@ The goals \plt{reference your goals} are solved by \plt{reference your instance
     \begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
         \hline
         \rowcolor[gray]{0.9}
-        Number      & IM\refstepcounter{instnum}\theinstnum \label{ewat}                                  \\
+        Number      & IM\refstepcounter{instnum}\theinstnum \label{ewat}                                                                            \\
         \hline
-        Label       & \bf Energy balance on water to find $T_W$                                           \\
+        Label       & \bf Sampled deflection fo the beam $T_W$                                                                                      \\
         \hline
-        Input       & $m_W$, $C_W$, $h_C$, $A_C$, $h_P$, $A_P$, $t_\text{final}$, $T_C$,
-        $T_\text{init}$, $T_P(t)$ from \iref{epcm}                                                        \\
-                    & The input is constrained so that $T_\text{init} \leq T_C$ (\aref{A_charge})         \\
+        Input       & $L_B$, $E_B$, $f(x)$ from \iref{epcm}                                                                                         \\
         \hline
-        Output      & $T_W(t)$, $0\leq t \leq t_\text{final}$, such that                                  \\
-                    & $\frac{dT_W}{dt} = \frac{1}{\tau_W}[(T_C - T_W(t)) + {\eta}(T_P(t) - T_W(t))]$,     \\
-                    & $T_W(0) = T_P(0) = T_\text{init}$ (\aref{A_InitTemp}) and $T_P(t)$ from \iref{epcm} \\
+        Output      & \(<y(0), y(\frac{L_B}{n}), y(2\frac{L_B}{n}), ..., y(n\frac{L_B}{n})>\), such that                                            \\
+                    & \(E_{B}I_{B}\frac{d^{4}y}{dx^{4}}=f(x)\) where \(y(0)=0\), \(\frac{dy}{dx}(0)=0\), \(y(L_B)=0\), and \(\frac{dy}{dx}(L_B)=0\) \\
         \hline
-        Description & $T_W$ is the water temperature (\si{\celsius}).                                     \\
-                    & $T_P$ is the PCM temperature (\si{\celsius}).                                       \\
-                    & $T_C$ is the coil temperature (\si{\celsius}).                                      \\
-                    & $\tau_W = \frac{m_W C_W}{h_C A_C}$ is a constant (\si{\second}).                    \\
-                    & $\eta = \frac{h_P A_P}{h_C A_C}$ is a constant (dimensionless).                     \\
-                    & The above equation applies as long as the water is in liquid form,
-        $0<T_W<100^o\text{C}$, where $0^o\text{C}$ and $100^o\text{C}$ are the melting
-        and boiling points of water, respectively (\aref{A_OpRange}, \aref{A_Pressure}).
+        Description & ... (generated by Drasil) ...                                                                                                 \\
         \\
         \hline
-        Sources     & Citation here                                                                       \\
+        Sources     & Citation here                                                                                                                 \\
         \hline
-        Ref.\ By    & \iref{epcm}                                                                         \\
+        Ref.\ By    & \iref{epcm}                                                                                                                   \\
         \hline
     \end{tabular}
 \end{minipage}\\
