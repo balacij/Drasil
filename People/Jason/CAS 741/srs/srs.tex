@@ -142,6 +142,16 @@
 
 \begin{document}
 
+
+% START : TODO LIST
+% Only show it if the "comments" flag is enabled
+\ifcomments
+  \todototoc
+  \listoftodos
+  \newpage
+\fi
+% END   : TODO LIST
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Title
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -535,11 +545,14 @@ easier to correctly understand the requirements:
     \item Deflection: the amount that a structural component is displaced due to
         deformation under load,
 
-    \item Shear forces:
+    \item Shear forces: unaligned opposed forces acting on an object (e.g.,
+        shears or scissors) that can result in tearing,
 
-    \item Bending moment:
+    \item Bending moment: the internal reaction of a structural element when an
+    external force is imposed and bends it,
 
-    \item Young's modulus:
+    \item Young's modulus (modulus of elasticity): the measure of lengthwise
+    stiffness of an element as a force is applied lengthwise\needscitation{},
 
     \item Moment of inertia:
 
