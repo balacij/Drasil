@@ -486,7 +486,8 @@ deflection curve.
           \end{itemize}
 \end{itemize}
 
-\subsection{User Characteristics} \label{SecUserCharacteristics}
+\subsection{User Characteristics}
+\label{SecUserCharacteristics}
 
 The user of this software should be a civil engineer or equivalent, and have a
 working understanding of the deflection of beams, shear forces, bending moments,
@@ -528,37 +529,51 @@ easier to correctly understand the requirements:
 
 \begin{itemize}
 
-    \item Beam: structural components intended to carry loads perpendicularly to
-        their ``long'' axis,
+    \item beam: structural components intended to carry loads perpendicularly to
+        their ``long'' axis\nc{},
 
-    \item Pinned support: a structural support that allows for rotation but
-        neither vertical nor horizontal movement,
+    \item pinned support: a structural support that allows for rotation but
+        neither vertical nor horizontal movement\nc{},
 
-    \item Roller support: a structural support that allows for rotation and
-        horizontal movement, but not vertical movement,
+    \item roller support: a structural support that allows for rotation and
+        horizontal movement, but not vertical movement\nc{},
 
-    \item Simply supported beam: a beam that has a pinned support on one end,
-        and a roller support on the other,
+    \item simply supported beam: a beam that has a pinned support on one end,
+        and a roller support on the other\nc{},
 
-    \item Load: an applied force to a structure,
+    \item load: an applied force to a structure\nc{},
 
-    \item Deflection: the amount that a structural component is displaced due to
-        deformation under load,
+    \item deflection: the amount that a structural component is displaced due to
+        deformation under load\nc{},
 
-    \item Shear forces: unaligned opposed forces acting on an object (e.g.,
-        shears or scissors) that can result in tearing,
+    \item shear forces: unaligned opposed forces acting on an object (e.g.,
+        shears or scissors) that can result in tearing\nc{},
 
-    \item Bending moment: the internal reaction of a structural element when an
-    external force is imposed and bends it,
+    \item bending moment: the internal reaction of a structural element when an
+    external force is imposed and bends it\nc{},
 
     \item Young's modulus (modulus of elasticity): the measure of lengthwise
-    stiffness of an element as a force is applied lengthwise\needscitation{},
+    stiffness of an element as a force is applied lengthwise\nc{}, and
 
-    \item Moment of inertia:
+    \item moment of inertia: torque required for angular acceleration\nc{}.
 
 \end{itemize}
 
-\subsubsection{Physical System Description} \label{sec_phySystDescrip}
+\subsubsection{Physical System Description}
+\label{sec_phySystDescrip}
+
+An ``at-rest'' view of the physical system of \progname{}, as shown in
+\Cref{beam_bending_diagram}, includes the following elements:
+
+\begin{itemize}
+
+    \item a slender beam,
+
+    \item a pinned support, and
+
+    \item a roller support.
+    
+\end{itemize}
 
 \begin{figure}[H]
     \begin{center}
@@ -567,31 +582,31 @@ easier to correctly understand the requirements:
     \end{center}
 \end{figure}
 
-\plt{The purpose of this section is to clearly and unambiguously state the
-    physical system that is to be modelled. Effective problem solving requires a
-    logical and organized approach. The statements on the physical system to be
-    studied should cover enough information to solve the problem. The physical
-    description involves element identification, where elements are defined as
-    independent and separable items of the physical system. Some example elements
-    include acceleration due to gravity, the mass of an object, and the size and
-    shape of an object. Each element should be identified and labelled, with their
-    interesting properties specified clearly. The physical description can also
-    include interactions of the elements, such as the following: i) the
-    interactions between the elements and their physical environment; ii) the
-    interactions between elements; and, iii) the initial or boundary conditions.}
+\Cref{beam_bending_diagram} shows the physical system at equilibrium. A slender
+beam is supported by a pinned support and a roller support. For the sake of
+following convention, the pinned support is placed on the left side of the beam,
+while the roller support is on the right. Additionally, when thinking of
+distance along the beam, we think of it as a distance from the pinned support on
+the left-hand side. As shown in \Cref{beam_bending_diagram}, the pinned support
+allows for rotational movements about the support tip, while the roller support
+also allows for some horizontal movement along the roller. When the beam is
+loaded, the roller support allows for tensile/compressive changes in the beam
+(which would alter the length of the beam).
 
-The physical system of \progname{}, as shown in
-\Cref{beam_bending_diagram_annotated}, includes the following elements:
+The physical system described in \progname{} examines
+\Cref{beam_bending_diagram} under an inputted general loading function. As such,
+the ``whole'' system is as per \Cref{beam_bending_diagram_annotated},
+containing:
 
 \begin{itemize}
 
-    \item[PS1:] a slender beam,
+    \item[\textbf{PS1}:] a slender beam,
 
-    \item[PS2:] a pinned support,
+    \item[\textbf{PS2}:] a pinned support,
 
-    \item[PS3:] a roller support, and
-
-    \item[PS4:] an applied load, with load across points captured by a function.
+    \item[\textbf{PS3}:] a roller support, and
+    
+    \item[\textbf{PS4}:] an applied load.
 
 \end{itemize}
 
@@ -601,6 +616,9 @@ The physical system of \progname{}, as shown in
         \caption{\label{beam_bending_diagram_annotated} Diagram of a Simply Supported Beam Under Load}
     \end{center}
 \end{figure}
+
+However, note that at the ``boundaries'' (the support tips), the beam may not
+have vertical deflection, and similarly has zero bending moment at the tips.
 
 \subsubsection{Goal Statements}
 \label{sssec_goals}
@@ -612,113 +630,60 @@ are:
 
 \begin{itemize}
 
-    \item[GS\refstepcounter{goalnum}\thegoalnum \label{deflection}:] Calculate
-        the deflection of the beam under load.
+    \item[\refstepcounter{goalnum}\textbf{GS\thegoalnum{}}\label{deflection}:]
+        Calculate the deflection of the beam under load.
 
-    \item[GS\refstepcounter{goalnum}\thegoalnum \label{reaction}:] Calculate the
-        reaction of the supports under load.
+    \item[\refstepcounter{goalnum}\textbf{GS\thegoalnum{}}\label{reaction}:]
+        Calculate the reaction of the supports under load.
 
 \end{itemize}
 
-\an{I'm not sure if I should also work to capture the shear force and bending
-    moment diagrams too.}
-
 \subsection{Solution Characteristics Specification}
-
-\plt{This section specifies the information in the solution domain of the system
-    to be developed. This section is intended to express what is required in
-    such a way that analysts and stakeholders get a clear picture, and the
-    latter will accept it. The purpose of this section is to reduce the problem
-    into one expressed in mathematical terms. Mathematical expertise is used to
-    extract the essentials from the underlying physical description of the
-    problem, and to collect and substantiate all physical data pertinent to the
-    problem.}
-
-\plt{This section presents the solution characteristics by successively refining
-    models.  It starts with the abstract/general Theoretical Models (TMs) and
-    refines them to the concrete/specific Instance Models (IMs).  If necessary
-    there are intermediate refinements to General Definitions (GDs).  All of these
-    refinements can potentially use Assumptions (A) and Data Definitions (DD).
-    TMs are refined to create new models, that are called GMs or IMs. DDs are not
-    refined; they are just used. GDs and IMs are derived, or refined, from other
-    models. DDs are not derived; they are just given. TMs are also just given, but
-    they are refined, not used.  If a potential DD includes a derivation, then
-    that means it is refining other models, which would make it a GD or an IM.}
-
-\plt{The above makes a distinction between ``refined'' and ``used.'' A model is
-    refined to another model if it is changed by the refinement. When we change a
-    general 3D equation to a 2D equation, we are making a refinement, by applying
-    the assumption that the third dimension does not matter. If we use a
-    definition, like the definition of density, we aren't refining, or changing
-    that definition, we are just using it.}
-
-\plt{The same information can be a TM in one problem and a DD in another.  It is
-    about how the information is used.  In one problem the definition of
-    acceleration can be a TM, in another it would be a DD.}
-
-\plt{There is repetition between the information given in the different chunks
-    (TM, GDs etc) with other information in the document.  For instance, the
-    meaning of the symbols, the units etc are repeated.  This is so that the
-    chunks can stand on their own when being read by a reviewer/user.  It also
-    facilitates reuse of the models in a different context.}
-
-\noindent \plt{The relationships between the parts of the document are show in
-    the following figure.  In this diagram ``may ref'' has the same role as
-    ``uses'' above.  The figure adds ``Likely Changes,'' which are able to
-    reference (use) Assumptions.}
-
-\begin{figure}[H]
-    \includegraphics[scale=0.9]{RelationsBetweenTM_GD_IM_DD_A.pdf}
-\end{figure}
 
 The instance models that govern \progname{} are presented in
 Subsection~\ref{sec_instance}.  The information to understand the meaning of the
 instance models and their derivation is also presented, so that the instance
 models can be verified.
 
-\subsubsection{Assumptions} \label{sec_assumpt}
-
-\plt{The assumptions are a refinement of the scope.  The scope is general, where
-    the assumptions are specific.  All assumptions should be listed, even those
-    that domain experts know so well that they are rarely (if ever) written down.}
-\plt{The document should not take for granted that the reader knows which
-    assumptions have been made. In the case of unusual assumptions, it is
-    recommended that the documentation either include, or point to, an explanation
-    and justification for the assumption.}
+\subsubsection{Assumptions}
+\label{sec_assumpt}
 
 This section simplifies the original problem and helps in developing the
-theoretical model by filling in the missing information for the physical
-system. The numbers given in the square brackets refer to the theoretical model
-    [T], general definition [GD], data definition [DD], instance model [IM], or
-likely change [LC], in which the respective assumption is used.
+theoretical model by filling in the missing information for the physical system.
+The numbers given in the square brackets refer to the Theoretical Model (TM),
+General Definition (GD), Data Definition (DD), Instance Model (IM), or Likely
+Change (LC), in which the respective assumption is used.
+
+\newcommand{\assume}[2]{\item[\textbf{A\refstepcounter{assumpnum}}\label{#1}:] #2}
 
 \begin{itemize}
 
-    \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_meaningfulLabel}:]
-        \plt{Short description of each assumption.  Each assumption
-            should have a meaningful label.  Use cross-references to identify the
-            appropriate traceability to T, GD, DD etc., using commands like dref, ddref
-            etc.  Each assumption should be atomic - that is, there should not be an
-            explicit (or implicit) ``and'' in the text of an assumption.}
+    \assume{world_dimension}{The ``world'' model is 2-dimensional, observing the
+        instant a load is applied on the beam.}
 
-\end{itemize}
+    \assume{beam_slender}{The beam is ``slender'' (has a length to height ratio
+        greater than \(10\) to \(1\)).}
 
-\begin{itemize}
-    
-    \item prismatic beam (straight, flat beam with a uniform cross-section),
-    
-    \item slender beam (such that Euler-Bernoulli applies, at least a 10:1 ratio
-          of length to height),
+    \assume{beam_prismatic}{The beam is prismatic.%
+    \begin{itemize}%
+        \assume{beam_uniform_cross_section}{The beam has a uniform cross-section.}%
+        \assume{beam_straight_faces}{The beam is straight/flat within a%
+            reasonable tolerance.}%
+    \end{itemize}%
+    }
 
-    \item the beam can experience only vertical linear elastic load, 
-    
-    \item the beam has constant modulus of elasticity
-    
-    \item the beam has constant moment of inertia, and
+    \assume{beam_moment_inertia_constant}{The beam has a constant moment of
+        inertia.}
 
-    \item only ``small'' deflections are needed to be considered (whereby the
-        maximum deflection is approximately less than a tenth of the length of
-        the beam).
+    \assume{beam_vertical_elastic}{The beam experiences vertical linear-elastic
+        load.}
+
+    \assume{beam_modulus_constant}{The beam's modulus of elasticity is constant
+        along the beam.}
+
+    \assume{beam_deflection}{Only relatively small deflections will be examined
+        (whereby the maximum deflection is at most \(10\%\) of the beam's
+        length).}
 
 \end{itemize}
 
@@ -734,10 +699,6 @@ on.  \plt{Modify the examples below for your problem, and add additional models
     as appropriate.}
 
 ~\newline
-
-\an{I can make this theory a refinment of the more general 2nd-order ``curvature
-    of an elastic beam'' equation. I'm not yet sure what I should define that as
-    a refinement of yet, nor how far ``up'' I should go.}
 
 \noindent
 \deftheory
@@ -845,7 +806,10 @@ instance models.
 \plt{Derivations are important for justifying a given GD.  You want it to be
     clear where the equation came from.}
 
-\subsubsection{Data Definitions}\label{sec_datadef}
+\subsubsection{Data Definitions}
+\label{sec_datadef}
+
+\an{Transcribe the loading function as a DD.}
 
 \plt{The Data Definitions are definitions of symbols and equations that are
     given for the problem.  They are not derived; they are simply used by other

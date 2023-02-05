@@ -2,7 +2,7 @@ import numpy as np
 import scipy
 
 if __name__ != "__main__":
-    print("main.py is not a valid import.")
+    print("Please run with 'python main.py'.")
     exit(1)
 
 ###############################################################################
@@ -20,6 +20,8 @@ I = 14200
 
 # increasing nodes to 5000 gives an error?! 500 seems to work okay.
 nodes = 5
+
+# TODO: Explain the background mathematics
 
 # Uniformly distributed -800 N/m load application
 def uniformly_distributed_800Npm_load(x, y):
@@ -53,6 +55,7 @@ if not res.success:
 
 x_plot = np.linspace(0, L, 100)
 y_plot = res.sol(x_plot)[0]
+# TODO: Show the solutions of the other derivatives
 
 import matplotlib.pyplot as plt
 

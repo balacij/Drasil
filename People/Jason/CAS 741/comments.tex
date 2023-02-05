@@ -5,14 +5,22 @@
 \newif\ifcomments\commentstrue %displays comments
 %\newif\ifcomments\commentsfalse %so that comments do not display
 
+% Changes: Use ``todonotes'' package for the comments, but don't use it for
+% inlined template explanation information.
+
 \ifcomments
-\newcommand{\authornote}[3]{\textcolor{#1}{[#3 ---#2]}}
-\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+    \newcommand{\plt}[1]{\textcolor{magenta}{[TPLT \textemdash{} #1]}}
+    \usepackage[backgroundcolor=yellow,colorinlistoftodos]{todonotes}
+    \setlength{\marginparwidth}{0.75in}
+    \reversemarginpar % place on left-hand side
 \else
-\newcommand{\authornote}[3]{}
-\newcommand{\todo}[1]{}
+    \newcommand{\plt}[1]{}
+    \usepackage[disable]{todonotes}
 \fi
 
-\newcommand{\wss}[1]{\authornote{blue}{SS}{#1}} 
-\newcommand{\plt}[1]{\authornote{magenta}{TPLT}{#1}} %For explanation of the template
-\newcommand{\an}[1]{\authornote{cyan}{Author}{#1}}
+\newcommand{\wss}[1]{\todo[color=blue]{SS: #1}}
+\newcommand{\an}[1]{\todo[color=cyan]{\authinitials{}: #1}}
+
+\newcounter{needscitationcounter}
+\newcommand{\needscitation}{\stepcounter{needscitationcounter}\todo[color=red]{NC \theneedscitationcounter{}: Needs citation.}}
+\newcommand{\nc}{\needscitation}
