@@ -644,7 +644,7 @@ The numbers given in the square brackets refer to the Theoretical Model (TM),
 General Definition (GD), Data Definition (DD), Instance Model (IM), or Likely
 Change (LC), in which the respective assumption is used.
 
-\newcommand{\assume}[2]{\stepcounter{assumpnum}\item[\textbf{A\theassumpnum{}}\label{#1}:] #2}
+\newcommand{\assume}[2]{\refstepcounter{assumpnum}\item[\textbf{A\theassumpnum{}}\label{#1}:] #2}
 
 \begin{itemize}
 
@@ -1021,16 +1021,16 @@ the assumptions.
     \begin{landscape}
         \begin{table}[h!]
             \centering
-            \begin{tabular}{|c|c|}
+            \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
                 \hline
-                                            & \aref{A_OnlyThermalEnergy} \\ \hline
-                \tref{T_COE}                &                            \\ \hline
-                \dref{NL}                   &                            \\ \hline
-                \ddref{dd_loading_function} &                            \\ \hline
-                \iref{im_deflection}        &                            \\ \hline
-                \iref{im_reaction}          &                            \\ \hline
-                \lcref{LC_loading}          &                            \\ \hline
-                \lcref{LC_units}            &                            \\ \hline
+                                            & \aref{world_dimension} & \aref{beam_slender} & \aref{beam_uniform_cross_section} & \aref{beam_straight_faces} & \aref{beam_moment_inertia_constant} & \aref{beam_vertical_elastic} & \aref{beam_modulus_constant} & \aref{beam_deflection} & \aref{deflection_differentiable} & \aref{loading_integrable} \\ \hline
+                \tref{T_COE}                &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
+                \dref{NL}                   &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
+                \ddref{dd_loading_function} &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
+                \iref{im_deflection}        &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
+                \iref{im_reaction}          &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
+                \lcref{LC_loading}          &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
+                \lcref{LC_units}            &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
             \end{tabular}
             \caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
             \label{Table:A_trace}
@@ -1038,53 +1038,30 @@ the assumptions.
     \end{landscape}
 }
 
+% TM of TMs, GDs, DDs, and IMs
 \begin{table}[h!]
     \centering
-    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+    \begin{tabular}{|c|c|c|c|c|c|}
         \hline
-                         & \tref{T_COE} & \tref{T_SHE} & \tref{T_LHE} & \dref{NL} & \dref{ROCT} & \ddref{FluxCoil} & \ddref{FluxPCM} & \ddref{D_HOF} & \ddref{D_MF} & \iref{ewat} & \iref{epcm} & \iref{I_HWAT} & \iref{I_HPCM} \\
-        \hline
-        \tref{T_COE}     &              &              &              &           &             &                  &                 &               &              &             &             &               &               \\ \hline
-        \tref{T_SHE}     &              &              & X            &           &             &                  &                 &               &              &             &             &               &               \\ \hline
-        \tref{T_LHE}     &              &              &              &           &             &                  &                 &               &              &             &             &               &               \\ \hline
-        \dref{NL}        &              &              &              &           &             &                  &                 &               &              &             &             &               &               \\ \hline
-        \dref{ROCT}      & X            &              &              &           &             &                  &                 &               &              &             &             &               &               \\ \hline
-        \ddref{FluxCoil} &              &              &              & X         &             &                  &                 &               &              &             &             &               &               \\ \hline
-        \ddref{FluxPCM}  &              &              &              & X         &             &                  &                 &               &              &             &             &               &               \\ \hline
-        \ddref{D_HOF}    &              &              &              &           &             &                  &                 &               &              &             &             &               &               \\ \hline
-        \ddref{D_MF}     &              &              &              &           &             &                  &                 & X             &              &             &             &               &               \\ \hline
-        \iref{ewat}      &              &              &              &           & X           & X                & X               &               &              &             & X           &               &               \\ \hline
-        \iref{epcm}      &              &              &              &           & X           &                  & X               &               & X            & X           &             &               & X             \\ \hline
-        \iref{I_HWAT}    &              & X            &              &           &             &                  &                 &               &              &             &             &               &               \\ \hline
-        \iref{I_HPCM}    &              & X            & X            &           &             &                  & X               & X             & X            &             & X           &               &               \\
-        \hline
+                         & \tref{T_COE} & \dref{ROCT} & \ddref{FluxCoil} & \iref{ewat} \\ \hline
+        \tref{T_COE}     &              &             &                  &             \\ \hline
+        \dref{NL}        &              &             &                  &             \\ \hline
+        \ddref{FluxCoil} &              &             &                  &             \\ \hline
+        \iref{ewat}      &              &             &                  &             \\ \hline
     \end{tabular}
     \caption{Traceability Matrix Showing the Connections Between Items of Different Sections}
     \label{Table:trace}
 \end{table}
 
+
+% TM between IMs, Rs, and Data Constraints
 \begin{table}[h!]
     \centering
-    \begin{tabular}{|c|c|c|c|c|c|c|c|}
+    \begin{tabular}{|c|c|c|c|}
         \hline
-                               & \iref{ewat} & \iref{epcm} & \iref{I_HWAT} & \iref{I_HPCM} & \ref{sec_DataConstraints} & \rref{R_RawInputs} & \rref{R_MassInputs} \\
-        \hline
-        \iref{ewat}            &             & X           &               &               &                           & X                  & X                   \\ \hline
-        \iref{epcm}            & X           &             &               & X             &                           & X                  & X                   \\ \hline
-        \iref{I_HWAT}          &             &             &               &               &                           & X                  & X                   \\ \hline
-        \iref{I_HPCM}          &             & X           &               &               &                           & X                  & X                   \\ \hline
-        \rref{R_RawInputs}     &             &             &               &               &                           &                    &                     \\ \hline
-        \rref{R_MassInputs}    &             &             &               &               &                           & X                  &                     \\ \hline
-        \rref{R_CheckInputs}   &             &             &               &               & X                         &                    &                     \\ \hline
-        \rref{R_OutputInputs}  & X           & X           &               &               &                           & X                  & X                   \\ \hline
-        \rref{R_TempWater}     & X           &             &               &               &                           &                    &                     \\ \hline
-        \rref{R_TempPCM}       &             & X           &               &               &                           &                    &                     \\ \hline
-        \rref{R_EnergyWater}   &             &             & X             &               &                           &                    &                     \\ \hline
-        \rref{R_EnergyPCM}     &             &             &               & X             &                           &                    &                     \\ \hline
-        \rref{R_VerifyOutput}  &             &             & X             & X             &                           &                    &                     \\ \hline
-        \rref{R_timeMeltBegin} &             & X           &               &               &                           &                    &                     \\ \hline
-        \rref{R_timeMeltEnd}   &             & X           &               &               &                           &                    &                     \\
-        \hline
+                           & \iref{ewat} & \ref{sec_DataConstraints} & \rref{R_RawInputs} \\ \hline
+        \iref{ewat}        &             &                           &                    \\ \hline
+        \rref{R_RawInputs} &             &                           &                    \\ \hline
     \end{tabular}
     \caption{Traceability Matrix Showing the Connections Between Requirements and Instance Models}
     \label{Table:R_trace}
