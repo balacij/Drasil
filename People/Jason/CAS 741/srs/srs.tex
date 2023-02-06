@@ -1,5 +1,5 @@
-% THIS DOCUMENT IS TAILORED TO REQUIREMENTS FOR SCIENTIFIC COMPUTING.  IT SHOULDN'T
-% BE USED FOR NON-SCIENTIFIC COMPUTING PROJECTS
+% THIS DOCUMENT IS TAILORED TO REQUIREMENTS FOR SCIENTIFIC COMPUTING.  IT
+% SHOULDN'T BE USED FOR NON-SCIENTIFIC COMPUTING PROJECTS
 \documentclass[12pt]{article}
 
 \usepackage{amsmath, mathtools}
@@ -35,15 +35,19 @@
 %\usepackage{refcheck}
 
 \hypersetup{
-    bookmarks=true,         % show bookmarks bar?
-    colorlinks=true,       % false: boxed links; true: colored links
-    linkcolor=red,          % color of internal links (change box color with linkbordercolor)
-    citecolor=green,        % color of links to bibliography
-    filecolor=magenta,      % color of file links
-    urlcolor=cyan           % color of external links
+    bookmarks=true,    % show bookmarks bar?
+    colorlinks=true,   % false: boxed links; true: colored links
+    linkcolor=red,     % color of internal links (change box color with linkbordercolor)
+    citecolor=green,   % color of links to bibliography
+    filecolor=magenta, % color of file links
+    urlcolor=cyan      % color of external links
 }
 \usepackage{cleveref}
 
+
+% Force todonotes to play nicely in other floats: credits to https://tex.stackexchange.com/a/402075
+\usepackage{marginnote}
+\renewcommand{\marginpar}{\marginnote}
 
 \input{../comments}
 \input{../common}
@@ -146,9 +150,9 @@
 % START : TODO LIST
 % Only show it if the "comments" flag is enabled
 \ifcomments
-  \todototoc
-  \listoftodos
-  \newpage
+    \todototoc
+    \listoftodos
+    \newpage
 \fi
 % END   : TODO LIST
 
@@ -188,23 +192,6 @@
     Jan. 25, 2023       & 0.3.0         & Refining GSD, SSD, TMs, and IMs. \\
     \bottomrule
 \end{tabularx}
-
-
-\noindent \plt{Advice on using the template:
-    \begin{itemize}
-        \item Difference between physical and software constraints
-        \item Properties of a correct solution means \emph{additional} properties, not
-              a restating of the requirements (may be ``not applicable'' for your problem).
-              If you have a table of output constraints, then these are properties of a
-              correct solution.
-        \item Assumptions have to be invoked somewhere
-        \item ``Referenced by'' implies that there is an explicit reference
-        \item Think of traceability matrix, list of assumption invocations and list of
-              reference by fields as automatically generatable
-        \item If you say the format of the output (plot, table etc), then your
-              requirement could be more abstract
-    \end{itemize}
-}
 
 ~\newpage
 
@@ -368,7 +355,8 @@ The requirements analyze the ``problem'' (as defined in \autoref{Sec_pd}) and
 related ``solution'' under the assumption of the Euler-Bernoulli Beam Theory
 \cite{EulerBernoulliWiki} in a 2-dimensional space for a prismatic beam.
 
-\subsection{Characteristics of Intended Reader} \label{sec_IntendedReader}
+\subsection{Characteristics of Intended Reader}
+\label{sec_IntendedReader}
 
 Readers of this document should at least have an understanding of:
 \begin{itemize}
@@ -441,7 +429,7 @@ deflection curve.
             % draw the arrows between the nodes
             \draw [->] (I) -- (BB) node[midway,above] {\parbox{3cm}{\center\textbf{Input}:\newline{}beam \& load specifications.}};
             \draw [->] (BB) -- (O) node[midway,above] {\parbox{3cm}{\center\textbf{Output}:\newline{}deflection curve.}};
-            \draw [->] (E) -- (BB) node[midway,left] {\parbox{2.5cm}{\center{}Provides BVP solutions.}};
+            \draw [<->] (E) -- (BB) node[midway,left] {\parbox{2.5cm}{\center{}Solver provides BVP solutions on demand.}};
         \end{tikzpicture}
     \end{center}
     \caption{System Context}
@@ -499,6 +487,12 @@ program and simulate a simply-supported beam across various scenarios.
 
 The final software should be built using Drasil to encode the problem and
 generate a problem using a BVP solver. There are no other system constraints.
+However, it should be noted that the usage of Drasil does impose the limitations
+of Drasil onto the produced software and SRS documents. One notable limitation
+is the inability to input general expressions into Drasil-generated programs. As
+such, the ``loading function,'' \(w(x)\), will need to be hard-coded into both
+this SRS document and the software. However, changing the source for both is
+relatively straightforward and simple thanks to Drasil.
 
 \newpage
 
@@ -510,10 +504,9 @@ generate a problem using a BVP solver. There are no other system constraints.
 \label{sec_ssd}
 
 This section first presents the problem description, which gives a high-level
-view of the problem to be solved.  This is followed by the solution characteristics
-specification, which presents the assumptions, theories, definitions and finally
-the instance models.  \plt{Add any project specific details that are relevant
-    for the section overview.}
+view of the problem to be solved.  This is followed by the solution
+characteristics specification, which presents the assumptions, theories,
+definitions and finally the instance models.
 
 \subsection{Problem Description}
 \label{Sec_pd}
@@ -530,30 +523,30 @@ easier to correctly understand the requirements:
 \begin{itemize}
 
     \item beam: structural components intended to carry loads perpendicularly to
-        their ``long'' axis\nc{},
+          their ``long'' axis\nc{},
 
     \item pinned support: a structural support that allows for rotation but
-        neither vertical nor horizontal movement\nc{},
+          neither vertical nor horizontal movement\nc{},
 
     \item roller support: a structural support that allows for rotation and
-        horizontal movement, but not vertical movement\nc{},
+          horizontal movement, but not vertical movement\nc{},
 
     \item simply supported beam: a beam that has a pinned support on one end,
-        and a roller support on the other\nc{},
+          and a roller support on the other\nc{},
 
     \item load: an applied force to a structure\nc{},
 
     \item deflection: the amount that a structural component is displaced due to
-        deformation under load\nc{},
+          deformation under load\nc{},
 
     \item shear forces: unaligned opposed forces acting on an object (e.g.,
-        shears or scissors) that can result in tearing\nc{},
+          shears or scissors) that can result in tearing\nc{},
 
     \item bending moment: the internal reaction of a structural element when an
-    external force is imposed and bends it\nc{},
+          external force is imposed and bends it\nc{},
 
     \item Young's modulus (modulus of elasticity): the measure of lengthwise
-    stiffness of an element as a force is applied lengthwise\nc{}, and
+          stiffness of an element as a force is applied lengthwise\nc{}, and
 
     \item moment of inertia: torque required for angular acceleration\nc{}.
 
@@ -572,7 +565,7 @@ An ``at-rest'' view of the physical system of \progname{}, as shown in
     \item a pinned support, and
 
     \item a roller support.
-    
+
 \end{itemize}
 
 \begin{figure}[H]
@@ -605,7 +598,7 @@ containing:
     \item[\textbf{PS2}:] a pinned support,
 
     \item[\textbf{PS3}:] a roller support, and
-    
+
     \item[\textbf{PS4}:] an applied load.
 
 \end{itemize}
@@ -654,7 +647,7 @@ The numbers given in the square brackets refer to the Theoretical Model (TM),
 General Definition (GD), Data Definition (DD), Instance Model (IM), or Likely
 Change (LC), in which the respective assumption is used.
 
-\newcommand{\assume}[2]{\item[\textbf{A\refstepcounter{assumpnum}}\label{#1}:] #2}
+\newcommand{\assume}[2]{\stepcounter{assumpnum}\item[\textbf{A\theassumpnum{}}\label{#1}:] #2}
 
 \begin{itemize}
 
@@ -665,11 +658,11 @@ Change (LC), in which the respective assumption is used.
         greater than \(10\) to \(1\)).}
 
     \assume{beam_prismatic}{The beam is prismatic.%
-    \begin{itemize}%
-        \assume{beam_uniform_cross_section}{The beam has a uniform cross-section.}%
-        \assume{beam_straight_faces}{The beam is straight/flat within a%
-            reasonable tolerance.}%
-    \end{itemize}%
+        \begin{itemize}%
+            \assume{beam_uniform_cross_section}{The beam has a uniform cross-section.}%
+            \assume{beam_straight_faces}{The beam is straight/flat within a%
+                reasonable tolerance.}%
+        \end{itemize}%
     }
 
     \assume{beam_moment_inertia_constant}{The beam has a constant moment of
@@ -685,20 +678,20 @@ Change (LC), in which the respective assumption is used.
         (whereby the maximum deflection is at most \(10\%\) of the beam's
         length).}
 
+    \assume{deflection_differentiable}{The hypothetical deflection function
+        should belong to at least the class of functions that are differentiable
+        4 times.}
+
+    \assume{loading_integrable}{The loading function should belong to at least
+        the class of functions that are integrable 4 times.}
+
 \end{itemize}
 
-\subsubsection{Theoretical Models}\label{sec_theoretical}
-
-\plt{Theoretical models are sets of abstract mathematical equations or axioms
-    for solving the problem described in Section ``Physical System Description''
-    (Section~\ref{sec_phySystDescrip}). Examples of theoretical models are
-    physical laws, constitutive equations, relevant conversion factors, etc.}
+\subsubsection{Theoretical Models}
+\label{sec_theoretical}
 
 This section focuses on the general equations and laws that \progname{} is based
-on.  \plt{Modify the examples below for your problem, and add additional models
-    as appropriate.}
-
-~\newline
+on.
 
 \noindent
 \deftheory
@@ -734,35 +727,11 @@ on.  \plt{Modify the examples below for your problem, and add additional models
 % #1 derivation - not applicable by default
 {}
 
-\plt{``Ref.\ By'' is used repeatedly with the different types of information.
-    This stands for Referenced By.  It means that the models, definitions and
-    assumptions listed reference the current model, definition or assumption.
-    This information is given for traceability.  Ref. By provides a pointer in the
-    opposite direction to what we commonly do.  You still need to have a reference
-    in the other direction pointing to the current model, definition or
-    assumption.  As an example, if T1 is referenced by G2, that means that G2 will
-    explicitly include a reference to T1.}
-
-~\newline
-
-\subsubsection{General Definitions}\label{sec_gendef}
-
-\plt{General Definitions (GDs) are a refinement of one or more TMs, and/or of
-    other GDs.  The GDs are less abstract than the TMs.  Generally the reduction
-    in abstraction is possible through invoking (using/referencing) Assumptions.
-    For instance, the TM could be Newton's Law of Cooling stated abstracting.  The
-    GD could take the general law and apply it to get a 1D equation.}
+\subsubsection{General Definitions}
+\label{sec_gendef}
 
 This section collects the laws and equations that will be used in building the
-instance models.
-
-\plt{Some projects may not have any content for this section, but the section
-    heading should be kept.}
-
-\plt{Modify the examples below for your problem, and add additional definitions
-    as appropriate.}
-
-~\newline
+instance models.\\
 
 \noindent
 \begin{minipage}{\textwidth}
@@ -774,8 +743,6 @@ instance models.
         \hline
         Label       & \bf Newton's law of cooling                                                        \\
         \hline
-        % Units&$MLt^{-3}T^0$\\
-        % \hline
         SI Units    & \si{\watt\per\square\metre}                                                        \\
         \hline
         Equation    & $ q(t) = h \Delta T(t)$                                                            \\
@@ -809,118 +776,44 @@ instance models.
 \subsubsection{Data Definitions}
 \label{sec_datadef}
 
-\an{Transcribe the loading function as a DD.}
-
-\plt{The Data Definitions are definitions of symbols and equations that are
-    given for the problem.  They are not derived; they are simply used by other
-    models.  For instance, if a problem depends on density, there may be a data
-    definition for the equation defining density.  The DDs are given information
-    that you can use in your other modules.}
-
-\plt{All Data Definitions should be used (referenced) by at least one other
-    model.}
-
-This section collects and defines all the data needed to build the instance
-models. The dimension of each quantity is also given.  \plt{Modify the examples
-    below for your problem, and add additional definitions as appropriate.}
-
-~\newline
-
 \noindent
 \begin{minipage}{\textwidth}
     \renewcommand*{\arraystretch}{1.5}
     \begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
         \hline
         \rowcolor[gray]{0.9}
-        Number      & DD\refstepcounter{datadefnum}\thedatadefnum \label{FluxCoil} \\
+        Number      & DD\refstepcounter{datadefnum}\thedatadefnum \label{LoadingFunction} \\
         \hline
-        Label       & \bf Heat flux out of coil                                    \\
+        Label       & \bf Applied Load                                                    \\
         \hline
-        Symbol      & $q_C$                                                        \\
+        Symbol      & $w(x)$                                                              \\
         \hline
-        % Units& $Mt^{-3}$\\
-        % \hline
-        SI Units    & \si{\watt\per\square\metre}                                  \\
+        SI Units    & \si{\watt\per\square\metre}                                         \\
         \hline
-        Equation    & $q_C(t) = h_C (T_C - T_W(t))$, over area $A_C$               \\
+        Equation    & $w(x) = (x - \frac{L}{2})^{2}$                                      \\
         \hline
-        Description &
-        $T_C$ is the temperature of the coil (\si{\celsius}).  $T_W$ is the temperature of the water (\si{\celsius}).
-        The heat flux out of the coil, $q_C$ (\si{\watt\per\square\metre}), is found by
-        assuming that Newton's Law
-        of Cooling applies (\aref{A_Newt_coil}).  This law (\dref{NL}) is used on the surface of
-        the coil, which has area $A_C$ (\si{\square\metre}) and heat
-        transfer coefficient $h_C$
-        (\si{\watt\per\square\metre\per\celsius}).  This equation
-        assumes that the temperature of the coil is constant over time (\aref{A_tcoil}) and that it does not vary along the length
-        of the coil (\aref{A_tlcoil}).
-        \\
+        Description &                                                                     \\
         \hline
-        Sources     & Citation here                                                \\
-        \hline
-        Ref.\ By    & \iref{ewat}                                                  \\
+        Ref.\ By    & \iref{ewat}                                                         \\
         \hline
     \end{tabular}
 \end{minipage}\\
 
-\subsubsection{Data Types}\label{sec_datatypes}
+\subsubsection{Data Types}
+\label{sec_datatypes}
 
-\plt{This section is optional.  In many scientific computing programs it isn't
-    necessary, since the inputs and outpus are straightforward types, like reals,
-    integers, and sequences of reals and integers.  However, for some problems it
-    is very helpful to capture the type information.}
+The conventional data types used in undergraduate-level physics courses is
+sufficient. As such, the specifications define no extra data types.
 
-\plt{The data types are not derived; they are simply stated and used by other
-    models.}
+\subsubsection{Instance Models}
+\label{sec_instance}
 
-\plt{All data types must be used by at least one of the models.}
-
-\plt{For the mathematical notation for expressing types, the recommendation is
-    to use the notation of~\cite{HoffmanAndStrooper1995}.}
-
-This section collects and defines all the data types needed to document the
-models. \plt{Modify the examples below for your problem, and add additional
-    definitions as appropriate.}
-
-~\newline
-
-\noindent
-\begin{minipage}{\textwidth}
-    \renewcommand*{\arraystretch}{1.5}
-    \begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-        \hline
-        \rowcolor[gray]{0.9}
-        Type Name   & Name for Type                                              \\
-        \hline
-        Type Def    & mathematical definition of the type                        \\
-        \hline
-        Description & description here
-        \\
-        \hline
-        Sources     & Citation here, if the type is borrowed from another source \\
-        \hline
-    \end{tabular}
-\end{minipage}\\
-
-\subsubsection{Instance Models} \label{sec_instance}
-
-\plt{The motivation for this section is to reduce the problem defined in
-    ``Physical System Description'' (Section~\ref{sec_phySystDescrip}) to one
-    expressed in mathematical terms. The IMs are built by refining the TMs and/or
-    GDs.  This section should remain abstract.  The SRS should specify the
-    requirements without considering the implementation.}
-
-This section transforms the problem defined in Section~\ref{Sec_pd} into
-one which is expressed in mathematical terms. It uses concrete symbols defined
-in Section~\ref{sec_datadef} to replace the abstract symbols in the models
+This section transforms the problem defined in Section~\ref{Sec_pd} into one
+which is expressed in mathematical terms. It uses concrete symbols defined in
+Section~\ref{sec_datadef} to replace the abstract symbols in the models
 identified in Sections~\ref{sec_theoretical} and~\ref{sec_gendef}.
 
-The goals \plt{reference your goals} are solved by \plt{reference your instance
-    models}.  \plt{other details, with cross-references where appropriate.}
-\plt{Modify the examples below for your problem, and add additional models as
-    appropriate.}
-
-~\newline
+\gsref{deflection} and \gsref{reaction} are solved by \iref{im_deflection} and \iref{im_reaction}.
 
 %Instance Model 1
 
@@ -930,36 +823,40 @@ The goals \plt{reference your goals} are solved by \plt{reference your instance
     \begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
         \hline
         \rowcolor[gray]{0.9}
-        Number      & IM\refstepcounter{instnum}\theinstnum \label{ewat}                                                                            \\
+        Number      & IM\refstepcounter{instnum}\theinstnum{}\label{im_deflection}  \\
         \hline
-        Label       & \bf Sampled deflection fo the beam $T_W$                                                                                      \\
+        Label       & \bf Beam Deflection                                           \\
         \hline
-        Input       & $L_B$, $E_B$, $f(x)$ from \iref{epcm}                                                                                         \\
+        Input       & $L_B$, $E_B$, $I_B$, $w(x)$                                   \\
         \hline
-        Output      & \(\vec{res} = <y(0), y(\frac{L_B}{n}), y(2\frac{L_B}{n}), ..., y(n\frac{L_B}{n})>\), such that                                \\
-                    & \(E_{B}I_{B}\frac{d^{4}y}{dx^{4}}=f(x)\) where \(y(0)=0\), \(\frac{dy}{dx}(0)=0\), \(y(L_B)=0\), and \(\frac{dy}{dx}(L_B)=0\) \\
+        Output      & \(y(x)\) as the solution to the BVP defined as:               \\
+                    & \(E_{B}I_{B}\frac{d^{4}y}{dx^{4}}=f(x)\) where \(y(0)=0\),
+        \(\frac{d^{2}y}{dx^{2}}(0)=0\), \(y(L_B)=0\), and
+        \(\frac{d^{2}y}{dx^{2}}(L_B)=0\)                                            \\
         \hline
-        Description & ... (\textit{mostly} generated by Drasil) ...                                                                                 \\
+        Description & $L_B$ is the beam's length.                                   \\
+                    & $E_B$ is the beam's modulus of elasticity (Young's modulus).  \\
+                    & $I_B$ is the beam's moment of inertia.                        \\
+                    & $w(x)$ is a function describing the load applied on the beam. \\
         \\
         \hline
-        Sources     & Citation here                                                                                                                 \\
+        Sources     & \nc{}                                                         \\
         \hline
-        Ref.\ By    & \iref{epcm}                                                                                                                   \\
+        Ref.\ By    &                                                               \\
         \hline
     \end{tabular}
 \end{minipage}\\
 
-%~\newline
-
-\subsubsection*{Derivation of ...}
+\subsubsection*{Derivation of Beam Deflection:}
 
 \plt{The derivation shows how the IM is derived from the TMs/GDs.  In cases
     where the derivation cannot be described under the Description field, it will
     be necessary to include this subsection.}
 
-\subsubsection{Input Data Constraints} \label{sec_DataConstraints}
+\subsubsection{Input Data Constraints}
+\label{sec_DataConstraints}
 
-Table~\ref{TblInputVar} shows the data constraints on the input output
+Table~\ref{TblInputVar} shows the data constraints on the input \& output
 variables.  The column for physical constraints gives the physical limitations
 on the range of values that can be taken by the variable.  The column for
 software constraints restricts the range of inputs to reasonable values.  The
@@ -988,11 +885,6 @@ Table~\ref{TblSpecParams}.
     \end{longtable*}
 \end{table}
 
-\noindent
-\begin{description}
-    \item[(*)] \plt{you might need to add some notes or clarifications}
-\end{description}
-
 \begin{table}[!h]
     \caption{Specification Parameter Values} \label{TblSpecParams}
     \renewcommand{\arraystretch}{1.2}
@@ -1005,18 +897,21 @@ Table~\ref{TblSpecParams}.
     \end{longtable*}
 \end{table}
 
-\subsubsection{Properties of a Correct Solution} \label{sec_CorrectSolution}
+\subsubsection{Properties of a Correct Solution}
+\label{sec_CorrectSolution}
 
 \noindent
 A correct solution must exhibit \plt{fill in the details}.  \plt{These
     properties are in addition to the stated requirements.  There is no need to
     repeat the requirements here.  These additional properties may not exist for
     every problem.  Examples include conservation laws (like conservation of
-    energy or mass) and known constraints on outputs, which are usually summarized
-    in tabular form.  A sample table is shown in Table~\ref{TblOutputVar}}
+    energy or mass) and known constraints on outputs, which are usually
+    summarized in tabular form.  A sample table is shown in
+    Table~\ref{TblOutputVar}}
 
 \begin{table}[!h]
-    \caption{Output Variables} \label{TblOutputVar}
+    \caption{Output Variables}
+    \label{TblOutputVar}
     \renewcommand{\arraystretch}{1.2}
     \noindent \begin{longtable*}{l l}
         \toprule
@@ -1027,10 +922,6 @@ A correct solution must exhibit \plt{fill in the details}.  \plt{These
         \bottomrule
     \end{longtable*}
 \end{table}
-
-\plt{This section is not for test cases or techniques for verification and
-    validation.  Those topics will be addressed in the Verification and Validation
-    plan.}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1048,24 +939,25 @@ qualities that the software is expected to exhibit.
 
 \subsection{Functional Requirements}
 
-\noindent \begin{itemize}
+\noindent
+\begin{itemize}
 
-    \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs}:] \plt{Requirements
-            for the inputs that are supplied by the user.  This information has to be
-            explicit.}
+    \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs}:]
+        \plt{Requirements for the inputs that are supplied by the user. This
+            information has to be explicit.}
 
-    \item[R\refstepcounter{reqnum}\thereqnum \label{R_OutputInputs}:] \plt{It isn't
-            always required, but often echoing the inputs as part of the output is a
-            good idea.}
+    \item[R\refstepcounter{reqnum}\thereqnum \label{R_OutputInputs}:] \plt{It
+            isn't always required, but often echoing the inputs as part of the
+            output is a good idea.}
 
-    \item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate}:] \plt{Calculation
-            related requirements.}
+    \item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate}:]
+        \plt{Calculation related requirements.}
 
     \item[R\refstepcounter{reqnum}\thereqnum \label{R_VerifyOutput}:]
         \plt{Verification related requirements.}
 
-    \item[R\refstepcounter{reqnum}\thereqnum \label{R_Output}:] \plt{Output related
-            requirements.}
+    \item[R\refstepcounter{reqnum}\thereqnum \label{R_Output}:] \plt{Output
+            related requirements.}
 
 \end{itemize}
 
@@ -1076,22 +968,25 @@ qualities that the software is expected to exhibit.
 
 \plt{List your nonfunctional requirements.  You may consider using a fit
     criterion to make them verifiable.}
+
 \plt{The goal is for the nonfunctional requirements to be unambiguous, abstract
-    and verifiable.  This isn't easy to show succinctly, so a good strategy may be
-    to give a ``high level'' view of the requirement, but allow for the details to
-    be covered in the Verification and Validation document.}
+    and verifiable.  This isn't easy to show succinctly, so a good strategy may
+    be to give a ``high level'' view of the requirement, but allow for the
+    details to be covered in the Verification and Validation document.}
+
 \plt{An absolute requirement on a quality of the system is rarely needed.  For
-    instance, an accuracy of 0.0101 \% is likely fine, even if the requirement is
-    for 0.01 \% accuracy.  Therefore, the emphasis will often be more on
+    instance, an accuracy of 0.0101 \% is likely fine, even if the requirement
+    is for 0.01 \% accuracy.  Therefore, the emphasis will often be more on
     describing now well the quality is achieved, through experimentation, and
     possibly theory, rather than meeting some bar that was defined a priori.}
+
 \plt{You do not need an entry for correctness in your NFRs.  The purpose of the
     SRS is to record the requirements that need to be satisfied for correctness.
     Any statement of correctness would just be redundant. Rather than discuss
     correctness, you can characterize how far away from the correct (true)
     solution you are allowed to be.  This is discussed under accuracy.}
 
-\noindent \begin{itemize}
+\noindent\begin{itemize}
 
     \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Accuracy}:]
         \textbf{Accuracy} \plt{Characterize the accuracy by giving the context/use for
@@ -1134,10 +1029,11 @@ qualities that the software is expected to exhibit.
 
 \section{Likely Changes}
 
-\noindent \begin{itemize}
+\noindent\begin{itemize}
 
-    \item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] \plt{Give
-            the likely changes, with a reference to the related assumption (aref), as appropriate.}
+    \item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:]
+        \plt{Give the likely changes, with a reference to the related
+            assumption (aref), as appropriate.}
 
 \end{itemize}
 
@@ -1159,55 +1055,32 @@ qualities that the software is expected to exhibit.
 % Traceability Matrices and Graphs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Traceability Matrices and Graphs}
+\section{Traceability Matrices}
 
 The purpose of the traceability matrices is to provide easy references on what
 has to be additionally modified if a certain component is changed.  Every time a
 component is changed, the items in the column of that component that are marked
-with an ``X'' may have to be modified as well.  Table~\ref{Table:trace} shows the
-dependencies of theoretical models, general definitions, data definitions, and
-instance models with each other. Table~\ref{Table:R_trace} shows the
+with an ``X'' may have to be modified as well.  Table~\ref{Table:trace} shows
+the dependencies of theoretical models, general definitions, data definitions,
+and instance models with each other. Table~\ref{Table:R_trace} shows the
 dependencies of instance models, requirements, and data constraints on each
 other. Table~\ref{Table:A_trace} shows the dependencies of theoretical models,
 general definitions, data definitions, instance models, and likely changes on
 the assumptions.
 
-\plt{You will have to modify these tables for your problem.}
-
-\plt{The traceability matrix is not generally symmetric.  If GD1 uses A1, that
-    means that GD1's derivation or presentation requires invocation of A1.  A1
-    does not use GD1.  A1 is ``used by'' GD1.}
-
-\plt{The traceability matrix is challenging to maintain manually.  Please do
-    your best.  In the future tools (like Drasil) will make this much easier.}
-
 \afterpage{
     \begin{landscape}
         \begin{table}[h!]
             \centering
-            \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+            \begin{tabular}{|c|c|}
                 \hline
-                                    & \aref{A_OnlyThermalEnergy} & \aref{A_hcoeff} & \aref{A_mixed} & \aref{A_tpcm} & \aref{A_const_density} & \aref{A_const_C} & \aref{A_Newt_coil} & \aref{A_tcoil} & \aref{A_tlcoil} & \aref{A_Newt_pcm} & \aref{A_charge} & \aref{A_InitTemp} & \aref{A_OpRangePCM} & \aref{A_OpRange} & \aref{A_htank} & \aref{A_int_heat} & \aref{A_vpcm} & \aref{A_PCM_state} & \aref{A_Pressure} \\
-                \hline
-                \tref{T_COE}        & X                          &                 &                &               &                        &                  &                    &                &                 &                   &                 &                   &                     &                  &                &                   &               &                    &                   \\ \hline
-                \tref{T_SHE}        &                            &                 &                &               &                        &                  &                    &                &                 &                   &                 &                   &                     &                  &                &                   &               &                    &                   \\ \hline
-                \tref{T_LHE}        &                            &                 &                &               &                        &                  &                    &                &                 &                   &                 &                   &                     &                  &                &                   &               &                    &                   \\ \hline
-                \dref{NL}           &                            & X               &                &               &                        &                  &                    &                &                 &                   &                 &                   &                     &                  &                &                   &               &                    &                   \\ \hline
-                \dref{ROCT}         &                            &                 & X              & X             & X                      & X                &                    &                &                 &                   &                 &                   &                     &                  &                &                   &               &                    &                   \\ \hline
-                \ddref{FluxCoil}    &                            &                 &                &               &                        &                  & X                  & X              & X               &                   &                 &                   &                     &                  &                &                   &               &                    &                   \\ \hline
-                \ddref{FluxPCM}     &                            &                 & X              & X             &                        &                  &                    &                &                 & X                 &                 &                   &                     &                  &                &                   &               &                    &                   \\ \hline
-                \ddref{D_HOF}       &                            &                 &                &               &                        &                  &                    &                &                 &                   &                 &                   &                     &                  &                &                   &               &                    &                   \\ \hline
-                \ddref{D_MF}        &                            &                 &                &               &                        &                  &                    &                &                 &                   &                 &                   &                     &                  &                &                   &               &                    &                   \\ \hline
-                \iref{ewat}         &                            &                 &                &               &                        &                  &                    &                &                 &                   & X               & X                 &                     & X                & X              & X                 &               &                    & X                 \\ \hline
-                \iref{epcm}         &                            &                 &                &               &                        &                  &                    &                &                 &                   &                 & X                 & X                   &                  &                & X                 & X             & X                  &                   \\ \hline
-                \iref{I_HWAT}       &                            &                 &                &               &                        &                  &                    &                &                 &                   &                 &                   &                     & X                &                &                   &               &                    & X                 \\ \hline
-                \iref{I_HPCM}       &                            &                 &                &               &                        &                  &                    &                &                 &                   &                 &                   & X                   &                  &                &                   &               & X                  &                   \\ \hline
-                \lcref{LC_tpcm}     &                            &                 &                & X             &                        &                  &                    &                &                 &                   &                 &                   &                     &                  &                &                   &               &                    &                   \\ \hline
-                \lcref{LC_tcoil}    &                            &                 &                &               &                        &                  &                    & X              &                 &                   &                 &                   &                     &                  &                &                   &               &                    &                   \\ \hline
-                \lcref{LC_tlcoil}   &                            &                 &                &               &                        &                  &                    &                & X               &                   &                 &                   &                     &                  &                &                   &               &                    &                   \\ \hline
-                \lcref{LC_charge}   &                            &                 &                &               &                        &                  &                    &                &                 &                   & X               &                   &                     &                  &                &                   &               &                    &                   \\ \hline
-                \lcref{LC_InitTemp} &                            &                 &                &               &                        &                  &                    &                &                 &                   &                 & X                 &                     &                  &                &                   &               &                    &                   \\ \hline
-                \lcref{LC_htank}    &                            &                 &                &               &                        &                  &                    &                &                 &                   &                 &                   &                     &                  & X              &                   &               &                    &                   \\
+                                     & \aref{A_OnlyThermalEnergy} \\ \hline
+                \tref{T_COE}         & X                          \\ \hline
+                \dref{NL}            &                            \\ \hline
+                \ddref{FluxCoil}     &                            \\ \hline
+                \iref{im_deflection} &                            \\ \hline
+                \iref{im_reaction}   &                            \\ \hline
+                \lcref{LC_htank}     &                            \\
                 \hline
             \end{tabular}
             \caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
@@ -1268,51 +1141,18 @@ the assumptions.
     \label{Table:R_trace}
 \end{table}
 
-The purpose of the traceability graphs is also to provide easy references on
-what has to be additionally modified if a certain component is changed.  The
-arrows in the graphs represent dependencies. The component at the tail of an
-arrow is depended on by the component at the head of that arrow. Therefore, if a
-component is changed, the components that it points to should also be
-changed. Figure~\ref{Fig_ATrace} shows the dependencies of theoretical models,
-general definitions, data definitions, instance models, likely changes, and
-assumptions on each other. Figure~\ref{Fig_RTrace} shows the dependencies of
-instance models, requirements, and data constraints on each other.
-
-% \begin{figure}[h!]
-% 	\begin{center}
-% 		%\rotatebox{-90}
-% 		{
-% 			\includegraphics[width=\textwidth]{ATrace.png}
-% 		}
-% 		\caption{\label{Fig_ATrace} Traceability Matrix Showing the Connections Between Items of Different Sections}
-% 	\end{center}
-% \end{figure}
-
-
-% \begin{figure}[h!]
-% 	\begin{center}
-% 		%\rotatebox{-90}
-% 		{
-% 			\includegraphics[width=0.7\textwidth]{RTrace.png}
-% 		}
-% 		\caption{\label{Fig_RTrace} Traceability Matrix Showing the Connections Between Requirements, Instance Models, and Data Constraints}
-% 	\end{center}
-% \end{figure}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Development Plan
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Development Plan}
+\label{sec_development_plan}
 
-\plt{This section is optional.  It is used to explain the plan for developing
-    the software.  In particular, this section gives a list of the order in which
-    the requirements will be implemented.  In the context of a course  this is
-    where you can indicate which requirements will be implemented as part of the
-    course, and which will be ``faked'' as future work.  This section can be
-    organized as a prioritized list of requirements, or it could should the
-    requirements that will be implemented for ``phase 1'', ``phase 2'', etc.}
-
+The software is to be constructed using Drasil. Additionally, Drasil should be
+used to re-construct this SRS document. Faking the ``rational design process''
+in Drasil allows developers to scale products against changes in the background
+knowledge. Drasil has extensive documentation on \textit{how} to develop
+software using it and should be followed by any developer using this document.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Values of Auxiliar Constants
@@ -1320,12 +1160,7 @@ instance models, requirements, and data constraints on each other.
 
 \section{Values of Auxiliary Constants}
 
-\plt{Show the values of the symbolic parameters introduced in the report.}
-
-\plt{The definition of the requirements will likely call for SYMBOLIC\_CONSTANTS.
-    Their values are defined in this section for easy maintenance.}
-
-\plt{The value of FRACTION, for the Maintainability NFR would be given here.}
+There are no auxiliary constants needed for this SRS document.
 
 \newpage
 
@@ -1334,31 +1169,5 @@ instance models, requirements, and data constraints on each other.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \printbibliography[heading=bibintoc]
-
-\newpage
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Appendix
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\newpage{}
-\section*{Appendix --- Reflection}
-
-The information in this section will be used to evaluate the team members on the
-graduate attribute of Lifelong Learning.  Please answer the following questions:
-
-\begin{enumerate}
-    \item What knowledge and skills will the team collectively need to acquire to
-          successfully complete this capstone project?  Examples of possible knowledge
-          to acquire include domain specific knowledge from the domain of your
-          application, or software engineering knowledge, mechatronics knowledge or
-          computer science knowledge.  Skills may be related to technology, or writing,
-          or presentation, or team management, etc.  You should look to identify at
-          least one item for each team member.
-    \item For each of the knowledge areas and skills identified in the previous
-          question, what are at least two approaches to acquiring the knowledge or
-          mastering the skill?  Of the identified approaches, which will each team
-          member pursue, and why did they make this choice?
-\end{enumerate}
 
 \end{document}
