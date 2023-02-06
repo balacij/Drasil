@@ -51,6 +51,7 @@
 
 \input{../comments}
 \input{../common}
+\input{../unicode-chars}
 
 % For easy change of table widths
 \newcommand{\colZwidth}{1.0\textwidth}
@@ -130,12 +131,12 @@
 
 #8
 
-\paragraph{Preconditions for \hyperref[#2]{#2}:}
+\paragraph{Preconditions for TM\thetheorycounter{}:}
 \label{#2_precond}
 
 #9
 
-\paragraph{Derivation for \hyperref[#2]{#2}:}
+\paragraph{Derivation for TM\thetheorycounter{}:}
 \label{#2_deriv}
 
 #1
@@ -790,6 +791,7 @@ on.
 }
 % #8 Referenced by
 {
+    \tref{TM:EBBDE}
 }
 % #9 Preconditions
 {
@@ -1135,13 +1137,13 @@ the assumptions.
     \centering
     \begin{tabular}{|c|c|c|c|c|c|c|c|}
         \hline
-                                    & \tref{TM:PC} & \tref{TM:PC} & \tref{TM:PC} & \tref{TM:EBBDE} & \ddref{dd_loading_function} & \iref{im_deflection} \\ \hline
-        \tref{TM:PC}                &              &              &              &                 &                             &                      \\ \hline
-        \tref{TM:PBPBA}             &              &              &              &                 &                             &                      \\ \hline
-        \tref{TM:OREC}              &              &              &              &                 &                             &                      \\ \hline
-        \tref{TM:EBBDE}             &              &              &              &                 &                             &                      \\ \hline
-        \ddref{dd_loading_function} &              &              &              &                 &                             &                      \\ \hline
-        \iref{im_deflection}        &              &              &              &                 &                             &                      \\ \hline
+                                    & \tref{TM:PC} & \tref{TM:PBPBA} & \tref{TM:OREC} & \tref{TM:EBBDE} & \ddref{dd_loading_function} & \iref{im_deflection} \\ \hline
+        \tref{TM:PC}                &              &                 &                &                 &                             &                      \\ \hline
+        \tref{TM:PBPBA}             &              &                 &                &                 &                             &                      \\ \hline
+        \tref{TM:OREC}              & X            & X               &                &                 &                             &                      \\ \hline
+        \tref{TM:EBBDE}             &              &                 & X              &                 &                             &                      \\ \hline
+        \ddref{dd_loading_function} &              &                 &                &                 &                             &                      \\ \hline
+        \iref{im_deflection}        &              &                 &                & X               & X                           &                      \\ \hline
     \end{tabular}
     \caption{Traceability Matrix Showing the Connections Between Items of Different Sections}
     \label{Table:trace}
@@ -1154,11 +1156,11 @@ the assumptions.
     \begin{tabular}{|c|c|c|c|c|c|c|}
         \hline
                               & \iref{im_deflection} & \ref{sec_DataConstraints} & \rref{R_Inputs} & \rref{R_OutputInputs} & \rref{R_Calculate} & \rref{R_Output} \\ \hline
-        \iref{im_deflection}  &                      &                           &                 &                       &                    &                 \\ \hline
-        \rref{R_Inputs}       &                      &                           &                 &                       &                    &                 \\ \hline
-        \rref{R_OutputInputs} &                      &                           &                 &                       &                    &                 \\ \hline
-        \rref{R_Calculate}    &                      &                           &                 &                       &                    &                 \\ \hline
-        \rref{R_Output}       &                      &                           &                 &                       &                    &                 \\ \hline
+        \iref{im_deflection}  &                      & X                         & X               &                       &                    &                 \\ \hline
+        \rref{R_Inputs}       &                      & X                         &                 &                       &                    &                 \\ \hline
+        \rref{R_OutputInputs} &                      &                           & X               &                       &                    &                 \\ \hline
+        \rref{R_Calculate}    &                      &                           & X               &                       &                    &                 \\ \hline
+        \rref{R_Output}       &                      & X                         &                 &                       & X                  &                 \\ \hline
     \end{tabular}
     \caption{Traceability Matrix Showing the Connections Between Requirements and Instance Models}
     \label{Table:R_trace}
