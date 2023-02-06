@@ -72,7 +72,7 @@
 \newcommand{\ddref}[1]{DD\ref{#1}}
 \newcounter{theorynum} %Theory Number
 \newcommand{\tthetheorynum}{T\thetheorynum}
-\newcommand{\tref}[1]{T\ref{#1}}
+\newcommand{\tref}[1]{TM\ref{#1}}
 \newcounter{tablenum} %Table Number
 \newcommand{\tbthetablenum}{T\thetablenum}
 \newcommand{\tbref}[1]{TB\ref{#1}}
@@ -97,13 +97,14 @@
 
 \usepackage{fullpage}
 
+\newcounter{theorycounter}
 \newcommand{\deftheory}[9][Not Applicable]
 {
 \newpage
 \noindent \rule{\textwidth}{0.5mm}
 
-\paragraph{RefName: } \textbf{#2} \phantomsection 
-\label[#2]{#2}
+\paragraph{RefName: } \refstepcounter{theorycounter}TM\thetheorycounter \phantomsection 
+\label{#2}
 
 \paragraph{Label:} #3
 
@@ -159,7 +160,8 @@
 % Title
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\title{Software Requirements Specification for \progname: examining a beam bending under load.}
+\title{Software Requirements Specification for \progname: examining a beam
+    bending under load.}
 \author{\authname}
 \date{\today}
 
@@ -180,15 +182,17 @@
 \section*{Revision History}
 
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-    \toprule {\bf Date} & {\bf Version} & {\bf Notes}                      \\
+    \toprule {\bf Date} & {\bf Version} & {\bf Notes}                           \\
     \midrule
-    Jan. 25, 2023       & 0.0.0         & Template imported.               \\
-    Jan. 25, 2023       & 0.1.0         & Preliminary information added.   \\
-    Jan. 25, 2023       & 0.1.1         & Table of units added.            \\
-    Jan. 25, 2023       & 0.1.2         & Table of symbols added.          \\
-    Jan. 25, 2023       & 0.1.3         & Refining above tables.           \\
-    Jan. 25, 2023       & 0.2.0         & Refined introduction.            \\
-    Jan. 25, 2023       & 0.3.0         & Refining GSD, SSD, TMs, and IMs. \\
+    Jan. 25, 2023       & 0.0.0         & Template imported.                    \\
+    Jan. 25, 2023       & 0.1.0         & Preliminary information added.        \\
+    Jan. 25, 2023       & 0.1.1         & Table of units added.                 \\
+    Jan. 25, 2023       & 0.1.2         & Table of symbols added.               \\
+    Jan. 25, 2023       & 0.1.3         & Refining above tables.                \\
+    Jan. 25, 2023       & 0.2.0         & Refined introduction.                 \\
+    Jan. 25, 2023       & 0.3.0         & Refining GSD, SSD, TMs, and IMs.      \\
+    Feb. 4, 2023        & 0.4.0         & Work on things other than the models. \\
+    Feb. 5, 2023        & 0.5.0         & Refining models (again).              \\
     \bottomrule
 \end{tabularx}
 
@@ -830,7 +834,7 @@ on.
     \end{itemize}
 
     because the beam is simply supported (fixed at both ends implying no
-vertical movement), and hence the moments at the ends are 0. }
+    vertical movement), and hence the moments at the ends are 0. }
 % #6 Notes
 { None. }
 % #7 Source
@@ -845,8 +849,8 @@ vertical movement), and hence the moments at the ends are 0. }
 { None. }
 % #1 derivation - not applicable by default
 { When a prismatic beam supports an applied loading, (\(w(x)\)), its elastic
-curve is governed by the fourth-order ODE found by integrating the equation
-found in \tref{TM:OREC} twice.
+    curve is governed by the fourth-order ODE found by integrating the equation
+    found in \tref{TM:OREC} twice.
 }
 
 \newpage
@@ -867,20 +871,15 @@ There are no general definitions.
     \begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
         \hline
         \rowcolor[gray]{0.9}
-        Number      & DD\refstepcounter{datadefnum}\thedatadefnum \label{dd_loading_function} \\
-        \hline
-        Label       & \bf Applied Load                                                        \\
-        \hline
-        Symbol      & $w_{B}(x)$                                                              \\
-        \hline
-        SI Units    & \si{\watt\per\square\metre}                                             \\
-        \hline
-        Equation    & $w_{B}(x) = (x - \frac{L}{2})^{2}$                                      \\
-        \hline
-        Description &                                                                         \\
-        \hline
-        Ref.\ By    & \iref{im_deflection}                                                    \\
-        \hline
+        Number      & DD\refstepcounter{datadefnum}\thedatadefnum \label{dd_loading_function} \\ \hline
+        Label       & \bf Applied Load                                                        \\ \hline
+        Symbol      & $w_{B}(x)$                                                              \\ \hline
+        SI Units    & \si{\watt\per\square\metre}                                             \\ \hline
+        Equation    & $w_{B}(x) = (x - \frac{L_B}{2})^{2}$                                    \\ \hline
+        Description & $w_{B}(x)$ is the function describing the load applied along the beam.  \\
+                    & $x$ is a point along the beam.                                          \\
+                    & $L_B$ is the length of the beam.                                        \\ \hline
+        Ref.\ By    & \iref{im_deflection}                                                    \\ \hline
     \end{tabular}
 \end{minipage}\\
 
@@ -896,10 +895,8 @@ sufficient. As such, the specifications define no extra data types.
 This section transforms the problem defined in Section~\ref{Sec_pd} into one
 which is expressed in mathematical terms. It uses concrete symbols defined in
 Section~\ref{sec_datadef} to replace the abstract symbols in the models
-identified in Sections~\ref{sec_theoretical} and~\ref{sec_gendef}.
-
-\gsref{deflection} and \gsref{reaction} are solved by \iref{im_deflection} and
-\iref{im_reaction}.
+identified in Sections~\ref{sec_theoretical} and~\ref{sec_gendef}. Notably,
+\gsref{deflection} is solved by \iref{im_deflection}.
 
 %Instance Model 1
 
@@ -909,27 +906,22 @@ identified in Sections~\ref{sec_theoretical} and~\ref{sec_gendef}.
     \begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
         \hline
         \rowcolor[gray]{0.9}
-        Number      & IM\refstepcounter{instnum}\theinstnum{}\label{im_deflection}           \\
-        \hline
-        Label       & \bf Beam Deflection                                                    \\
-        \hline
-        Input       & $L_B$, $E_B$, $I_B$, $w_{B}(x)$                                        \\
-        \hline
+        Number      & IM\refstepcounter{instnum}\theinstnum{}\label{im_deflection}           \\ \hline
+        Label       & \bf Beam Deflection                                                    \\ \hline
+        Input       & $L_B$, $E_B$, $I_B$, $w_{B}(x)$                                        \\ \hline
         Output      & \(y_{B}(x)\) as the solution to the BVP defined as:                    \\
                     & \(E_{B}I_{B}\frac{d^{4}y_{B}}{dx^{4}}=w_{B}(x)\) where \(y_{B}(0)=0\),
         \(\frac{d^{2}y_{B}}{dx^{2}}(0)=0\), \(y_{B}(L_B)=0\), and
-        \(\frac{d^{2}y_{B}}{dx^{2}}(L_B)=0\)                                                 \\
-        \hline
-        Description & $L_B$ is the beam's length.                                            \\
+        \(\frac{d^{2}y_{B}}{dx^{2}}(L_B)=0\)                                                 \\ \hline
+        Description & The above output is the solution of the above defined BVP.             \\
+                    & $L_B$ is the beam's length.                                            \\
                     & $E_B$ is the beam's modulus of elasticity (Young's modulus).           \\
                     & $I_B$ is the beam's moment of inertia.                                 \\
                     & $w_{B}(x)$ is the function describing the load applied along the beam. \\
-                    & $y_{B}(x)$ is a function describing the deflection along the beam.     \\
-        \hline
-        Sources     & \nc{}                                                                  \\
-        \hline
-        Ref.\ By    &                                                                        \\
-        \hline
+                    & $x$ is a point along the beam.                                         \\
+                    & $y_{B}(x)$ is a function describing the deflection along the beam.     \\ \hline
+        Sources     & \nc{}                                                                  \\ \hline
+        Ref.\ By    &                                                                        \\ \hline
     \end{tabular}
 \end{minipage}\\
 
@@ -997,7 +989,7 @@ Table~\ref{TblSpecParams}.
         \toprule
         \textbf{Var} & \textbf{Physical Constraints} \\
         \midrule
-        $y_{B}(x)$ & $\forall~x \in [0, L]~.~|y_{B}(x)| \leq \frac{L}{10}$ (by~\aref{beam_deflection})
+        $y_{B}(x)$ & $\forall~x \in [0, L_B]~.~|y_{B}(x)| \leq \frac{L_B}{10}$ (by~\aref{beam_deflection})
         \\
         \bottomrule
     \end{longtable*}
@@ -1122,11 +1114,12 @@ the assumptions.
             \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
                 \hline
                                               & \aref{world_dimension} & \aref{beam_slender} & \aref{beam_uniform_cross_section} & \aref{beam_straight_faces} & \aref{beam_moment_inertia_constant} & \aref{beam_vertical_elastic} & \aref{beam_modulus_constant} & \aref{beam_deflection} & \aref{deflection_differentiable} & \aref{loading_integrable} \\ \hline
-                \tref{T_COE}                  &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
-                \dref{NL}                     &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
+                \tref{TM:PC}                  &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
+                \tref{TM:PBPBA}               &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
+                \tref{TM:OREC}                &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
+                \tref{TM:EBBDE}               &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
                 \ddref{dd_loading_function}   &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
                 \iref{im_deflection}          &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
-                \iref{im_reaction}            &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
                 \lcref{LC_loading}            &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
                 \lcref{LC_units}              &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
                 \lcref{LC_beam_configuration} &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
@@ -1140,13 +1133,15 @@ the assumptions.
 % TM of TMs, GDs, DDs, and IMs
 \begin{table}[h!]
     \centering
-    \begin{tabular}{|c|c|c|c|c|c|}
+    \begin{tabular}{|c|c|c|c|c|c|c|c|}
         \hline
-                         & \tref{T_COE} & \dref{ROCT} & \ddref{FluxCoil} & \iref{ewat} \\ \hline
-        \tref{T_COE}     &              &             &                  &             \\ \hline
-        \dref{NL}        &              &             &                  &             \\ \hline
-        \ddref{FluxCoil} &              &             &                  &             \\ \hline
-        \iref{ewat}      &              &             &                  &             \\ \hline
+                                    & \tref{TM:PC} & \tref{TM:PC} & \tref{TM:PC} & \tref{TM:EBBDE} & \ddref{dd_loading_function} & \iref{im_deflection} \\ \hline
+        \tref{TM:PC}                &              &              &              &                 &                             &                      \\ \hline
+        \tref{TM:PBPBA}             &              &              &              &                 &                             &                      \\ \hline
+        \tref{TM:OREC}              &              &              &              &                 &                             &                      \\ \hline
+        \tref{TM:EBBDE}             &              &              &              &                 &                             &                      \\ \hline
+        \ddref{dd_loading_function} &              &              &              &                 &                             &                      \\ \hline
+        \iref{im_deflection}        &              &              &              &                 &                             &                      \\ \hline
     \end{tabular}
     \caption{Traceability Matrix Showing the Connections Between Items of Different Sections}
     \label{Table:trace}
@@ -1156,11 +1151,14 @@ the assumptions.
 % TM between IMs, Rs, and Data Constraints
 \begin{table}[h!]
     \centering
-    \begin{tabular}{|c|c|c|c|}
+    \begin{tabular}{|c|c|c|c|c|c|c|}
         \hline
-                           & \iref{ewat} & \ref{sec_DataConstraints} & \rref{R_RawInputs} \\ \hline
-        \iref{ewat}        &             &                           &                    \\ \hline
-        \rref{R_RawInputs} &             &                           &                    \\ \hline
+                              & \iref{im_deflection} & \ref{sec_DataConstraints} & \rref{R_Inputs} & \rref{R_OutputInputs} & \rref{R_Calculate} & \rref{R_Output} \\ \hline
+        \iref{im_deflection}  &                      &                           &                 &                       &                    &                 \\ \hline
+        \rref{R_Inputs}       &                      &                           &                 &                       &                    &                 \\ \hline
+        \rref{R_OutputInputs} &                      &                           &                 &                       &                    &                 \\ \hline
+        \rref{R_Calculate}    &                      &                           &                 &                       &                    &                 \\ \hline
+        \rref{R_Output}       &                      &                           &                 &                       &                    &                 \\ \hline
     \end{tabular}
     \caption{Traceability Matrix Showing the Connections Between Requirements and Instance Models}
     \label{Table:R_trace}
