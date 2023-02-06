@@ -103,7 +103,7 @@
 \noindent \rule{\textwidth}{0.5mm}
 
 \paragraph{RefName: } \textbf{#2} \phantomsection 
-\label{#2}
+\label[#2]{#2}
 
 \paragraph{Label:} #3
 
@@ -301,10 +301,8 @@ systems.  The symbols are listed in alphabetical order.
 
 \subsection{Mathematical Notation}
 
-Vector symbols will be represented using the ``arrow'' notation, where a
-right-ward facing arrow is placed atop a symbol denoting a vector. For example,
-\(\vec{v}\) is a vector symbol. Additionally, the standard ``tuple'' notation
-will also be used to denote tuples.
+The common mathematical notation used in Canadian undergraduate-level
+mathematics will be used throughout this document.
 
 \newpage
 
@@ -609,6 +607,8 @@ containing:
 
 However, note that at the ``boundaries'' (the support tips), the beam may not
 have vertical deflection, and similarly has zero bending moment at the tips.
+Additionally, it should be noted that the beam is considered
+\textit{determinant}.
 
 \subsubsection{Goal Statements}
 \label{sssec_goals}
@@ -692,17 +692,23 @@ on.
 \noindent
 \deftheory
 % #2 refname of theory
-{TM:EBBDE}
+{TM:PC}
 % #3 label
-{Euler-Bernoulli Beam Deflection Equation}
+{Curvature of a Plane}
 % #4 equation
 {
-    \(EI\frac{d^{4}y}{dx^{4}}=w(x)\)
+    \[\frac{1}{\rho} = \frac{\frac{d^{2}y}{dx^{2}}}{(1+(\frac{dy}{dx})^{2})^{\frac{3}{2}}}\]
 }
 % #5 description
-{ The above equation describes the relationship between a beam's deflection
-    (\(y(x)\)) and the applied load (\(w(x)\)) for any point along the beam (\(x\)).
-    \an{Describe requirements and their relationship to the assumptions.}
+{ From elementary calculus, the curvature of a plane curve at a point \(Q(x,y)\)
+    of a curve may be expressed by the above equation, where
+    \cite{BeerJohnston1981}:
+
+    \begin{itemize}
+        \item \(\rho\) is the radius of curvature,
+        \item \(y\) is the vertical component of the point, and
+        \item \(x\) is the horizontal component of the point.
+    \end{itemize}
 }
 % #6 Notes
 {
@@ -710,57 +716,145 @@ on.
 }
 % #7 Source
 {
-    \cite{EulerBernoulliWiki}
+    \cite{BeerJohnston1981}
 }
 % #8 Referenced by
 {
-    \dref{ROCT}
+    \tref{TM:OREC}
 }
 % #9 Preconditions
 {
-    None
+    None.
 }
 % #1 derivation - not applicable by default
-{}
+{
+}
+
+\noindent
+\deftheory
+% #2 refname of theory
+{TM:PBPBA}
+% #3 label
+{Prismatic Beam Pure Bending into Arc}
+% #4 equation
+{
+    \[\frac{1}{\rho} = \frac{M(x)}{EI}\]
+}
+% #5 description
+{ For a beam, the reciprocal of the radius of curvature is a ratio of the
+    bending moment ($M(x)$) to the flexural rigidity ($EI$). }
+% #6 Notes
+{
+    None.
+}
+% #7 Source
+{
+    \cite{BeerJohnston1981}
+}
+% #8 Referenced by
+{
+    \tref{TM:OREC}
+}
+% #9 Preconditions
+{
+    None.
+}
+% #1 derivation - not applicable by default
+{
+}
+
+\noindent
+\deftheory
+% #2 refname of theory
+{TM:OREC}
+% #3 label
+{ODE Relationship of an Elastic Curve}
+% #4 equation
+{
+    \[\frac{d^{2}y}{dx^{2}} = \frac{M(x)}{EI}\]
+}
+% #5 description
+{
+}
+% #6 Notes
+{
+    None.
+}
+% #7 Source
+{
+    \cite{BeerJohnston1981}
+}
+% #8 Referenced by
+{
+}
+% #9 Preconditions
+{
+    None.
+}
+% #1 derivation - not applicable by default
+{ Starting with \tref{TM:PC}:
+
+    \[\frac{1}{\rho} = \frac{\frac{d^{2}y}{dx^{2}}}{(1+(\frac{dy}{dx})^{2})^{\frac{3}{2}}}\]
+
+    We may recognize that in the context of an abstract prismatic beam, the slope
+    \(\frac{dy}{dx}\) is relatively ``small'' (\aref{beam_deflection}). Similarly,
+    its square is also small. Considering it negligible, we may drop it:
+
+    \[\frac{1}{\rho} = \frac{d^{2}y}{dx^{2}}\]
+
+    However, substituting \(\frac{1}{\rho}\) from \tref{TM:PBPBA}, we obtain:
+
+    \[\frac{d^{2}y}{dx^{2}} = \frac{M(x)}{EI}\]
+}
+
+\noindent
+\deftheory
+% #2 refname of theory
+{TM:EBBDE}
+% #3 label
+{Euler-Bernoulli Beam Deflection Equation}
+% #4 equation
+{
+    \[EI\frac{d^{4}y}{dx^{4}}=w(x)\]
+}
+% #5 description
+{ The above equation describes the relationship between a beam's deflection
+    (\(y(x)\)) and the applied load (\(w(x)\)) for any point along the beam
+    (\(x\)). Notably,
+
+    \begin{itemize}
+        \item $y(0)=0$,
+        \item $y(L)=0$,
+        \item $\frac{d^{2}}{dx^2} y(0) = 0$, and
+        \item $\frac{d^{2}}{dx^2} y(L) = 0$
+    \end{itemize}
+
+    because the beam is simply supported (fixed at both ends implying no
+vertical movement), and hence the moments at the ends are 0. }
+% #6 Notes
+{ None. }
+% #7 Source
+{
+    \cite{BeerJohnston1981,EulerBernoulliWiki}
+}
+% #8 Referenced by
+{
+    \iref{im_deflection}
+}
+% #9 Preconditions
+{ None. }
+% #1 derivation - not applicable by default
+{ When a prismatic beam supports an applied loading, (\(w(x)\)), its elastic
+curve is governed by the fourth-order ODE found by integrating the equation
+found in \tref{TM:OREC} twice.
+}
+
+\newpage
 
 \subsubsection{General Definitions}
 \label{sec_gendef}
 
-This section collects the laws and equations that will be used in building the
-instance models.\\
-
-\noindent
-\begin{minipage}{\textwidth}
-    \renewcommand*{\arraystretch}{1.5}
-    \begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-        \hline
-        \rowcolor[gray]{0.9}
-        Number      & GD\refstepcounter{defnum}\thedefnum \label{NL}                                     \\
-        \hline
-        Label       & \bf Newton's law of cooling                                                        \\
-        \hline
-        SI Units    & \si{\watt\per\square\metre}                                                        \\
-        \hline
-        Equation    & $ q(t) = h \Delta T(t)$                                                            \\
-        \hline
-        Description &
-        Newton's law of cooling describes convective cooling from a surface.  The law is
-        stated as: the rate of heat loss from a body is proportional to the difference
-        in temperatures between the body and its surroundings.
-        \\
-                    & $q(t)$ is the thermal flux (\si{\watt\per\square\metre}).                          \\
-                    & $h$ is the heat transfer coefficient, assumed independent of $T$ (\aref{A_hcoeff})
-        (\si{\watt\per\square\metre\per\celsius}).                                                       \\
-                    & $\Delta T(t)$= $T(t) - T_{\text{env}}(t)$ is the time-dependent thermal gradient
-        between the environment and the object (\si{\celsius}).
-        \\
-        \hline
-        Source      & Citation here                                                                      \\
-        \hline
-        Ref.\ By    & \ddref{FluxCoil}, \ddref{FluxPCM}                                                  \\
-        \hline
-    \end{tabular}
-\end{minipage}\\
+There are no general definitions.
 
 \subsubsection*{Detailed derivation of simplified rate of change of temperature}
 
@@ -785,7 +879,7 @@ instance models.\\
         \hline
         Description &                                                                         \\
         \hline
-        Ref.\ By    & \iref{ewat}                                                             \\
+        Ref.\ By    & \iref{im_deflection}                                                    \\
         \hline
     \end{tabular}
 \end{minipage}\\
@@ -831,7 +925,6 @@ identified in Sections~\ref{sec_theoretical} and~\ref{sec_gendef}.
                     & $I_B$ is the beam's moment of inertia.                                 \\
                     & $w_{B}(x)$ is the function describing the load applied along the beam. \\
                     & $y_{B}(x)$ is a function describing the deflection along the beam.     \\
-        \\
         \hline
         Sources     & \nc{}                                                                  \\
         \hline
@@ -841,6 +934,10 @@ identified in Sections~\ref{sec_theoretical} and~\ref{sec_gendef}.
 \end{minipage}\\
 
 \subsubsection*{Derivation of Beam Deflection:}
+
+This model is a direct instantiation of \tref{TM:EBBDE} observed as a BVP for
+the beam in question as provided by user inputs (i.e., with $L_B$, $E_B$, $I_B$,
+$w_B$, $y_B$ substituted in).
 
 \subsubsection{Input Data Constraints}
 \label{sec_DataConstraints}
@@ -939,19 +1036,16 @@ qualities that the software is expected to exhibit.
 
 \end{itemize}
 
-\plt{Every IM should map to at least one requirement, but not every requirement
-    has to map to a corresponding IM.}
-
 \subsection{Nonfunctional Requirements}
 
 \noindent\begin{itemize}
 
     \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Accuracy}:]
         \textbf{Accuracy} The accuracy of the computed solutions should meet the
-        level needed for civil engineering.  The level of accuracy achieved
-        by \progname{} shall be described following the procedure given in
-        Section~X\an{Link to the VnV plan.} of the Verification and
-        Validation Plan.
+        level needed for civil engineering.  The level of accuracy achieved by
+        \progname{} shall be described following the procedure given in
+        Section~X\an{Link to the VnV plan.} of the Verification and Validation
+        Plan.
 
     \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability}:]
         \textbf{Usability} The program should allow for post-processing and
@@ -990,6 +1084,10 @@ qualities that the software is expected to exhibit.
         variables may be changed if numbers have poor readability in certain
         units.
 
+    \item[LC\refstepcounter{lcnum}\thelcnum\label{LC_beam_configuration}:] The
+        beam's configuration is likely to change across different beam needs and
+        positions.
+
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1023,14 +1121,15 @@ the assumptions.
             \centering
             \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
                 \hline
-                                            & \aref{world_dimension} & \aref{beam_slender} & \aref{beam_uniform_cross_section} & \aref{beam_straight_faces} & \aref{beam_moment_inertia_constant} & \aref{beam_vertical_elastic} & \aref{beam_modulus_constant} & \aref{beam_deflection} & \aref{deflection_differentiable} & \aref{loading_integrable} \\ \hline
-                \tref{T_COE}                &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
-                \dref{NL}                   &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
-                \ddref{dd_loading_function} &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
-                \iref{im_deflection}        &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
-                \iref{im_reaction}          &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
-                \lcref{LC_loading}          &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
-                \lcref{LC_units}            &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
+                                              & \aref{world_dimension} & \aref{beam_slender} & \aref{beam_uniform_cross_section} & \aref{beam_straight_faces} & \aref{beam_moment_inertia_constant} & \aref{beam_vertical_elastic} & \aref{beam_modulus_constant} & \aref{beam_deflection} & \aref{deflection_differentiable} & \aref{loading_integrable} \\ \hline
+                \tref{T_COE}                  &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
+                \dref{NL}                     &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
+                \ddref{dd_loading_function}   &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
+                \iref{im_deflection}          &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
+                \iref{im_reaction}            &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
+                \lcref{LC_loading}            &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
+                \lcref{LC_units}              &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
+                \lcref{LC_beam_configuration} &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
             \end{tabular}
             \caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
             \label{Table:A_trace}
