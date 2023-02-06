@@ -263,7 +263,6 @@ systems.  The symbols are listed in alphabetical order.
     \(L_{B}\) & \si{\metre} & user-defined length of the beam \\
     \(E_{B}\) & \si{\giga\pascal} & user-defined Young's modulus (beam material modulus of elasticity) \\
     \(I_{B}\) & \(\si{\metre{}}^{4}\) & user-defined moment of inertia of a cross-section of the beam \\
-    \(n\) & \textemdash{} & user-defined number of (imposed force, deflection) samples to take along the beam \\
     \(w_B(x)\) & \si{\kilo\newton} & user-defined definition of the force of the load applied at a specific point along the beam \\
     \(x\) & \si{\metre} & distance of an arbitrary point along the beam, from the far left-side (at the pinned support) \\
     \(w(x)\) & \si{\kilo\newton} & hypothetical force of the load applied at a specific point along the beam \\
@@ -275,7 +274,6 @@ systems.  The symbols are listed in alphabetical order.
     \(\theta{}_{\mathit{Roller}}\) & \si{\radian} & slope of the angle between the beam and the roller support under load \\
     \(y(x)\) & \si{\milli\metre} & deflection of a hypothetical loaded beam at a specific point along it \\
     \(y_{B}(x)\) & \si{\milli\metre} & deflection of the loaded beam at a specific point along it \\
-    \(s\) & \si{\milli\metre} & loaded beam movement in the rightward direction of the roller support \\
     \bottomrule
 \end{longtable*}
 
@@ -959,8 +957,9 @@ Table~\ref{TblSpecParams}.
         \toprule
         \textbf{Var} & \textbf{Physical Constraints} & \textbf{Software Constraints} & \textbf{Typical Value} & \textbf{Uncertainty}\\
         \midrule
-        $L$          & $L > 0$                       & $L_{\text{min}} \leq L \leq L_{\text{max}}$ & 1.5 \si[per-mode=symbol]{\metre} & 10\%
-        \\
+        $L_B$        & $0 < L_B$ & $0 < L_B$ & 10 \si[per-mode=symbol]{\metre} & 0\% \\
+        $E_B$        & $0 < E_B$ & $0 < E_B$ & \textemdash{} & 5\% \\
+        $I_B$        & $0 < I_B$ & $0 < E_B$ & \textemdash{} & 5\% \\
         \bottomrule
     \end{longtable*}
 \end{table}
@@ -972,7 +971,8 @@ Table~\ref{TblSpecParams}.
         \toprule
         \textbf{Var} & \textbf{Value} \\
         \midrule
-        $L_\text{min}$ & 0.1 \si{\metre}\\
+        % $L_\text{max}$ & $2^{32}$ \si{\metre}\\
+        \textemdash{} & \textemdash{} \\
         \bottomrule
     \end{longtable*}
 \end{table}
@@ -1116,15 +1116,15 @@ the assumptions.
             \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
                 \hline
                                               & \aref{world_dimension} & \aref{beam_slender} & \aref{beam_uniform_cross_section} & \aref{beam_straight_faces} & \aref{beam_moment_inertia_constant} & \aref{beam_vertical_elastic} & \aref{beam_modulus_constant} & \aref{beam_deflection} & \aref{deflection_differentiable} & \aref{loading_integrable} \\ \hline
-                \tref{TM:PC}                  &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
-                \tref{TM:PBPBA}               &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
-                \tref{TM:OREC}                &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
-                \tref{TM:EBBDE}               &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
+                \tref{TM:PC}                  & X                      & X                   & X                                 &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
+                \tref{TM:PBPBA}               & X                      & X                   & X                                 & X                          & X                                   & X                            & X                            &                        &                                  &                           \\ \hline
+                \tref{TM:OREC}                & X                      & X                   & X                                 & X                          & X                                   & X                            & X                            &                        &                                  &                           \\ \hline
+                \tref{TM:EBBDE}               & X                      & X                   & X                                 & X                          & X                                   & X                            & X                            & X                      & X                                & X                         \\ \hline
                 \ddref{dd_loading_function}   &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
-                \iref{im_deflection}          &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
-                \lcref{LC_loading}            &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
+                \iref{im_deflection}          & X                      & X                   & X                                 & X                          & X                                   & X                            & X                            & X                      & X                                & X                         \\ \hline
+                \lcref{LC_loading}            &                        &                     &                                   &                            &                                     &                              &                              &                        & X                                & X                         \\ \hline
                 \lcref{LC_units}              &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
-                \lcref{LC_beam_configuration} &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
+                \lcref{LC_beam_configuration} &                        & X                   & X                                 & X                          & X                                   & X                            & X                            & X                      & X                                & X                         \\ \hline
             \end{tabular}
             \caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
             \label{Table:A_trace}
