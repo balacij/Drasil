@@ -32,6 +32,7 @@ def parabolic_distribution(x, y):
     return np.vstack((y[1], y[2], y[3], - (y[0] - L/2) ** 2 / (E * I)))
 
 fun = uniformly_distributed_800Npm_load
+# fun = parabolic_distribution
 
 # Boundary conditions:
 # 1. ends are vertically fixed:   y(0) = 0,   y(L) = 0

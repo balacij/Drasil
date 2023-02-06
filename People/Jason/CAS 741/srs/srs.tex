@@ -51,7 +51,6 @@
 
 \input{../comments}
 \input{../common}
-\input{../macros}
 
 % For easy change of table widths
 \newcommand{\colZwidth}{1.0\textwidth}
@@ -217,7 +216,7 @@ description of the unit and the SI name. ~\newline
         \textbf{symbol} & \textbf{unit} & \textbf{SI} \\
         \midrule
         \si{\metre}     & length        & metre       \\
-        \si{\gram}      & mass          & gram        \\
+        \si{\kilo\gram} & mass          & gram        \\
         \si{\pascal}    & pressure      & pascal      \\
         \si{\radian}    & angle         & radian      \\
         \si{\newton}    & force         & newton      \\
@@ -231,9 +230,6 @@ description of the unit and the SI name. ~\newline
 
     \item ``gigapascals'' (a unit of pressure, denoted by \si{\giga\pascal},
           where \(\si{\giga\pascal}=10^{9}\si{\pascal}\)),
-
-    \item ``kilograms'' (a unit of mass, \si{\kilogram}, where
-          \(\si{\kilogram}=10^{3}\si{\gram}\)),
 
     \item ``kilonewtons'' (a unit of force, denoted by \si{\kilo\newton}, where
           \(\si{\kilo\newton}=10^{3}\si{\newton}\)), and
@@ -263,7 +259,7 @@ systems.  The symbols are listed in alphabetical order.
     \(E_{B}\) & \si{\giga\pascal} & user-defined Young's modulus (beam material modulus of elasticity) \\
     \(I_{B}\) & \(\si{\metre{}}^{4}\) & user-defined moment of inertia of a cross-section of the beam \\
     \(n\) & \textemdash{} & user-defined number of (imposed force, deflection) samples to take along the beam \\
-    \(f(x)\) & \si{\kilo\newton} & user-defined definition of the force of the load applied at a specific point along the beam \\
+    \(w_B(x)\) & \si{\kilo\newton} & user-defined definition of the force of the load applied at a specific point along the beam \\
     \(x\) & \si{\metre} & distance of an arbitrary point along the beam, from the far left-side (at the pinned support) \\
     \(w(x)\) & \si{\kilo\newton} & hypothetical force of the load applied at a specific point along the beam \\
     \(\mathit{Pinned}\) & \si{\metre} & 1-dimensional position of the pinned support \\
@@ -272,9 +268,9 @@ systems.  The symbols are listed in alphabetical order.
     \(R_{\mathit{Roller}}\) & \si{\kilo\newton} & reaction of the roller support under loaded beam \\
     \(\theta{}_{\mathit{Pinned}}\) & \si{\radian} & slope of the angle between the beam and the pinned support under load \\
     \(\theta{}_{\mathit{Roller}}\) & \si{\radian} & slope of the angle between the beam and the roller support under load \\
-    \(y(x)\) & \si{\milli\metre} & deflection of the loaded beam at a specific point along it \\
+    \(y(x)\) & \si{\milli\metre} & deflection of a hypothetical loaded beam at a specific point along it \\
+    \(y_{B}(x)\) & \si{\milli\metre} & deflection of the loaded beam at a specific point along it \\
     \(s\) & \si{\milli\metre} & loaded beam movement in the rightward direction of the roller support \\
-    \(\vec{r}\) & \textemdash{} & $n+1$-dimensional vector of equally-spaced $(w(x),y(x))$ samples along the beam \\
     \bottomrule
 \end{longtable*}
 
@@ -491,9 +487,9 @@ generate a problem using a BVP solver. There are no other system constraints.
 However, it should be noted that the usage of Drasil does impose the limitations
 of Drasil onto the produced software and SRS documents. One notable limitation
 is the inability to input general expressions into Drasil-generated programs. As
-such, the ``loading function,'' \(w(x)\), will need to be hard-coded into both
-this SRS document and the software. However, changing the source for both is
-relatively straightforward and simple thanks to Drasil.
+such, the ``user-defined'' loading function, \(w_{B}(x)\), will need to be
+hard-coded into both this SRS document and the software. However, changing the
+source for both is relatively straightforward and simple thanks to Drasil.
 
 \newpage
 
@@ -658,32 +654,32 @@ Change (LC), in which the respective assumption is used.
     \assume{beam_slender}{The beam is ``slender'' (has a length to height ratio
         greater than \(10\) to \(1\)).}
 
-    \item[] \textit{The beam is prismatic.}
-    \begin{itemize}
-        \assume{beam_uniform_cross_section}{The beam has a uniform cross-section.}
-        \assume{beam_straight_faces}{The beam is straight/flat within a
-            reasonable tolerance.}
-    \end{itemize}
+    \item \textit{The beam is prismatic.}
+          \begin{itemize}
+              \assume{beam_uniform_cross_section}{The beam has a uniform cross-section.}
+              \assume{beam_straight_faces}{The beam is straight/flat within a
+                  reasonable tolerance.}
+          \end{itemize}
 
-    \assume{beam_moment_inertia_constant}{The beam has a constant moment of
-        inertia.}
+          \assume{beam_moment_inertia_constant}{The beam has a constant moment of
+              inertia.}
 
-    \assume{beam_vertical_elastic}{The beam experiences vertical linear-elastic
-        load.}
+          \assume{beam_vertical_elastic}{The beam experiences vertical linear-elastic
+              load.}
 
-    \assume{beam_modulus_constant}{The beam's modulus of elasticity is constant
-        along the beam.}
+          \assume{beam_modulus_constant}{The beam's modulus of elasticity is constant
+              along the beam.}
 
-    \assume{beam_deflection}{Only relatively small deflections will be examined
-        (whereby the maximum deflection is at most \(10\%\) of the beam's
-        length).}
+          \assume{beam_deflection}{Only relatively small deflections will be examined
+              (whereby the maximum deflection is at most \(10\%\) of the beam's
+              length).}
 
-    \assume{deflection_differentiable}{The hypothetical deflection function
-        should belong to at least the class of functions that are differentiable
-        4 times on \([0, L]\).}
+          \assume{deflection_differentiable}{The hypothetical deflection function
+              should belong to at least the class of functions that are differentiable
+              4 times on \([0, L]\).}
 
-    \assume{loading_integrable}{The loading function should belong to at least
-        the class of functions that are integrable 4 times on \([0, L]\).}
+          \assume{loading_integrable}{The loading function should belong to at least
+              the class of functions that are integrable 4 times on \([0, L]\).}
 
 \end{itemize}
 
@@ -779,17 +775,17 @@ instance models.\\
         \rowcolor[gray]{0.9}
         Number      & DD\refstepcounter{datadefnum}\thedatadefnum \label{dd_loading_function} \\
         \hline
-        Label       & \bf Applied Load                                                    \\
+        Label       & \bf Applied Load                                                        \\
         \hline
-        Symbol      & $w(x)$                                                              \\
+        Symbol      & $w_{B}(x)$                                                              \\
         \hline
-        SI Units    & \si{\watt\per\square\metre}                                         \\
+        SI Units    & \si{\watt\per\square\metre}                                             \\
         \hline
-        Equation    & $w(x) = (x - \frac{L}{2})^{2}$                                      \\
+        Equation    & $w_{B}(x) = (x - \frac{L}{2})^{2}$                                      \\
         \hline
-        Description &                                                                     \\
+        Description &                                                                         \\
         \hline
-        Ref.\ By    & \iref{ewat}                                                         \\
+        Ref.\ By    & \iref{ewat}                                                             \\
         \hline
     \end{tabular}
 \end{minipage}\\
@@ -808,7 +804,8 @@ which is expressed in mathematical terms. It uses concrete symbols defined in
 Section~\ref{sec_datadef} to replace the abstract symbols in the models
 identified in Sections~\ref{sec_theoretical} and~\ref{sec_gendef}.
 
-\gsref{deflection} and \gsref{reaction} are solved by \iref{im_deflection} and \iref{im_reaction}.
+\gsref{deflection} and \gsref{reaction} are solved by \iref{im_deflection} and
+\iref{im_reaction}.
 
 %Instance Model 1
 
@@ -818,27 +815,27 @@ identified in Sections~\ref{sec_theoretical} and~\ref{sec_gendef}.
     \begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
         \hline
         \rowcolor[gray]{0.9}
-        Number      & IM\refstepcounter{instnum}\theinstnum{}\label{im_deflection}     \\
+        Number      & IM\refstepcounter{instnum}\theinstnum{}\label{im_deflection}           \\
         \hline
-        Label       & \bf Beam Deflection                                              \\
+        Label       & \bf Beam Deflection                                                    \\
         \hline
-        Input       & $L_B$, $E_B$, $I_B$, $w(x)$                                      \\
+        Input       & $L_B$, $E_B$, $I_B$, $w_{B}(x)$                                        \\
         \hline
-        Output      & \(y(x)\) as the solution to the BVP defined as:                  \\
-                    & \(E_{B}I_{B}\frac{d^{4}y}{dx^{4}}=w(x)\) where \(y(0)=0\),
+        Output      & \(y(x)\) as the solution to the BVP defined as:                        \\
+                    & \(E_{B}I_{B}\frac{d^{4}y}{dx^{4}}=w_{B}(x)\) where \(y(0)=0\),
         \(\frac{d^{2}y}{dx^{2}}(0)=0\), \(y(L_B)=0\), and
-        \(\frac{d^{2}y}{dx^{2}}(L_B)=0\)                                               \\
+        \(\frac{d^{2}y}{dx^{2}}(L_B)=0\)                                                     \\
         \hline
-        Description & $L_B$ is the beam's length.                                      \\
-                    & $E_B$ is the beam's modulus of elasticity (Young's modulus).     \\
-                    & $I_B$ is the beam's moment of inertia.                           \\
-                    & $w(x)$ is a function describing the load applied along the beam. \\
-                    & $y(x)$ is a function describing the deflection along the beam.   \\
+        Description & $L_B$ is the beam's length.                                            \\
+                    & $E_B$ is the beam's modulus of elasticity (Young's modulus).           \\
+                    & $I_B$ is the beam's moment of inertia.                                 \\
+                    & $w_{B}(x)$ is the function describing the load applied along the beam. \\
+                    & $y(x)$ is a function describing the deflection along the beam.         \\
         \\
         \hline
-        Sources     & \nc{}                                                            \\
+        Sources     & \nc{}                                                                  \\
         \hline
-        Ref.\ By    &                                                                  \\
+        Ref.\ By    &                                                                        \\
         \hline
     \end{tabular}
 \end{minipage}\\
@@ -866,12 +863,12 @@ Table~\ref{TblSpecParams}.
 \begin{table}[!h]
     \caption{Input Variables} \label{TblInputVar}
     \renewcommand{\arraystretch}{1.2}
-    \noindent \begin{longtable*}{l l l l c}
+    \noindent
+    \begin{longtable*}{l l l l c}
         \toprule
-        \textbf{Var} & \textbf{Physical Constraints} & \textbf{Software Constraints} &
-        \textbf{Typical Value} & \textbf{Uncertainty}\\
+        \textbf{Var} & \textbf{Physical Constraints} & \textbf{Software Constraints} & \textbf{Typical Value} & \textbf{Uncertainty}\\
         \midrule
-        $L$ & $L > 0$ & $L_{\text{min}} \leq L \leq L_{\text{max}}$ & 1.5 \si[per-mode=symbol] {\metre} & 10\%
+        $L$          & $L > 0$                       & $L_{\text{min}} \leq L \leq L_{\text{max}}$ & 1.5 \si[per-mode=symbol]{\metre} & 10\%
         \\
         \bottomrule
     \end{longtable*}
@@ -925,22 +922,20 @@ qualities that the software is expected to exhibit.
 \noindent
 \begin{itemize}
 
-    \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs}:]
-        \plt{Requirements for the inputs that are supplied by the user. This
-            information has to be explicit.}
+    \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs}:] The inputs must
+        be provided by the end-user according to \Cref{TblInputVar}.
 
-    \item[R\refstepcounter{reqnum}\thereqnum \label{R_OutputInputs}:] \plt{It
-            isn't always required, but often echoing the inputs as part of the
-            output is a good idea.}
+    \item[R\refstepcounter{reqnum}\thereqnum \label{R_OutputInputs}:] The inputs
+        of \progname{} should be displayed to the user before any meaningful
+        computation begins.
 
-    \item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate}:]
-        \plt{Calculation related requirements.}
+    \item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate}:] The output
+        variables should be calculated following the instance models as per
+        \Cref{sec_instance}.
 
-    \item[R\refstepcounter{reqnum}\thereqnum \label{R_VerifyOutput}:]
-        \plt{Verification related requirements.}
-
-    \item[R\refstepcounter{reqnum}\thereqnum \label{R_Output}:] \plt{Output
-            related requirements.}
+    \item[R\refstepcounter{reqnum}\thereqnum \label{R_Output}:] The output of
+        the program should have a well-defined output scheme in the software
+        design document\an{Well-defined output scheme.}.
 
 \end{itemize}
 
@@ -953,10 +948,10 @@ qualities that the software is expected to exhibit.
 
     \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Accuracy}:]
         \textbf{Accuracy} The accuracy of the computed solutions should meet the
-            level needed for civil engineering.  The level of accuracy achieved
-            by \progname{} shall be described following the procedure given in
-            Section~X\an{Link to the VnV plan.} of the Verification and
-            Validation Plan.
+        level needed for civil engineering.  The level of accuracy achieved
+        by \progname{} shall be described following the procedure given in
+        Section~X\an{Link to the VnV plan.} of the Verification and
+        Validation Plan.
 
     \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability}:]
         \textbf{Usability} The program should allow for post-processing and
@@ -975,7 +970,7 @@ qualities that the software is expected to exhibit.
 
     \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Portability}:]
         \textbf{Portability} \progname{} should be usable on at least the 3
-            major home operating systems (Linux, macOS, and Windows).
+        major home operating systems (Linux, macOS, and Windows).
 
 \end{itemize}
 
@@ -1028,14 +1023,14 @@ the assumptions.
             \centering
             \begin{tabular}{|c|c|}
                 \hline
-                                     & \aref{A_OnlyThermalEnergy} \\ \hline
-                \tref{T_COE}         &                            \\ \hline
-                \dref{NL}            &                            \\ \hline
-                \ddref{dd_loading_function}     &                            \\ \hline
-                \iref{im_deflection} &                            \\ \hline
-                \iref{im_reaction}   &                            \\ \hline
-                \lcref{LC_loading}   &                            \\ \hline
-                \lcref{LC_units}     &                            \\ \hline
+                                            & \aref{A_OnlyThermalEnergy} \\ \hline
+                \tref{T_COE}                &                            \\ \hline
+                \dref{NL}                   &                            \\ \hline
+                \ddref{dd_loading_function} &                            \\ \hline
+                \iref{im_deflection}        &                            \\ \hline
+                \iref{im_reaction}          &                            \\ \hline
+                \lcref{LC_loading}          &                            \\ \hline
+                \lcref{LC_units}            &                            \\ \hline
             \end{tabular}
             \caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
             \label{Table:A_trace}
