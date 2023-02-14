@@ -24,7 +24,7 @@
 \usepackage{tikz}
 \usepackage{varwidth}
 \usetikzlibrary{shapes,arrows,cd,babel,arrows.meta,graphs,graphdrawing}
-\usegdlibrary {layered}
+\usegdlibrary{layered}
 
 % Credit to Gabriel Devenyi for this bibliography cfg:
 % github.com/gdevenyi/mcmaster.latex
@@ -161,8 +161,8 @@
 % Title
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\title{Software Requirements Specification for \progname: examining a beam
-    bending under load.}
+\title{Software Requirements Specification for \progname{}: examining a beam
+    bending under load}
 \author{\authname}
 \date{\today}
 
@@ -297,7 +297,7 @@ systems.  The symbols are listed in alphabetical order.
         PS              & Physical System Description         \\
         R               & Requirement                         \\
         SRS             & Software Requirements Specification \\
-        \progname{}     & Beam Bending                        \\
+        \progname{}     & Beam Bending Program                \\
         TM              & Theoretical Model                   \\
         \bottomrule
     \end{tabular}
@@ -318,49 +318,53 @@ mathematics will be used throughout this document.
 
 \section{Introduction}
 
-For any load-carrying structure, beams safely distribute the stress of the load
-to the foundations of the structure. Unlike flooring in residential homes, we
-expect the beds of industrial-strength mechanical tools and bridges to, within
-reason, be vertically and horizontally flexible, reacting to imposed load such
-that they may hold with minimal columns. \textit{Simply supported} beams are one
-type of beam that are commonly found in bridges and beds of machine tools. It is
-important to understand how beams will react under load or else we risk damaging
-structures, floor bending (making inhabitants feel unsafe), or damaging loads.
-We may use software to analyze the beams reaction under various loading
-scenarios. We call the software that performs this: ``BeamBending.''
+Beams safely distribute the stress of the load to its foundations. For example,
+beams are used in both residential and commercial applications. In residential
+homes, we expect floors (which might be supported by beams) to remain flat
+enough that inhabitants wouldn't care about minor deflections. However, in other
+applications of beams, such as the beds of industrial-strength mechanical tools,
+and bridges, we might expect beams to be relatively pliant under loading. For
+example, we might expect these industrial applications to have some vertical and
+horizontal deflection. \textit{Simply supported} beams are one type of beam that
+are commonly found in bridges and beds of machine tools. It is important to
+understand how beams will react under load or else we risk damaging structures,
+floor bending (making inhabitants feel unsafe), or damaging loads. We may use
+software to analyze the reaction of beams under various loading scenarios. We
+call our software that performs this: ``BeamBending.''
 
 This document aims to develop a general scheme for understanding the reaction of
 a simply supported beam to imposed load under simplified conditions. This
 section aims to provide an overview of the Software Requirements Specification
-(SRS) for the ``BeamBending'' problem, discussing the scope and purpose of the
-work.
+(SRS) for the BeamBending problem, discussing the scope and purpose of the work.
 
 \subsection{Purpose of Document}
 
 The purpose of this document is to provide the reader with a well-derived,
-verifiable explanation of a solution to the ``beam bending'' problem. The
-document provides sufficient information such that a related software artifact
-may be constructed. The produced software artifact has an ``increased'' degree
-of confidence in reliability and correctness by being traceable to and derived
-by these defined software requirements specifications. As such, a large focus on
+verifiable explanation of a solution to the beam bending problem. The document
+provides sufficient information such that a related software artifact may be
+constructed. The produced software artifact has an ``increased'' degree of
+confidence in reliability and correctness by being traceable to and derived by
+these defined software requirements specifications. As such, a large focus on
 the development of this document is to have the domain knowledge captured and
 adequately codified such that the origins of fragments of code may be verified,
-up to development choices (e.g., language, tooling, etc.).
+up to development choices (e.g., numerical algorithm, language, tooling, etc.).
 
 \subsection{Scope of Requirements}
 \label{ssec_scope}
 
 The requirements analyze the ``problem'' (as defined in \Cref{Sec_pd}) and
 related ``solution'' under the assumption of the Euler-Bernoulli Beam Theory
-\cite{EulerBernoulliWiki} in a 2-dimensional space for a prismatic beam.
+\cite{EulerBernoulliWiki} in a 2-dimensional space for a simply-supported
+prismatic beam.
 
 \subsection{Characteristics of Intended Reader}
 \label{sec_IntendedReader}
 
 Readers of this document should at least have an understanding of:
 \begin{itemize}
-    \item at least a first-year university level physics concepts, such as
-          ``force,'' ``mass,'' ``inertia,'' ``elasticity,'' and ``units,''
+    \item at least a first-year university level engineering mechanics concepts,
+          such as ``force,'' ``mass,'' ``inertia,'' ``elasticity,'' and
+          ``units,''
     \item first-year university level linear algebra and calculus concepts, such
           as derivatives, integration, continuous functions, and vectors.
 \end{itemize}
@@ -369,9 +373,11 @@ However, it is preferred that users have at least a second-year university level
 understand of physics and calculus concepts to confidently audit the derivation
 of the instance models.
 
-Should this document be used for non-trivial, non-educational purposes, this
-document should strictly be read and used by those appropriately licensed and
-well-versed in software and civil engineering.
+This document is intended for educational purposes only. The author accepts no
+liability for any damages related to use of this document. This document is
+provided ``as is,'' with no warranty. Please seek the advice of someone
+appropriately licensed (as per your country's laws) should you consider using
+any component of this document.
 
 \subsection{Organization of Document}
 
@@ -458,17 +464,11 @@ deflection curve.
               \item Detect data type mismatches, such as a string of characters
                     instead of a floating point number.
 
-              \item Evaluate applicability of the input arguments to the
-                    proposed ``solution'' outlined in this document, such as
-                    numbers being above a certain threshold with respect to
-                    others (e.g., the number of sampling points must be a
-                    positive, non-zero, number).
+              \item Validating applicability of the input arguments to the
+                    proposed ``solution'' outlined in this document.
 
-              \item Calculate the imposed loading and resultant deflection at
-                    every desired sampling point, the angles of rotation between
-                    the beam and the respective supports, the force reactions at
-                    the supports, and the movement of the beam in the horizontal
-                    direction.
+              \item Approximate the deflection of the beam under the imposed
+                    loading.
 
           \end{itemize}
 \end{itemize}
@@ -547,7 +547,8 @@ easier to correctly understand the requirements:
     \item Young's modulus (modulus of elasticity): the measure of lengthwise
           stiffness of an element as a force is applied lengthwise\nc{}, and
 
-    \item moment of inertia: torque required for angular acceleration\nc{}.
+    \item moment of inertia: second moment of area (a measure of how well a
+          cross-section resists bending)\cite{SmithAdviceAndDiscussion2023}.
 
 \end{itemize}
 
@@ -598,7 +599,7 @@ containing:
 
     \item[\textbf{PS3}:] a roller support, and
 
-    \item[\textbf{PS4}:] an applied load.
+    \item[\textbf{PS4}:] an applied distributed load.
 
 \end{itemize}
 
@@ -609,26 +610,23 @@ containing:
     \end{center}
 \end{figure}
 
-However, note that at the ``boundaries'' (the support tips), the beam may not
-have vertical deflection, and similarly has zero bending moment at the tips.
-Additionally, it should be noted that the beam is considered
-\textit{determinant}.
+\noindent{}However, note that at the ``boundaries'' (the support tips), the beam
+may not have vertical deflection, and similarly has zero bending moment at the
+tips. Additionally, it should be noted that the beam is \textit{statically
+    determinant}.
 
 \subsubsection{Goal Statements}
 \label{sssec_goals}
 
-\noindent{}Given constant length, modulus of elasticity, and moment of inertia
-across cross-sections of the beam, and the applied load on the beam as a
-function from the distance of the leftward pinned support, the goal statements
-are:
+\noindent{}Given constant length, modulus of elasticity, and second moment of
+area across the beam's cross-section, and the applied distributed load on the
+beam as a function from the distance of the leftward pinned support, the goal
+statements are:
 
 \begin{itemize}
 
     \item[\refstepcounter{goalnum}\textbf{GS\thegoalnum{}}\label{deflection}:]
         Calculate the deflection of the beam under load.
-
-    \item[\refstepcounter{goalnum}\textbf{GS\thegoalnum{}}\label{reaction}:]
-        Calculate the reaction of the supports under load.
 
 \end{itemize}
 
@@ -658,32 +656,33 @@ Change (LC), in which the respective assumption is used.
     \assume{beam_slender}{The beam is ``slender'' (has a length to height ratio
         greater than \(10\) to \(1\)).}
 
-    \item \textit{The beam is prismatic.}
-          \begin{itemize}
-              \assume{beam_uniform_cross_section}{The beam has a uniform cross-section.}
-              \assume{beam_straight_faces}{The beam is straight/flat within a
-                  reasonable tolerance.}
-          \end{itemize}
+    \assume{beam_prismatic}{The beam is prismatic (i.e.,
+        \aref{beam_uniform_cross_section} \& \aref{beam_straight_faces}).}
 
-          \assume{beam_moment_inertia_constant}{The beam has a constant moment of
-              inertia.}
+    \assume{beam_uniform_cross_section}{The beam has a uniform cross-section.}
 
-          \assume{beam_vertical_elastic}{The beam experiences vertical linear-elastic
-              load.}
+    \assume{beam_straight_faces}{The beam is straight/flat within a reasonable
+        tolerance.}
 
-          \assume{beam_modulus_constant}{The beam's modulus of elasticity is constant
-              along the beam.}
+    \assume{beam_moment_inertia_constant}{The beam has a constant second moment
+        of area.}
 
-          \assume{beam_deflection}{Only relatively small deflections will be examined
-              (whereby the maximum deflection is at most \(10\%\) of the beam's
-              length).}
+    \assume{beam_vertical_elastic}{The beam experiences vertical linear-elastic
+        load.}
 
-          \assume{deflection_differentiable}{The hypothetical deflection function
-              should belong to at least the class of functions that are differentiable
-              4 times on \([0, L]\).}
+    \assume{beam_modulus_constant}{The beam's modulus of elasticity is constant
+        along the beam.}
 
-          \assume{loading_integrable}{The loading function should belong to at least
-              the class of functions that are integrable 4 times on \([0, L]\).}
+    \assume{beam_deflection}{Only relatively small deflections will be examined
+        (whereby the maximum deflection is at most \(10\%\) of the beam's
+        length).}
+
+    \assume{deflection_differentiable}{The hypothetical deflection function
+        should belong to at least the class of functions that are differentiable
+        4 times on \([0, L]\).}
+
+    \assume{loading_integrable}{The loading function should belong to at least
+        the class of functions that are integrable 4 times on \([0, L]\).}
 
 \end{itemize}
 
@@ -1022,12 +1021,8 @@ qualities that the software is expected to exhibit.
         computation begins.
 
     \item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate}:] The output
-        variables should be calculated following the instance models as per
-        \Cref{sec_instance}.
-
-    \item[R\refstepcounter{reqnum}\thereqnum \label{R_Output}:] The output of
-        the program should have a well-defined output scheme in the software
-        design document\an{Well-defined output scheme.}.
+        variables (see \Cref{TblOutputVar}) should be calculated following the
+        instance models as per \Cref{sec_instance}.
 
 \end{itemize}
 
@@ -1114,18 +1109,18 @@ the assumptions.
     \begin{landscape}
         \begin{table}[h!]
             \centering
-            \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+            \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
                 \hline
-                                              & \aref{world_dimension} & \aref{beam_slender} & \aref{beam_uniform_cross_section} & \aref{beam_straight_faces} & \aref{beam_moment_inertia_constant} & \aref{beam_vertical_elastic} & \aref{beam_modulus_constant} & \aref{beam_deflection} & \aref{deflection_differentiable} & \aref{loading_integrable} \\ \hline
-                \tref{TM:PC}                  & X                      & X                   & X                                 &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
-                \tref{TM:PBPBA}               & X                      & X                   & X                                 & X                          & X                                   & X                            & X                            &                        &                                  &                           \\ \hline
-                \tref{TM:OREC}                & X                      & X                   & X                                 & X                          & X                                   & X                            & X                            &                        &                                  &                           \\ \hline
-                \tref{TM:EBBDE}               & X                      & X                   & X                                 & X                          & X                                   & X                            & X                            & X                      & X                                & X                         \\ \hline
-                \ddref{dd_loading_function}   &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
-                \iref{im_deflection}          & X                      & X                   & X                                 & X                          & X                                   & X                            & X                            & X                      & X                                & X                         \\ \hline
-                \lcref{LC_loading}            &                        &                     &                                   &                            &                                     &                              &                              &                        & X                                & X                         \\ \hline
-                \lcref{LC_units}              &                        &                     &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
-                \lcref{LC_beam_configuration} &                        & X                   & X                                 & X                          & X                                   & X                            & X                            & X                      & X                                & X                         \\ \hline
+                                              & \aref{world_dimension} & \aref{beam_slender} & \aref{beam_prismatic} & \aref{beam_uniform_cross_section} & \aref{beam_straight_faces} & \aref{beam_moment_inertia_constant} & \aref{beam_vertical_elastic} & \aref{beam_modulus_constant} & \aref{beam_deflection} & \aref{deflection_differentiable} & \aref{loading_integrable} \\ \hline
+                \tref{TM:PC}                  & X                      & X                   &                       & X                                 &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
+                \tref{TM:PBPBA}               & X                      & X                   & X                     & X                                 & X                          & X                                   & X                            & X                            &                        &                                  &                           \\ \hline
+                \tref{TM:OREC}                & X                      & X                   & X                     & X                                 & X                          & X                                   & X                            & X                            &                        &                                  &                           \\ \hline
+                \tref{TM:EBBDE}               & X                      & X                   & X                     & X                                 & X                          & X                                   & X                            & X                            & X                      & X                                & X                         \\ \hline
+                \ddref{dd_loading_function}   &                        &                     &                       &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
+                \iref{im_deflection}          & X                      & X                   & X                     & X                                 & X                          & X                                   & X                            & X                            & X                      & X                                & X                         \\ \hline
+                \lcref{LC_loading}            &                        &                     &                       &                                   &                            &                                     &                              &                              &                        & X                                & X                         \\ \hline
+                \lcref{LC_units}              &                        &                     &                       &                                   &                            &                                     &                              &                              &                        &                                  &                           \\ \hline
+                \lcref{LC_beam_configuration} &                        & X                   & X                     & X                                 & X                          & X                                   & X                            & X                            & X                      & X                                & X                         \\ \hline
             \end{tabular}
             \caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
             \label{Table:A_trace}
