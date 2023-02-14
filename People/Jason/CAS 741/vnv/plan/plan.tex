@@ -57,6 +57,10 @@
 
 \pagenumbering{roman}
 
+%------------------------------------------------------------------------------
+% REVISION HISTORY
+%------------------------------------------------------------------------------
+
 \section{Revision History}
 
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X} \toprule {
@@ -76,32 +80,44 @@
 \listoffigures
 \plt{Remove this section if it isn't needed}
 
+%------------------------------------------------------------------------------
+% TABLE OF SYMBOLS, ABBREVIATIONS, AND ACRONYMS
+%------------------------------------------------------------------------------
+
 \newpage
 
 \section{Symbols, Abbreviations, and Acronyms}
 
+The Symbols, Abbreviations, and Acronyms in this document builds upon those from
+\progname{}'s related SRS document \cite{BalaciBeamBendingSRS2023}.\\
+
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{l l}
     \toprule
-    \textbf{symbol} & \textbf{description} \\
+    \textbf{Symbol} & \textbf{Description}                                     \\
     \midrule
-    T               & Test                 \\
+    CAS             & Computing and Software department at McMaster University \\
+    SRS             & Software Requirements Specification                      \\
+    T               & Test                                                     \\
+    VnV             & Verification and Validation                              \\
     \bottomrule
 \end{tabular}\\
-
-\plt{symbols, abbreviations, or acronyms --- you can simply reference the SRS
-    tables, if appropriate}
-
-\plt{Remove this section if it isn't needed}
 
 \newpage
 
 \pagenumbering{arabic}
 
-This document ... \plt{provide an introductory blurb and roadmap of the
-    Verification and Validation plan}
+%------------------------------------------------------------------------------
+% GENERAL INFORMATION
+%------------------------------------------------------------------------------
 
 \section{General Information}
+
+This document describes the plan of action related to the Verification and
+Validation (VnV) of the Beam Bending analysis program (\progname{}).
+
+\plt{provide an introductory blurb and roadmap of the Verification and
+    Validation plan}
 
 \subsection{Summary}
 
@@ -125,36 +141,89 @@ This document ... \plt{provide an introductory blurb and roadmap of the
 
 \cite{BalaciBeamBendingSRS2023}
 
+%------------------------------------------------------------------------------
+% PLAN
+%------------------------------------------------------------------------------
+\newpage{}
+
 \section{Plan}
 
-\plt{Introduce this section.   You can provide a roadmap of the sections to
-    come.}
+The ``whole'' Verification and Validation plan for \progname{} consists of
+multiple sub-plans. Notably, it has a designated team (with sub-teams) who will
+be executing the related sub-plans stipulated in this document. Team members
+will take responsibility for various aspects of verification and validation.
+
+\plt{Introduce this section. You can provide a roadmap of the sections to come.}
 
 \subsection{Verification and Validation Team}
 
-\plt{Your teammates.  Maybe your supervisor. You shoud do more than list names.
-    You should say what each person's role is for the project's verification.  A
-    table is a good way to summarize this information.}
+\begin{longtable}{|l|c|l|}
+    \caption{Table of VnV Teammates}
+    \label{table:vnv_teammates}
+
+    \\ \hline
+    \textbf{Assignee}    & \textbf{Project}                  & \textbf{Role(s)}                                              \\ \hline
+    Dr.\ Smith           & \(*\)\footnote{\(*\): match all.} & Authoritative Expert\footnote{Pretend we're not in CAS 741.}. \\ \hline
+    Jason Balaci         & \(*\)                             & Author.                                                       \\ \hline
+    Sam Crawford         & \(*\)                             & Reviewer and VnV-er.                                          \\ \hline
+    Mina Mahdipour       & SRS                               & Reviewer.                                                     \\ \hline
+    Deesha Patel         & VnV                               & Reviewer.                                                     \\ \hline
+    Maryam Valian        & Drasil                            & Reviewer \& VnV-er.                                           \\ \hline
+    Class of CAS \(741\) & \(*\)                             & \(*\)                                                         \\ \hline
+\end{longtable}
+
+\begin{longtable}{|l|p{8cm}|}
+    \caption{Table of VnV Roles}
+    \label{table:vnv_roles}
+
+    \\ \hline
+    \textbf{Role}        & \textbf{Description/responsibilities}                        \\ \hline
+    Authoritative Expert & Manager of all review committees and distinguished reviewer. \\ \hline
+    Domain Expert        &                                                              \\ \hline
+    Author               &                                                              \\ \hline
+    Reviewer             &                                                              \\ \hline
+    Verifier             &                                                              \\ \hline
+    Validator            &                                                              \\ \hline
+    VnV-er               &                                                              \\ \hline
+\end{longtable}
 
 \subsection{SRS Verification Plan}
 
-\plt{List any approaches you intend to use for SRS verification.  This may
-    include ad hoc feedback from reviewers, like your classmates, or you may
-    plan for something more rigorous/systematic.}
+In addition to checking that \progname{}'s Software Requirements Specification
+(SRS) conforms to Dr.\ Smith's provided SRS checklist, we will have:
 
-\plt{Maybe create an SRS checklist?}
+\begin{enumerate}
+
+    \item a designated reviewing committee with a governing authoritative
+          expert,
+
+    \item a public presentation with a reviewing audience,
+
+    \item built the project in Drasil, where we can build automated consistency
+          checks and generate certain aspects of the document to avoid error,
+
+    \item at least one external reviewer (Dr.\ Jacques Carette of the Drasil
+          project) when the whole \progname{} project is sent to the main Drasil
+          repository for merging, and finally, 
+
+    \item regular updates and sporadic reviews by current and future Drasil team
+          members and onlookers (assuming the project is merged as an official
+          case study of Drasil).
+
+\end{enumerate}
 
 \subsection{Design Verification Plan}
 
-\plt{Plans for design verification}
+The software design does not need verification as the design of the software
+will be based on Drasil's existing software family generator \cite{Drasil2023}.
+The onus of Drasil's validation is up to the Drasil team.
 
-\plt{The review will include reviews by your classmates}
-
-\plt{Create a checklists?}
+\an{Well, I am extending Drasil a bit.}
 
 \subsection{Verification and Validation Plan Verification Plan}
 
-\plt{The verification and validation plan is an artifact that should also be verified.}
+\plt{The verification and validation plan is an artifact that should also be
+    verified.}
 
 \plt{The review will include reviews by your classmates}
 
@@ -197,6 +266,12 @@ This document ... \plt{provide an introductory blurb and roadmap of the
     inspection?}
 
 \plt{This section might reference back to the SRS verification section.}
+
+
+%------------------------------------------------------------------------------
+% SYSTEM TEST DESCRIPTION 
+%------------------------------------------------------------------------------
+\newpage{}
 
 \section{System Test Description}
 
@@ -309,6 +384,12 @@ This document ... \plt{provide an introductory blurb and roadmap of the
 
 \plt{Provide a table that shows which test cases are supporting which
     requirements.}
+
+
+%------------------------------------------------------------------------------
+% UNIT TEST DESCRIPTION
+%------------------------------------------------------------------------------
+\newpage{}
 
 \section{Unit Test Description}
 
@@ -431,45 +512,27 @@ This document ... \plt{provide an introductory blurb and roadmap of the
 % Bibliography
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\printbibliography
+\newpage{}
 
-\newpage
+\printbibliography{}
+
+%------------------------------------------------------------------------------
+% APPENDIX
+%------------------------------------------------------------------------------
+
+\newpage{}
 
 \section{Appendix}
 
-This is where you can place additional information.
-
 \subsection{Symbolic Parameters}
 
-The definition of the test cases will call for SYMBOLIC\_CONSTANTS. Their values
-are defined in this section for easy maintenance.
+There are no symbolic constants (nor parameters) needed for \progname{}.
 
-\subsection{Usability Survey Questions?}
+\subsection{Usability Survey Questions}
 
-\plt{This is a section that would be appropriate for some projects.}
-
-\newpage{}
-\section*{Appendix --- Reflection}
-
-The information in this section will be used to evaluate the team members on the
-graduate attribute of Lifelong Learning.  Please answer the following questions:
-
-\newpage{}
-\section*{Appendix --- Reflection}
-
-The information in this section will be used to evaluate the team members on the
-graduate attribute of Lifelong Learning.  Please answer the following questions:
-
-\begin{enumerate}
-    \item What knowledge and skills will the team collectively need to acquire
-          to successfully complete the verification and validation of your
-          project? Examples of possible knowledge and skills include dynamic
-          testing knowledge, static testing knowledge, specific tool usage etc.
-          You should look to identify at least one item for each team member.
-    \item For each of the knowledge areas and skills identified in the previous
-          question, what are at least two approaches to acquiring the knowledge
-          or mastering the skill?  Of the identified approaches, which will each
-          team member pursue, and why did they make this choice?
-\end{enumerate}
+As the project will rely on Drasil to build the software from the requirement
+description, any and all ``usability'' and/or ``accessibility'' concerns should
+be directed towards the Drasil team as \progname{} will only use their basic
+(stable) public-facing tooling.
 
 \end{document}
