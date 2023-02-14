@@ -20,13 +20,8 @@
 \usepackage{afterpage}
 
 \usepackage{hyperref}
-\hypersetup{
-    colorlinks,
-    citecolor=blue,
-    filecolor=black,
-    linkcolor=red,
-    urlcolor=blue
-}
+\hypersetup{ colorlinks, citecolor=blue, filecolor=black, linkcolor=red,
+    urlcolor=blue }
 \usepackage{cleveref}
 
 \usepackage{tikz}
@@ -43,7 +38,8 @@
 %\usepackage{refcheck}
 
 
-% Force todonotes to play nicely in other floats: credits to https://tex.stackexchange.com/a/402075
+% Force todonotes to play nicely in other floats: credits to
+% https://tex.stackexchange.com/a/402075
 \usepackage{marginnote}
 \renewcommand{\marginpar}{\marginnote}
 
@@ -53,22 +49,22 @@
 
 \begin{document}
 
-\title{Project Title: System Verification and Validation Plan for \progname{}} 
+\title{System Verification and Validation Plan for \progname{}}
 \author{\authname}
 \date{\today}
-	
+
 \maketitle
 
 \pagenumbering{roman}
 
 \section{Revision History}
 
-\begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-\toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
-\midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
-\bottomrule
+\begin{tabularx}{\textwidth}{p{3cm}p{2cm}X} \toprule {
+    \bf Date} & {\bf Version} & {\bf Notes} \\
+    \midrule
+    Date 1    & 1.0           & Notes       \\
+    Date 2    & 1.1           & Notes       \\
+    \bottomrule
 \end{tabularx}
 
 \newpage
@@ -86,16 +82,16 @@ Date 2 & 1.1 & Notes\\
 \section{Symbols, Abbreviations and Acronyms}
 
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{l l} 
-  \toprule		
-  \textbf{symbol} & \textbf{description}\\
-  \midrule 
-  T & Test\\
-  \bottomrule
+\begin{tabular}{l l}
+    \toprule
+    \textbf{symbol} & \textbf{description} \\
+    \midrule
+    T               & Test                 \\
+    \bottomrule
 \end{tabular}\\
 
 \plt{symbols, abbreviations or acronyms --- you can simply reference the SRS
-  tables, if appropriate}
+    tables, if appropriate}
 %   tables, if appropriate}
 
 \plt{Remove this section if it isn't needed}
@@ -105,49 +101,48 @@ Date 2 & 1.1 & Notes\\
 \pagenumbering{arabic}
 
 This document ... \plt{provide an introductory blurb and roadmap of the
-  Verification and Validation plan}
+    Verification and Validation plan}
 
 \section{General Information}
 
 \subsection{Summary}
 
 \plt{Say what software is being tested.  Give its name and a brief overview of
-  its general functions.}
+    its general functions.}
 
 \subsection{Objectives}
 
 \plt{State what is intended to be accomplished.  The objective will be around
-  the qualities that are most important for your project.  You might have
-  something like: ``build confidence in the software correctness,''
-  ``demonstrate adequate usability.'' etc.  You won't list all of the qualities,
-  just those that are most important.}
+    the qualities that are most important for your project.  You might have
+    something like: ``build confidence in the software correctness,''
+    ``demonstrate adequate usability.'' etc.  You won't list all of the
+    qualities, just those that are most important.}
 
 \subsection{Relevant Documentation}
 
 \plt{Reference relevant documentation.  This will definitely include your SRS
-  and your other project documents (design documents, like MG, MIS, etc).  You
-  can include these even before they are written, since by the time the project
-  is done, they will be written.}
+    and your other project documents (design documents, like MG, MIS, etc).  You
+    can include these even before they are written, since by the time the
+    project is done, they will be written.}
 
-% TODO: CITE MY SRS!!!!
-% \citet{SRS}
+% TODO: CITE MY SRS!!!! \citet{SRS}
 
 \section{Plan}
 
 \plt{Introduce this section.   You can provide a roadmap of the sections to
-  come.}
+    come.}
 
 \subsection{Verification and Validation Team}
 
-\plt{Your teammates.  Maybe your supervisor.
-  You shoud do more than list names.  You should say what each person's role is
-  for the project's verification.  A table is a good way to summarize this information.}
+\plt{Your teammates.  Maybe your supervisor. You shoud do more than list names.
+    You should say what each person's role is for the project's verification.  A
+    table is a good way to summarize this information.}
 
 \subsection{SRS Verification Plan}
 
-\plt{List any approaches you intend to use for SRS verification.  This may include
-  ad hoc feedback from reviewers, like your classmates, or you may plan for 
-  something more rigorous/systematic.}
+\plt{List any approaches you intend to use for SRS verification.  This may
+    include ad hoc feedback from reviewers, like your classmates, or you may
+    plan for something more rigorous/systematic.}
 
 \plt{Maybe create an SRS checklist?}
 
@@ -170,90 +165,92 @@ This document ... \plt{provide an introductory blurb and roadmap of the
 \subsection{Implementation Verification Plan}
 
 \plt{You should at least point to the tests listed in this document and the unit
-  testing plan.}
+    testing plan.}
 
-\plt{In this section you would also give any details of any plans for static verification of
-  the implementation.  Potential techniques include code walkthroughs, code
-  inspection, static analyzers, etc.}
+\plt{In this section you would also give any details of any plans for static
+    verification of the implementation.  Potential techniques include code
+    walkthroughs, code inspection, static analyzers, etc.}
 
 \subsection{Automated Testing and Verification Tools}
 
 \plt{What tools are you using for automated testing.  Likely a unit testing
-  framework and maybe a profiling tool, like ValGrind.  Other possible tools
-  include a static analyzer, make, continuous integration tools, test coverage
-  tools, etc.  Explain your plans for summarizing code coverage metrics.
-  Linters are another important class of tools.  For the programming language
-  you select, you should look at the available linters.  There may also be tools
-  that verify that coding standards have been respected, like flake9 for
-  Python.}
+    framework and maybe a profiling tool, like ValGrind.  Other possible tools
+    include a static analyzer, make, continuous integration tools, test coverage
+    tools, etc.  Explain your plans for summarizing code coverage metrics.
+    Linters are another important class of tools.  For the programming language
+    you select, you should look at the available linters.  There may also be
+    tools that verify that coding standards have been respected, like flake9 for
+    Python.}
 
 \plt{If you have already done this in the development plan, you can point to
-that document.}
+    that document.}
 
 \plt{The details of this section will likely evolve as you get closer to the
-  implementation.}
+    implementation.}
 
 \subsection{Software Validation Plan}
 
 \plt{If there is any external data that can be used for validation, you should
-  point to it here.  If there are no plans for validation, you should state that
-  here.}
+    point to it here.  If there are no plans for validation, you should state
+    that here.}
 
 \plt{You might want to use review sessions with the stakeholder to check that
-the requirements document captures the right requirements.  Maybe task based
-inspection?}
+    the requirements document captures the right requirements.  Maybe task based
+    inspection?}
 
 \plt{This section might reference back to the SRS verification section.}
 
 \section{System Test Description}
-	
+
 \subsection{Tests for Functional Requirements}
 
 \plt{Subsets of the tests may be in related, so this section is divided into
-  different areas.  If there are no identifiable subsets for the tests, this
-  level of document structure can be removed.}
+    different areas.  If there are no identifiable subsets for the tests, this
+    level of document structure can be removed.}
 
-\plt{Include a blurb here to explain why the subsections below
-  cover the requirements.  References to the SRS would be good here.}
+\plt{Include a blurb here to explain why the subsections below cover the
+    requirements.  References to the SRS would be good here.}
 
 \subsubsection{Area of Testing1}
 
 \plt{It would be nice to have a blurb here to explain why the subsections below
-  cover the requirements.  References to the SRS would be good here.  If a section
-  covers tests for input constraints, you should reference the data constraints
-  table in the SRS.}
-		
+    cover the requirements.  References to the SRS would be good here.  If a
+    section covers tests for input constraints, you should reference the data
+    constraints table in the SRS.}
+
 \paragraph{Title for Test}
 
 \begin{enumerate}
 
-\item{test-id1\\}
+    \item{test-id1\\}
 
-Control: Manual versus Automatic
-					
-Initial State: 
-					
-Input: 
-					
-Output: \plt{The expected result for the given inputs}
+    Control: Manual versus Automatic
 
-Test Case Derivation: \plt{Justify the expected value given in the Output field}
-					
-How test will be performed: 
-					
-\item{test-id2\\}
+    Initial State:
 
-Control: Manual versus Automatic
-					
-Initial State: 
-					
-Input: 
-					
-Output: \plt{The expected result for the given inputs}
+    Input:
 
-Test Case Derivation: \plt{Justify the expected value given in the Output field}
+    Output: \plt{The expected result for the given inputs}
 
-How test will be performed: 
+    Test Case Derivation: \plt{Justify the expected value given in the Output
+        field}
+
+    How test will be performed:
+
+    \item{test-id2\\}
+
+    Control: Manual versus Automatic
+
+    Initial State:
+
+    Input:
+
+    Output: \plt{The expected result for the given inputs}
+
+    Test Case Derivation: \plt{Justify the expected value given in the Output
+        field}
+
+    How test will be performed:
 
 \end{enumerate}
 
@@ -264,45 +261,45 @@ How test will be performed:
 \subsection{Tests for Nonfunctional Requirements}
 
 \plt{The nonfunctional requirements for accuracy will likely just reference the
-  appropriate functional tests from above.  The test cases should mention
-  reporting the relative error for these tests.  Not all projects will
-  necessarily have nonfunctional requirements related to accuracy}
+    appropriate functional tests from above.  The test cases should mention
+    reporting the relative error for these tests.  Not all projects will
+    necessarily have nonfunctional requirements related to accuracy}
 
 \plt{Tests related to usability could include conducting a usability test and
-  survey.  The survey will be in the Appendix.}
+    survey.  The survey will be in the Appendix.}
 
 \plt{Static tests, review, inspections, and walkthroughs, will not follow the
-format for the tests given below.}
+    format for the tests given below.}
 
 \subsubsection{Area of Testing1}
-		
+
 \paragraph{Title for Test}
 
 \begin{enumerate}
 
-\item{test-id1\\}
+    \item{test-id1\\}
 
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input/Condition: 
-					
-Output/Result: 
-					
-How test will be performed: 
-					
-\item{test-id2\\}
+    Type: Functional, Dynamic, Manual, Static etc.
 
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input: 
-					
-Output: 
-					
-How test will be performed: 
+    Initial State:
+
+    Input/Condition:
+
+    Output/Result:
+
+    How test will be performed:
+
+    \item{test-id2\\}
+
+    Type: Functional, Dynamic, Manual, Static etc.
+
+    Initial State:
+
+    Input:
+
+    Output:
+
+    How test will be performed:
 
 \end{enumerate}
 
@@ -313,70 +310,71 @@ How test will be performed:
 \subsection{Traceability Between Test Cases and Requirements}
 
 \plt{Provide a table that shows which test cases are supporting which
-  requirements.}
+    requirements.}
 
 \section{Unit Test Description}
 
 \plt{Reference your MIS (detailed design document) and explain your overall
-  philosophy for test case selection.}  
-\plt{This section should not be filled in until after the MIS (detailed design
-  document) has been completed.}
+    philosophy for test case selection.} \plt{This section should not be filled
+    in until after the MIS (detailed design document) has been completed.}
 
 \subsection{Unit Testing Scope}
 
 \plt{What modules are outside of the scope.  If there are modules that are
-  developed by someone else, then you would say here if you aren't planning on
-  verifying them.  There may also be modules that are part of your software, but
-  have a lower priority for verification than others.  If this is the case,
-  explain your rationale for the ranking of module importance.}
+    developed by someone else, then you would say here if you aren't planning on
+    verifying them.  There may also be modules that are part of your software,
+    but have a lower priority for verification than others.  If this is the
+    case, explain your rationale for the ranking of module importance.}
 
 \subsection{Tests for Functional Requirements}
 
 \plt{Most of the verification will be through automated unit testing.  If
-  appropriate specific modules can be verified by a non-testing based
-  technique.  That can also be documented in this section.}
+    appropriate specific modules can be verified by a non-testing based
+    technique.  That can also be documented in this section.}
 
 \subsubsection{Module 1}
 
 \plt{Include a blurb here to explain why the subsections below cover the module.
-  References to the MIS would be good.  You will want tests from a black box
-  perspective and from a white box perspective.  Explain to the reader how the
-  tests were selected.}
+    References to the MIS would be good.  You will want tests from a black box
+    perspective and from a white box perspective.  Explain to the reader how the
+    tests were selected.}
 
 \begin{enumerate}
 
-\item{test-id1\\}
+    \item{test-id1\\}
 
-Type: \plt{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-					
-Initial State: 
-					
-Input: 
-					
-Output: \plt{The expected result for the given inputs}
+    Type: \plt{Functional, Dynamic, Manual, Automatic, Static etc. Most will be
+        automatic}
 
-Test Case Derivation: \plt{Justify the expected value given in the Output field}
+    Initial State:
 
-How test will be performed: 
-					
-\item{test-id2\\}
+    Input:
 
-Type: \plt{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-					
-Initial State: 
-					
-Input: 
-					
-Output: \plt{The expected result for the given inputs}
+    Output: \plt{The expected result for the given inputs}
 
-Test Case Derivation: \plt{Justify the expected value given in the Output field}
+    Test Case Derivation: \plt{Justify the expected value given in the Output
+        field}
 
-How test will be performed: 
+    How test will be performed:
 
-\item{...\\}
-    
+    \item{test-id2\\}
+
+    Type: \plt{Functional, Dynamic, Manual, Automatic, Static etc. Most will be
+        automatic}
+
+    Initial State:
+
+    Input:
+
+    Output: \plt{The expected result for the given inputs}
+
+    Test Case Derivation: \plt{Justify the expected value given in the Output
+        field}
+
+    How test will be performed:
+
+    \item{...\\}
+
 \end{enumerate}
 
 \subsubsection{Module 2}
@@ -386,40 +384,40 @@ How test will be performed:
 \subsection{Tests for Nonfunctional Requirements}
 
 \plt{If there is a module that needs to be independently assessed for
-  performance, those test cases can go here.  In some projects, planning for
-  nonfunctional tests of units will not be that relevant.}
+    performance, those test cases can go here.  In some projects, planning for
+    nonfunctional tests of units will not be that relevant.}
 
 \plt{These tests may involve collecting performance data from previously
-  mentioned functional tests.}
+    mentioned functional tests.}
 
 \subsubsection{Module ?}
-		
+
 \begin{enumerate}
 
-\item{test-id1\\}
+    \item{test-id1\\}
 
-Type: \plt{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-					
-Initial State: 
-					
-Input/Condition: 
-					
-Output/Result: 
-					
-How test will be performed: 
-					
-\item{test-id2\\}
+    Type: \plt{Functional, Dynamic, Manual, Automatic, Static etc. Most will be
+        automatic}
 
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input: 
-					
-Output: 
-					
-How test will be performed: 
+    Initial State:
+
+    Input/Condition:
+
+    Output/Result:
+
+    How test will be performed:
+
+    \item{test-id2\\}
+
+    Type: Functional, Dynamic, Manual, Static etc.
+
+    Initial State:
+
+    Input:
+
+    Output:
+
+    How test will be performed:
 
 \end{enumerate}
 
@@ -430,7 +428,7 @@ How test will be performed:
 \subsection{Traceability Between Test Cases and Modules}
 
 \plt{Provide evidence that all of the modules have been considered.}
-				
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Bibliography
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -445,8 +443,8 @@ This is where you can place additional information.
 
 \subsection{Symbolic Parameters}
 
-The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
-Their values are defined in this section for easy maintenance.
+The definition of the test cases will call for SYMBOLIC\_CONSTANTS. Their values
+are defined in this section for easy maintenance.
 
 \subsection{Usability Survey Questions?}
 
@@ -465,15 +463,15 @@ The information in this section will be used to evaluate the team members on the
 graduate attribute of Lifelong Learning.  Please answer the following questions:
 
 \begin{enumerate}
-  \item What knowledge and skills will the team collectively need to acquire to
-  successfully complete the verification and validation of your project?
-  Examples of possible knowledge and skills include dynamic testing knowledge,
-  static testing knowledge, specific tool usage etc.  You should look to
-  identify at least one item for each team member.
-  \item For each of the knowledge areas and skills identified in the previous
-  question, what are at least two approaches to acquiring the knowledge or
-  mastering the skill?  Of the identified approaches, which will each team
-  member pursue, and why did they make this choice?
+    \item What knowledge and skills will the team collectively need to acquire
+          to successfully complete the verification and validation of your
+          project? Examples of possible knowledge and skills include dynamic
+          testing knowledge, static testing knowledge, specific tool usage etc.
+          You should look to identify at least one item for each team member.
+    \item For each of the knowledge areas and skills identified in the previous
+          question, what are at least two approaches to acquiring the knowledge
+          or mastering the skill?  Of the identified approaches, which will each
+          team member pursue, and why did they make this choice?
 \end{enumerate}
 
 \end{document}
