@@ -361,21 +361,6 @@ The Python code will be aggressively formatted with Black~\cite{PythonBlack}.
 \plt{Include a blurb here to explain why the subsections below cover the
     requirements.  References to the SRS would be good here.}
 
-\injb{``Trivial'': \[ [//math:solve y''''=0,y(0)=0,y(10)=0,y''(0)=0,y''(10)=0//] \] }
-\injb{``Trivial'': \[ [//math:solve y''''=1,y(0)=0,y(10)=0,y''(0)=0,y''(10)=0//] \] }
-\injb{``Trivial'': \[ [//math:solve y''''=-1,y(0)=0,y(10)=0,y''(0)=0,y''(10)=0//] \] }
-\injb{``Trivial'': \[ [//math:solve y''''=x,y(0)=0,y(10)=0,y''(0)=0,y''(10)=0//] \] }
-\injb{``Trivial'': \[ [//math:solve y''''=-x,y(0)=0,y(10)=0,y''(0)=0,y''(10)=0//] \] }
-
-\injb{``Trivial'': \[ [//math:solve y''''=80000x^3,y(0)=0,y(10)=0,y''(0)=0,y''(10)=0//] \] }
-\injb{``Trivial'': \[ [//math:solve y''''=0x^3,y(0)=0,y(10)=0,y''(0)=0,y''(10)=0//] \] }
-\injb{``Trivial'': \[ [//math:solve y''''=80000x^2,y(0)=0,y(10)=0,y''(0)=0,y''(10)=0//] \] }
-\injb{``Trivial'': \[ [//math:solve y''''=0x^2,y(0)=0,y(10)=0,y''(0)=0,y''(10)=0//] \] }
-\injb{``Trivial'': \[ [//math:solve y''''=10000000000x^3,y(0)=0,y(10)=0,y''(0)=0,y''(10)=0//] \] }
-
-\injb{``Trivial'': \[ [//math:solve y''''=800000*sin((x/L)*pi),y(0)=0,y(10)=0,y''(0)=0,y''(10)=0//] \] }
-\injb{``Trivial'': \[ [//math:solve y''''=800000*sin((x/L)*2*pi),y(0)=0,y(10)=0,y''(0)=0,y''(10)=0//] \] }
-
 
 \subsubsection{Area of Testing1}
 
@@ -388,37 +373,189 @@ The Python code will be aggressively formatted with Black~\cite{PythonBlack}.
 
 \begin{enumerate}
 
-    \item{test-id1\\}
+    \item{T1\\}
 
-    Control: Manual versus Automatic
+    Control: Automatic.
 
-    Initial State:
+    Initial State: N/A.
 
-    Input:
+    Input: \(w(x) = 0\)
 
-    Output: \plt{The expected result for the given inputs}
+    Output: \(y_a(x) = 0\)
 
-    Test Case Derivation: \plt{Justify the expected value given in the Output
-        field}
+    Test Case Derivation: \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D0%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}.
 
-    How test will be performed:
+    How test will be performed: Observing \(\forall x \in \mathbb{R}~.~y(x)
+    \approx_{\epsilon} y_a(x)\) (with pytest using samples or symbolic
+    equivalence, depending on solution).
 
-    \item{test-id2\\}
+    \item{T2\\}
 
-    Control: Manual versus Automatic
+    Control: Automatic.
 
-    Initial State:
+    Initial State: N/A.
 
-    Input:
+    Input: \(w(x) = 1\)
 
-    Output: \plt{The expected result for the given inputs}
+    Output: \(y_a(x) = \frac{x}{24} (x^3 - 20x^2 + 1000)\)
 
-    Test Case Derivation: \plt{Justify the expected value given in the Output
-        field}
+    Test Case Derivation: \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D1%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}.
 
-    How test will be performed:
+    How test will be performed: Observing \(\forall x \in \mathbb{R}~.~y(x)
+    \approx_{\epsilon} y_a(x)\) (with pytest using samples or symbolic
+    equivalence, depending on solution).
+
+    \item{T3\\}
+
+    Control: Automatic.
+
+    Initial State: N/A.
+
+    Input: \(w(x) = -1\)
+
+    Output: \(y_a(x) = - \frac{x}{24} (x^3 - 20x^2 + 1000)\)
+
+    Test Case Derivation: \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D-1%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}.
+
+    How test will be performed: Observing \(\forall x \in \mathbb{R}~.~y(x)
+    \approx_{\epsilon} y_a(x)\) (with pytest using samples or symbolic
+    equivalence, depending on solution).
+
+    \item{T4\\}
+
+    Control: Automatic.
+
+    Initial State: N/A.
+
+    Input: \(w(x) = x\)
+
+    Output: \(y_a(x) = \frac{x}{360} (3x^4 - 1000x^3 + 70000)\)
+
+    Test Case Derivation: \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3Dx%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}.
+
+    How test will be performed: Observing \(\forall x \in \mathbb{R}~.~y(x)
+    \approx_{\epsilon} y_a(x)\) (with pytest using samples or symbolic
+    equivalence, depending on solution).
+
+    \item{T5\\}
+
+    Control: Automatic.
+
+    Initial State: N/A.
+
+    Input: \(w(x) = - x\)
+
+    Output: \(y_a(x) = - \frac{x}{360} (3x^4 - 1000x^3 + 70000)\)
+
+    Test Case Derivation: \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D-x%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}.
+
+    How test will be performed: Observing \(\forall x \in \mathbb{R}~.~y(x)
+    \approx_{\epsilon} y_a(x)\) (with pytest using samples or symbolic
+    equivalence, depending on solution).
+
+    \item{T6\\}
+
+    Control: Automatic.
+
+    Initial State: N/A.
+
+    Input: \(w(x) = 80000x^3\)
+
+    Output: \(y_a(x) = \frac{20000x}{21} (x^6 - 70000x^2 + 6000000)\)
+
+    Test Case Derivation: \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D80000x%5E3%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}.
+
+    How test will be performed: Observing \(\forall x \in \mathbb{R}~.~y(x)
+    \approx_{\epsilon} y_a(x)\) (with pytest using samples or symbolic
+    equivalence, depending on solution).
+
+    \item{T7\\}
+
+    Control: Automatic.
+
+    Initial State: N/A.
+
+    Input: \(w(x) = 80000x^2\)
+
+    Output: \(y_a(x) = \frac{2000x}{9} (x^5 - 5000x^4 + 400000)\)
+
+    Test Case Derivation: \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D80000x%5E2%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}.
+
+    How test will be performed: Observing \(\forall x \in \mathbb{R}~.~y(x)
+    \approx_{\epsilon} y_a(x)\) (with pytest using samples or symbolic
+    equivalence, depending on solution).
+
+    \item{T8\\}
+
+    Control: Automatic.
+
+    Initial State: N/A.
+
+    Input: \(w(x) = \)
+
+    Output: \(y_a(x) = \)
+
+    Test Case Derivation: \href{}{WolframAlpha}.
+
+    How test will be performed: Observing \(\forall x \in \mathbb{R}~.~y(x)
+    \approx_{\epsilon} y_a(x)\) (with pytest using samples or symbolic
+    equivalence, depending on solution).
+
+    \item{T9\\}
+
+    Control: Automatic.
+
+    Initial State: N/A.
+
+    Input: \(w(x) = \)
+
+    Output: \(y_a(x) = \)
+
+    Test Case Derivation: \href{}{WolframAlpha}.
+
+    How test will be performed: Observing \(\forall x \in \mathbb{R}~.~y(x)
+    \approx_{\epsilon} y_a(x)\) (with pytest using samples or symbolic
+    equivalence, depending on solution).
+
+    \item{T10\\}
+
+    Control: Automatic.
+
+    Initial State: N/A.
+
+    Input: \(w(x) = \)
+
+    Output: \(y_a(x) = \)
+
+    Test Case Derivation: \href{}{WolframAlpha}.
+
+    How test will be performed: Observing \(\forall x \in \mathbb{R}~.~y(x)
+    \approx_{\epsilon} y_a(x)\) (with pytest using samples or symbolic
+    equivalence, depending on solution).
+
+    \item{T11\\}
+
+    Control: Automatic.
+
+    Initial State: N/A.
+
+    Input: \(w(x) = \)
+
+    Output: \(y_a(x) = \)
+
+    Test Case Derivation: \href{}{WolframAlpha}.
+
+    How test will be performed: Observing \(\forall x \in \mathbb{R}~.~y(x)
+    \approx_{\epsilon} y_a(x)\) (with pytest using samples or symbolic
+    equivalence, depending on solution).
 
 \end{enumerate}
+
+\injb{``Trivial'': \[ [//math:solve y''''=80000x^2,y(0)=0,y(10)=0,y''(0)=0,y''(10)=0//] \] }
+\injb{``Trivial'': \[ [//math:solve y''''=10000000000x^3,y(0)=0,y(10)=0,y''(0)=0,y''(10)=0//] \] }
+
+\injb{``Trivial'': \[ [//math:solve y''''=800000*sin((x/L)*pi),y(0)=0,y(10)=0,y''(0)=0,y''(10)=0//] \] }
+\injb{``Trivial'': \[ [//math:solve y''''=800000*sin((x/L)*2*pi),y(0)=0,y(10)=0,y''(0)=0,y''(10)=0//] \] }
 
 \subsubsection{Area of Testing2}
 
@@ -620,7 +757,9 @@ The Python code will be aggressively formatted with Black~\cite{PythonBlack}.
 
 \subsection{Symbolic Parameters}
 
-There are no symbolic constants (nor parameters) needed for \progname{}.
+In addition to the symbolic parameters from the SRS
+document~\cite{BalaciBeamBendingSRS2023}, we will add \(\epsilon\), where
+\(\epsilon = 10^{-3}\) (m), for usage as a tolerance for equivalence.
 
 \subsection{Usability Survey Questions}
 
