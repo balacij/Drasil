@@ -11,16 +11,20 @@
 \ifcomments
     \newcommand{\plt}[1]{\textcolor{magenta}{[TPLT \textemdash{} #1]}}
     \usepackage[backgroundcolor=yellow,colorinlistoftodos]{todonotes}
-    \setlength{\marginparwidth}{0.75in}
-    \reversemarginpar % place on left-hand side
+    \setlength{\marginparwidth}{1in}
+    % \reversemarginpar % place on left-hand side
 \else
     \newcommand{\plt}[1]{}
     \usepackage[disable]{todonotes}
 \fi
 
 \newcommand{\wss}[1]{\todo[color=blue]{SS: #1}}
+
 \newcommand{\an}[1]{\todo[color=cyan]{\authinitials{}: #1}}
 \newcommand{\jb}[1]{\an{#1}}
+
+\newcommand{\inan}[1]{\todo[inline,color=cyan]{\authinitials{}: #1}}
+\newcommand{\injb}[1]{\inan{#1}}
 
 \newcounter{needscitationcounter}
 \newcommand{\needscitation}{\stepcounter{needscitationcounter}\todo[color=red]{NC \theneedscitationcounter{}: Needs citation.}}
