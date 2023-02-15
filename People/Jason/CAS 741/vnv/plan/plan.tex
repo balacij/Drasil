@@ -49,6 +49,10 @@
 
 \begin{document}
 
+%------------------------------------------------------------------------------
+% TITLE
+%------------------------------------------------------------------------------
+
 \title{System Verification and Validation Plan for \progname{}}
 \author{\authname}
 \date{\today}
@@ -64,21 +68,27 @@
 \section{Revision History}
 
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X} \toprule {
-    \bf Date} & {\bf Version} & {\bf Notes}      \\
+    \bf Date} & {\bf Version} & {\bf Notes}                                               \\
     \midrule
-    Feb 12    & 0.0           & Format template. \\
+    Feb 12    & 0.0           & Format template.                                          \\
+    Feb 13    & 0.1           & Preliminary work, read through and filling in easy spots. \\
+    Feb 14    & 0.2           & Preliminary copy of ``general information'' section.      \\
     \bottomrule
 \end{tabularx}
 
+%------------------------------------------------------------------------------
+% TABLE OF CONTENTS
+%------------------------------------------------------------------------------
 \newpage
 
 \tableofcontents
 
-\listoftables
-\plt{Remove this section if it isn't needed}
+%------------------------------------------------------------------------------
+% TABLE OF TABLES
+%------------------------------------------------------------------------------
+\newpage{}
 
-\listoffigures
-\plt{Remove this section if it isn't needed}
+\listoftables
 
 %------------------------------------------------------------------------------
 % TABLE OF SYMBOLS, ABBREVIATIONS, AND ACRONYMS
@@ -94,12 +104,12 @@ The Symbols, Abbreviations, and Acronyms in this document builds upon those from
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{l l}
     \toprule
-    \textbf{Symbol} & \textbf{Description}                                     \\
+    \textbf{Symbol} & \textbf{Description}                                    \\
     \midrule
-    CAS             & Computing and Software department at McMaster University \\
-    SRS             & Software Requirements Specification                      \\
-    T               & Test                                                     \\
-    VnV             & Verification and Validation                              \\
+    CAS             & Computing and Software department (McMaster University) \\
+    SRS             & Software Requirements Specification                     \\
+    T               & Test                                                    \\
+    VnV             & Verification and Validation                             \\
     \bottomrule
 \end{tabular}\\
 
@@ -114,32 +124,57 @@ The Symbols, Abbreviations, and Acronyms in this document builds upon those from
 \section{General Information}
 
 This document describes the plan of action related to the Verification and
-Validation (VnV) of the Beam Bending analysis program (\progname{}).
-
-\plt{provide an introductory blurb and roadmap of the Verification and
-    Validation plan}
+Validation (VnV) of the Beam Bending analysis program (\progname{}). This VnV
+plan will describe a plan of action for \textit{validating} that the Software
+Requirements Specification (SRS)~\cite{BalaciBeamBendingSRS2023} for \progname{}
+satisfies stakeholders, and \textit{verifying} that a supposedly conforming
+software does indeed accurately satisfy the requirements.
 
 \subsection{Summary}
 
-\plt{Say what software is being tested.  Give its name and a brief overview of
-    its general functions.}
+The BeamBending Software Requirements Specification
+(SRS)~\cite{BalaciBeamBendingSRS2023} derives the software requirements of a
+hypothetical program that solves deflection analysis problems for
+simply-supported beams. The focus of the program is to predict how
+simply-supported beams handle imposed, distributed loads.
 
 \subsection{Objectives}
 
-\plt{State what is intended to be accomplished.  The objective will be around
-    the qualities that are most important for your project.  You might have
-    something like: ``build confidence in the software correctness,''
-    ``demonstrate adequate usability.'' etc.  You won't list all of the
-    qualities, just those that are most important.}
+The objective of this document is to outline a plan of action for:
+
+\begin{enumerate}
+
+    \item \textit{auditing} a continuously developed SRS document
+          \cite{ParnasAndClements1986} for logical consistency,
+
+    \item \textit{validating} said SRS satisfies stakeholder requirements, and
+
+    \item \textit{verifying} that a produced software artifact conforms
+          everything laid out in the SRS document (including, but not limited
+          to, the functional and nonfunctional requirements), through both
+          transparent and opaque testing.
+
+\end{enumerate}
+
+In doing this, we hope to build confidence in the coherence of software
+requirements, and correctness and conformance of a software to said
+specifications.
 
 \subsection{Relevant Documentation}
 
-\plt{Reference relevant documentation.  This will definitely include your SRS
-    and your other project documents (design documents, like MG, MIS, etc).  You
-    can include these even before they are written, since by the time the
-    project is done, they will be written.}
+As we intend to build (generate) the software with Drasil, the only relevant
+documentation is that which is originally manually built, including:
 
-\cite{BalaciBeamBendingSRS2023}
+\begin{enumerate}
+
+    \item the SRS document \cite{BalaciBeamBendingSRS2023}, and
+
+    \item this VnV plan.
+
+\end{enumerate}
+
+\noindent{}When the \progname{} program is re-created in Drasil, we may think of
+that as a sort of ``documentation'' that we can to the above list.
 
 %------------------------------------------------------------------------------
 % PLAN
@@ -152,8 +187,6 @@ The ``whole'' Verification and Validation plan for \progname{} consists of
 multiple sub-plans. Notably, it has a designated team (with sub-teams) who will
 be executing the related sub-plans stipulated in this document. Team members
 will take responsibility for various aspects of verification and validation.
-
-\plt{Introduce this section. You can provide a roadmap of the sections to come.}
 
 \subsection{Verification and Validation Team}
 
@@ -204,7 +237,7 @@ In addition to checking that \progname{}'s Software Requirements Specification
 
     \item at least one external reviewer (Dr.\ Jacques Carette of the Drasil
           project) when the whole \progname{} project is sent to the main Drasil
-          repository for merging, and finally, 
+          repository for merging, and finally,
 
     \item regular updates and sporadic reviews by current and future Drasil team
           members and onlookers (assuming the project is merged as an official
