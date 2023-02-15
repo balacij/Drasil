@@ -18,6 +18,7 @@
 \usepackage{caption}
 \usepackage{pdflscape}
 \usepackage{afterpage}
+\usepackage[dvipsnames]{xcolor}
 
 \usepackage{hyperref}
 \hypersetup{ colorlinks, citecolor=blue, filecolor=black, linkcolor=red,
@@ -73,6 +74,7 @@
     Feb 12    & 0.0           & Format template.                                          \\
     Feb 13    & 0.1           & Preliminary work, read through and filling in easy spots. \\
     Feb 14    & 0.2           & Preliminary copy of ``general information'' section.      \\
+    Feb 14    & 0.3           & Preliminary copy of ``plan'' section.                     \\
     \bottomrule
 \end{tabularx}
 
@@ -190,34 +192,42 @@ will take responsibility for various aspects of verification and validation.
 
 \subsection{Verification and Validation Team}
 
-\begin{longtable}{|l|c|l|}
-    \caption{Table of VnV Teammates}
-    \label{table:vnv_teammates}
+Roles (\Cref{table:vnv_roles}) are assigned to each team member
+(\Cref{table:vnv_teammates}), dictating the minimum responsibilities each member
+has for each related project.
 
-    \\ \hline
-    \textbf{Assignee}    & \textbf{Project}                  & \textbf{Role(s)}                                              \\ \hline
-    Dr.\ Smith           & \(*\)\footnote{\(*\): match all.} & Authoritative Expert\footnote{Pretend we're not in CAS 741.}. \\ \hline
-    Jason Balaci         & \(*\)                             & Author.                                                       \\ \hline
-    Sam Crawford         & \(*\)                             & Reviewer and VnV-er.                                          \\ \hline
-    Mina Mahdipour       & SRS                               & Reviewer.                                                     \\ \hline
-    Deesha Patel         & VnV                               & Reviewer.                                                     \\ \hline
-    Maryam Valian        & Drasil                            & Reviewer \& VnV-er.                                           \\ \hline
-    Class of CAS \(741\) & \(*\)                             & \(*\)                                                         \\ \hline
-\end{longtable}
-
-\begin{longtable}{|l|p{8cm}|}
+\begin{longtable}{|r|p{8cm}|}
     \caption{Table of VnV Roles}
     \label{table:vnv_roles}
 
     \\ \hline
-    \textbf{Role}        & \textbf{Description/responsibilities}                        \\ \hline
-    Authoritative Expert & Manager of all review committees and distinguished reviewer. \\ \hline
-    Domain Expert        &                                                              \\ \hline
-    Author               &                                                              \\ \hline
-    Reviewer             &                                                              \\ \hline
-    Verifier             &                                                              \\ \hline
-    Validator            &                                                              \\ \hline
-    VnV-er               &                                                              \\ \hline
+    \rowcolor{Maroon}
+    \textbf{Role}        & \textbf{Description/responsibilities}                                                       \\ \hline
+    \rowcolor{White}
+    Authoritative Expert & Manager of all review committees, and distinguished reviewer and domain expert.             \\ \hline
+    Domain Expert        & Reviewer with considerable knowledge on underlying domains.                                 \\ \hline
+    Author               & Writer.                                                                                     \\ \hline
+    Reviewer             & Ensures documents are logically coherent and well-formed.                                   \\ \hline
+    Verifier             & Assures Drasil encoding of SRS accurately re-creates the manually created SRS.\an{Odd\dots} \\ \hline
+    Validator            & Assures SRS satisfies stakeholder requirements.                                             \\ \hline
+    VnV-er               & Verifier \(\cup\) Validator.                                                                \\ \hline
+\end{longtable}
+
+\begin{longtable}{|r|c|l|}
+    \caption{Table of VnV Teammates}
+    \label{table:vnv_teammates}
+
+    \\ \hline
+    \rowcolor{Maroon}
+    \textbf{Assignee}    & \textbf{Project}                  & \textbf{Role(s)}                                              \\ \hline
+    \rowcolor{White}
+    Dr.\ Smith           & \(*\)\footnote{\(*\): match all.} & Authoritative Expert\footnote{Pretend we're not in CAS 741.}. \\ \hline
+    Jason Balaci         & \(*\)                             & Author.                                                       \\ \hline
+    Sam Crawford         & \(*\)                             & Domain Expert, Reviewer, and VnV-er.                          \\ \hline
+    Mina Mahdipour       & SRS                               & Reviewer.                                                     \\ \hline
+    Deesha Patel         & VnV                               & Reviewer.                                                     \\ \hline
+    Maryam Valian        & Drasil                            & Reviewer \& VnV-er.                                           \\ \hline
+    Class of CAS \(741\) & \(*\)                             & \(*\)                                                         \\ \hline
 \end{longtable}
 
 \subsection{SRS Verification Plan}
@@ -248,45 +258,79 @@ In addition to checking that \progname{}'s Software Requirements Specification
 \subsection{Design Verification Plan}
 
 The software design does not need verification as the design of the software
-will be based on Drasil's existing software family generator \cite{Drasil2023}.
-The onus of Drasil's validation is up to the Drasil team.
-
-\an{Well, I am extending Drasil a bit.}
+will be based on Drasil's existing software family
+generator~\cite{Drasil2023}\an{Well, I am extending Drasil a bit.}. The onus of
+Drasil's validation is up to the Drasil team\footnote{Including, but not limited
+    to, Dr.\ Spencer Smith, Sam Crawford, and Jason Balaci.}.
 
 \subsection{Verification and Validation Plan Verification Plan}
 
-\plt{The verification and validation plan is an artifact that should also be
-    verified.}
-
-\plt{The review will include reviews by your classmates}
-
-\plt{Create a checklists?}
+To assure that the Verification and Validation Plan adequately tests both the
+SRS document and the relevant software, we will largely assume the ``many eyes''
+hypothesis~\cite{Caraco1980avian} with many ``eyes'' of different skill-sets and
+academic backgrounds (see \Cref{table:vnv_teammates}). Each team member should
+test that this document conforms to the general VnV Checklist
+document~\cite{SmithCapTemplate}.
 
 \subsection{Implementation Verification Plan}
 
-\plt{You should at least point to the tests listed in this document and the unit
-    testing plan.}
+A proof of concept should be built and manually tested. When the project is
+re-created in Drasil, the generated software artifacts should be similar to the
+proof of concept, up to code style and organization. The generated software
+artifacts should be tested against the manually created artifacts if non-trivial
+or significant differences exist. Additionally, as Drasil does not yet generate
+unit tests\footnote{But Sam might fix this for us!}, the unit tests will be
+ported over to the generated software artifacts.
 
-\plt{In this section you would also give any details of any plans for static
-    verification of the implementation.  Potential techniques include code
-    walkthroughs, code inspection, static analyzers, etc.}
+By re-writing the SRS with Drasil, the software implementation will be
+generated. We have faith in the Drasil work, and so, the ``Implementation
+Verification Plan'' is largely a ``Solution Validation Plan'' with an extra set
+of requirements for the configuration of Drasil's code generator. The solution
+proposed in the SRS is to be validated by peer review, code walkthrough,
+external audit, audit by assigned reviewers (see \Cref{table:vnv_roles}), and
+audit by the authoritative figure (Dr.\ Smith). The configuration requirements
+for Drasil's code generator are as follows:
+
+\begin{enumerate}
+
+    \item generate code:
+
+          \begin{enumerate}
+
+              \item in Python,
+
+              \item with full code comment coverage\footnote{The ratio of the
+                        number of well-documented ``code'' components to the
+                        number of ``code'' components, where a code component is
+                        defined as any logical component of a codebase (such as
+                        functions, data types, classes, etc.).}, and
+
+              \item ``full'' modularity\footnote{The generated software artifact
+                        should be broken up into multiple logically grouped
+                        software artifacts.},
+
+          \end{enumerate}
+
+    \item generate a Makefile with all common usage types (e.g., build, run,
+          deps) as targets,
+
+    \item generate basic usage documentation, and
+
+    \item generate SRS artifacts from the same pool of knowledge used to build
+          the previous two components.
+
+\end{enumerate}
 
 \subsection{Automated Testing and Verification Tools}
 
-\plt{What tools are you using for automated testing.  Likely a unit testing
-    framework and maybe a profiling tool, like ValGrind.  Other possible tools
-    include a static analyzer, make, continuous integration tools, test coverage
-    tools, etc.  Explain your plans for summarizing code coverage metrics.
-    Linters are another important class of tools.  For the programming language
-    you select, you should look at the available linters.  There may also be
-    tools that verify that coding standards have been respected, like flake9 for
-    Python.}
-
-\plt{If you have already done this in the development plan, you can point to
-    that document.}
-
-\plt{The details of this section will likely evolve as you get closer to the
-    implementation.}
+The reference code implementation and final generated code artifacts will be
+tested (along with code coverage) using \textbf{pytest}~\cite{PyTest} to
+automatically test the code against a series of unit tests (see
+\Cref{sec:unit_test_description}). Continuous integration will be used to assure
+that changes to the SRS encoding in Drasil does not change against the
+well-tested artifacts\footnote{These are captured in the ``stable'' folder in
+    Drasil's code repository, where ``stable'' artifacts remain manually tested.}.
+The Python code will be aggressively formatted with Black~\cite{PythonBlack}.
 
 \subsection{Software Validation Plan}
 
@@ -425,6 +469,7 @@ The onus of Drasil's validation is up to the Drasil team.
 \newpage{}
 
 \section{Unit Test Description}
+\label{sec:unit_test_description}
 
 \plt{Reference your MIS (detailed design document) and explain your overall
     philosophy for test case selection.} \plt{This section should not be filled
