@@ -15,10 +15,11 @@
 \usepackage{float}
 \usepackage{siunitx}
 \usepackage{booktabs}
+\usepackage{multirow}
 \usepackage{caption}
 \usepackage{pdflscape}
 \usepackage{afterpage}
-\usepackage[dvipsnames]{xcolor}
+\usepackage[dvipsnames,table,xcdraw]{xcolor}
 
 \usepackage{hyperref}
 \hypersetup{ colorlinks, citecolor=blue, filecolor=black, linkcolor=red,
@@ -371,6 +372,29 @@ The Python code will be aggressively formatted with Black~\cite{PythonBlack}.
     constraints table in the SRS.}
 
 \paragraph{Title for Test}
+
+\begin{longtable}[c]{|l|lll|l|l|}
+    \caption{Simple, Automatic, Tests}
+    \label{tab:simple_automatic_tests}                                                                                                                                                                                                                         \\
+    \hline
+    \rowcolor{lightgray}
+    \cellcolor{lightgray}                              & \multicolumn{3}{c|}{\cellcolor{lightgray}\textbf{Inputs}} & \textbf{Outputs}                             & \cellcolor{lightgray}                                                                      \\ \cline{2-5}
+    \rowcolor{lightgray}
+    \multirow{-2}{*}{\cellcolor{lightgray}\textbf{ID}} & \multicolumn{1}{c|}{\cellcolor{lightgray}$w(x)$}           & \multicolumn{1}{c|}{\cellcolor{lightgray}$E$} & $I$                   & $y_a(x)$ & \multirow{-2}{*}{\cellcolor{lightgray}\textbf{Control}} \\ \hline
+    \endfirsthead
+    \endhead
+    T1                                                 & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{}                        &                       &          &                                                         \\ \hline
+    T2                                                 & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{}                        &                       &          &                                                         \\ \hline
+    T3                                                 & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{}                        &                       &          &                                                         \\ \hline
+    T4                                                 & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{}                        &                       &          &                                                         \\ \hline
+    T5                                                 & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{}                        &                       &          &                                                         \\ \hline
+    T6                                                 & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{}                        &                       &          &                                                         \\ \hline
+    T7                                                 & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{}                        &                       &          &                                                         \\ \hline
+    T8                                                 & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{}                        &                       &          &                                                         \\ \hline
+    T9                                                 & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{}                        &                       &          &                                                         \\ \hline
+    T10                                                & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{}                        &                       &          &                                                         \\ \hline
+    T11                                                & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{}                        &                       &          &                                                         \\ \hline
+\end{longtable}
 
 \begin{enumerate}
 
