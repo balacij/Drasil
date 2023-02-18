@@ -77,6 +77,8 @@
     Feb 14    & 0.2           & Preliminary copy of ``general information'' section.      \\
     Feb 14    & 0.3           & Preliminary copy of ``plan'' section.                     \\
     Feb 14    & 0.4           & Preliminary dubious ``system'' (unit) tests.              \\
+    Feb 16    & 0.5           & I guess the system tests weren't as dubious as I thought! Cleaning up as per in-class feedback ($E$, $I$, zeroes) \\
+    Feb 17    & 0.6           & Complete draft.                                           \\
     \bottomrule
 \end{tabularx}
 
@@ -137,10 +139,9 @@ software does indeed accurately satisfy the requirements.
 \subsection{Summary}
 
 The BeamBending Software Requirements Specification
-(SRS)~\cite{BalaciBeamBendingSRS2023} derives the software requirements of a
-hypothetical program that solves deflection analysis problems for
-simply-supported beams. The focus of the program is to predict how
-simply-supported beams handle imposed, distributed loads.
+(SRS)~\cite{BalaciBeamBendingSRS2023} describes the requirements of a
+hypothetical program that analyzes beam deflection under imposed, distributed
+loads on a simply-supported beam.
 
 \subsection{Objectives}
 
@@ -206,7 +207,7 @@ has for each related project.
     \rowcolor{Maroon}
     \textbf{Role}        & \textbf{Description/responsibilities}                                           \\ \hline
     \rowcolor{White}
-    Authoritative Expert & Manager of all review committees, and distinguished reviewer and domain expert. \\ \hline
+    Supervisor           & Manager of all review committees, and distinguished reviewer and domain expert. \\ \hline
     Domain Expert        & Reviewer with considerable knowledge on underlying domains.                     \\ \hline
     Author               & Writer.                                                                         \\ \hline
     Reviewer             & Ensures documents are logically coherent and well-formed.                       \\ \hline
@@ -223,7 +224,7 @@ has for each related project.
     \rowcolor{Maroon}
     \textbf{Assignee}    & \textbf{Project}                  & \textbf{Role(s)}                                              \\ \hline
     \rowcolor{White}
-    Dr.\ Smith           & \(*\)\footnote{\(*\): match all.} & Authoritative Expert\footnote{Pretend we're not in CAS 741.}. \\ \hline
+    Dr.\ Smith           & \(*\)\footnote{\(*\): match all.} & Supervisor.                                                   \\ \hline
     Jason Balaci         & \(*\)                             & Author.                                                       \\ \hline
     Sam Crawford         & \(*\)                             & Domain Expert, Reviewer, and VnV-er.                          \\ \hline
     Mina Mahdipour       & SRS                               & Reviewer.                                                     \\ \hline
@@ -239,8 +240,7 @@ In addition to checking that \progname{}'s Software Requirements Specification
 
 \begin{enumerate}
 
-    \item a designated reviewing committee with a governing authoritative
-          expert,
+    \item a designated reviewing committee with a supervisor,
 
     \item a public presentation with a reviewing audience,
 
@@ -293,8 +293,8 @@ Verification Plan'' is largely a ``Solution Validation Plan'' with an extra set
 of requirements for the configuration of Drasil's code generator. The solution
 proposed in the SRS is to be validated by peer review, code walkthrough,
 external audit, audit by assigned reviewers (see \Cref{table:vnv_roles}), and
-audit by the authoritative figure (Dr.\ Smith). The configuration requirements
-for Drasil's code generator are as follows:
+audit by the supervisor (Dr.\ Smith). The configuration requirements for
+Drasil's code generator are as follows:
 
 \begin{enumerate}
 
@@ -339,16 +339,13 @@ The Python code will be aggressively formatted with Black~\cite{PythonBlack}.
 
 \subsection{Software Validation Plan}
 
-\plt{If there is any external data that can be used for validation, you should
-    point to it here.  If there are no plans for validation, you should state
-    that here.}
-
-\plt{You might want to use review sessions with the stakeholder to check that
-    the requirements document captures the right requirements.  Maybe task based
-    inspection?}
-
-\plt{This section might reference back to the SRS verification section.}
-
+As the problem described in the SRS is similar to beam deflection problems
+commonly found in engineering textbooks (such as \cite{BeerJohnston1981}), we
+will assume a potential stakeholder is a writer of one of said textbooks.
+Dr.~Spencer Smith will also be an assumed stakeholder in the project as he
+suggested this project to the author. Input, output, and theory-based inspection
+will primarily be done to ensure that that information contained in the SRS and
+the software satisfies stakeholders.
 
 %------------------------------------------------------------------------------
 % SYSTEM TEST DESCRIPTION 
@@ -359,30 +356,38 @@ The Python code will be aggressively formatted with Black~\cite{PythonBlack}.
 
 \subsection{Tests for Functional Requirements}
 
-\plt{Subsets of the tests may be in related, so this section is divided into
-    different areas.  If there are no identifiable subsets for the tests, this
-    level of document structure can be removed.}
+The tests for functional requirements may be split up into 3 categories, as
+follows:
 
-\plt{Include a blurb here to explain why the subsections below cover the
-    requirements.  References to the SRS would be good here.}
+\begin{enumerate}
+    
+    \item testing that inputs match the understood inputs
+          (R2~\cite{BalaciBeamBendingSRS2023}),
 
+    \item testing that the BVP solver functions as expected, and
+    
+    \item testing that the whole program accurately follows the instance models
+          as described in the SRS (R3~\cite{BalaciBeamBendingSRS2023}).
+    
+\end{enumerate}
 
-\subsubsection{Area of Testing1}
+\subsubsection{Testing Inputs Are Outputted Accurately}
 
-\plt{It would be nice to have a blurb here to explain why the subsections below
-    cover the requirements.  References to the SRS would be good here.  If a
-    section covers tests for input constraints, you should reference the data
-    constraints table in the SRS.}
+Throughout the next two categories of testing the functional requirements, we
+will have tests on the program, and each test should be additionally
+automatically checked that the re-iterated outputs match the intended inputs.
 
-\paragraph{Testing BVP Solver}
+\subsubsection{Testing BVP Solver}
 
-All of the tests in \Cref{tab:simple_automatic_tests} should be done
-\textit{automatically} with a trivially ``empty'' initial state (e.g., the
-program is not started and has been provided no inputs yet). The inputs should
-be provided as appropriate and the expected output should be printed. Each test
-will observe \(\forall x \in \mathbb{R}~.~y(x) \approx_{\epsilon} y_a(x)\) (with
-pytest using samples or symbolic equivalence, depending on solution). The
-expected outputs are confirmed using WolframAlpha~\cite{WolframAlpha}.
+All of the tests for testing the BVP solver (\Cref{tab:simple_automatic_tests})
+are done \textit{automatically} with a trivially ``empty'' initial state (e.g.,
+the program is not started and has been provided no inputs yet), and trivial
+inputs other than the BVPs themselves. The focus of this section is to test the
+BVP solver. The inputs should be provided as appropriate and the expected output
+should be printed. Each test will observe \(\forall x : \mathbb{R} ~.~x \in (0,
+L_B) \Rightarrow (y(x) \approx_{\epsilon} y_a(x))\) (with pytest using samples
+or symbolic equivalence, depending on solution). The expected outputs are
+confirmed using WolframAlpha~\cite{WolframAlpha}.
 
 \begin{landscape}
     \begin{longtable}[c]{|l|ccc|c|l|}
@@ -430,64 +435,69 @@ expected outputs are confirmed using WolframAlpha~\cite{WolframAlpha}.
     \end{longtable}
 \end{landscape}
 
-\subsubsection{Area of Testing2}
+\subsubsection{Testing Outputs with Non-trivial Inputs}
 
-...
+All of the tests from \Cref{tab:simple_automatic_tests} should be performed
+again\footnote{Note: referencing here will be done with the BVP subscript
+removed, $T*$.} with non-trivial $E_B$s and $I_B$s (e.g., not $1$). Since
+numeric scaling isn't very consequential to the output, we will omit for
+brevity. WolframAlpha may be similarly used as a control.
 
 \subsection{Tests for Nonfunctional Requirements}
 
-\plt{The nonfunctional requirements for accuracy will likely just reference the
-    appropriate functional tests from above.  The test cases should mention
-    reporting the relative error for these tests.  Not all projects will
-    necessarily have nonfunctional requirements related to accuracy}
-
-\plt{Tests related to usability could include conducting a usability test and
-    survey.  The survey will be in the Appendix.}
-
-\plt{Static tests, review, inspections, and walkthroughs, will not follow the
-    format for the tests given below.}
-
-\subsubsection{Area of Testing1}
-
-\paragraph{Title for Test}
+The nonfunctional requirements are relatively uncomplicated to audit, mostly
+because of the usage of Drasil:
 
 \begin{enumerate}
 
-    \item{test-id1\\}
+    \item[$T_\text{NFR1}$] \textbf{Accuracy} is satisfied primarily through the
+                tests of the functional requirements having a low
+                tolerance\footnote{As this software is purely educational,
+                accepting a higher tolerance is fine too.},
 
-    Type: Functional, Dynamic, Manual, Static etc.
+    \item[$T_\text{NFR2}$] \textbf{Usability} is strongly tied to Drasil's
+                ability to generate code that can output
+                data\footnote{Unfortunately, list-like functionality remains
+                limited, but will be improved. Also note that ``usability'' was
+                defined in the SRS document. Specifically, we will not be
+                testing for accessibility nor any other facet as this software
+                is meant to be an intermediate program used for calculation, not
+                visualization.},
 
-    Initial State:
+    \item[$T_\text{NFR3}$] \textbf{Maintainability} is satisfied through being
+                constructed in Drasil, where changes in information have
+                rippling effects and re-generation allows us to update
+                everything to accomodate changes,
 
-    Input/Condition:
-
-    Output/Result:
-
-    How test will be performed:
-
-    \item{test-id2\\}
-
-    Type: Functional, Dynamic, Manual, Static etc.
-
-    Initial State:
-
-    Input:
-
-    Output:
-
-    How test will be performed:
+    \item[$T_\text{NFR4}$] \textbf{Portability} is satisfied because we aim to
+                generate Python code, but also because all of Drasil's supported
+                output languages are supported on the 3 major personal operating
+                systems.
 
 \end{enumerate}
 
-\subsubsection{Area of Testing2}
-
-...
-
 \subsection{Traceability Between Test Cases and Requirements}
 
-\plt{Provide a table that shows which test cases are supporting which
-    requirements.}
+The following table traces the test cases as shown in the earlier sections back
+to the functional and nonfunctional requirements\footnote{Note that $*$ is used
+to quantify over each individual test case as it is redundant to have identical
+rows for the tests that are each intended to test the same concepts.}.
 
+\begin{longtable}{|c|c|c|c|c|c|c|c|c|}
+    \caption{Tracing Tests to Requirements}
+    \label{tab:trace_tests_to_reqs} \\
+    
+    \hline
+
+                    & R1 & R2 & R3 & NFR1 & NFR2 & NFR3 & NFR4 \\ \hline
+    $T*_\text{BVP}$ & X  & X  &    &      &      &      &      \\ \hline
+    $T*$            & X  & X  & X  &      &      &      &      \\ \hline
+    $T_\text{NFR1}$ & X  & X  & X  & X    &      &      &      \\ \hline
+    $T_\text{NFR2}$ &    &    &    &      & X    &      &      \\ \hline
+    $T_\text{NFR3}$ &    &    &    &      &      & X    &      \\ \hline
+    $T_\text{NFR4}$ &    &    &    &      &      &      & X    \\ \hline
+
+\end{longtable}
 
 %------------------------------------------------------------------------------
 % UNIT TEST DESCRIPTION
@@ -497,120 +507,9 @@ expected outputs are confirmed using WolframAlpha~\cite{WolframAlpha}.
 \section{Unit Test Description}
 \label{sec:unit_test_description}
 
-\plt{Reference your MIS (detailed design document) and explain your overall
-    philosophy for test case selection.} \plt{This section should not be filled
-    in until after the MIS (detailed design document) has been completed.}
-
-\subsection{Unit Testing Scope}
-
-\plt{What modules are outside of the scope.  If there are modules that are
-    developed by someone else, then you would say here if you aren't planning on
-    verifying them.  There may also be modules that are part of your software,
-    but have a lower priority for verification than others.  If this is the
-    case, explain your rationale for the ranking of module importance.}
-
-\subsection{Tests for Functional Requirements}
-
-\plt{Most of the verification will be through automated unit testing.  If
-    appropriate specific modules can be verified by a non-testing based
-    technique.  That can also be documented in this section.}
-
-\subsubsection{Module 1}
-
-\plt{Include a blurb here to explain why the subsections below cover the module.
-    References to the MIS would be good.  You will want tests from a black box
-    perspective and from a white box perspective.  Explain to the reader how the
-    tests were selected.}
-
-\begin{enumerate}
-
-    \item{test-id1\\}
-
-    Type: \plt{Functional, Dynamic, Manual, Automatic, Static etc. Most will be
-        automatic}
-
-    Initial State:
-
-    Input:
-
-    Output: \plt{The expected result for the given inputs}
-
-    Test Case Derivation: \plt{Justify the expected value given in the Output
-        field}
-
-    How test will be performed:
-
-    \item{test-id2\\}
-
-    Type: \plt{Functional, Dynamic, Manual, Automatic, Static etc. Most will be
-        automatic}
-
-    Initial State:
-
-    Input:
-
-    Output: \plt{The expected result for the given inputs}
-
-    Test Case Derivation: \plt{Justify the expected value given in the Output
-        field}
-
-    How test will be performed:
-
-    \item{...\\}
-
-\end{enumerate}
-
-\subsubsection{Module 2}
-
-...
-
-\subsection{Tests for Nonfunctional Requirements}
-
-\plt{If there is a module that needs to be independently assessed for
-    performance, those test cases can go here.  In some projects, planning for
-    nonfunctional tests of units will not be that relevant.}
-
-\plt{These tests may involve collecting performance data from previously
-    mentioned functional tests.}
-
-\subsubsection{Module ?}
-
-\begin{enumerate}
-
-    \item{test-id1\\}
-
-    Type: \plt{Functional, Dynamic, Manual, Automatic, Static etc. Most will be
-        automatic}
-
-    Initial State:
-
-    Input/Condition:
-
-    Output/Result:
-
-    How test will be performed:
-
-    \item{test-id2\\}
-
-    Type: Functional, Dynamic, Manual, Static etc.
-
-    Initial State:
-
-    Input:
-
-    Output:
-
-    How test will be performed:
-
-\end{enumerate}
-
-\subsubsection{Module ?}
-
-...
-
-\subsection{Traceability Between Test Cases and Modules}
-
-\plt{Provide evidence that all of the modules have been considered.}
+As no software design documents will be constructed for Team Drasil's projects,
+we will bootstrap the Drasil-generated software artifacts for testing. This
+section will be filled in once we have Drasil generating code.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Bibliography
