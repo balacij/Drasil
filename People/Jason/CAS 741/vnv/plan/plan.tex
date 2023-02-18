@@ -204,15 +204,15 @@ has for each related project.
 
     \\ \hline
     \rowcolor{Maroon}
-    \textbf{Role}        & \textbf{Description/responsibilities}                                                       \\ \hline
+    \textbf{Role}        & \textbf{Description/responsibilities}                                           \\ \hline
     \rowcolor{White}
-    Authoritative Expert & Manager of all review committees, and distinguished reviewer and domain expert.             \\ \hline
-    Domain Expert        & Reviewer with considerable knowledge on underlying domains.                                 \\ \hline
-    Author               & Writer.                                                                                     \\ \hline
-    Reviewer             & Ensures documents are logically coherent and well-formed.                                   \\ \hline
-    Verifier             & Assures Drasil encoding of SRS accurately re-creates the manually created SRS.\an{Odd\dots} \\ \hline
-    Validator            & Assures SRS satisfies stakeholder requirements.                                             \\ \hline
-    VnV-er               & Verifier \(\cup\) Validator.                                                                \\ \hline
+    Authoritative Expert & Manager of all review committees, and distinguished reviewer and domain expert. \\ \hline
+    Domain Expert        & Reviewer with considerable knowledge on underlying domains.                     \\ \hline
+    Author               & Writer.                                                                         \\ \hline
+    Reviewer             & Ensures documents are logically coherent and well-formed.                       \\ \hline
+    Verifier             & Assures Drasil encoding of SRS accurately re-creates the manually created SRS.  \\ \hline
+    Validator            & Assures SRS satisfies stakeholder requirements.                                 \\ \hline
+    VnV-er               & Verifier \(\cup\) Validator.                                                    \\ \hline
 \end{longtable}
 
 \begin{longtable}{|r|c|l|}
@@ -260,10 +260,13 @@ In addition to checking that \progname{}'s Software Requirements Specification
 \subsection{Design Verification Plan}
 
 The software design does not need verification as the design of the software
-will be based on Drasil's existing software family
-generator~\cite{Drasil2023}\an{Well, I am extending Drasil a bit.}. The onus of
-Drasil's validation is up to the Drasil team\footnote{Including, but not limited
-    to, Dr.\ Spencer Smith, Sam Crawford, and Jason Balaci.}.
+will be based on Drasil's existing software family generator~\cite{Drasil2023}.
+However, in order to build the Boundary Value Problem (BVP) in Drasil, we will
+need to extend Drasil to generate BVP solving methods\footnote{This will be done
+    and assumed as ``trusted'' when accepted into Drasil's main
+    codebase~\cite{Drasil2023}.}. The onus of Drasil's validation is up to the
+Drasil team\footnote{Including, but not limited to, Dr.\ Spencer Smith, Sam
+    Crawford, and Jason Balaci.}.
 
 \subsection{Verification and Validation Plan Verification Plan}
 
@@ -371,196 +374,61 @@ The Python code will be aggressively formatted with Black~\cite{PythonBlack}.
     section covers tests for input constraints, you should reference the data
     constraints table in the SRS.}
 
-\paragraph{Title for Test}
-
-\begin{longtable}[c]{|l|lll|l|l|}
-    \caption{Simple, Automatic, Tests}
-    \label{tab:simple_automatic_tests}                                                                                                                                                                                                                         \\
-    \hline
-    \rowcolor{lightgray}
-    \cellcolor{lightgray}                              & \multicolumn{3}{c|}{\cellcolor{lightgray}\textbf{Inputs}} & \textbf{Outputs}                             & \cellcolor{lightgray}                                                                      \\ \cline{2-5}
-    \rowcolor{lightgray}
-    \multirow{-2}{*}{\cellcolor{lightgray}\textbf{ID}} & \multicolumn{1}{c|}{\cellcolor{lightgray}$w(x)$}           & \multicolumn{1}{c|}{\cellcolor{lightgray}$E$} & $I$                   & $y_a(x)$ & \multirow{-2}{*}{\cellcolor{lightgray}\textbf{Control}} \\ \hline
-    \endfirsthead
-    \endhead
-    T1                                                 & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{}                        &                       &          &                                                         \\ \hline
-    T2                                                 & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{}                        &                       &          &                                                         \\ \hline
-    T3                                                 & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{}                        &                       &          &                                                         \\ \hline
-    T4                                                 & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{}                        &                       &          &                                                         \\ \hline
-    T5                                                 & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{}                        &                       &          &                                                         \\ \hline
-    T6                                                 & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{}                        &                       &          &                                                         \\ \hline
-    T7                                                 & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{}                        &                       &          &                                                         \\ \hline
-    T8                                                 & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{}                        &                       &          &                                                         \\ \hline
-    T9                                                 & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{}                        &                       &          &                                                         \\ \hline
-    T10                                                & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{}                        &                       &          &                                                         \\ \hline
-    T11                                                & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{}                        &                       &          &                                                         \\ \hline
-\end{longtable}
-
-\begin{enumerate}
-
-    \item{T1\\}
-
-    Control: Automatic.
-
-    Initial State: N/A.
-
-    Input: \(w(x) = 0\)
-
-    Output: \(y_a(x) = 0\)
-
-    Test Case Derivation: \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D0%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}.
-
-    How test will be performed: Observing \(\forall x \in \mathbb{R}~.~y(x)
-    \approx_{\epsilon} y_a(x)\) (with pytest using samples or symbolic
-    equivalence, depending on solution).
-
-    \item{T2\\}
-
-    Control: Automatic.
-
-    Initial State: N/A.
-
-    Input: \(w(x) = 1\)
-
-    Output: \(y_a(x) = \frac{x}{24} (x^3 - 20x^2 + 1000)\)
-
-    Test Case Derivation: \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D1%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}.
-
-    How test will be performed: Observing \(\forall x \in \mathbb{R}~.~y(x)
-    \approx_{\epsilon} y_a(x)\) (with pytest using samples or symbolic
-    equivalence, depending on solution).
-
-    \item{T3\\}
-
-    Control: Automatic.
-
-    Initial State: N/A.
-
-    Input: \(w(x) = -1\)
-
-    Output: \(y_a(x) = - \frac{x}{24} (x^3 - 20x^2 + 1000)\)
-
-    Test Case Derivation: \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D-1%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}.
-
-    How test will be performed: Observing \(\forall x \in \mathbb{R}~.~y(x)
-    \approx_{\epsilon} y_a(x)\) (with pytest using samples or symbolic
-    equivalence, depending on solution).
-
-    \item{T4\\}
-
-    Control: Automatic.
-
-    Initial State: N/A.
-
-    Input: \(w(x) = x\)
-
-    Output: \(y_a(x) = \frac{x}{360} (3x^4 - 1000x^3 + 70000)\)
-
-    Test Case Derivation: \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3Dx%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}.
-
-    How test will be performed: Observing \(\forall x \in \mathbb{R}~.~y(x)
-    \approx_{\epsilon} y_a(x)\) (with pytest using samples or symbolic
-    equivalence, depending on solution).
-
-    \item{T5\\}
-
-    Control: Automatic.
-
-    Initial State: N/A.
-
-    Input: \(w(x) = - x\)
-
-    Output: \(y_a(x) = - \frac{x}{360} (3x^4 - 1000x^3 + 70000)\)
-
-    Test Case Derivation: \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D-x%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}.
-
-    How test will be performed: Observing \(\forall x \in \mathbb{R}~.~y(x)
-    \approx_{\epsilon} y_a(x)\) (with pytest using samples or symbolic
-    equivalence, depending on solution).
-
-    \item{T6\\}
-
-    Control: Automatic.
-
-    Initial State: N/A.
-
-    Input: \(w(x) = 80000x^3\)
-
-    Output: \(y_a(x) = \frac{20000x}{21} (x^6 - 70000x^2 + 6000000)\)
-
-    Test Case Derivation: \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D80000x%5E3%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}.
-
-    How test will be performed: Observing \(\forall x \in \mathbb{R}~.~y(x)
-    \approx_{\epsilon} y_a(x)\) (with pytest using samples or symbolic
-    equivalence, depending on solution).
-
-    \item{T7\\}
-
-    Control: Automatic.
-
-    Initial State: N/A.
-
-    Input: \(w(x) = 80000x^2\)
-
-    Output: \(y_a(x) = \frac{2000x}{9} (x^5 - 5000x^4 + 400000)\)
-
-    Test Case Derivation: \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D80000x%5E2%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}.
-
-    How test will be performed: Observing \(\forall x \in \mathbb{R}~.~y(x)
-    \approx_{\epsilon} y_a(x)\) (with pytest using samples or symbolic
-    equivalence, depending on solution).
-
-    \item{T8\\}
-
-    Control: Automatic.
-
-    Initial State: N/A.
-
-    Input: \(w(x) = 800000\sin{}(\frac{x\pi}{L})\)
-
-    Output: \(y_a(x) = \frac{1}{3\pi^{4}} (40000L^2x(\pi^2(x^2 - 100) - 6L^2)\sin{}(\frac{10\pi}{L})+60L^2\sin{}(\frac{x\pi}{L}))\)
-
-    Test Case Derivation: \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D800000*sin%28%28x%2FL%29*pi%29%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}.
-
-    How test will be performed: Observing \(\forall x \in \mathbb{R}~.~y(x)
-    \approx_{\epsilon} y_a(x)\) (with pytest using samples or symbolic
-    equivalence, depending on solution).
-
-    \item{T9\\}
-
-    Control: Automatic.
-
-    Initial State: N/A.
-
-    Input: \(w(x) = 800000\sin{}(\frac{2x\pi}{L})\)
-
-    Output: \(y_a(x) = \frac{1}{3\pi^{4}} (5000L^2x(2\pi^2(x^2 - 100) - 3L^2)\sin{}(\frac{20\pi}{L})+30L^2\sin{}(\frac{2x\pi}{L}))\)
-
-    Test Case Derivation: \href{}{WolframAlpha}.
-
-    How test will be performed: Observing \(\forall x \in \mathbb{R}~.~y(x)
-    \approx_{\epsilon} y_a(x)\) (with pytest using samples or symbolic
-    equivalence, depending on solution).
-
-    % \item{T10\\}
-
-    % Control: Automatic.
-
-    % Initial State: N/A.
-
-    % Input: \(w(x) = \)
-
-    % Output: \(y_a(x) = \)
-
-    % Test Case Derivation: \href{}{WolframAlpha}.
-
-    % How test will be performed: Observing \(\forall x \in \mathbb{R}~.~y(x)
-    % \approx_{\epsilon} y_a(x)\) (with pytest using samples or symbolic
-    % equivalence, depending on solution).
-
-\end{enumerate}
-
-% \injb{``Trivial'': \[ [//math:solve y''''=800000*sin((x/L)*2*pi),y(0)=0,y(10)=0,y''(0)=0,y''(10)=0//] \] }
+\paragraph{Testing BVP Solver}
+
+All of the tests in \Cref{tab:simple_automatic_tests} should be done
+\textit{automatically} with a trivially ``empty'' initial state (e.g., the
+program is not started and has been provided no inputs yet). The inputs should
+be provided as appropriate and the expected output should be printed. Each test
+will observe \(\forall x \in \mathbb{R}~.~y(x) \approx_{\epsilon} y_a(x)\) (with
+pytest using samples or symbolic equivalence, depending on solution). The
+expected outputs are confirmed using WolframAlpha~\cite{WolframAlpha}.
+
+\begin{landscape}
+    \begin{longtable}[c]{|l|ccc|c|l|}
+        \caption{Simple, Automatic, Tests}
+        \label{tab:simple_automatic_tests}                                                                                                                                                                                                                                                                                                                                          \\
+        \hline
+        \rowcolor{lightgray}
+        \cellcolor{lightgray}                              & \multicolumn{3}{c|}{\cellcolor{lightgray}\textbf{Inputs}} & \textbf{Outputs}                              & \cellcolor{lightgray}                                                                                                                                                                                      \\ \cline{2-5}
+        \rowcolor{lightgray}
+        \multirow{-2}{*}{\cellcolor{lightgray}\textbf{ID}} & \multicolumn{1}{c|}{\cellcolor{lightgray}$w_B(x)$}          & \multicolumn{1}{c|}{\cellcolor{lightgray}$E_B$} & $I_B$                   & $y_a(x)$                                                                                                                 & \multirow{-2}{*}{\cellcolor{lightgray}\textbf{Control}} \\ \hline
+        \endfirsthead
+        \endhead
+        T1$_{\text{BVP}}$                                                 & \multicolumn{1}{c|}{$0$}                                  & \multicolumn{1}{l|}{$1$}                      & $1$                   & $0$                                                                                                                      
+                                                           & \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D0%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                        \\ \hline
+    
+        T2$_{\text{BVP}}$                                                 & \multicolumn{1}{c|}{$1$}                                  & \multicolumn{1}{l|}{$1$}                      & $1$                   & \(\frac{x}{24} (x^3 - 20x^2 + 1 \text{E}^3)\)
+                                                           & \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D1%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                                                                                                                                                                                                                                                                                       \\ \hline
+    
+        T3$_{\text{BVP}}$                                                 & \multicolumn{1}{c|}{$-1$}                                 & \multicolumn{1}{l|}{$1$}                      & $1$                   & \(- \frac{x}{24} (x^3 - 20x^2 + 1 \text{E}^3)\)
+                                                           & \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D-1%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                                                                                                                                                                                                                                                                                       \\ \hline
+    
+        T4$_{\text{BVP}}$                                                 & \multicolumn{1}{c|}{$x$}                                  & \multicolumn{1}{l|}{$1$}                      & $1$                   & \(\frac{x}{360} (3x^4 - 1 \text{E}^3x^3 + 7 \text{E}^4)\)
+                                                           & \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3Dx%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                                                                                                                                                                                                                                                                                       \\ \hline
+    
+        T5$_{\text{BVP}}$                                                 & \multicolumn{1}{c|}{$- x$}                                & \multicolumn{1}{l|}{$1$}                      & $1$                   & \(- \frac{x}{360} (3x^4 - 1 \text{E}^3x^3 + 7 \text{E}^4)\)
+                                                           & \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D-x%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                                                                                                                                                                                                                                                                                       \\ \hline
+    
+        T6$_{\text{BVP}}$                                                 & \multicolumn{1}{c|}{$8 \text{E}^4 x^3$}             & \multicolumn{1}{l|}{$1$}                      & $1$                   & \(\frac{2 \text{E}^4x}{21} (x^6 - 7 \text{E}^4x^2 + 6 \text{E}^6)\)
+                                                           & \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D80000x%5E3%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                                                                                                                                                                                                                                                                                       \\ \hline
+    
+        T7$_{\text{BVP}}$                                                 & \multicolumn{1}{c|}{$8 \text{E}^4 x^2$}                           & \multicolumn{1}{l|}{$1$}                      & $1$                   & \(\frac{2 \text{E}^3x}{9} (x^5 - 5 \text{E}^3x^4 + 4 \text{E}^5)\)
+                                                           & \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D80000x%5E2%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                                                                                                                                                                                                                                                                                       \\ \hline
+    
+        T8$_{\text{BVP}}$                                                 & \multicolumn{1}{c|}{$8 \text{E}^5 \sin{}(\frac{x\pi}{L})$}       & \multicolumn{1}{l|}{$1$}                      & $1$                   & \(\frac{1}{3\pi^{4}} (4 \text{E}^4L^2x(\pi^2(x^2 - 100) - 6L^2)\sin{}(\frac{10\pi}{L})+60L^2\sin{}(\frac{x\pi}{L}))\)
+                                                           & \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D800000*sin%28%28x%2FL%29*pi%29%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                                                                                                                                                                                                                                                                                       \\ \hline
+    
+        T9$_{\text{BVP}}$                                                 & \multicolumn{1}{c|}{$8 \text{E}^5 \sin{}(\frac{2x\pi}{L})$}      & \multicolumn{1}{l|}{$1$}                      & $1$                   & \(\frac{1}{3\pi^{4}} (5 \text{E}^3L^2x(2\pi^2(x^2 - 100) \linebreak{}\newline{}- 3L^2)\sin{}(\frac{20\pi}{L})+30L^2\sin{}(\frac{2x\pi}{L}))\)
+                                                           & \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D800000*sin%28%282x%2FL%29*pi%29%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                                                                                                                                                                                                                                                                                       \\ \hline
+    
+        % T10                                                & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{$1$}                      & $1$                   &          
+        % &                                                         \\ \hline
+    
+        % T11                                                & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{$1$}                      & $1$                   &          
+        % &                                                         \\ \hline
+    \end{longtable}
+\end{landscape}
 
 \subsubsection{Area of Testing2}
 
