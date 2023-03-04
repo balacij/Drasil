@@ -337,9 +337,10 @@ section aims to provide an overview of the Software Requirements Specification
 \subsection{Purpose of Document}
 
 The purpose of this document is to provide the reader with a well-derived,
-verifiable explanation of a solution to the beam bending problem. The document
-provides sufficient information such that a related software artifact may be
-constructed. The produced software artifact has an ``increased'' degree of
+verifiable explanation of a solution to the beam bending problem. This document
+outlines sufficient information for developers to create software tools that
+solve the \progname{} problem. The produced software artifact has an
+``increased''\footnote{Not that we will try to quantify it, however.} degree of
 confidence in reliability and correctness by being traceable to and derived by
 these defined software requirements specifications. As such, a large focus on
 the development of this document is to have the domain knowledge captured and
@@ -349,10 +350,10 @@ up to development choices (e.g., numerical algorithm, language, tooling, etc.).
 \subsection{Scope of Requirements}
 \label{ssec_scope}
 
-The requirements analyze the ``problem'' (as defined in \Cref{Sec_pd}) and
-related ``solution'' under the assumption of the Euler-Bernoulli Beam Theory
-\cite{EulerBernoulliWiki} in a 2-dimensional space for a simply-supported
-prismatic beam.
+The requirements analyze the problem (as defined in \Cref{Sec_pd}) and related
+solution (as per \Cref{sec_instance}, most directly) under the assumption of the
+Euler-Bernoulli Beam Theory \cite{EulerBernoulliWiki} in a two-dimensional space
+for a simply supported prismatic beam.
 
 \subsection{Characteristics of Intended Reader}
 \label{sec_IntendedReader}
@@ -484,7 +485,7 @@ The user of this software should be a civil engineer or equivalent, and have a
 working understanding of the deflection of beams, shear forces, bending moments,
 and related concepts. If applied in educational purposes, only an understanding
 of first-year physics and calculus is required to generally understand the
-program and simulate a simply-supported beam across various scenarios.
+program and simulate a simply supported beam across various scenarios.
 
 \subsection{System Constraints}
 
@@ -514,8 +515,8 @@ definitions and finally the instance models.
 \subsection{Problem Description}
 \label{Sec_pd}
 
-\progname{} is intended to solve for the deflection a beam experiences given a
-load-application function and properties of the beam.
+\progname{} is intended to solve for the deflection experienced by a beam given
+a distributed loading function and properties of the beam.
 
 \subsubsection{Terminology and  Definitions}
 
@@ -654,8 +655,8 @@ Change (LC), in which the respective assumption is used.
 
 \begin{itemize}
 
-    \assume{world_dimension}{The ``world'' model is 2-dimensional, observing the
-        instant a load is applied on the beam.}
+    \assume{world_dimension}{The ``world'' model is two-dimensional, observing
+        the instant a load is applied on the beam.}
 
     \assume{beam_slender}{The beam is ``slender'' (has a length to height ratio
         greater than \(10\) to \(1\)).}
