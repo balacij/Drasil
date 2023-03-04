@@ -413,12 +413,11 @@ system constraints.
 \subsection{System Context}
 
 \Cref{Fig_SystemContext} represents an abstract view of the software. The
-rectangular node represents the ``BeamBending'' software itself, whilst circular
-nodes represent external entities interacting with the ``BeamBending'' software.
-The abstract view is that a user would provide input information (beam and load
-specifications) to the software, which would use a provided, external, Boundary
-Value Problem (BVP) solver to process the inputs, and output the expected
-deflection curve.
+rectangular node represents the BeamBending software itself, whilst circular
+nodes represent external entities interacting with the BeamBending software. The
+abstract view is that a user would provide information (e.g., beam and load
+specifications) to the software, which would use an external Boundary Value
+Problem (BVP) solver to approximate the deflection curve.
 
 \begin{figure}[h!]
     \begin{center}
@@ -467,6 +466,13 @@ deflection curve.
 
               \item Approximate the deflection of the beam under the imposed
                     loading.
+
+          \end{itemize}
+
+    \item External BVP Solver Responsibilities:
+          \begin{itemize}
+            
+            \item Attempt to solve $4^{\text{th}}$ order BVP problems on demand.
 
           \end{itemize}
 \end{itemize}
