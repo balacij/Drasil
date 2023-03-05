@@ -542,6 +542,8 @@ easier to correctly understand the requirements:
     \item simply supported beam: a beam that has a pinned support on one end,
           and a roller support on the other\nc{},
 
+    \item slender: has a length to height ratio greater than \(10\) to \(1\),
+
     \item load: an applied force to a structure\nc{},
 
     \item deflection: the amount that a structural component is displaced due to
@@ -564,18 +566,8 @@ easier to correctly understand the requirements:
 \subsubsection{Physical System Description}
 \label{sec_phySystDescrip}
 
-An ``at-rest'' view of the physical system of \progname{}, as shown in
-\Cref{beam_bending_diagram}, includes the following elements:
-
-\begin{itemize}
-
-    \item a slender beam,
-
-    \item a pinned support, and
-
-    \item a roller support.
-
-\end{itemize}
+An overview of the physical system of \progname{} at rest is depicted in
+\Cref{beam_bending_diagram}.
 
 \begin{figure}[H]
     \begin{center}
@@ -584,16 +576,17 @@ An ``at-rest'' view of the physical system of \progname{}, as shown in
     \end{center}
 \end{figure}
 
-\Cref{beam_bending_diagram} shows the physical system at equilibrium. A slender
-beam is supported by a pinned support and a roller support. For the sake of
-following convention, the pinned support is placed on the left side of the beam,
-while the roller support is on the right. Additionally, when thinking of
-distance along the beam, we think of it as a distance from the pinned support on
-the left-hand side. As shown in \Cref{beam_bending_diagram}, the pinned support
-allows for rotational movements about the support tip, while the roller support
-also allows for some horizontal movement along the roller. When the beam is
-loaded, the roller support allows for tensile/compressive changes in the beam
-(which would alter the length of the beam).
+\Cref{beam_bending_diagram} shows the physical system at rest. A slender beam is
+supported by a pinned support and a roller support (i.e., it is simply
+supported). For the sake of following convention, the pinned support is placed
+on the left side of the beam, while the roller support is on the right.
+Additionally, when thinking of distance along the beam, we think of it as a
+distance from the pinned support on the left-hand side. As shown in
+\Cref{beam_bending_diagram}, the pinned support allows for rotational movements
+about the support tip, while the roller support also allows for some horizontal
+movement along the roller. When the beam is loaded, the roller support allows
+for tensile/compressive changes in the beam (which would alter the length of the
+beam).
 
 The physical system described in \progname{} examines
 \Cref{beam_bending_diagram} under an inputted general loading function. As such,
@@ -622,7 +615,7 @@ containing:
 \noindent{}However, note that at the ``boundaries'' (the support tips), the beam
 may not have vertical deflection, and similarly has zero bending moment at the
 tips. Additionally, it should be noted that the beam is \textit{statically
-    determinant}.
+    determinant} \cite{StaticallyDeterminantWiki}.
 
 \subsubsection{Goal Statements}
 \label{sssec_goals}
@@ -662,8 +655,7 @@ Change (LC), in which the respective assumption is used.
     \assume{world_dimension}{The ``world'' model is two-dimensional, observing
         the instant a load is applied on the beam.}
 
-    \assume{beam_slender}{The beam is ``slender'' (has a length to height ratio
-        greater than \(10\) to \(1\)).}
+    \assume{beam_slender}{The beam is slender.}
 
     \assume{beam_prismatic}{The beam is prismatic (i.e.,
         \aref{beam_uniform_cross_section} \& \aref{beam_straight_faces}).}
