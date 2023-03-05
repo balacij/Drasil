@@ -433,6 +433,7 @@ Problem (BVP) solver to approximate the deflection curve.
             \draw [->] (I) -- (BB) node[midway,above] {\parbox{3cm}{\center\textbf{Input}:\newline{}beam \& load specifications.}};
             \draw [->] (BB) -- (O) node[midway,above] {\parbox{3cm}{\center\textbf{Output}:\newline{}deflection curve.}};
             \draw [<->] (E) -- (BB) node[midway,left] {\parbox{2.5cm}{\center{}Solver provides BVP solutions on demand.}};
+            \draw [] (E) -- (BB) node[midway,right] {\parbox{2.5cm}{\tiny\center{}BVP Solver receives BVP specifications and responds with solution or error.}};
         \end{tikzpicture}
     \end{center}
     \caption{System Context}
