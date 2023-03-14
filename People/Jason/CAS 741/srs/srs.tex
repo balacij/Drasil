@@ -670,14 +670,22 @@ Change (LC), in which the respective assumption is used.
     \assume{beam_slope}{The deflection will have locally small slopes across the
         beam.}
 
-    \assume{deflection_differentiable}{The hypothetical deflection function
-        should belong to at least the class of functions that are differentiable
-        4 times on \([0, L]\).}
-
-    \assume{loading_integrable}{The loading function should belong to at least
-        the class of functions that are integrable 4 times on \([0, L]\).}
-
     \assume{beam_simply_supported}{The beam is simply supported.}
+
+    \assume{beam_loading}{The beam's loading is captured by a third-order
+        polynomial of standard form, \(w_{B}(x) = a_0 + a_1x + a_2x^2 +
+        a_3x^3\).}
+
+    \assume{beam_loading_no_points}{The beam contains no point loads.}
+
+    \assume{beam_no_axial_loading}{The beam has no loading applied axially.}
+
+    \assume{deflection_differentiable}{The deflection function (\(y_{B}(x)\))
+        belongs to the class of functions that are continuously differentiable 4
+        times on \([0, L]\).}
+
+    \assume{loading_integrable}{The loading function (\(w_{B}(x)\)) belongs to
+        the class of functions that are integrable 4 times on \([0, L]\).}
 
 \end{itemize}
 
