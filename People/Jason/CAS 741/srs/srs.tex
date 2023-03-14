@@ -230,20 +230,7 @@ description of the unit and the SI name. ~\newline
     \end{tabular}\\
 \end{center}
 
-\noindent{}Note that we will also often use:
-
-\begin{itemize}
-
-    \item ``gigapascals'' (a unit of pressure, denoted by \si{\giga\pascal},
-          where \(\si{\giga\pascal}=10^{9}\si{\pascal}\)),
-
-    \item ``kilonewtons'' (a unit of force, denoted by \si{\kilo\newton}, where
-          \(\si{\kilo\newton}=10^{3}\si{\newton}\)), and
-
-    \item ``millimetres'' (a unit of length, denoted by \si{\milli\metre}, where
-          \(\si{\milli\metre}=10^{-5}\si{\metre}\)).
-
-\end{itemize}
+Note that ``unitless'' quantities will be described as having the unit $1$.
 
 \subsection{Table of Symbols}
 
@@ -252,27 +239,27 @@ their units.  The choice of symbols was made to be consistent with the
 literature related to materials.
 
 \renewcommand{\arraystretch}{1.2}
-\begin{longtable*}{l l p{12cm}}
+\begin{longtable}{l l p{12cm}}
     \toprule
-    \textbf{symbol} & \textbf{unit} & \textbf{description}\\
+    \textbf{symbol}   & \textbf{unit}                        & \textbf{description}                                                                                                                           \\
     \midrule
-    \(L\) & \si{\metre} & abstract length of the beam \\
-    \(E\) & \si{\giga\pascal} & abstract Young's modulus (beam material modulus of elasticity) \\
-    \(I\) & \(\si{\metre{}}^{4}\) & abstract moment of inertia \\
-    \(L_{B}\) & \si{\metre} & user-defined length of the beam \\
-    \(E_{B}\) & \si{\giga\pascal} & user-defined Young's modulus (beam material modulus of elasticity) \\
-    \(I_{B}\) & \(\si{\metre{}}^{4}\) & user-defined moment of inertia of a cross-section of the beam \\
-    \(w_B(x)\) & \si{\kilo\newton} & user-defined definition of the force of the load applied at a specific point along the beam \\
-    \(x\) & \si{\metre} & distance of an arbitrary point along the beam, from the far left-side (at the pinned support) \\
-    \(w(x)\) & \si{\kilo\newton} & hypothetical force of the load applied at a specific point along the beam \\
-    \(\text{Pinned}\) & \si{\metre} & 1-dimensional position of the pinned support \\
-    \(\text{Roller}\) & \si{\metre} & 1-dimensional position of the roller support \\
-    \(\theta{}_{\text{Pinned}}\) & \si{\radian} & slope of the angle between the beam and the pinned support under load \\
-    \(\theta{}_{\text{Roller}}\) & \si{\radian} & slope of the angle between the beam and the roller support under load \\
-    \(y(x)\) & \si{\milli\metre} & deflection of a hypothetical loaded beam at a specific point along it \\
-    \(y_{B}(x)\) & \si{\milli\metre} & deflection of the loaded beam at a specific point along it \\
+    \(L\)             & \si{\metre}                          & abstract length of the beam                                                                                                                    \\
+    \(E\)             & \si{\pascal}                         & abstract Young's modulus (beam material modulus of elasticity)                                                                                 \\
+    \(I\)             & \(\si{\metre{}}^{4}\)                & abstract moment of second area                                                                                                                 \\
+    \(L_{B}\)         & \si{\metre}                          & user-defined length of the beam                                                                                                                \\
+    \(E_{B}\)         & \si{\pascal}                         & user-defined Young's modulus (beam material modulus of elasticity)                                                                             \\
+    \(I_{B}\)         & \(\si{\metre{}}^{4}\)                & user-defined moment of second area of a cross-section of the beam                                                                              \\
+    \(w_B(x)\)        & \(\frac{\si{\newton}}{\si{\metre}}\) & user-defined definition of the force of the distributed load applied at a specific point along the beam (directed downwards, towards the beam) \\
+    \(x\)             & \si{\metre}                          & distance of an arbitrary point along the beam, from the far left-side (at the pinned support)                                                  \\
+    \(w(x)\)          & \si{\newton}                         & hypothetical distributed force of the load applied at a specific point along the beam (directed downwards, towards the beam)                   \\
+    \(\text{Pinned}\) & \si{\metre}                          & 1-dimensional position of the pinned support                                                                                                   \\
+    \(\text{Roller}\) & \si{\metre}                          & 1-dimensional position of the roller support                                                                                                   \\
+    \(y(x)\)          & \si{\metre}                          & deflection of a hypothetical loaded beam at a specific point along it (positive $y$ values relate to amount deflected downwards)               \\
+    \(y_{B}(x)\)      & \si{\metre}                          & deflection of the loaded beam at a specific point along it (positive $y$ values relate to amount deflected downwards)                          \\
+    \(a\)             & \(1\)                                &                                                                                                                                                \\
+    \(f(a)\)          & \(1\)                                &                                                                                                                                                \\
     \bottomrule
-\end{longtable*}
+\end{longtable}
 
 \subsection{Abbreviations and Acronyms}
 
@@ -473,8 +460,8 @@ Problem (BVP) solver to approximate the deflection curve.
 
     \item External BVP Solver Responsibilities:
           \begin{itemize}
-            
-            \item Attempt to solve $4^{\text{th}}$ order BVP problems on demand.
+
+              \item Attempt to solve $4^{\text{th}}$ order BVP problems on demand.
 
           \end{itemize}
 \end{itemize}
@@ -545,14 +532,14 @@ easier to correctly understand the requirements:
     \item modulus of elasticity: the measure of lengthwise stiffness of an
           element as a force is applied lengthwise\nc{},
 
-    \item moment of inertia: second moment of area (a measure of how well a
-          cross-section resists bending)\cite{SmithAdviceAndDiscussion2023},
+    \item second moment of area: a measure of how well a cross-section resists
+          bending\cite{SmithAdviceAndDiscussion2023},
 
     \item pinned support: a structural support that allows for rotation but
           neither vertical nor horizontal movement\nc{},
 
     \item shear force: force applied perpendicularly to objects\nc{},
-    
+
     \item simply supported beam: a beam that has a pinned support on one end and
           a roller support on the other\nc{},
 
@@ -677,8 +664,11 @@ Change (LC), in which the respective assumption is used.
         along the beam.}
 
     \assume{beam_deflection}{Only relatively small deflections will be examined
-        (whereby the maximum deflection is at most \(10\%\) of the beam's
-        length).}
+        (whereby the maximum deflection is at most \texttt{SLENDER} (\(10\%\))
+        of the beam's length).}
+
+    \assume{beam_slope}{The deflection will have locally small slopes across the
+        beam.}
 
     \assume{deflection_differentiable}{The hypothetical deflection function
         should belong to at least the class of functions that are differentiable
@@ -686,6 +676,8 @@ Change (LC), in which the respective assumption is used.
 
     \assume{loading_integrable}{The loading function should belong to at least
         the class of functions that are integrable 4 times on \([0, L]\).}
+
+    \assume{beam_simply_supported}{The beam is simply supported.}
 
 \end{itemize}
 
@@ -703,17 +695,17 @@ on.
 {Curvature of a Plane}
 % #4 equation
 {
-    \[\frac{1}{\rho} = \frac{\frac{d^{2}y}{dx^{2}}}{(1+(\frac{dy}{dx})^{2})^{\frac{3}{2}}}\]
+    \[\frac{1}{\rho} = \frac{\frac{d^{2}f}{da^{2}}}{(1+(\frac{df}{da})^{2})^{\frac{3}{2}}}\]
 }
 % #5 description
-{ From elementary calculus, the curvature of a plane curve at a point \(Q(x,y)\)
-    of a curve may be expressed by the above equation, where
+{ From elementary calculus, the curvature of a plane curve at a point
+    \((a,f(a))\) of a curve may be expressed by the above equation, where
     \cite{BeerJohnston1981}:
 
     \begin{itemize}
-        \item \(\rho\) is the radius of curvature,
-        \item \(y\) is the vertical component of the point, and
-        \item \(x\) is the horizontal component of the point.
+        \item \(\rho\) is the radius of curvature ($1$),
+        \item \(f\) is the vertical component of the point ($1$), and
+        \item \(a\) is the horizontal component of the point ($1$).
     \end{itemize}
 }
 % #6 Notes
@@ -803,13 +795,14 @@ on.
 
     \[\frac{1}{\rho} = \frac{\frac{d^{2}y}{dx^{2}}}{(1+(\frac{dy}{dx})^{2})^{\frac{3}{2}}}\]
 
-    We may recognize that in the context of an abstract prismatic beam, the slope
-    \(\frac{dy}{dx}\) is relatively ``small'' (\aref{beam_deflection}). Similarly,
-    its square is also small. Considering it negligible, we may drop it:
+    We may recognize that in the context of an abstract prismatic beam, the
+    slope \(\frac{dy}{dx}\) is relatively ``small'' (\aref{beam_slope}).
+    Similarly, its square is also small. Considering it negligible, we may drop
+    it:
 
     \[\frac{1}{\rho} = \frac{d^{2}y}{dx^{2}}\]
 
-    However, substituting \(\frac{1}{\rho}\) from \tref{TM:PBPBA}, we obtain:
+    Substituting \(\frac{1}{\rho}\) from \tref{TM:PBPBA}, we obtain:
 
     \[\frac{d^{2}y}{dx^{2}} = \frac{M(x)}{EI}\]
 }
@@ -827,17 +820,23 @@ on.
 % #5 description
 { The above equation describes the relationship between a beam's deflection
     (\(y(x)\)) and the applied load (\(w(x)\)) for any point along the beam
-    (\(x\)). Notably,
+    (\(x\)). Notably, for a simply supported beam
+    (\aref{beam_simply_supported}), the ends observe no deflection, thus:
 
     \begin{itemize}
-        \item $y(0)=0$,
-        \item $y(L)=0$,
+        \item $y(0)=0$, and
+        \item $y(L)=0$.
+    \end{itemize}
+
+    Additionally, as there is no resistance to rotation at the ends, the moments
+    are zero at the ends (e.g., $M(0) = M(L) = 0$), and thus, as $M =
+        \frac{d^{2}}{dx^2} y$:
+
+    \begin{itemize}
         \item $\frac{d^{2}}{dx^2} y(0) = 0$, and
         \item $\frac{d^{2}}{dx^2} y(L) = 0$
     \end{itemize}
-
-    because the beam is simply supported (fixed at both ends implying no
-    vertical movement), and hence the moments at the ends are 0. }
+}
 % #6 Notes
 { None. }
 % #7 Source
@@ -919,7 +918,7 @@ identified in Sections~\ref{sec_theoretical} and~\ref{sec_gendef}. Notably,
         Description & The above output is the solution of the above defined BVP.             \\
                     & $L_B$ is the beam's length.                                            \\
                     & $E_B$ is the beam's modulus of elasticity (Young's modulus).           \\
-                    & $I_B$ is the beam's moment of inertia.                                 \\
+                    & $I_B$ is the beam's moment of second area.                             \\
                     & $w_{B}(x)$ is the function describing the load applied along the beam. \\
                     & $x$ is a point along the beam.                                         \\
                     & $y_{B}(x)$ is a function describing the deflection along the beam.     \\ \hline
@@ -1022,6 +1021,9 @@ qualities that the software is expected to exhibit.
     \item[R\refstepcounter{reqnum}\thereqnum \label{R_OutputInputs}:] The inputs
         of \progname{} should be displayed to the user before any meaningful
         computation begins.
+
+    \item[R\refstepcounter{reqnum}\thereqnum \label{R_ValidateInputs}:] The
+        provided inputs must be validated against \Cref{TblInputVar}.
 
     \item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate}:] The output
         variables (see \Cref{TblOutputVar}) should be calculated following the
@@ -1134,15 +1136,16 @@ the assumptions.
 % TM of TMs, GDs, DDs, and IMs
 \begin{table}[h!]
     \centering
-    \begin{tabular}{|c|c|c|c|c|c|c|c|}
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
         \hline
-                                    & \tref{TM:PC} & \tref{TM:PBPBA} & \tref{TM:OREC} & \tref{TM:EBBDE} & \ddref{dd_loading_function} & \iref{im_deflection} \\ \hline
-        \tref{TM:PC}                &              &                 &                &                 &                             &                      \\ \hline
-        \tref{TM:PBPBA}             &              &                 &                &                 &                             &                      \\ \hline
-        \tref{TM:OREC}              & X            & X               &                &                 &                             &                      \\ \hline
-        \tref{TM:EBBDE}             &              &                 & X              &                 &                             &                      \\ \hline
-        \ddref{dd_loading_function} &              &                 &                &                 &                             &                      \\ \hline
-        \iref{im_deflection}        &              &                 &                & X               & X                           &                      \\ \hline
+                                    & \tref{TM:PC} & \tref{TM:PBPBA} & \tref{TM:OREC} & \tref{TM:EBBDE} & \ddref{dd_loading_function} & \iref{im_deflection} & \gsref{deflection} \\ \hline
+        \tref{TM:PC}                &              &                 &                &                 &                             &                      &                    \\ \hline
+        \tref{TM:PBPBA}             &              &                 &                &                 &                             &                      &                    \\ \hline
+        \tref{TM:OREC}              & X            & X               &                &                 &                             &                      &                    \\ \hline
+        \tref{TM:EBBDE}             &              &                 & X              &                 &                             &                      &                    \\ \hline
+        \ddref{dd_loading_function} &              &                 &                &                 &                             &                      &                    \\ \hline
+        \iref{im_deflection}        &              &                 &                & X               & X                           &                      & X                  \\ \hline
+        \gsref{deflection}          &              &                 &                &                 &                             &                      &                    \\ \hline
     \end{tabular}
     \caption{Traceability Matrix Showing the Connections Between Items of Different Sections}
     \label{Table:trace}
@@ -1152,13 +1155,14 @@ the assumptions.
 % TM between IMs, Rs, and Data Constraints
 \begin{table}[h!]
     \centering
-    \begin{tabular}{|c|c|c|c|c|c|}
+    \begin{tabular}{|c|c|c|c|c|c|c|}
         \hline
-                              & \iref{im_deflection} & \ref{sec_DataConstraints} & \rref{R_Inputs} & \rref{R_OutputInputs} & \rref{R_Calculate} \\ \hline
-        \iref{im_deflection}  &                      & X                         & X               &                       &                    \\ \hline
-        \rref{R_Inputs}       &                      & X                         &                 &                       &                    \\ \hline
-        \rref{R_OutputInputs} &                      &                           & X               &                       &                    \\ \hline
-        \rref{R_Calculate}    &                      &                           & X               &                       &                    \\ \hline
+                                & \iref{im_deflection} & \ref{sec_DataConstraints} & \rref{R_Inputs} & \rref{R_OutputInputs} & \rref{R_ValidateInputs} & \rref{R_Calculate} \\ \hline
+        \iref{im_deflection}    &                      & X                         & X               &                       &                         &                    \\ \hline
+        \rref{R_Inputs}         &                      & X                         &                 &                       &                         &                    \\ \hline
+        \rref{R_OutputInputs}   &                      &                           & X               &                       &                         &                    \\ \hline
+        \rref{R_ValidateInputs} &                      &                           & X               &                       &                         &                    \\ \hline
+        \rref{R_Calculate}      &                      &                           & X               &                       &                         &                    \\ \hline
     \end{tabular}
     \caption{Traceability Matrix Showing the Connections Between Requirements and Instance Models}
     \label{Table:R_trace}
@@ -1183,7 +1187,18 @@ software using it and should be followed by any developer using this document.
 
 \section{Values of Auxiliary Constants}
 
-There are no auxiliary constants needed for this SRS document.
+\begin{table}[H]
+    \caption{Auxiliar Constants}
+    \label{TblAuxConstants}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{longtable}{r c c p{5cm}}
+        \toprule
+        \textbf{Label}   & \textbf{Value} & \textbf{Unit} & \textbf{Description}                   \\
+        \midrule
+        \texttt{SLENDER} & $\frac{1}{10}$ & $1$           & Maximum observable deflection allowed. \\
+        \bottomrule
+    \end{longtable}
+\end{table}
 
 \newpage
 
