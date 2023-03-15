@@ -1,51 +1,11 @@
-module Drasil.BmBnd.Body (pidODEInfo, printSetting, si, srs, fullSI) where
+module Drasil.BmBnd.Body where
 
-import Language.Drasil
 import Drasil.SRSDocument
-import qualified Drasil.DocLang.SRS as SRS (inModel)
-import Theory.Drasil (DataDefinition, GenDefn, InstanceModel, TheoryModel)
+import Language.Drasil
 import qualified Language.Drasil.Sentence.Combinators as S
+import Theory.Drasil (DataDefinition, GenDefn, InstanceModel, TheoryModel)
 
-import Data.Drasil.Concepts.Documentation (doccon, doccon', srsDomains)
 import qualified Data.Drasil.Concepts.Documentation as Doc (srs)
-import Data.Drasil.Concepts.Math (mathcon, mathcon', ode)
-import Data.Drasil.Concepts.Software (program)
-import Data.Drasil.ExternalLibraries.ODELibraries
-       (apacheODESymbols, arrayVecDepVar, odeintSymbols, osloSymbols,
-        scipyODESymbols)
-import qualified Data.Drasil.TheoryConcepts as IDict (dataDefn)
-import Data.Drasil.Quantities.Physics (physicscon)
-import Data.Drasil.Concepts.PhysicalProperties (physicalcon)
-import Data.Drasil.Concepts.Physics (angular, linear) -- FIXME: should not be needed?
-import Data.Drasil.Quantities.PhysicalProperties (mass)
-import Data.Drasil.SI_Units (second, kilogram)
-import Data.Drasil.Quantities.Math (posInf, negInf)
-
-import Drasil.BmBnd.Assumptions (assumptions)
-import Drasil.BmBnd.Changes (likelyChgs)
-import Drasil.BmBnd.Concepts (acronyms, pidControllerSystem,
-  pidC, concepts, defs)
-import Drasil.BmBnd.DataDefs (dataDefinitions)
-import Drasil.BmBnd.GenDefs (genDefns)
-import Drasil.BmBnd.GenSysDesc
-       (gsdSysContextFig, gsdSysContextList, gsdSysContextP1, gsdSysContextP2,
-        gsduserCharacteristics)
-import Drasil.BmBnd.IModel (instanceModels, imPD)
-import Drasil.BmBnd.IntroSection
-       (introDocOrg, introPara, introPurposeOfDoc, introUserChar1,
-        introUserChar2, introscopeOfReq)
-import Drasil.BmBnd.References (citations)
-import Drasil.BmBnd.Requirements (funcReqs, nonfuncReqs)
-import Drasil.BmBnd.SpSysDesc
-       (goals, sysFigure, sysGoalInput, sysParts, sysProblemDesc)
-import Drasil.BmBnd.TModel (theoreticalModels)
-import Drasil.BmBnd.Unitals (symbols, inputs, outputs, inputsUC,
-  inpConstrained, pidConstants, pidDqdConstants, opProcessVariable)
-import Drasil.BmBnd.ODEs (pidODEInfo)
-import Language.Drasil.Code (quantvar, listToArray)
-
-naveen :: Person
-naveen = person "Naveen Ganesh" "Muralidharan"
 
 srs :: Document
 srs = mkDoc mkSRS (S.forGen titleize phrase) si
@@ -57,108 +17,70 @@ printSetting :: PrintingInformation
 printSetting = piSys fullSI Equational defaultConfiguration
 
 mkSRS :: SRSDecl
-mkSRS
-  = [TableOfContents,
-    RefSec $ RefProg intro [TUnits, tsymb [TSPurpose, SymbOrder], TAandA],
-     IntroSec $
-       IntroProg introPara (phrase pidControllerSystem)
-         [IPurpose [introPurposeOfDoc], IScope introscopeOfReq,
-          IChar introUserChar1 introUserChar2 [],
-          IOrgSec introDocOrg IDict.dataDefn (SRS.inModel [] [])
-            (S "The instance model referred as" +:+ refS imPD +:+
-               S "provides an"
-               +:+ titleize ode +:+ sParen (short ode)
-               +:+ S "that models the"
-               +:+ phrase pidC)],
-     GSDSec $
-       GSDProg
-         [SysCntxt
-            [gsdSysContextP1, LlC gsdSysContextFig, gsdSysContextP2,
-             gsdSysContextList],
-          UsrChars [gsduserCharacteristics], SystCons [] []],
-     SSDSec $
-       SSDProg
-         [SSDProblem $
-            PDProg sysProblemDesc []
-              [TermsAndDefs Nothing defs,
-               PhySysDesc pidControllerSystem sysParts sysFigure [],
-               Goals sysGoalInput],
-          SSDSolChSpec $
-            SCSProg
-              [Assumptions, TMs [] (Label : stdFields),
-               GDs [] (Label : stdFields) HideDerivation,
-               DDs [] ([Label, Symbol, Units] ++ stdFields) ShowDerivation,
-               IMs []
-                 ([Label, Input, Output, InConstraints, OutConstraints] ++
-                    stdFields)
-                 ShowDerivation,
-               Constraints EmptyS inputsUC]],
-
-     ReqrmntSec $ ReqsProg [FReqsSub EmptyS [], NonFReqsSub], LCsSec,
-     TraceabilitySec $ TraceabilityProg $ traceMatStandard si, Bibliography]
+mkSRS = []
 
 si :: SystemInformation
-si = SI {
-  _sys = pidControllerSystem,
-  _kind = Doc.srs,
-  _authors = [naveen],
-  _purpose = [],
-  _background  = [],
-  _quants = symbolsAll,
-  _concepts = [] :: [DefinedQuantityDict],
-  _datadefs = dataDefinitions,
-  _instModels = instanceModels,
-  _configFiles = [],
-  _inputs = inputs,
-  _outputs = outputs,
-  _defSequence = [] :: [Block SimpleQDef],
-  _constraints = map cnstrw inpConstrained,
-  _constants = pidConstants,
-  _sysinfodb = symbMap,
-  _usedinfodb = usedDB,
-   refdb = refDB}
-
-symbolsAll :: [QuantityDict]
-symbolsAll = symbols ++ map qw pidDqdConstants ++ map qw pidConstants
-  ++ scipyODESymbols ++ osloSymbols ++ apacheODESymbols ++ odeintSymbols 
-  ++ map qw [listToArray $ quantvar opProcessVariable, arrayVecDepVar pidODEInfo]
+si =
+  SI
+    { _sys = example
+    , _kind = Doc.srs
+    , _authors = [authorName]
+    , _background = []
+    , _purpose = []
+    , _quants = [] :: [QuantityDict]
+    , _concepts = [] :: [DefinedQuantityDict]
+    , _instModels = [] :: [InstanceModel]
+    , _datadefs = [] :: [DataDefinition]
+    , _configFiles = []
+    , _inputs = [] :: [QuantityDict]
+    , _outputs = [] :: [QuantityDict]
+    , _defSequence = [] :: [Block SimpleQDef]
+    , _constraints = [] :: [ConstrainedChunk]
+    , _constants = [] :: [ConstQDef]
+    , _sysinfodb = symbMap
+    , _usedinfodb = usedDB
+    , refdb = refDB
+    }
 
 symbMap :: ChunkDB
-symbMap = cdb (map qw physicscon ++ symbolsAll ++ [qw mass, qw posInf, qw negInf])
-  (nw pidControllerSystem : [nw program, nw angular, nw linear] 
-  ++ map nw doccon ++ map nw doccon' ++ concepts ++ map nw mathcon
-  ++ map nw mathcon' ++ map nw [second, kilogram] ++ map nw symbols 
-  ++ map nw physicscon ++ map nw acronyms ++ map nw physicalcon)
-  (map cw inpConstrained ++ srsDomains)
-  (map unitWrapper [second, kilogram])
-  dataDefinitions
-  instanceModels
-  genDefns
-  theoreticalModels
-  conceptInstances
-  ([] :: [Section])
-  ([] :: [LabelledContent])
-  ([] :: [Reference])
+symbMap =
+  cdb
+    ([] :: [QuantityDict])
+    [nw example]
+    ([] :: [ConceptChunk])
+    ([] :: [UnitDefn])
+    ([] :: [DataDefinition])
+    ([] :: [InstanceModel])
+    ([] :: [GenDefn])
+    ([] :: [TheoryModel])
+    ([] :: [ConceptInstance])
+    ([] :: [Section])
+    ([] :: [LabelledContent])
+    ([] :: [Reference])
 
 usedDB :: ChunkDB
-usedDB = cdb ([] :: [QuantityDict]) (map nw acronyms ++ map nw symbolsAll)
-  ([] :: [ConceptChunk])
-  ([] :: [UnitDefn])
-  ([] :: [DataDefinition])
-  ([] :: [InstanceModel])
-  ([] :: [GenDefn])
-  ([] :: [TheoryModel])
-  ([] :: [ConceptInstance])
-  ([] :: [Section])
-  ([] :: [LabelledContent])
-  ([] :: [Reference])
+usedDB =
+  cdb
+    ([] :: [QuantityDict])
+    ([] :: [IdeaDict])
+    ([] :: [ConceptChunk])
+    ([] :: [UnitDefn])
+    ([] :: [DataDefinition])
+    ([] :: [InstanceModel])
+    ([] :: [GenDefn])
+    ([] :: [TheoryModel])
+    ([] :: [ConceptInstance])
+    ([] :: [Section])
+    ([] :: [LabelledContent])
+    ([] :: [Reference])
 
 refDB :: ReferenceDB
-refDB = rdb citations conceptInstances
+refDB = rdb [] []
 
-conceptInstances :: [ConceptInstance]
-conceptInstances = assumptions ++ goals ++ funcReqs ++ nonfuncReqs ++ likelyChgs
+-- MOVE TO CONCEPTS
+example :: CI -- name of example
+example = commonIdeaWithDict "example" (pn "Template") "Template" []
 
-stdFields :: Fields
-stdFields
-  = [DefiningEquation, Description Verbose IncludeUnits, Notes, Source, RefBy]
+-- MOVE TO DATA.PEOPLE
+authorName :: Person
+authorName = person "Author" "Name"
