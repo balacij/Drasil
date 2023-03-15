@@ -7,12 +7,130 @@
 \usepackage{amssymb}
 \usepackage{mathtools}
 \usepackage{unicode-math}
+\usepackage{tabu}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage{graphics}
+\usepackage{svg}
+\usepackage{filecontents}
+\usepackage[backend=bibtex]{biblatex}
+\usepackage{url}
 \setmathfont{Latin Modern Math}
 \newcommand{\gt}{\ensuremath >}
 \newcommand{\lt}{\ensuremath <}
-\title{Software Requirements Specification for Template}
-\author{Author Name}
+\global\tabulinesep=1mm
+\bibliography{bibfile}
+\title{Software Requirements Specification for Beam Bending Analysis Program}
+\author{Jason Balaci}
 \begin{document}
 \maketitle
+\tableofcontents
 \newpage
+\section{Reference Material}
+\label{Sec:RefMat}
+This section records information for easy reference.
+
+\subsection{Table of Units}
+\label{Sec:ToU}
+The unit system used throughout is SI (Système International d'Unités). In addition to the basic units, several derived units are also used. For each unit, the \hyperref[Table:ToU]{Table of Units} lists the symbol, a description and the SI name.
+
+\subsection{Table of Symbols}
+\label{Sec:ToS}
+The symbols used in this document are summarized in the \hyperref[Table:ToS]{Table of Symbols} along with their units. The symbols are listed in alphabetical order.
+
+\subsection{Abbreviations and Acronyms}
+\label{Sec:TAbbAcc}
+\begin{longtable}{l l}
+\toprule
+\textbf{Abbreviation} & \textbf{Full Form}
+\\
+\midrule
+\endhead
+BmBnd & Beam Bending Analysis Program
+\\
+\bottomrule
+\caption{Abbreviations and Acronyms}
+\label{Table:TAbbAcc}
+\end{longtable}
+\section{Introduction}
+\label{Sec:Intro}
+
+
+The following section provides an overview of the Software Requirements Specification (SRS) for . This section explains the purpose of this document, the scope of the requirements, the characteristics of the intended reader, and the organization of the document.
+
+\section{General System Description}
+\label{Sec:GenSysDesc}
+This section provides general information about the system. It identifies the interfaces between the system and its environment, describes the user characteristics, and lists the system constraints.
+
+\section{Specific System Description}
+\label{Sec:SpecSystDesc}
+This section first presents the problem description, which gives a high-level view of the problem to be solved. This is followed by the solution characteristics specification, which presents the assumptions, theories, and definitions that are used.
+
+\section{Requirements}
+\label{Sec:Requirements}
+This section provides the functional requirements, the tasks and behaviours that the software is expected to complete, and the non-functional requirements, the qualities that the software is expected to exhibit.
+
+\section{Likely Changes}
+\label{Sec:LCs}
+This section lists the likely changes to be made to the software.
+
+\section{Traceability Matrices and Graphs}
+\label{Sec:TraceMatrices}
+The purpose of the traceability matrices is to provide easy references on what has to be additionally modified if a certain component is changed. Every time a component is changed, the items in the column of that component that are marked with an ``X'' should be modified as well. \hyperref[Table:TraceMatAvsA]{Tab:TraceMatAvsA} shows the dependencies of assumptions on the assumptions. \hyperref[Table:TraceMatAvsAll]{Tab:TraceMatAvsAll} shows the dependencies of data definitions, theoretical models, general definitions, instance models, requirements, likely changes, and unlikely changes on the assumptions. \hyperref[Table:TraceMatRefvsRef]{Tab:TraceMatRefvsRef} shows the dependencies of data definitions, theoretical models, general definitions, and instance models with each other. \hyperref[Table:TraceMatAllvsR]{Tab:TraceMatAllvsR} shows the dependencies of on the data definitions, theoretical models, general definitions, and instance models.
+
+The purpose of the traceability graphs is also to provide easy references on what has to be additionally modified if a certain component is changed. The arrows in the graphs represent dependencies. The component at the tail of an arrow is depended on by the component at the head of that arrow. Therefore, if a component is changed, the components that it points to should also be changed. \hyperref[Figure:TraceGraphAvsA]{Fig:TraceGraphAvsA} shows the dependencies of assumptions on the assumptions. \hyperref[Figure:TraceGraphAvsAll]{Fig:TraceGraphAvsAll} shows the dependencies of data definitions, theoretical models, general definitions, instance models, requirements, likely changes, and unlikely changes on the assumptions. \hyperref[Figure:TraceGraphRefvsRef]{Fig:TraceGraphRefvsRef} shows the dependencies of data definitions, theoretical models, general definitions, and instance models with each other. \hyperref[Figure:TraceGraphAllvsR]{Fig:TraceGraphAllvsR} shows the dependencies of on the data definitions, theoretical models, general definitions, and instance models. \hyperref[Figure:TraceGraphAllvsAll]{Fig:TraceGraphAllvsAll} shows the dependencies of dependencies of assumptions, models, definitions, requirements, goals, and changes with each other.
+
+\begin{figure}
+\begin{center}
+\includesvg[width=\textwidth, inkscapelatex = false]{../../../../traceygraphs/bmbnd/avsa}
+\caption{TraceGraphAvsA}
+\label{Figure:TraceGraphAvsA}
+\end{center}
+\end{figure}
+\begin{figure}
+\begin{center}
+\includesvg[width=\textwidth, inkscapelatex = false]{../../../../traceygraphs/bmbnd/avsall}
+\caption{TraceGraphAvsAll}
+\label{Figure:TraceGraphAvsAll}
+\end{center}
+\end{figure}
+\begin{figure}
+\begin{center}
+\includesvg[width=\textwidth, inkscapelatex = false]{../../../../traceygraphs/bmbnd/refvsref}
+\caption{TraceGraphRefvsRef}
+\label{Figure:TraceGraphRefvsRef}
+\end{center}
+\end{figure}
+\begin{figure}
+\begin{center}
+\includesvg[width=\textwidth, inkscapelatex = false]{../../../../traceygraphs/bmbnd/allvsr}
+\caption{TraceGraphAllvsR}
+\label{Figure:TraceGraphAllvsR}
+\end{center}
+\end{figure}
+\begin{figure}
+\begin{center}
+\includesvg[width=\textwidth, inkscapelatex = false]{../../../../traceygraphs/bmbnd/allvsall}
+\caption{TraceGraphAllvsAll}
+\label{Figure:TraceGraphAllvsAll}
+\end{center}
+\end{figure}
+For convenience, the following graphs can be found at the links below:
+
+\begin{itemize}
+\item{\hyperref{../../../../traceygraphs/bmbnd/avsa.svg}{}{}{TraceGraphAvsA}}
+\item{\hyperref{../../../../traceygraphs/bmbnd/avsall.svg}{}{}{TraceGraphAvsAll}}
+\item{\hyperref{../../../../traceygraphs/bmbnd/refvsref.svg}{}{}{TraceGraphRefvsRef}}
+\item{\hyperref{../../../../traceygraphs/bmbnd/allvsr.svg}{}{}{TraceGraphAllvsR}}
+\item{\hyperref{../../../../traceygraphs/bmbnd/allvsall.svg}{}{}{TraceGraphAllvsAll}}
+\end{itemize}
+\section{References}
+\label{Sec:References}
+\begin{filecontents*}{bibfile.bib}
+\end{filecontents*}
+\nocite{*}
+\bibstyle{ieeetr}
+\printbibliography[heading=none]
 \end{document}
