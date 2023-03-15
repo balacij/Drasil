@@ -1,8 +1,8 @@
-module Drasil.PDController.IntroSection where
+module Drasil.BmBnd.IntroSection where
 
 import Data.Drasil.Citations (smithLai2005)
 
-import Drasil.PDController.Concepts
+import Drasil.BmBnd.Concepts
 import Language.Drasil
 import Language.Drasil.Chunk.Concept.NamedCombinators
 import qualified Language.Drasil.Sentence.Combinators as S

@@ -1,10 +1,10 @@
-module Drasil.PDController.Changes where
+module Drasil.BmBnd.Changes where
 
 import Data.Drasil.Concepts.Documentation (likeChgDom)
 import Data.Drasil.Concepts.PhysicalProperties (mass)
 
-import Drasil.PDController.Assumptions
-import Drasil.PDController.Concepts
+import Drasil.BmBnd.Assumptions
+import Drasil.BmBnd.Concepts
 import Language.Drasil
 import Language.Drasil.Chunk.Concept.NamedCombinators
 

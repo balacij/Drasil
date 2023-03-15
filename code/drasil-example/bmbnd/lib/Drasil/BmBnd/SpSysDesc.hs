@@ -1,8 +1,8 @@
-module Drasil.PDController.SpSysDesc where
+module Drasil.BmBnd.SpSysDesc where
 
 import Data.Drasil.Concepts.Documentation (goalStmtDom, physicalSystem)
 
-import Drasil.PDController.Concepts
+import Drasil.BmBnd.Concepts
 import Language.Drasil
 import Language.Drasil.Chunk.Concept.NamedCombinators
 

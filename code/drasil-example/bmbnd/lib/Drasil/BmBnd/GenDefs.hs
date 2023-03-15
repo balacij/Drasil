@@ -1,18 +1,18 @@
 {-# LANGUAGE PostfixOperators #-}
-module Drasil.PDController.GenDefs where
+module Drasil.BmBnd.GenDefs where
 
 import Data.Drasil.Quantities.PhysicalProperties (mass)
 import Data.Drasil.Concepts.Math (equation)
-import Drasil.PDController.Assumptions
-import Drasil.PDController.Concepts
-import Drasil.PDController.References
-import Drasil.PDController.TModel
+import Drasil.BmBnd.Assumptions
+import Drasil.BmBnd.Concepts
+import Drasil.BmBnd.References
+import Drasil.BmBnd.TModel
 import Language.Drasil
 import Theory.Drasil (GenDefn, gd, othModel')
 import Language.Drasil.Chunk.Concept.NamedCombinators
 import qualified Language.Drasil.Sentence.Combinators as S
 import Data.Drasil.Citations ( pidWiki )
-import Drasil.PDController.Unitals
+import Drasil.BmBnd.Unitals
 
 genDefns :: [GenDefn]
 genDefns = [gdPowerPlant]

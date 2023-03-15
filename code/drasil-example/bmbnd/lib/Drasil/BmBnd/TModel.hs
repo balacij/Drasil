@@ -1,18 +1,18 @@
 {-# LANGUAGE PostfixOperators #-}
-module Drasil.PDController.TModel where
+module Drasil.BmBnd.TModel where
 
 import Data.Drasil.Quantities.PhysicalProperties (mass)
 import Data.Drasil.Quantities.Physics (time)
-import Drasil.PDController.Assumptions
-import Drasil.PDController.Concepts
-import Drasil.PDController.References
+import Drasil.BmBnd.Assumptions
+import Drasil.BmBnd.Concepts
+import Drasil.BmBnd.References
 import Language.Drasil
 import qualified Language.Drasil as DrasilLang
 import Theory.Drasil (TheoryModel, tm, othModel')
 import Language.Drasil.Chunk.Concept.NamedCombinators
 import qualified Language.Drasil.Sentence.Combinators as S
 import Data.Drasil.Citations(laplaceWiki)
-import Drasil.PDController.Unitals
+import Drasil.BmBnd.Unitals
 import Data.Drasil.Quantities.Math (posInf, negInf)
 
 theoreticalModels :: [TheoryModel]

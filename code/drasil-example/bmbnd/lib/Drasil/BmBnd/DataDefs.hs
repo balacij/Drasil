@@ -1,11 +1,11 @@
 {-# LANGUAGE PostfixOperators #-}
-module Drasil.PDController.DataDefs where
+module Drasil.BmBnd.DataDefs where
 
-import Drasil.PDController.Concepts
-import Drasil.PDController.Assumptions
-import Drasil.PDController.Unitals
-import Drasil.PDController.References
-import Drasil.PDController.TModel
+import Drasil.BmBnd.Concepts
+import Drasil.BmBnd.Assumptions
+import Drasil.BmBnd.Unitals
+import Drasil.BmBnd.References
+import Drasil.BmBnd.TModel
 import Data.Drasil.Concepts.Math (equation)
 import Language.Drasil
 import Theory.Drasil (DataDefinition, ddE)

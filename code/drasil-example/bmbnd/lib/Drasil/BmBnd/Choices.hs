@@ -1,4 +1,4 @@
-module Drasil.PDController.Choices where
+module Drasil.BmBnd.Choices where
 
 import Language.Drasil.Code (AuxFile(..), Choices(..), CodeSpec, Comments(..), 
   ConstantRepr(..), ConstantStructure(..), ConstraintBehaviour(..), 
@@ -8,7 +8,7 @@ import Language.Drasil.Code (AuxFile(..), Choices(..), CodeSpec, Comments(..),
 
 import Data.Drasil.ExternalLibraries.ODELibraries (scipyODEPckg, osloPckg,
   apacheODEPckg, odeintPckg)
-import Drasil.PDController.Body (pidODEInfo, fullSI)
+import Drasil.BmBnd.Body (pidODEInfo, fullSI)
 
 codeSpecs :: CodeSpec
 codeSpecs = codeSpec fullSI codeChoices []

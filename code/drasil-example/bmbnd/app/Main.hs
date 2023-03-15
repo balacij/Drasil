@@ -1,7 +1,7 @@
 module Main (main) where
 
 import GHC.IO.Encoding (setLocaleEncoding, utf8)
-import Drasil.PDController.Body (printSetting, srs, fullSI)
+import Drasil.BmBnd.Body (printSetting, srs, fullSI)
 import Language.Drasil.Generate (gen, typeCheckSI, DocSpec(DocSpec), DocType(SRS), Format(..), docChoices)
 
 

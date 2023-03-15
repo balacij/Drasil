@@ -1,4 +1,4 @@
-module Drasil.PDController.Concepts where
+module Drasil.BmBnd.Concepts where
 
 import Data.Drasil.Concepts.Documentation
        (assumption, goalStmt, physSyst, requirement, srs, typUnc)

@@ -1,4 +1,4 @@
-module Drasil.PDController.References where
+module Drasil.BmBnd.References where
 import Data.Drasil.Citations (smithLai2005, laplaceWiki, pidWiki)
 
 import Language.Drasil

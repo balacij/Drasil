@@ -1,9 +1,9 @@
-module Drasil.PDController.GenSysDesc where
+module Drasil.BmBnd.GenSysDesc where
 
 import Data.Drasil.Concepts.Documentation
        (environment, software, softwareSys, sysCont, system, user)
 
-import Drasil.PDController.Concepts
+import Drasil.BmBnd.Concepts
 import Language.Drasil
 import Language.Drasil.Chunk.Concept.NamedCombinators
 

@@ -1,19 +1,19 @@
 {-# LANGUAGE PostfixOperators #-}
-module Drasil.PDController.IModel where
+module Drasil.BmBnd.IModel where
 
 import Data.Drasil.Quantities.Physics (time)
-import Drasil.PDController.Assumptions
-import Drasil.PDController.Concepts
-import Drasil.PDController.DataDefs
-import Drasil.PDController.GenDefs
-import Drasil.PDController.References
-import Drasil.PDController.TModel
+import Drasil.BmBnd.Assumptions
+import Drasil.BmBnd.Concepts
+import Drasil.BmBnd.DataDefs
+import Drasil.BmBnd.GenDefs
+import Drasil.BmBnd.References
+import Drasil.BmBnd.TModel
 import Language.Drasil
 import Theory.Drasil (InstanceModel, im, qwC, newDEModel')
 import Utils.Drasil (weave)
 import Language.Drasil.Chunk.Concept.NamedCombinators
 import qualified Language.Drasil.Sentence.Combinators as S
-import Drasil.PDController.Unitals
+import Drasil.BmBnd.Unitals
 
 instanceModels :: [InstanceModel]
 instanceModels = [imPD]

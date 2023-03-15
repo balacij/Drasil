@@ -1,4 +1,4 @@
-module Drasil.PDController.Body (pidODEInfo, printSetting, si, srs, fullSI) where
+module Drasil.BmBnd.Body (pidODEInfo, printSetting, si, srs, fullSI) where
 
 import Language.Drasil
 import Drasil.SRSDocument
@@ -21,27 +21,27 @@ import Data.Drasil.Quantities.PhysicalProperties (mass)
 import Data.Drasil.SI_Units (second, kilogram)
 import Data.Drasil.Quantities.Math (posInf, negInf)
 
-import Drasil.PDController.Assumptions (assumptions)
-import Drasil.PDController.Changes (likelyChgs)
-import Drasil.PDController.Concepts (acronyms, pidControllerSystem,
+import Drasil.BmBnd.Assumptions (assumptions)
+import Drasil.BmBnd.Changes (likelyChgs)
+import Drasil.BmBnd.Concepts (acronyms, pidControllerSystem,
   pidC, concepts, defs)
-import Drasil.PDController.DataDefs (dataDefinitions)
-import Drasil.PDController.GenDefs (genDefns)
-import Drasil.PDController.GenSysDesc
+import Drasil.BmBnd.DataDefs (dataDefinitions)
+import Drasil.BmBnd.GenDefs (genDefns)
+import Drasil.BmBnd.GenSysDesc
        (gsdSysContextFig, gsdSysContextList, gsdSysContextP1, gsdSysContextP2,
         gsduserCharacteristics)
-import Drasil.PDController.IModel (instanceModels, imPD)
-import Drasil.PDController.IntroSection
+import Drasil.BmBnd.IModel (instanceModels, imPD)
+import Drasil.BmBnd.IntroSection
        (introDocOrg, introPara, introPurposeOfDoc, introUserChar1,
         introUserChar2, introscopeOfReq)
-import Drasil.PDController.References (citations)
-import Drasil.PDController.Requirements (funcReqs, nonfuncReqs)
-import Drasil.PDController.SpSysDesc
+import Drasil.BmBnd.References (citations)
+import Drasil.BmBnd.Requirements (funcReqs, nonfuncReqs)
+import Drasil.BmBnd.SpSysDesc
        (goals, sysFigure, sysGoalInput, sysParts, sysProblemDesc)
-import Drasil.PDController.TModel (theoreticalModels)
-import Drasil.PDController.Unitals (symbols, inputs, outputs, inputsUC,
+import Drasil.BmBnd.TModel (theoreticalModels)
+import Drasil.BmBnd.Unitals (symbols, inputs, outputs, inputsUC,
   inpConstrained, pidConstants, pidDqdConstants, opProcessVariable)
-import Drasil.PDController.ODEs (pidODEInfo)
+import Drasil.BmBnd.ODEs (pidODEInfo)
 import Language.Drasil.Code (quantvar, listToArray)
 
 naveen :: Person
