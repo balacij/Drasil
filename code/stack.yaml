@@ -52,6 +52,7 @@ packages:
 - drasil-docLang
 - drasil-metadata
 - drasil-website
+- drasil-example/bmbnd
 - drasil-example/dblpendulum
 - drasil-example/sglpendulum
 - drasil-example/gamephysics

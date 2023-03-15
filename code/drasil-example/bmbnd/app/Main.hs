@@ -2,8 +2,7 @@ module Main (main) where
 
 import GHC.IO.Encoding (setLocaleEncoding, utf8)
 import Drasil.PDController.Body (printSetting, srs, fullSI)
-import Drasil.PDController.Choices (codeChoices, codeSpecs)
-import Language.Drasil.Generate (gen, typeCheckSI, genCode, genDot, genLog, DocSpec(DocSpec), DocType(SRS), Format(..), docChoices)
+import Language.Drasil.Generate (gen, typeCheckSI, DocSpec(DocSpec), DocType(SRS), Format(..), docChoices)
 
 
 main :: IO ()
