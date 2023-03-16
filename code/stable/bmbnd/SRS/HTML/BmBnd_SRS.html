@@ -46,15 +46,31 @@
           </li>
           <li>
             <a href=#Sec:Intro>Introduction</a>
-            <ul class="list"></ul>
+            <ul class="list">
+              <li><a href=#Sec:DocPurpose>Purpose of Document</a></li>
+              <li><a href=#Sec:ReqsScope>Scope of Requirements</a></li>
+              <li>
+                <a href=#Sec:ReaderChars>Characteristics of Intended Reader</a>
+              </li>
+            </ul>
           </li>
           <li>
             <a href=#Sec:GenSysDesc>General System Description</a>
-            <ul class="list"></ul>
+            <ul class="list">
+              <li><a href=#Sec:SysContext>System Context</a></li>
+              <li><a href=#Sec:UserChars>User Characteristics</a></li>
+              <li><a href=#Sec:SysConstraints>System Constraints</a></li>
+            </ul>
           </li>
           <li>
             <a href=#Sec:SpecSystDesc>Specific System Description</a>
             <ul class="list">
+              <li>
+                <a href=#Sec:ProbDesc>Problem Description</a>
+                <ul class="list">
+                  <li><a href=#Sec:GoalStmt>Goal Statements</a></li>
+                </ul>
+              </li>
               <li>
                 <a href=#Sec:SolCharSpec>Solution Characteristics Specification</a>
                 <ul class="list">
@@ -130,13 +146,77 @@
                   <th>Units</th>
                 </tr>
                 <tr>
-                  <td><em>w<sub>B</sub></em></td>
-                  <td>Loading function</td>
+                  <td><em>a<sub>0</sub></em></td>
+                  <td>Coefficient of w_B's term of power 0</td>
                   <td><em>\(\frac{\text{N}}{\text{m}}\)</em></td>
                 </tr>
                 <tr>
+                  <td><em>a<sub>1</sub></em></td>
+                  <td>Coefficient of w_B's term of power 1</td>
+                  <td><em>\(\frac{\text{N}}{\text{m}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>a<sub>2</sub></em></td>
+                  <td>Coefficient of w_B's term of power 2</td>
+                  <td><em>\(\frac{\text{N}}{\text{m}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>a<sub>3</sub></em></td>
+                  <td>Coefficient of w_B's term of power 3</td>
+                  <td><em>\(\frac{\text{N}}{\text{m}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>E</em></td>
+                  <td>Modulus of elasticity of the abstract beam</td>
+                  <td><em>Pa</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>B</sub></em></td>
+                  <td>Modulus of elasticity of the beam</td>
+                  <td><em>Pa</em></td>
+                </tr>
+                <tr>
+                  <td><em>I</em></td>
+                  <td>
+                    Moment of second area of a cross-section of the abstract beam
+                  </td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
+                  <td><em>I<sub>B</sub></em></td>
+                  <td>Moment of second area of a cross-section of the beam</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
+                  <td><em>L</em></td>
+                  <td>Length of the abstract beam</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
+                  <td><em>L<sub>B</sub></em></td>
+                  <td>Length of the beam</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
+                  <td><em>w<sub>B</sub></em></td>
+                  <td>Load at a particular point along the beam</td>
+                  <td><em>N</em></td>
+                </tr>
+                <tr>
                   <td><em>x</em></td>
-                  <td>Point</td>
+                  <td>
+                    One-dimensional point along the beam, from the left-hand side (at the pinned support)
+                  </td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
+                  <td><em>y</em></td>
+                  <td>Deflection at a particular point along the abstract beam</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
+                  <td><em>y<sub>B</sub></em></td>
+                  <td>Deflection at a particular point along the beam</td>
                   <td><em>m</em></td>
                 </tr>
               </table>
@@ -171,6 +251,28 @@
         <p class="paragraph">
           The following section provides an overview of the Software Requirements Specification (SRS) for . This section explains the purpose of this document, the scope of the requirements, the characteristics of the intended reader, and the organization of the document.
         </p>
+        <div id="Sec:DocPurpose">
+          <div class="subsection">
+            <h2>Purpose of Document</h2>
+            <p class="paragraph">
+              This document will be used as a starting point for subsequent development phases, including writing the design specification and the software verification and validation plan. The design document will show how the requirements are to be realized, including decisions on the numerical algorithms and programming environment. The verification and validation plan will show the steps that will be used to increase confidence in the software documentation and the implementation. Although the SRS fits in a series of documents that follow the so-called waterfall model, the actual development process is not constrained in any way. Even when the waterfall model is not followed, as Parnas and Clements point out <a href=#parnasClements1986>parnasClements1986</a>, the most logical way to present the documentation is still to "fake" a rational design process.
+            </p>
+          </div>
+        </div>
+        <div id="Sec:ReqsScope">
+          <div class="subsection">
+            <h2>Scope of Requirements</h2>
+            <p class="paragraph">The scope of the requirements includes .</p>
+          </div>
+        </div>
+        <div id="Sec:ReaderChars">
+          <div class="subsection">
+            <h2>Characteristics of Intended Reader</h2>
+            <p class="paragraph">
+              Reviewers of this documentation should have an understanding of. The users of BmBnd can have a lower level of expertise, as explained in <a href=#Sec:UserChars>Sec:User Characteristics</a>.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
     <div id="Sec:GenSysDesc">
@@ -179,6 +281,21 @@
         <p class="paragraph">
           This section provides general information about the system. It identifies the interfaces between the system and its environment, describes the user characteristics, and lists the system constraints.
         </p>
+        <div id="Sec:SysContext">
+          <div class="subsection"><h2>System Context</h2></div>
+        </div>
+        <div id="Sec:UserChars">
+          <div class="subsection">
+            <h2>User Characteristics</h2>
+            <p class="paragraph">Hello world!.</p>
+          </div>
+        </div>
+        <div id="Sec:SysConstraints">
+          <div class="subsection">
+            <h2>System Constraints</h2>
+            <p class="paragraph">There are no system constraints.</p>
+          </div>
+        </div>
       </div>
     </div>
     <div id="Sec:SpecSystDesc">
@@ -187,6 +304,25 @@
         <p class="paragraph">
           This section first presents the problem description, which gives a high-level view of the problem to be solved. This is followed by the solution characteristics specification, which presents the assumptions, theories, and definitions that are used.
         </p>
+        <div id="Sec:ProbDesc">
+          <div class="subsection">
+            <h2>Problem Description</h2>
+            <p class="paragraph">A system is needed to .</p>
+            <div id="Sec:GoalStmt">
+              <div class="subsubsection">
+                <h3>Goal Statements</h3>
+                <p class="paragraph">Given , the goal statements are:</p>
+                <div class="list">
+                  <p>
+                    <div id="deflection">
+                      deflection: Calculate the deflection of the beam under load.
+                    </div>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div id="Sec:SolCharSpec">
           <div class="subsection">
             <h2>Solution Characteristics Specification</h2>
@@ -203,6 +339,37 @@
                   <p>
                     <div id="world">
                       world: The world model is two-dimensional, observing the instant a load is applied on the beam.
+                    </div>
+                  </p>
+                  <p>
+                    <div id="beamSlender">beamSlender: The beam is slender.</div>
+                  </p>
+                  <p>
+                    <div id="beamPrismatic">beamPrismatic: The beam is prismatic.</div>
+                  </p>
+                  <p>
+                    <div id="beamUniformCrossSection">
+                      beamUniformCrossSection: The beam has a uniform cross-section.
+                    </div>
+                  </p>
+                  <p>
+                    <div id="beamFlat">
+                      beamFlat: The beam is flat within a reasonable tolerance.
+                    </div>
+                  </p>
+                  <p>
+                    <div id="beamStaticSecondMomentOfArea">
+                      beamStaticSecondMomentOfArea: The beam has a static second moment of area.
+                    </div>
+                  </p>
+                  <p>
+                    <div id="beamVerticalLinearElasticLoad">
+                      beamVerticalLinearElasticLoad: The beam experiences vertical linear elastic load.
+                    </div>
+                  </p>
+                  <p>
+                    <div id="beamStaticModulusOfElasticity">
+                      beamStaticModulusOfElasticity: The beam's modulus of elasticity is static along the beam.
                     </div>
                   </p>
                 </div>
@@ -236,7 +403,9 @@
                     </tr>
                     <tr>
                       <th>Label</th>
-                      <td><p class="paragraph">Loading function</p></td>
+                      <td>
+                        <p class="paragraph">Load at a particular point along the beam</p>
+                      </td>
                     </tr>
                     <tr>
                       <th>Symbol</th>
@@ -244,22 +413,36 @@
                     </tr>
                     <tr>
                       <th>Units</th>
-                      <td>
-                        <p class="paragraph"><em>\(\frac{\text{N}}{\text{m}}\)</em></p>
-                      </td>
+                      <td><p class="paragraph"><em>N</em></p></td>
                     </tr>
                     <tr>
                       <th>Equation</th>
-                      <td>\[{w_{B}}=x\]</td>
+                      <td>
+                        \[{w_{B}}\left(x\right)={a_{\text{0}}}+{a_{\text{1}}} x+{a_{\text{2}}} x^{2}+{a_{\text{3}}} x^{3}\]
+                      </td>
                     </tr>
                     <tr>
                       <th>Description</th>
                       <td>
                         <ul class="hide-list-style-no-indent">
                           <li>
-                            <em>w<sub>B</sub></em> is the Loading function (<em>\(\frac{\text{N}}{\text{m}}\)</em>)
+                            <em>w<sub>B</sub></em> is the load at a particular point along the beam (<em>N</em>)
                           </li>
-                          <li><em>x</em> is the Point (<em>m</em>)</li>
+                          <li>
+                            <em>a<sub>0</sub></em> is the coefficient of w_B's term of power 0 (<em>\(\frac{\text{N}}{\text{m}}\)</em>)
+                          </li>
+                          <li>
+                            <em>a<sub>1</sub></em> is the coefficient of w_B's term of power 1 (<em>\(\frac{\text{N}}{\text{m}}\)</em>)
+                          </li>
+                          <li>
+                            <em>x</em> is the one-dimensional point along the beam, from the left-hand side (at the pinned support) (<em>m</em>)
+                          </li>
+                          <li>
+                            <em>a<sub>2</sub></em> is the coefficient of w_B's term of power 2 (<em>\(\frac{\text{N}}{\text{m}}\)</em>)
+                          </li>
+                          <li>
+                            <em>a<sub>3</sub></em> is the coefficient of w_B's term of power 3 (<em>\(\frac{\text{N}}{\text{m}}\)</em>)
+                          </li>
                         </ul>
                       </td>
                     </tr>
@@ -314,6 +497,41 @@
                   <th>Description</th>
                   <th>Units</th>
                 </tr>
+                <tr>
+                  <td><em>a<sub>0</sub></em></td>
+                  <td>Coefficient of w_B's term of power 0</td>
+                  <td><em>\(\frac{\text{N}}{\text{m}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>a<sub>1</sub></em></td>
+                  <td>Coefficient of w_B's term of power 1</td>
+                  <td><em>\(\frac{\text{N}}{\text{m}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>a<sub>2</sub></em></td>
+                  <td>Coefficient of w_B's term of power 2</td>
+                  <td><em>\(\frac{\text{N}}{\text{m}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>a<sub>3</sub></em></td>
+                  <td>Coefficient of w_B's term of power 3</td>
+                  <td><em>\(\frac{\text{N}}{\text{m}}\)</em></td>
+                </tr>
+                <tr>
+                  <td><em>E<sub>B</sub></em></td>
+                  <td>Modulus of elasticity of the beam</td>
+                  <td><em>Pa</em></td>
+                </tr>
+                <tr>
+                  <td><em>I<sub>B</sub></em></td>
+                  <td>Moment of second area of a cross-section of the beam</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
+                  <td><em>L<sub>B</sub></em></td>
+                  <td>Length of the beam</td>
+                  <td><em>m</em></td>
+                </tr>
               </table>
               <p class="caption">
                 Required Inputs following <a href=#inputValues>FR:Input-Values</a>
@@ -352,9 +570,116 @@
             <tr>
               <th></th>
               <th><a href=#world>A:world</a></th>
+              <th><a href=#beamSlender>A:beamSlender</a></th>
+              <th><a href=#beamPrismatic>A:beamPrismatic</a></th>
+              <th>
+                <a href=#beamUniformCrossSection>A:beamUniformCrossSection</a>
+              </th>
+              <th><a href=#beamFlat>A:beamFlat</a></th>
+              <th>
+                <a href=#beamStaticSecondMomentOfArea>A:beamStaticSecondMomentOfArea</a>
+              </th>
+              <th>
+                <a href=#beamVerticalLinearElasticLoad>A:beamVerticalLinearElasticLoad</a>
+              </th>
+              <th>
+                <a href=#beamStaticModulusOfElasticity>A:beamStaticModulusOfElasticity</a>
+              </th>
             </tr>
             <tr>
               <td><a href=#world>A:world</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#beamSlender>A:beamSlender</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#beamPrismatic>A:beamPrismatic</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>
+                <a href=#beamUniformCrossSection>A:beamUniformCrossSection</a>
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#beamFlat>A:beamFlat</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>
+                <a href=#beamStaticSecondMomentOfArea>A:beamStaticSecondMomentOfArea</a>
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>
+                <a href=#beamVerticalLinearElasticLoad>A:beamVerticalLinearElasticLoad</a>
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>
+                <a href=#beamStaticModulusOfElasticity>A:beamStaticModulusOfElasticity</a>
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
               <td></td>
             </tr>
           </table>
@@ -367,13 +692,42 @@
             <tr>
               <th></th>
               <th><a href=#world>A:world</a></th>
+              <th><a href=#beamSlender>A:beamSlender</a></th>
+              <th><a href=#beamPrismatic>A:beamPrismatic</a></th>
+              <th>
+                <a href=#beamUniformCrossSection>A:beamUniformCrossSection</a>
+              </th>
+              <th><a href=#beamFlat>A:beamFlat</a></th>
+              <th>
+                <a href=#beamStaticSecondMomentOfArea>A:beamStaticSecondMomentOfArea</a>
+              </th>
+              <th>
+                <a href=#beamVerticalLinearElasticLoad>A:beamVerticalLinearElasticLoad</a>
+              </th>
+              <th>
+                <a href=#beamStaticModulusOfElasticity>A:beamStaticModulusOfElasticity</a>
+              </th>
             </tr>
             <tr>
               <td><a href=#DD:loading>DD:loading</a></td>
               <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#inputValues>FR:Input-Values</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
               <td></td>
             </tr>
           </table>
@@ -402,6 +756,11 @@
               <th></th>
               <th><a href=#DD:loading>DD:loading</a></th>
               <th><a href=#inputValues>FR:Input-Values</a></th>
+            </tr>
+            <tr>
+              <td><a href=#deflection>GS:deflection</a></td>
+              <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#inputValues>FR:Input-Values</a></td>
@@ -471,7 +830,23 @@
     <div id="Sec:References">
       <div class="section">
         <h1>References</h1>
-        <ul class="hide-list-style"></ul>
+        <ul class="hide-list-style">
+          <li>
+            <div id="koothoor2013">
+              [1]: Koothoor, Nirmitha. <em>A document drive approach to certifying scientific computing software</em>. McMaster University, Hamilton, ON, Canada: 2013. Print.
+            </div>
+          </li>
+          <li>
+            <div id="parnasClements1986">
+              [2]: Parnas, David L. and Clements, P. C. "A rational design process: How and why to fake it." <em>IEEE Transactions on Software Engineering</em>, vol. 12, no. 2, Washington, USA: February, 1986. pp. 251&ndash;257. Print.
+            </div>
+          </li>
+          <li>
+            <div id="smithLai2005">
+              [3]: Smith, W. Spencer and Lai, Lei. "A new requirements template for scientific computing." <em>Proceedings of the First International Workshop on Situational Requirements Engineering Processes - Methods, Techniques and Tools to Support Situation-Specific Requirements Engineering Processes, SREP'05</em>. Edited by PJ Agerfalk, N. Kraiem, and J. Ralyte, Paris, France: 2005. pp. 107&ndash;121. In conjunction with 13th IEEE International Requirements Engineering Conference,
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   </body>

@@ -56,20 +56,44 @@ ${\text{N}}$ & force & newton
 \label{Sec:ToS}
 The symbols used in this document are summarized in the \hyperref[Table:ToS]{Table of Symbols} along with their units. The symbols are listed in alphabetical order.
 
-\begin{longtable}{l l l}
+\begin{longtabu}{l X[l] l}
 \toprule
 \textbf{Symbol} & \textbf{Description} & \textbf{Units}
 \\
 \midrule
 \endhead
-${w_{B}}$ & Loading function & $\frac{\text{N}}{\text{m}}$
+${a_{\text{0}}}$ & Coefficient of w\_B's term of power 0 & $\frac{\text{N}}{\text{m}}$
 \\
-$x$ & Point & ${\text{m}}$
+${a_{\text{1}}}$ & Coefficient of w\_B's term of power 1 & $\frac{\text{N}}{\text{m}}$
+\\
+${a_{\text{2}}}$ & Coefficient of w\_B's term of power 2 & $\frac{\text{N}}{\text{m}}$
+\\
+${a_{\text{3}}}$ & Coefficient of w\_B's term of power 3 & $\frac{\text{N}}{\text{m}}$
+\\
+$E$ & Modulus of elasticity of the abstract beam & ${\text{Pa}}$
+\\
+${E_{B}}$ & Modulus of elasticity of the beam & ${\text{Pa}}$
+\\
+$I$ & Moment of second area of a cross-section of the abstract beam & ${\text{m}}$
+\\
+${I_{B}}$ & Moment of second area of a cross-section of the beam & ${\text{m}}$
+\\
+$L$ & Length of the abstract beam & ${\text{m}}$
+\\
+${L_{B}}$ & Length of the beam & ${\text{m}}$
+\\
+${w_{B}}$ & Load at a particular point along the beam & ${\text{N}}$
+\\
+$x$ & One-dimensional point along the beam, from the left-hand side (at the pinned support) & ${\text{m}}$
+\\
+$y$ & Deflection at a particular point along the abstract beam & ${\text{m}}$
+\\
+${y_{B}}$ & Deflection at a particular point along the beam & ${\text{m}}$
 \\
 \bottomrule
 \caption{Table of Symbols}
 \label{Table:ToS}
-\end{longtable}
+\end{longtabu}
 \subsection{Abbreviations and Acronyms}
 \label{Sec:TAbbAcc}
 \begin{longtable}{l l}
@@ -90,14 +114,47 @@ BmBnd & Beam Bending Analysis Program
 
 The following section provides an overview of the Software Requirements Specification (SRS) for . This section explains the purpose of this document, the scope of the requirements, the characteristics of the intended reader, and the organization of the document.
 
+\subsection{Purpose of Document}
+\label{Sec:DocPurpose}
+This document will be used as a starting point for subsequent development phases, including writing the design specification and the software verification and validation plan. The design document will show how the requirements are to be realized, including decisions on the numerical algorithms and programming environment. The verification and validation plan will show the steps that will be used to increase confidence in the software documentation and the implementation. Although the SRS fits in a series of documents that follow the so-called waterfall model, the actual development process is not constrained in any way. Even when the waterfall model is not followed, as Parnas and Clements point out \cite{parnasClements1986}, the most logical way to present the documentation is still to ``fake'' a rational design process.
+
+\subsection{Scope of Requirements}
+\label{Sec:ReqsScope}
+The scope of the requirements includes .
+
+\subsection{Characteristics of Intended Reader}
+\label{Sec:ReaderChars}
+Reviewers of this documentation should have an understanding of. The users of BmBnd can have a lower level of expertise, as explained in \hyperref[Sec:UserChars]{Sec:User Characteristics}.
+
 \section{General System Description}
 \label{Sec:GenSysDesc}
 This section provides general information about the system. It identifies the interfaces between the system and its environment, describes the user characteristics, and lists the system constraints.
+
+\subsection{System Context}
+\label{Sec:SysContext}
+\subsection{User Characteristics}
+\label{Sec:UserChars}
+Hello world!.
+
+\subsection{System Constraints}
+\label{Sec:SysConstraints}
+There are no system constraints.
 
 \section{Specific System Description}
 \label{Sec:SpecSystDesc}
 This section first presents the problem description, which gives a high-level view of the problem to be solved. This is followed by the solution characteristics specification, which presents the assumptions, theories, and definitions that are used.
 
+\subsection{Problem Description}
+\label{Sec:ProbDesc}
+A system is needed to .
+
+\subsubsection{Goal Statements}
+\label{Sec:GoalStmt}
+Given , the goal statements are:
+
+\begin{itemize}
+\item[deflection:\phantomsection\label{deflection}]{Calculate the deflection of the beam under load.}
+\end{itemize}
 \subsection{Solution Characteristics Specification}
 \label{Sec:SolCharSpec}
 The instance models that govern BmBnd are presented in the \hyperref[Sec:IMs]{Instance Model Section}. The information to understand the meaning of the instance models and their derivation is also presented, so that the instance models can be verified.
@@ -108,6 +165,13 @@ This section simplifies the original problem and helps in developing the theoret
 
 \begin{itemize}
 \item[world:\phantomsection\label{world}]{The world model is two-dimensional, observing the instant a load is applied on the beam.}
+\item[beamSlender:\phantomsection\label{beamSlender}]{The beam is slender.}
+\item[beamPrismatic:\phantomsection\label{beamPrismatic}]{The beam is prismatic.}
+\item[beamUniformCrossSection:\phantomsection\label{beamUniformCrossSection}]{The beam has a uniform cross-section.}
+\item[beamFlat:\phantomsection\label{beamFlat}]{The beam is flat within a reasonable tolerance.}
+\item[beamStaticSecondMomentOfArea:\phantomsection\label{beamStaticSecondMomentOfArea}]{The beam has a static second moment of area.}
+\item[beamVerticalLinearElasticLoad:\phantomsection\label{beamVerticalLinearElasticLoad}]{The beam experiences vertical linear elastic load.}
+\item[beamStaticModulusOfElasticity:\phantomsection\label{beamStaticModulusOfElasticity}]{The beam's modulus of elasticity is static along the beam.}
 \end{itemize}
 \subsubsection{Theoretical Models}
 \label{Sec:TMs}
@@ -129,22 +193,26 @@ This section collects and defines all the data needed to build the instance mode
 \phantomsection 
 \label{DD:loading}
 \\ \midrule \\
-Label & Loading function
+Label & Load at a particular point along the beam
         
 \\ \midrule \\
 Symbol & ${w_{B}}$
          
 \\ \midrule \\
-Units & $\frac{\text{N}}{\text{m}}$
+Units & ${\text{N}}$
         
 \\ \midrule \\
 Equation & \begin{displaymath}
-           {w_{B}}=x
+           {w_{B}}\left(x\right)={a_{\text{0}}}+{a_{\text{1}}} x+{a_{\text{2}}} x^{2}+{a_{\text{3}}} x^{3}
            \end{displaymath}
 \\ \midrule \\
 Description & \begin{symbDescription}
-              \item{${w_{B}}$ is the Loading function ($\frac{\text{N}}{\text{m}}$)}
-              \item{$x$ is the Point (${\text{m}}$)}
+              \item{${w_{B}}$ is the load at a particular point along the beam (${\text{N}}$)}
+              \item{${a_{\text{0}}}$ is the coefficient of w\_B's term of power 0 ($\frac{\text{N}}{\text{m}}$)}
+              \item{${a_{\text{1}}}$ is the coefficient of w\_B's term of power 1 ($\frac{\text{N}}{\text{m}}$)}
+              \item{$x$ is the one-dimensional point along the beam, from the left-hand side (at the pinned support) (${\text{m}}$)}
+              \item{${a_{\text{2}}}$ is the coefficient of w\_B's term of power 2 ($\frac{\text{N}}{\text{m}}$)}
+              \item{${a_{\text{3}}}$ is the coefficient of w\_B's term of power 3 ($\frac{\text{N}}{\text{m}}$)}
               \end{symbDescription}
 \\ \midrule \\
 Source & \hyperref[world]{A:world}
@@ -170,6 +238,30 @@ This section provides the functional requirements, the tasks and behaviours that
 \begin{itemize}
 \item[Input-Values:\phantomsection\label{inputValues}]{Input the values from \hyperref[Table:ReqInputs]{Tab:ReqInputs}.}
 \end{itemize}
+\begin{longtabu}{l X[l] l}
+\toprule
+\textbf{Symbol} & \textbf{Description} & \textbf{Units}
+\\
+\midrule
+\endhead
+${a_{\text{0}}}$ & Coefficient of w\_B's term of power 0 & $\frac{\text{N}}{\text{m}}$
+\\
+${a_{\text{1}}}$ & Coefficient of w\_B's term of power 1 & $\frac{\text{N}}{\text{m}}$
+\\
+${a_{\text{2}}}$ & Coefficient of w\_B's term of power 2 & $\frac{\text{N}}{\text{m}}$
+\\
+${a_{\text{3}}}$ & Coefficient of w\_B's term of power 3 & $\frac{\text{N}}{\text{m}}$
+\\
+${E_{B}}$ & Modulus of elasticity of the beam & ${\text{Pa}}$
+\\
+${I_{B}}$ & Moment of second area of a cross-section of the beam & ${\text{m}}$
+\\
+${L_{B}}$ & Length of the beam & ${\text{m}}$
+\\
+\bottomrule
+\caption{Required Inputs following \hyperref[inputValues]{FR:Input-Values}}
+\label{Table:ReqInputs}
+\end{longtabu}
 \subsection{Non-Functional Requirements}
 \label{Sec:NFRs}
 This section provides the non-functional requirements, the qualities that the software is expected to exhibit.
@@ -182,27 +274,41 @@ This section lists the likely changes to be made to the software.
 \label{Sec:TraceMatrices}
 The purpose of the traceability matrices is to provide easy references on what has to be additionally modified if a certain component is changed. Every time a component is changed, the items in the column of that component that are marked with an ``X'' should be modified as well. \hyperref[Table:TraceMatAvsA]{Tab:TraceMatAvsA} shows the dependencies of assumptions on the assumptions. \hyperref[Table:TraceMatAvsAll]{Tab:TraceMatAvsAll} shows the dependencies of data definitions, theoretical models, general definitions, instance models, requirements, likely changes, and unlikely changes on the assumptions. \hyperref[Table:TraceMatRefvsRef]{Tab:TraceMatRefvsRef} shows the dependencies of data definitions, theoretical models, general definitions, and instance models with each other. \hyperref[Table:TraceMatAllvsR]{Tab:TraceMatAllvsR} shows the dependencies of goal statements on the data definitions, theoretical models, general definitions, and instance models.
 
-\begin{longtable}{l l}
+\begin{longtable}{l l l l l l l l l}
 \toprule
-\textbf{} & \textbf{\hyperref[world]{A:world}}
+\textbf{} & \textbf{\hyperref[world]{A:world}} & \textbf{\hyperref[beamSlender]{A:beamSlender}} & \textbf{\hyperref[beamPrismatic]{A:beamPrismatic}} & \textbf{\hyperref[beamUniformCrossSection]{A:beamUniformCrossSection}} & \textbf{\hyperref[beamFlat]{A:beamFlat}} & \textbf{\hyperref[beamStaticSecondMomentOfArea]{A:beamStaticSecondMomentOfArea}} & \textbf{\hyperref[beamVerticalLinearElasticLoad]{A:beamVerticalLinearElasticLoad}} & \textbf{\hyperref[beamStaticModulusOfElasticity]{A:beamStaticModulusOfElasticity}}
 \\
 \midrule
 \endhead
-\hyperref[world]{A:world} & 
+\hyperref[world]{A:world} &  &  &  &  &  &  &  & 
+\\
+\hyperref[beamSlender]{A:beamSlender} &  &  &  &  &  &  &  & 
+\\
+\hyperref[beamPrismatic]{A:beamPrismatic} &  &  &  &  &  &  &  & 
+\\
+\hyperref[beamUniformCrossSection]{A:beamUniformCrossSection} &  &  &  &  &  &  &  & 
+\\
+\hyperref[beamFlat]{A:beamFlat} &  &  &  &  &  &  &  & 
+\\
+\hyperref[beamStaticSecondMomentOfArea]{A:beamStaticSecondMomentOfArea} &  &  &  &  &  &  &  & 
+\\
+\hyperref[beamVerticalLinearElasticLoad]{A:beamVerticalLinearElasticLoad} &  &  &  &  &  &  &  & 
+\\
+\hyperref[beamStaticModulusOfElasticity]{A:beamStaticModulusOfElasticity} &  &  &  &  &  &  &  & 
 \\
 \bottomrule
 \caption{Traceability Matrix Showing the Connections Between Assumptions and Other Assumptions}
 \label{Table:TraceMatAvsA}
 \end{longtable}
-\begin{longtable}{l l}
+\begin{longtable}{l l l l l l l l l}
 \toprule
-\textbf{} & \textbf{\hyperref[world]{A:world}}
+\textbf{} & \textbf{\hyperref[world]{A:world}} & \textbf{\hyperref[beamSlender]{A:beamSlender}} & \textbf{\hyperref[beamPrismatic]{A:beamPrismatic}} & \textbf{\hyperref[beamUniformCrossSection]{A:beamUniformCrossSection}} & \textbf{\hyperref[beamFlat]{A:beamFlat}} & \textbf{\hyperref[beamStaticSecondMomentOfArea]{A:beamStaticSecondMomentOfArea}} & \textbf{\hyperref[beamVerticalLinearElasticLoad]{A:beamVerticalLinearElasticLoad}} & \textbf{\hyperref[beamStaticModulusOfElasticity]{A:beamStaticModulusOfElasticity}}
 \\
 \midrule
 \endhead
-\hyperref[DD:loading]{DD:loading} & 
+\hyperref[DD:loading]{DD:loading} &  &  &  &  &  &  &  & 
 \\
-\hyperref[inputValues]{FR:Input-Values} & 
+\hyperref[inputValues]{FR:Input-Values} &  &  &  &  &  &  &  & 
 \\
 \bottomrule
 \caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
@@ -226,6 +332,8 @@ The purpose of the traceability matrices is to provide easy references on what h
 \\
 \midrule
 \endhead
+\hyperref[deflection]{GS:deflection} &  & 
+\\
 \hyperref[inputValues]{FR:Input-Values} &  & 
 \\
 \bottomrule
@@ -281,6 +389,31 @@ For convenience, the following graphs can be found at the links below:
 \section{References}
 \label{Sec:References}
 \begin{filecontents*}{bibfile.bib}
+@mastersthesis{koothoor2013,
+author={Koothoor, Nirmitha},
+title={A document drive approach to certifying scientific computing software},
+school={McMaster University},
+year={2013},
+address={Hamilton, ON, Canada}}
+@article{parnasClements1986,
+author={Parnas, David L. and Clements, P. C.},
+title={A rational design process: How and why to fake it},
+journal={IEEE Transactions on Software Engineering},
+year={1986},
+month=feb,
+volume={12},
+number={2},
+pages={251--257},
+address={Washington, USA}}
+@inproceedings{smithLai2005,
+author={Smith, W. Spencer and Lai, Lei},
+title={A new requirements template for scientific computing},
+booktitle={Proceedings of the First International Workshop on Situational Requirements Engineering Processes - Methods, Techniques and Tools to Support Situation-Specific Requirements Engineering Processes, SREP'05},
+year={2005},
+editor={Agerfalk, PJ and Kraiem, N. and Ralyte, J.},
+address={Paris, France},
+pages={107--121},
+note={In conjunction with 13th IEEE International Requirements Engineering Conference,}}
 \end{filecontents*}
 \nocite{*}
 \bibstyle{ieeetr}
