@@ -87,7 +87,7 @@ symbMap = cdb
   Qs.quantities
   terms
   conceptChunks
-  (map unitWrapper [metre, newton, kilogram]) -- FIXME: should be presupposed?
+  (map unitWrapper [metre, newton]) -- FIXME: shouldn't these be presupposed?
   DDs.models
   IMs.models
   []

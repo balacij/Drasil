@@ -146,6 +146,11 @@
                   <th>Units</th>
                 </tr>
                 <tr>
+                  <td><em>a</em></td>
+                  <td>A</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
                   <td><em>a<sub>0</sub></em></td>
                   <td>Coefficient of w_B's term of power 0</td>
                   <td><em>\(\frac{\text{N}}{\text{m}}\)</em></td>
@@ -174,6 +179,11 @@
                   <td><em>E<sub>B</sub></em></td>
                   <td>Modulus of elasticity of the beam</td>
                   <td><em>Pa</em></td>
+                </tr>
+                <tr>
+                  <td><em>f</em></td>
+                  <td>F</td>
+                  <td><em>m</em></td>
                 </tr>
                 <tr>
                   <td><em>I</em></td>
@@ -217,6 +227,11 @@
                 <tr>
                   <td><em>y<sub>B</sub></em></td>
                   <td>Deflection at a particular point along the beam</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
+                  <td><em>ρ</em></td>
+                  <td>Rho</td>
                   <td><em>m</em></td>
                 </tr>
               </table>
@@ -381,6 +396,42 @@
                 <p class="paragraph">
                   This section focuses on the general equations and laws that BmBnd is based on.
                 </p>
+                <div id="TM:curvatureThm">
+                  <table class="tdefn">
+                    <tr>
+                      <th>Refname</th>
+                      <td><b>TM:curvatureThm</b></td>
+                    </tr>
+                    <tr>
+                      <th>Label</th>
+                      <td><p class="paragraph">Curvature of a plane</p></td>
+                    </tr>
+                    <tr>
+                      <th>Equation</th>
+                      <td>
+                        \[\frac{1}{ρ}=\frac{\frac{\,d^{2}f}{\,da^{2}}}{\left(1+\frac{\,df}{\,da}^{2}\right)^{\frac{3}{2}}}\]
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Description</th>
+                      <td>
+                        <ul class="hide-list-style-no-indent">
+                          <li><em>ρ</em> is the rho (<em>m</em>)</li>
+                          <li><em>a</em> is the a (<em>m</em>)</li>
+                          <li><em>f</em> is the f (<em>m</em>)</li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Source</th>
+                      <td><p class="paragraph"><a href=#world>A:world</a></p></td>
+                    </tr>
+                    <tr>
+                      <th>RefBy</th>
+                      <td><p class="paragraph"></p></td>
+                    </tr>
+                  </table>
+                </div>
               </div>
             </div>
             <div id="Sec:GDs">
@@ -720,6 +771,17 @@
               <td></td>
             </tr>
             <tr>
+              <td><a href=#TM:curvatureThm>TM:curvatureThm</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
               <td><a href=#inputValues>FR:Input-Values</a></td>
               <td></td>
               <td></td>
@@ -740,9 +802,16 @@
             <tr>
               <th></th>
               <th><a href=#DD:loading>DD:loading</a></th>
+              <th><a href=#TM:curvatureThm>TM:curvatureThm</a></th>
             </tr>
             <tr>
               <td><a href=#DD:loading>DD:loading</a></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#TM:curvatureThm>TM:curvatureThm</a></td>
+              <td></td>
               <td></td>
             </tr>
           </table>
@@ -755,15 +824,18 @@
             <tr>
               <th></th>
               <th><a href=#DD:loading>DD:loading</a></th>
+              <th><a href=#TM:curvatureThm>TM:curvatureThm</a></th>
               <th><a href=#inputValues>FR:Input-Values</a></th>
             </tr>
             <tr>
               <td><a href=#deflection>GS:deflection</a></td>
               <td></td>
               <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#inputValues>FR:Input-Values</a></td>
+              <td></td>
               <td></td>
               <td></td>
             </tr>

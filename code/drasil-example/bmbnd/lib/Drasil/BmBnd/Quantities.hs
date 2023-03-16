@@ -21,7 +21,7 @@ intermediateUnitals :: [UnitalChunk]
 intermediateUnitals = [x, w_B]
 
 abstractUnitals :: [UnitalChunk]
-abstractUnitals = [l, e, i, y]
+abstractUnitals = [l, e, i, y, rho, a, f]
 
 inputUnitals :: [UnitalChunk]
 inputUnitals = [a_0, a_1, a_2, a_3, l_B, e_B, i_B]
@@ -150,3 +150,31 @@ a_1 = a_n 1
 a_2 = a_n 2
 
 a_3 = a_n 3
+
+rho :: UnitalChunk
+rho = uc'
+  "rho"
+  (nounPhraseSent $ S "rho") -- FIXME: Improve descriptions :)
+  (S "radius of curvature")
+  lRho
+  Real
+  metre -- FIXME: I need it to be unitless -- switch type to QuantityDict or DefinedQD
+
+a :: UnitalChunk
+a = uc'
+  "a"
+  (nounPhraseSent $ S "a") -- FIXME: Improve descriptions :)
+  (S "a")
+  lA
+  Real
+  metre -- FIXME: I need it to be unitless -- switch type to QuantityDict or DefinedQD
+
+f :: UnitalChunk
+f = uc'
+  "f"
+  (nounPhraseSent $ S "f") -- FIXME: Improve descriptions :)
+  (S "f")
+  lF
+  (mkFunction [Real] Real)
+  metre -- FIXME: I need it to be unitless -- switch type to QuantityDict or DefinedQD
+

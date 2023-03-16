@@ -62,6 +62,8 @@ The symbols used in this document are summarized in the \hyperref[Table:ToS]{Tab
 \\
 \midrule
 \endhead
+$a$ & A & ${\text{m}}$
+\\
 ${a_{\text{0}}}$ & Coefficient of w\_B's term of power 0 & $\frac{\text{N}}{\text{m}}$
 \\
 ${a_{\text{1}}}$ & Coefficient of w\_B's term of power 1 & $\frac{\text{N}}{\text{m}}$
@@ -73,6 +75,8 @@ ${a_{\text{3}}}$ & Coefficient of w\_B's term of power 3 & $\frac{\text{N}}{\tex
 $E$ & Modulus of elasticity of the abstract beam & ${\text{Pa}}$
 \\
 ${E_{B}}$ & Modulus of elasticity of the beam & ${\text{Pa}}$
+\\
+$f$ & F & ${\text{m}}$
 \\
 $I$ & Moment of second area of a cross-section of the abstract beam & ${\text{m}}$
 \\
@@ -89,6 +93,8 @@ $x$ & One-dimensional point along the beam, from the left-hand side (at the pinn
 $y$ & Deflection at a particular point along the abstract beam & ${\text{m}}$
 \\
 ${y_{B}}$ & Deflection at a particular point along the beam & ${\text{m}}$
+\\
+$ρ$ & Rho & ${\text{m}}$
 \\
 \bottomrule
 \caption{Table of Symbols}
@@ -177,6 +183,34 @@ This section simplifies the original problem and helps in developing the theoret
 \label{Sec:TMs}
 This section focuses on the general equations and laws that BmBnd is based on.
 
+\vspace{\baselineskip}
+\noindent
+\begin{minipage}{\textwidth}
+\begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
+\toprule \textbf{Refname} & \textbf{TM:curvatureThm}
+\phantomsection 
+\label{TM:curvatureThm}
+\\ \midrule \\
+Label & Curvature of a plane
+        
+\\ \midrule \\
+Equation & \begin{displaymath}
+           \frac{1}{ρ}=\frac{\frac{\,d^{2}f}{\,da^{2}}}{\left(1+\frac{\,df}{\,da}^{2}\right)^{\frac{3}{2}}}
+           \end{displaymath}
+\\ \midrule \\
+Description & \begin{symbDescription}
+              \item{$ρ$ is the rho (${\text{m}}$)}
+              \item{$a$ is the a (${\text{m}}$)}
+              \item{$f$ is the f (${\text{m}}$)}
+              \end{symbDescription}
+\\ \midrule \\
+Source & \hyperref[world]{A:world}
+         
+\\ \midrule \\
+RefBy & 
+\\ \bottomrule
+\end{tabular}
+\end{minipage}
 \subsubsection{General Definitions}
 \label{Sec:GDs}
 There are no general definitions.
@@ -308,33 +342,37 @@ The purpose of the traceability matrices is to provide easy references on what h
 \endhead
 \hyperref[DD:loading]{DD:loading} &  &  &  &  &  &  &  & 
 \\
+\hyperref[TM:curvatureThm]{TM:curvatureThm} &  &  &  &  &  &  &  & 
+\\
 \hyperref[inputValues]{FR:Input-Values} &  &  &  &  &  &  &  & 
 \\
 \bottomrule
 \caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
 \label{Table:TraceMatAvsAll}
 \end{longtable}
-\begin{longtable}{l l}
+\begin{longtable}{l l l}
 \toprule
-\textbf{} & \textbf{\hyperref[DD:loading]{DD:loading}}
+\textbf{} & \textbf{\hyperref[DD:loading]{DD:loading}} & \textbf{\hyperref[TM:curvatureThm]{TM:curvatureThm}}
 \\
 \midrule
 \endhead
-\hyperref[DD:loading]{DD:loading} & 
+\hyperref[DD:loading]{DD:loading} &  & 
+\\
+\hyperref[TM:curvatureThm]{TM:curvatureThm} &  & 
 \\
 \bottomrule
 \caption{Traceability Matrix Showing the Connections Between Items and Other Sections}
 \label{Table:TraceMatRefvsRef}
 \end{longtable}
-\begin{longtable}{l l l}
+\begin{longtable}{l l l l}
 \toprule
-\textbf{} & \textbf{\hyperref[DD:loading]{DD:loading}} & \textbf{\hyperref[inputValues]{FR:Input-Values}}
+\textbf{} & \textbf{\hyperref[DD:loading]{DD:loading}} & \textbf{\hyperref[TM:curvatureThm]{TM:curvatureThm}} & \textbf{\hyperref[inputValues]{FR:Input-Values}}
 \\
 \midrule
 \endhead
-\hyperref[deflection]{GS:deflection} &  & 
+\hyperref[deflection]{GS:deflection} &  &  & 
 \\
-\hyperref[inputValues]{FR:Input-Values} &  & 
+\hyperref[inputValues]{FR:Input-Values} &  &  & 
 \\
 \bottomrule
 \caption{Traceability Matrix Showing the Connections Between Goal Statements and Other Items}
