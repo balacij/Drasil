@@ -257,8 +257,10 @@ literature related to materials.
     \(\text{Roller}\) & \si{\metre}            & 1-dimensional position of the roller support                                                                                                   \\
     \(y(x)\)          & \si{\metre}            & deflection of a hypothetical loaded beam at a specific point along it (positive $y$ values relate to amount deflected downwards)               \\
     \(y_{B}(x)\)      & \si{\metre}            & deflection of the loaded beam at a specific point along it (positive $y$ values relate to amount deflected downwards)                          \\
-    \(a\)             & \(1\)                  &                                                                                                                                                \\
-    \(f(a)\)          & \(1\)                  &                                                                                                                                                \\
+    \(a\)             & \(1\)                  & point along the x-axis of a hypothetical graph                                                                                                 \\
+    \(f(a)\)          & \(1\)                  & point along the y-axis of a hypothetical graph, dependent on the value of $a$                                                                  \\
+    \(M(x)\)          & \(1\)                  & moment at a particular point along the beam                                                                                                    \\
+    \(\rho\)          & \si{\radian}           & ratio of curvature                                                                                                                             \\
     \bottomrule
 \end{longtable}
 
@@ -658,7 +660,7 @@ Change (LC), in which the respective assumption is used.
     \assume{beam_moment_inertia_constant}{The beam has a constant second moment
         of area.}
 
-    \assume{beam_vertical_elastic}{The beam experiences vertical linear-elastic
+    \assume{beam_vertical_elastic}{The beam experiences vertical linear elastic
         load.}
 
     \assume{beam_modulus_constant}{The beam's modulus of elasticity is constant
@@ -1036,7 +1038,7 @@ qualities that the software is expected to exhibit.
 \begin{itemize}
 
     \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs}:] The inputs must
-        be provided by the end-user according to \Cref{TblInputVar}.
+        be provided by the end user according to \Cref{TblInputVar}.
 
     \item[R\refstepcounter{reqnum}\thereqnum \label{R_OutputInputs}:] The inputs
         of \progname{} should be displayed to the user before any meaningful
@@ -1057,25 +1059,26 @@ qualities that the software is expected to exhibit.
 
     \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Accuracy}:]
         \textbf{Accuracy} The accuracy of the computed solutions should meet the
-        level needed for civil engineering.  The level of accuracy achieved by
-        \progname{} shall be described following the procedure given in
-        Section~X\an{Link to the VnV plan.} of the Verification and Validation
-        Plan.
+        level needed for the usage domain (this is up to applicable regulatory
+        bodies). To gain confidence that the software is accurate, \progname{}
+        shall be evaluated by the steps outlined in the Verification and
+        Validation Plan.
 
     \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability}:]
         \textbf{Usability} The program should allow for post-processing and
-        visualization of the calculated data by re-iterating all important
-        information before termination. \progname{} is not intended to be used
+        visualization of the calculated data by having a standardized output (up
+        to the design of the software). \progname{} is not intended to be used
         alone with manual analysis. The level of usability achieved by the
         software shall be described following the procedure given in
         Section~X\an{Link to the VnV plan.} of the Verification and Validation
         Plan.
 
     \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability}:]
-        \textbf{Maintainability} Through specialized tooling, the effort needed
-        to make any likely change should be relatively straightforward and
-        already well-understood. Additionally, any other possible change should
-        have a clear impact outlined by the specialized tools.
+        \textbf{Maintainability} Through specialized tooling (Drasil), the
+        effort needed to make any likely change should be relatively
+        straightforward and already well-understood. Additionally, any other
+        possible change should have a clear impact outlined by the specialized
+        tools.
 
     \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Portability}:]
         \textbf{Portability} \progname{} should be usable on at least the 3
