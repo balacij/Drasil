@@ -21,8 +21,16 @@ import           Language.Drasil
 import qualified Language.Drasil.Sentence.Combinators    as S
 import           Theory.Drasil
 
--- This is my only 'immediate' dependency.
+-- My 'real' imports.
+import qualified Drasil.BmBnd.Assumptions                as As
+import qualified Drasil.BmBnd.Constants                  as Cs
+import qualified Drasil.BmBnd.DataDefinitions            as DDs
+import qualified Drasil.BmBnd.Goals                      as Gs
+import qualified Drasil.BmBnd.InstanceModels             as IMs
+import qualified Drasil.BmBnd.Quantities                 as Qs
+import qualified Drasil.BmBnd.References                 as Rs
 import           Drasil.BmBnd.SRS
+import qualified Drasil.BmBnd.TheoryModels               as TMs
 
 caseStudy :: CI
 caseStudy = commonIdeaWithDict "bmbnd" (pn "Beam Bending Analysis Program") "BmBnd" []
@@ -41,16 +49,16 @@ si =
         , _authors = [jasonBalaci]
         , _background = []
         , _purpose = [purpose]
-        , _quants = [] :: [QuantityDict]
+        , _quants = Qs.quantities
         , _concepts = [] :: [DefinedQuantityDict]
-        , _instModels = [] :: [InstanceModel]
-        , _datadefs = [] :: [DataDefinition]
+        , _instModels = IMs.models
+        , _datadefs = DDs.models
         , _configFiles = []
-        , _inputs = [] :: [QuantityDict]
-        , _outputs = [] :: [QuantityDict]
+        , _inputs = Qs.inputs
+        , _outputs = Qs.outputs
         , _defSequence = [] :: [Block SimpleQDef]
         , _constraints = [] :: [ConstrainedChunk]
-        , _constants = [] :: [ConstQDef]
+        , _constants = Cs.constants
         , _sysinfodb = symbMap
         , _usedinfodb = usedDB
         , refdb = refDB
@@ -70,22 +78,29 @@ terms =
                 ++ map nw CM.mathcon
                 ++ map nw CM.mathcon'
           )
+        ++ map nw Qs.quantities
+
+conceptChunks :: [ConceptChunk]
+conceptChunks = Doc.srsDomains
+
+conceptInstances :: [ConceptInstance]
+conceptInstances = As.assumptions ++ Gs.goals
 
 symbMap :: ChunkDB
 symbMap =
     cdb
-        ([] :: [QuantityDict])
+        Qs.quantities
         terms
-        ([] :: [ConceptChunk])
-        ([] :: [UnitDefn])
-        ([] :: [DataDefinition])
-        ([] :: [InstanceModel])
-        ([] :: [GenDefn])
-        ([] :: [TheoryModel])
-        ([] :: [ConceptInstance])
+        conceptChunks
+        (map unitWrapper [metre, second, newton, kilogram, degree, radian, hertz])
+        DDs.models
+        IMs.models
+        []
+        TMs.models
+        conceptInstances
         ([] :: [Section])
         ([] :: [LabelledContent])
-        ([] :: [Reference])
+        Rs.references
 
 usedDB :: ChunkDB
 usedDB =
@@ -104,7 +119,7 @@ usedDB =
         ([] :: [Reference])
 
 refDB :: ReferenceDB
-refDB = rdb [] []
+refDB = rdb [] conceptInstances
 
 realSrsBody :: SRSDecl
 realSrsBody = srsBody si

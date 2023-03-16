@@ -8,13 +8,29 @@ import           Language.Drasil
 -- needed. This is temporary work to avoid the cyclic dependency shown below.
 srsBody :: SystemInformation -> SRSDecl
 srsBody si =
-  [ TableOfContents,
-    RefSec $ RefProg intro [TUnits, tsymb [TSPurpose, SymbOrder], TAandA],
-    IntroSec $ IntroProg (S "") (S "") [],
-    GSDSec $ GSDProg [],
-    SSDSec $ SSDProg [],
-    ReqrmntSec $ ReqsProg [],
-    LCsSec,
-    TraceabilitySec $ TraceabilityProg $ traceMatStandard si, -- FIXME: the SRSDecl referencing the SystemInformation is akin to a cyclic dependency (talking about Drasil, not Haskell).
-    Bibliography
-  ]
+  [ TableOfContents
+  , RefSec $ RefProg intro [TUnits, tsymb [TSPurpose, SymbOrder], TAandA]
+  , IntroSec $ IntroProg (S "") (S "") []
+  , GSDSec $ GSDProg []
+  , SSDSec
+    $ SSDProg
+      [ SSDSolChSpec
+        $ SCSProg
+          [ Assumptions
+          , TMs [] (Label:stdFields)
+          , GDs [] ([Label, Units] ++ stdFields) ShowDerivation
+          , DDs [] ([Label, Symbol, Units] ++ stdFields) ShowDerivation
+          , IMs
+              []
+              ([Label, Input, Output, InConstraints, OutConstraints]
+               ++ stdFields)
+              ShowDerivation]]
+  , ReqrmntSec $ ReqsProg [FReqsSub EmptyS [], NonFReqsSub]
+  , LCsSec
+  , TraceabilitySec $ TraceabilityProg $ traceMatStandard si  -- FIXME: the SRSDecl referencing the SystemInformation is akin to a cyclic dependency (talking about Drasil, not Haskell).
+  -- , AuxConstntSec $ AuxConsProg prog [] -- FIXME: In a similar fashion to the above, I should not have to manually reference the 'progName' from here! It should be filled in for me.
+  , Bibliography]
+
+stdFields :: Fields
+stdFields =
+  [DefiningEquation, Description Verbose IncludeUnits, Notes, Source, RefBy]
