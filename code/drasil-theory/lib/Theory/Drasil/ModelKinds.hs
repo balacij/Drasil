@@ -134,15 +134,13 @@ instance Express e => Express (ModelKinds e) where
   express = elimMk (to express) (to express) (to express) (to express) (to express)
 -- | Expose all expressions that need to be type-checked for theories that need
 --   expose 'Expr's.
-instance RequiresChecking (ModelKinds Expr) Expr Space where
+instance RequiresChecking (ModelKinds Expr) Expr Space where -- FIXME: This is actually a bit problematic. We shouldn't need to mention the kinds of expressions being type-checked at all.
   requiredChecks (NewDEModel dm)            = requiredChecks dm
-  requiredChecks (DEModel _)                = mempty
+  requiredChecks (DEModel _)                = mempty -- re FIXME above: for example, this should expose some ModelExprs to type-check
   requiredChecks (EquationalConstraints cs) = requiredChecks cs
   requiredChecks (EquationalModel qd)       = pure (qd ^. defnExpr, qd ^. typ)
   requiredChecks (EquationalRealm md)       = requiredChecks md
-  requiredChecks (OthModel _)               = mempty
-
--- TODO: implement MayHaveUnit for ModelKinds once we've sufficiently removed OthModels & RelationConcepts (else we'd be breaking too much of `stable`)
+  requiredChecks (OthModel _)               = mempty -- re FIXME above: for example, this should expose _a_ Boolean-expected ModelExpr to type-check
 
 -- | Finds the 'UID' of the 'ModelKind'.
 instance HasUID        (ModelKind e) where uid     = mkUID

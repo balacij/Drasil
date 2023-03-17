@@ -4,6 +4,7 @@ import           Language.Drasil
 import           Language.Drasil.ShortHands
 import           Data.Drasil.SI_Units
 import           Data.Drasil.Units.Physics
+import           Drasil.BmBnd.Units
 
 quantities :: [QuantityDict]
 quantities = map qw unitals
@@ -21,7 +22,7 @@ intermediateUnitals :: [UnitalChunk]
 intermediateUnitals = [x, w_B]
 
 abstractUnitals :: [UnitalChunk]
-abstractUnitals = [l, e, i, y, rho, a, f]
+abstractUnitals = [l, e, i, y, rho, a, f, moment]
 
 inputUnitals :: [UnitalChunk]
 inputUnitals = [a_0, a_1, a_2, a_3, l_B, e_B, i_B]
@@ -49,7 +50,7 @@ w_B = uc'
   (S "loading function")
   (sub lW cB)
   (mkFunction [Real] Real)
-  newton
+  forcePerMeterU
 
 l_B :: UnitalChunk
 l_B = uc'
@@ -128,28 +129,27 @@ y = uc'
 -- TODO: I have 2 things to implicitly keep in mind (which I shouldn't) while I write these unital chunks:
 --       1) the strings should start with a lowercase letter, and
 --       2) the strings should not end with a period.
--- FIXME: How can I switch from greek letters to a_0, a_1, etc.?
-a_n :: Int -> UnitalChunk
-a_n n
+a_n :: Int -> UnitDefn -> UnitalChunk
+a_n n ud
   | n >= 0 = uc'
     ("a_" ++ show n)
     (nounPhraseSent s)
     s
-    (subStr lA $ show n)
+    (subStr lA $ show n) -- FIXME: Somewhat cheating here with making the symbol for "a_n"
     Real
-    forcePerMeterU -- FIXME: Typo in stdlib? 'metre'?
+    ud
   | otherwise = error "'a_n' only allows non-negative 'n's"
   where
     s = S $ "coefficient of w_B's term of power " ++ show n -- FIXME: I'm really cheating with this formulation of text. Try re-writing it in another way! :)
 
 a_0, a_1, a_2, a_3 :: UnitalChunk
-a_0 = a_n 0
+a_0 = a_n 0 forcePerMeterU -- FIXME: Typo in stdlib? 'metre'?
 
-a_1 = a_n 1
+a_1 = a_n 1 forcePerMetreSqd
 
-a_2 = a_n 2
+a_2 = a_n 2 forcePerMetreCubed
 
-a_3 = a_n 3
+a_3 = a_n 3 forcePerMetreQtc
 
 rho :: UnitalChunk
 rho = uc'
@@ -178,3 +178,11 @@ f = uc'
   (mkFunction [Real] Real)
   metre -- FIXME: I need it to be unitless -- switch type to QuantityDict or DefinedQD
 
+moment :: UnitalChunk
+moment = uc'
+  "moment"
+  (nounPhraseSent $ S "moment") -- FIXME: Improve descriptions :)
+  (S "moment")
+  cM
+  (mkFunction [Real] Real)
+  newton -- FIXME: Unit?

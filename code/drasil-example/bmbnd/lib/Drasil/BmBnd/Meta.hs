@@ -9,13 +9,9 @@ import           Data.Drasil.Concepts.Computation
 import qualified Data.Drasil.Concepts.Documentation as Doc
 import           Data.Drasil.Concepts.Education
 import qualified Data.Drasil.Concepts.Math as CM
-import qualified Data.Drasil.Concepts.PhysicalProperties as CPP
 import qualified Data.Drasil.Concepts.Physics as CP
 import           Data.Drasil.Concepts.Software
-import           Data.Drasil.People
-import qualified Data.Drasil.Quantities.Physics as QP
 import           Data.Drasil.SI_Units
-import           Data.Drasil.Software.Products
 import           Drasil.SRSDocument
 import           Language.Drasil
 import qualified Language.Drasil.Sentence.Combinators as S
@@ -31,6 +27,8 @@ import qualified Drasil.BmBnd.References as Rs
 import           Drasil.BmBnd.SRS
 import qualified Drasil.BmBnd.TheoryModels as TMs
 import qualified Drasil.BmBnd.Figures as Fs
+import qualified Drasil.BmBnd.Units as Us
+import qualified Drasil.BmBnd.Terminology as Ts
 
 caseStudy :: CI
 caseStudy =
@@ -44,7 +42,7 @@ purpose = S "To examine a beam bending under load."
 
 si :: SystemInformation
 si = SI { _sys = caseStudy
-        , _kind = Doc.srs -- FIXME: ICO!
+        , _kind = Doc.srs -- FIXME: ICO! The SystemInformation is approximately the SRS abstraction.
         , _authors = [jasonBalaci]
         , _background = []
         , _purpose = [purpose]
@@ -76,9 +74,7 @@ terms = nw caseStudy
     ++ map nw CM.mathcon
     ++ map nw CM.mathcon')
   ++ map nw Qs.quantities -- TODO: this is required, but feels like it should be done automatically, look into this
-
-shownTerms :: [ConceptChunk]
-shownTerms = []
+  ++ map nw Ts.terminology
 
 conceptChunks :: [ConceptChunk]
 conceptChunks = Doc.srsDomains
@@ -91,14 +87,14 @@ symbMap = cdb
   Qs.quantities
   terms
   conceptChunks
-  (map unitWrapper [metre, newton]) -- FIXME: shouldn't these be presupposed?
+  (map unitWrapper [metre, newton, pascal, radian] ++ Us.units) -- FIXME: shouldn't the SI units be presupposed?
   DDs.models
   IMs.models
-  []
+  [] -- no general definitions
   TMs.models
   conceptInstances
   ([] :: [Section])
-  ([] :: [LabelledContent])
+  Fs.figures -- FIXME: Even if I didn't put the 'figures' here, the SRS generator would still work fine, which means something isn't using the UID system appropriately.
   ([] :: [Reference])
 
 usedDB :: ChunkDB
@@ -119,8 +115,8 @@ usedDB = cdb
 refDB :: ReferenceDB
 refDB = rdb Rs.references conceptInstances
 
-realSrsBody :: SRSDecl
-realSrsBody = srsBody si caseStudy Fs.bmBndDiagram shownTerms
+realSrsBody :: SRSDecl -- FIXME: This is suboptimal.
+realSrsBody = srsBody si caseStudy Fs.bmBndDiagram Ts.terminology
 
 srs :: Document
 srs = mkDoc realSrsBody (S.forGen titleize phrase) si

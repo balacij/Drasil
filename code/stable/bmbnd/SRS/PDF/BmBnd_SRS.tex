@@ -48,6 +48,8 @@ ${\text{m}}$ & length & metre
 \\
 ${\text{N}}$ & force & newton
 \\
+${\text{Pa}}$ & pressure & pascal
+\\
 \bottomrule
 \caption{Table of Units}
 \label{Table:ToU}
@@ -66,11 +68,11 @@ $a$ & A & ${\text{m}}$
 \\
 ${a_{\text{0}}}$ & Coefficient of w\_B's term of power 0 & $\frac{\text{N}}{\text{m}}$
 \\
-${a_{\text{1}}}$ & Coefficient of w\_B's term of power 1 & $\frac{\text{N}}{\text{m}}$
+${a_{\text{1}}}$ & Coefficient of w\_B's term of power 1 & $\frac{\text{N}}{\text{m}^{2}}$
 \\
-${a_{\text{2}}}$ & Coefficient of w\_B's term of power 2 & $\frac{\text{N}}{\text{m}}$
+${a_{\text{2}}}$ & Coefficient of w\_B's term of power 2 & $\frac{\text{N}}{\text{m}^{3}}$
 \\
-${a_{\text{3}}}$ & Coefficient of w\_B's term of power 3 & $\frac{\text{N}}{\text{m}}$
+${a_{\text{3}}}$ & Coefficient of w\_B's term of power 3 & $\frac{\text{N}}{\text{m}^{4}}$
 \\
 $E$ & Modulus of elasticity of the abstract beam & ${\text{Pa}}$
 \\
@@ -86,7 +88,9 @@ $L$ & Length of the abstract beam & ${\text{m}}$
 \\
 ${L_{B}}$ & Length of the beam & ${\text{m}}$
 \\
-${w_{B}}$ & Load at a particular point along the beam & ${\text{N}}$
+$M$ & Moment & ${\text{N}}$
+\\
+${w_{B}}$ & Load at a particular point along the beam & $\frac{\text{N}}{\text{m}}$
 \\
 $x$ & One-dimensional point along the beam, from the left-hand side (at the pinned support) & ${\text{m}}$
 \\
@@ -158,6 +162,20 @@ A system is needed to .
 \label{Sec:TermDefs}
 This subsection provides a list of terms that are used in the subsequent sections and their meaning, with the purpose of reducing ambiguity and making it easier to correctly understand the requirements.
 
+\begin{itemize}
+\item{Slender: If an object's length to height ratio is at least 10:1, then it is slender.}
+\item{Beam: Structural component intended to carry loads perpendicularly to their ``long'' axis.}
+\item{Bending moment: The internal reaction of a structural element when force is imposed.}
+\item{Deflection: Displacement due to deformation under load.}
+\item{Load: An applied load.}
+\item{Modulus of elasticity: Measure of lengthwise stiffness of an element as a force is applied lengthwise.}
+\item{Second moment of area: A measure of how well a cross-section resists bending.}
+\item{Pinned support: A structural support that allows for rotation but neither vertical nor horizontal movement.}
+\item{Roller support: A structural support that allows for rotation and horizontal movement, but not vertical movement.}
+\item{Simply supported beam: A beam that has a pinned support on one end and roller support on the other.}
+\item{Shear force: Force applied perpendicularly to objects.}
+\item{Young's modulus: Common synonym for modulus of elasticity.}
+\end{itemize}
 \subsubsection{Physical System Description}
 \label{Sec:PhysSyst}
 The physical system of BmBnd, as shown in \hyperref[Figure:bmbndFull]{Fig:bmbndFull}, includes the following elements:
@@ -256,7 +274,7 @@ Label & Load at a particular point along the beam
 Symbol & ${w_{B}}$
          
 \\ \midrule \\
-Units & ${\text{N}}$
+Units & $\frac{\text{N}}{\text{m}}$
         
 \\ \midrule \\
 Equation & \begin{displaymath}
@@ -264,12 +282,12 @@ Equation & \begin{displaymath}
            \end{displaymath}
 \\ \midrule \\
 Description & \begin{symbDescription}
-              \item{${w_{B}}$ is the load at a particular point along the beam (${\text{N}}$)}
+              \item{${w_{B}}$ is the load at a particular point along the beam ($\frac{\text{N}}{\text{m}}$)}
               \item{${a_{\text{0}}}$ is the coefficient of w\_B's term of power 0 ($\frac{\text{N}}{\text{m}}$)}
-              \item{${a_{\text{1}}}$ is the coefficient of w\_B's term of power 1 ($\frac{\text{N}}{\text{m}}$)}
+              \item{${a_{\text{1}}}$ is the coefficient of w\_B's term of power 1 ($\frac{\text{N}}{\text{m}^{2}}$)}
               \item{$x$ is the one-dimensional point along the beam, from the left-hand side (at the pinned support) (${\text{m}}$)}
-              \item{${a_{\text{2}}}$ is the coefficient of w\_B's term of power 2 ($\frac{\text{N}}{\text{m}}$)}
-              \item{${a_{\text{3}}}$ is the coefficient of w\_B's term of power 3 ($\frac{\text{N}}{\text{m}}$)}
+              \item{${a_{\text{2}}}$ is the coefficient of w\_B's term of power 2 ($\frac{\text{N}}{\text{m}^{3}}$)}
+              \item{${a_{\text{3}}}$ is the coefficient of w\_B's term of power 3 ($\frac{\text{N}}{\text{m}^{4}}$)}
               \end{symbDescription}
 \\ \midrule \\
 Source & \hyperref[world]{A:world}
@@ -283,6 +301,46 @@ RefBy &
 \subsubsection{Instance Models}
 \label{Sec:IMs}
 This section transforms the problem defined in the \hyperref[Sec:ProbDesc]{problem description} into one which is expressed in mathematical terms. It uses concrete symbols defined in the \hyperref[Sec:DDs]{data definitions} to replace the abstract symbols in the models identified in \hyperref[Sec:TMs]{theoretical models} and \hyperref[Sec:GDs]{general definitions}.
+
+\vspace{\baselineskip}
+\noindent
+\begin{minipage}{\textwidth}
+\begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
+\toprule \textbf{Refname} & \textbf{IM:deflection}
+\phantomsection 
+\label{IM:deflection}
+\\ \midrule \\
+Label & Deflection as an instance model
+        
+\\ \midrule \\
+Input & ${w_{B}}$, ${L_{B}}$, ${E_{B}}$, ${I_{B}}$
+        
+\\ \midrule \\
+Output & ${y_{B}}$
+         
+\\ \midrule \\
+Input Constraints & 
+\\ \midrule \\
+Output Constraints & 
+\\ \midrule \\
+Equation & \begin{displaymath}
+           {E_{B}}
+           \end{displaymath}
+\\ \midrule \\
+Description & \begin{symbDescription}
+              \item{${E_{B}}$ is the modulus of elasticity of the beam (${\text{Pa}}$)}
+              \end{symbDescription}
+\\ \midrule \\
+Notes & Analyzing the deflection of the beam as a boundary value problem.
+        
+\\ \midrule \\
+Source & \hyperref[world]{A:world}
+         
+\\ \midrule \\
+RefBy & 
+\\ \bottomrule
+\end{tabular}
+\end{minipage}
 
 \section{Requirements}
 \label{Sec:Requirements}
@@ -303,11 +361,11 @@ This section provides the functional requirements, the tasks and behaviours that
 \endhead
 ${a_{\text{0}}}$ & Coefficient of w\_B's term of power 0 & $\frac{\text{N}}{\text{m}}$
 \\
-${a_{\text{1}}}$ & Coefficient of w\_B's term of power 1 & $\frac{\text{N}}{\text{m}}$
+${a_{\text{1}}}$ & Coefficient of w\_B's term of power 1 & $\frac{\text{N}}{\text{m}^{2}}$
 \\
-${a_{\text{2}}}$ & Coefficient of w\_B's term of power 2 & $\frac{\text{N}}{\text{m}}$
+${a_{\text{2}}}$ & Coefficient of w\_B's term of power 2 & $\frac{\text{N}}{\text{m}^{3}}$
 \\
-${a_{\text{3}}}$ & Coefficient of w\_B's term of power 3 & $\frac{\text{N}}{\text{m}}$
+${a_{\text{3}}}$ & Coefficient of w\_B's term of power 3 & $\frac{\text{N}}{\text{m}^{4}}$
 \\
 ${E_{B}}$ & Modulus of elasticity of the beam & ${\text{Pa}}$
 \\
@@ -383,35 +441,39 @@ The purpose of the traceability matrices is to provide easy references on what h
 \\
 \hyperref[TM:curvatureThm]{TM:curvatureThm} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
+\hyperref[IM:deflection]{IM:deflection} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
 \hyperref[inputValues]{FR:Input-Values} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
 \bottomrule
 \caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
 \label{Table:TraceMatAvsAll}
 \end{longtable}
-\begin{longtable}{l l l}
+\begin{longtable}{l l l l}
 \toprule
-\textbf{} & \textbf{\hyperref[DD:loading]{DD:loading}} & \textbf{\hyperref[TM:curvatureThm]{TM:curvatureThm}}
+\textbf{} & \textbf{\hyperref[DD:loading]{DD:loading}} & \textbf{\hyperref[TM:curvatureThm]{TM:curvatureThm}} & \textbf{\hyperref[IM:deflection]{IM:deflection}}
 \\
 \midrule
 \endhead
-\hyperref[DD:loading]{DD:loading} &  & 
+\hyperref[DD:loading]{DD:loading} &  &  & 
 \\
-\hyperref[TM:curvatureThm]{TM:curvatureThm} &  & 
+\hyperref[TM:curvatureThm]{TM:curvatureThm} &  &  & 
+\\
+\hyperref[IM:deflection]{IM:deflection} &  &  & 
 \\
 \bottomrule
 \caption{Traceability Matrix Showing the Connections Between Items and Other Sections}
 \label{Table:TraceMatRefvsRef}
 \end{longtable}
-\begin{longtable}{l l l l}
+\begin{longtable}{l l l l l}
 \toprule
-\textbf{} & \textbf{\hyperref[DD:loading]{DD:loading}} & \textbf{\hyperref[TM:curvatureThm]{TM:curvatureThm}} & \textbf{\hyperref[inputValues]{FR:Input-Values}}
+\textbf{} & \textbf{\hyperref[DD:loading]{DD:loading}} & \textbf{\hyperref[TM:curvatureThm]{TM:curvatureThm}} & \textbf{\hyperref[IM:deflection]{IM:deflection}} & \textbf{\hyperref[inputValues]{FR:Input-Values}}
 \\
 \midrule
 \endhead
-\hyperref[deflection]{GS:deflection} &  &  & 
+\hyperref[deflection]{GS:deflection} &  &  &  & 
 \\
-\hyperref[inputValues]{FR:Input-Values} &  &  & 
+\hyperref[inputValues]{FR:Input-Values} &  &  &  & 
 \\
 \bottomrule
 \caption{Traceability Matrix Showing the Connections Between Goal Statements and Other Items}

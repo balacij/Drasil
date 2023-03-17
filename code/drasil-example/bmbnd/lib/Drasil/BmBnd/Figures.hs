@@ -2,6 +2,9 @@ module Drasil.BmBnd.Figures where
 
 import           Language.Drasil
 
+figures :: [LabelledContent]
+figures = [bmBndDiagramSimplified, bmBndDiagram, systemContext]
+
 resourcePath :: String
 resourcePath = "../../../../datafiles/bmbnd/"
 

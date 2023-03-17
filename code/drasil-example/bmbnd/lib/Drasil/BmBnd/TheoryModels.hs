@@ -2,7 +2,6 @@ module Drasil.BmBnd.TheoryModels where
 
 import           Theory.Drasil
 import           Language.Drasil
-import qualified Language.Drasil.Sentence.Combinators as S
 import qualified Data.List.NonEmpty as NE
 import           Drasil.BmBnd.Quantities
 import qualified Drasil.BmBnd.Assumptions as As

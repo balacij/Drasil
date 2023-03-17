@@ -40,9 +40,10 @@ degree = fund' "degree" "angle" (Special Circle)
 s_2 :: UnitDefn
 s_2 = newUnit "seconds squared" $ second ^: 2
 
-m_2, m_3 :: UnitDefn
+m_2, m_3, m_4 :: UnitDefn
 m_2 = newUnit "square metres"   $ metre ^: 2
-m_3 = newUnit "cubic metres"    $ metre ^: 3
+m_3 = newUnit "cubic metres" $ metre ^: 3
+m_4 = newUnit "quartic metres" $ metre ^: 4
 
 -- And now for the ones with 'common' names
 

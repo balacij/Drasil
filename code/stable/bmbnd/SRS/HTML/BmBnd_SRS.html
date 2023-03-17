@@ -132,6 +132,11 @@
                   <td>force</td>
                   <td>newton</td>
                 </tr>
+                <tr>
+                  <td><em>Pa</em></td>
+                  <td>pressure</td>
+                  <td>pascal</td>
+                </tr>
               </table>
               <p class="caption">Table of Units</p>
             </div>
@@ -163,17 +168,17 @@
                 <tr>
                   <td><em>a<sub>1</sub></em></td>
                   <td>Coefficient of w_B's term of power 1</td>
-                  <td><em>\(\frac{\text{N}}{\text{m}}\)</em></td>
+                  <td><em>\(\frac{\text{N}}{\text{m}^{2}}\)</em></td>
                 </tr>
                 <tr>
                   <td><em>a<sub>2</sub></em></td>
                   <td>Coefficient of w_B's term of power 2</td>
-                  <td><em>\(\frac{\text{N}}{\text{m}}\)</em></td>
+                  <td><em>\(\frac{\text{N}}{\text{m}^{3}}\)</em></td>
                 </tr>
                 <tr>
                   <td><em>a<sub>3</sub></em></td>
                   <td>Coefficient of w_B's term of power 3</td>
-                  <td><em>\(\frac{\text{N}}{\text{m}}\)</em></td>
+                  <td><em>\(\frac{\text{N}}{\text{m}^{4}}\)</em></td>
                 </tr>
                 <tr>
                   <td><em>E</em></td>
@@ -213,9 +218,14 @@
                   <td><em>m</em></td>
                 </tr>
                 <tr>
+                  <td><em>M</em></td>
+                  <td>Moment</td>
+                  <td><em>N</em></td>
+                </tr>
+                <tr>
                   <td><em>w<sub>B</sub></em></td>
                   <td>Load at a particular point along the beam</td>
-                  <td><em>N</em></td>
+                  <td><em>\(\frac{\text{N}}{\text{m}}\)</em></td>
                 </tr>
                 <tr>
                   <td><em>x</em></td>
@@ -334,7 +344,36 @@
                 <p class="paragraph">
                   This subsection provides a list of terms that are used in the subsequent sections and their meaning, with the purpose of reducing ambiguity and making it easier to correctly understand the requirements.
                 </p>
-                <ul class="list"></ul>
+                <ul class="list">
+                  <li>
+                    Slender: If an object's length to height ratio is at least 10:1, then it is slender.
+                  </li>
+                  <li>
+                    Beam: Structural component intended to carry loads perpendicularly to their ``long'' axis.
+                  </li>
+                  <li>
+                    Bending moment: The internal reaction of a structural element when force is imposed.
+                  </li>
+                  <li>Deflection: Displacement due to deformation under load.</li>
+                  <li>Load: An applied load.</li>
+                  <li>
+                    Modulus of elasticity: Measure of lengthwise stiffness of an element as a force is applied lengthwise.
+                  </li>
+                  <li>
+                    Second moment of area: A measure of how well a cross-section resists bending.
+                  </li>
+                  <li>
+                    Pinned support: A structural support that allows for rotation but neither vertical nor horizontal movement.
+                  </li>
+                  <li>
+                    Roller support: A structural support that allows for rotation and horizontal movement, but not vertical movement.
+                  </li>
+                  <li>
+                    Simply supported beam: A beam that has a pinned support on one end and roller support on the other.
+                  </li>
+                  <li>Shear force: Force applied perpendicularly to objects.</li>
+                  <li>Young's modulus: Common synonym for modulus of elasticity.</li>
+                </ul>
               </div>
             </div>
             <div id="Sec:PhysSyst">
@@ -533,7 +572,9 @@
                     </tr>
                     <tr>
                       <th>Units</th>
-                      <td><p class="paragraph"><em>N</em></p></td>
+                      <td>
+                        <p class="paragraph"><em>\(\frac{\text{N}}{\text{m}}\)</em></p>
+                      </td>
                     </tr>
                     <tr>
                       <th>Equation</th>
@@ -546,22 +587,22 @@
                       <td>
                         <ul class="hide-list-style-no-indent">
                           <li>
-                            <em>w<sub>B</sub></em> is the load at a particular point along the beam (<em>N</em>)
+                            <em>w<sub>B</sub></em> is the load at a particular point along the beam (<em>\(\frac{\text{N}}{\text{m}}\)</em>)
                           </li>
                           <li>
                             <em>a<sub>0</sub></em> is the coefficient of w_B's term of power 0 (<em>\(\frac{\text{N}}{\text{m}}\)</em>)
                           </li>
                           <li>
-                            <em>a<sub>1</sub></em> is the coefficient of w_B's term of power 1 (<em>\(\frac{\text{N}}{\text{m}}\)</em>)
+                            <em>a<sub>1</sub></em> is the coefficient of w_B's term of power 1 (<em>\(\frac{\text{N}}{\text{m}^{2}}\)</em>)
                           </li>
                           <li>
                             <em>x</em> is the one-dimensional point along the beam, from the left-hand side (at the pinned support) (<em>m</em>)
                           </li>
                           <li>
-                            <em>a<sub>2</sub></em> is the coefficient of w_B's term of power 2 (<em>\(\frac{\text{N}}{\text{m}}\)</em>)
+                            <em>a<sub>2</sub></em> is the coefficient of w_B's term of power 2 (<em>\(\frac{\text{N}}{\text{m}^{3}}\)</em>)
                           </li>
                           <li>
-                            <em>a<sub>3</sub></em> is the coefficient of w_B's term of power 3 (<em>\(\frac{\text{N}}{\text{m}}\)</em>)
+                            <em>a<sub>3</sub></em> is the coefficient of w_B's term of power 3 (<em>\(\frac{\text{N}}{\text{m}^{4}}\)</em>)
                           </li>
                         </ul>
                       </td>
@@ -585,6 +626,69 @@
                 <p class="paragraph">
                   This section transforms the problem defined in the <a href=#Sec:ProbDesc>problem description</a> into one which is expressed in mathematical terms. It uses concrete symbols defined in the <a href=#Sec:DDs>data definitions</a> to replace the abstract symbols in the models identified in <a href=#Sec:TMs>theoretical models</a> and <a href=#Sec:GDs>general definitions</a>.
                 </p>
+                <div id="IM:deflection">
+                  <table class="idefn">
+                    <tr>
+                      <th>Refname</th>
+                      <td><b>IM:deflection</b></td>
+                    </tr>
+                    <tr>
+                      <th>Label</th>
+                      <td><p class="paragraph">Deflection as an instance model</p></td>
+                    </tr>
+                    <tr>
+                      <th>Input</th>
+                      <td>
+                        <p class="paragraph">
+                          <em>w<sub>B</sub></em>, <em>L<sub>B</sub></em>, <em>E<sub>B</sub></em>, <em>I<sub>B</sub></em>
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Output</th>
+                      <td><p class="paragraph"><em>y<sub>B</sub></em></p></td>
+                    </tr>
+                    <tr>
+                      <th>Input Constraints</th>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Output Constraints</th>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Equation</th>
+                      <td>\[{E_{B}}\]</td>
+                    </tr>
+                    <tr>
+                      <th>Description</th>
+                      <td>
+                        <ul class="hide-list-style-no-indent">
+                          <li>
+                            <em>E<sub>B</sub></em> is the modulus of elasticity of the beam (<em>Pa</em>)
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Notes</th>
+                      <td>
+                        <p class="paragraph">
+                          Analyzing the deflection of the beam as a boundary value problem.
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Source</th>
+                      <td><p class="paragraph"><a href=#world>A:world</a></p></td>
+                    </tr>
+                    <tr>
+                      <th>RefBy</th>
+                      <td><p class="paragraph"></p></td>
+                    </tr>
+                  </table>
+                </div>
+                <p class="paragraph"></p>
               </div>
             </div>
           </div>
@@ -625,17 +729,17 @@
                 <tr>
                   <td><em>a<sub>1</sub></em></td>
                   <td>Coefficient of w_B's term of power 1</td>
-                  <td><em>\(\frac{\text{N}}{\text{m}}\)</em></td>
+                  <td><em>\(\frac{\text{N}}{\text{m}^{2}}\)</em></td>
                 </tr>
                 <tr>
                   <td><em>a<sub>2</sub></em></td>
                   <td>Coefficient of w_B's term of power 2</td>
-                  <td><em>\(\frac{\text{N}}{\text{m}}\)</em></td>
+                  <td><em>\(\frac{\text{N}}{\text{m}^{3}}\)</em></td>
                 </tr>
                 <tr>
                   <td><em>a<sub>3</sub></em></td>
                   <td>Coefficient of w_B's term of power 3</td>
-                  <td><em>\(\frac{\text{N}}{\text{m}}\)</em></td>
+                  <td><em>\(\frac{\text{N}}{\text{m}^{4}}\)</em></td>
                 </tr>
                 <tr>
                   <td><em>E<sub>B</sub></em></td>
@@ -1117,6 +1221,25 @@
               <td></td>
             </tr>
             <tr>
+              <td><a href=#IM:deflection>IM:deflection</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
               <td><a href=#inputValues>FR:Input-Values</a></td>
               <td></td>
               <td></td>
@@ -1146,14 +1269,23 @@
               <th></th>
               <th><a href=#DD:loading>DD:loading</a></th>
               <th><a href=#TM:curvatureThm>TM:curvatureThm</a></th>
+              <th><a href=#IM:deflection>IM:deflection</a></th>
             </tr>
             <tr>
               <td><a href=#DD:loading>DD:loading</a></td>
               <td></td>
               <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#TM:curvatureThm>TM:curvatureThm</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#IM:deflection>IM:deflection</a></td>
+              <td></td>
               <td></td>
               <td></td>
             </tr>
@@ -1168,6 +1300,7 @@
               <th></th>
               <th><a href=#DD:loading>DD:loading</a></th>
               <th><a href=#TM:curvatureThm>TM:curvatureThm</a></th>
+              <th><a href=#IM:deflection>IM:deflection</a></th>
               <th><a href=#inputValues>FR:Input-Values</a></th>
             </tr>
             <tr>
@@ -1175,9 +1308,11 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#inputValues>FR:Input-Values</a></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
