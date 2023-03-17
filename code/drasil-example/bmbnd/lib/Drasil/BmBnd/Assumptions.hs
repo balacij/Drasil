@@ -4,14 +4,23 @@ import           Language.Drasil
 import           Data.Drasil.Concepts.Documentation
 
 assumptions :: [ConceptInstance]
-assumptions = [ world
-              , beamSlender
-              , beamPrismatic
-              , beamUniformCrossSection
-              , beamFlat
-              , beamStaticSecondMomentOfArea
-              , beamVerticalLinearElasticLoad
-              , beamStaticModulusOfElasticity]
+assumptions =
+  [ world
+  , beamSlender
+  , beamPrismatic
+  , beamUniformCrossSection
+  , beamFlat
+  , beamConstantSecondMomentOfArea
+  , beamVerticalLinearElasticLoad
+  , beamConstantModulusOfElasticity
+  , beamSmallDeflections
+  , beamLocallySmallSlopes
+  , beamSimplySupported
+  , beamLoadingPolynomial
+  , beamNoPointLoads
+  , beamNoAxialLoading
+  , beamDeflectionFunctionDifferentiable
+  , beamLoadingFunctionIntegrable]
 
 world :: ConceptInstance
 world = cic
@@ -43,11 +52,11 @@ beamFlat = cic
   "beamFlat"
   assumpDom
 
-beamStaticSecondMomentOfArea :: ConceptInstance
-beamStaticSecondMomentOfArea = cic
-  "beamStaticSecondMomentOfArea"
-  (S "The beam has a static second moment of area.")
-  "beamStaticSecondMomentOfArea"
+beamConstantSecondMomentOfArea :: ConceptInstance
+beamConstantSecondMomentOfArea = cic
+  "beamConstantSecondMomentOfArea"
+  (S "The beam has a constant second moment of area.")
+  "beamConstantSecondMomentOfArea"
   assumpDom
 
 beamVerticalLinearElasticLoad :: ConceptInstance
@@ -57,9 +66,69 @@ beamVerticalLinearElasticLoad = cic
   "beamVerticalLinearElasticLoad"
   assumpDom
 
-beamStaticModulusOfElasticity :: ConceptInstance
-beamStaticModulusOfElasticity = cic
-  "beamStaticModulusOfElasticity"
-  (S "The beam's modulus of elasticity is static along the beam.")
-  "beamStaticModulusOfElasticity"
+beamConstantModulusOfElasticity :: ConceptInstance
+beamConstantModulusOfElasticity = cic
+  "beamConstantModulusOfElasticity"
+  (S "The beam's modulus of elasticity is constant along the beam.")
+  "beamConstantModulusOfElasticity"
+  assumpDom
+
+beamSmallDeflections :: ConceptInstance
+beamSmallDeflections = cic
+  "beamSmallDeflections"
+  (S
+     "Only relatively small deflections will be examined (whereby the maximum deflection is at most SLENDER of the beam's length).")
+  "beamSmallDeflections"
+  assumpDom
+
+beamLocallySmallSlopes :: ConceptInstance
+beamLocallySmallSlopes = cic
+  "beamLocallySmallSlopes"
+  (S
+     "The deflection of the beam will have locally small slopes across the beam.")
+  "beamLocallySmallSlopes"
+  assumpDom
+
+beamSimplySupported :: ConceptInstance
+beamSimplySupported = cic
+  "beamSimplySupported"
+  (S "The beam is simply supported.")
+  "beamSimplySupported"
+  assumpDom
+
+beamLoadingPolynomial :: ConceptInstance
+beamLoadingPolynomial = cic
+  "beamLoadingPolynomial"
+  (S
+     "The beam's loading may be captured by a third-order polynomial of standard form.")
+  "beamLoadingPolynomial"
+  assumpDom
+
+beamNoPointLoads :: ConceptInstance
+beamNoPointLoads = cic
+  "beamNoPointLoads"
+  (S "The beam's loading contains no point loads.")
+  "beamNoPointLoads"
+  assumpDom
+
+beamNoAxialLoading :: ConceptInstance
+beamNoAxialLoading = cic
+  "beamNoAxialLoading"
+  (S "The beam has no loading applied axially")
+  "beamNoAxialLoading"
+  assumpDom
+
+beamDeflectionFunctionDifferentiable :: ConceptInstance
+beamDeflectionFunctionDifferentiable = cic
+  "beamDeflectionFunctionDifferentiable"
+  (S
+     "The beam deflection function is continuously differentiable 4 times on [0, L].") -- FIXME: While this is textually 'good', I would prefer it be written using the math notation "y_B(x) \in C^4"
+  "beamDeflectionFunctionDifferentiable"
+  assumpDom
+
+beamLoadingFunctionIntegrable :: ConceptInstance
+beamLoadingFunctionIntegrable = cic
+  "beamLoadingFunctionIntegrable"
+  (S "The beam loading function is integrable 4 times on [0, L].") -- TODO: Is this really needed? I feel like it should be covered by beamDeflectionFunctionDifferentiable
+  "beamLoadingFunctionIntegrable"
   assumpDom

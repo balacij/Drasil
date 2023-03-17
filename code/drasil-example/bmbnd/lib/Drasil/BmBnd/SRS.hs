@@ -6,8 +6,8 @@ import           Language.Drasil
 
 -- FIXME: I added this argument for the SRSDecl, but I don't think it should be
 -- needed. This is temporary work to avoid the cyclic dependency shown below.
-srsBody :: SystemInformation -> SRSDecl
-srsBody si =
+srsBody :: SystemInformation -> CI -> LabelledContent -> [ConceptChunk] -> SRSDecl
+srsBody si cs fig terms =
   [ TableOfContents
   , RefSec $ RefProg intro [TUnits, tsymb [TSPurpose, SymbOrder], TAandA]
   , IntroSec
@@ -17,7 +17,8 @@ srsBody si =
     $ GSDProg [SysCntxt [], UsrChars [userCharacteristics], SystCons [] []]
   , SSDSec
     $ SSDProg
-      [ SSDProblem $ PDProg (S "") [] [Goals [S ""]]
+      [ SSDProblem
+        $ PDProg (S "") [] [TermsAndDefs Nothing terms, PhySysDesc cs [] fig [], Goals [S ""]]
       , SSDSolChSpec
         $ SCSProg
           [ Assumptions
@@ -32,7 +33,7 @@ srsBody si =
   , ReqrmntSec $ ReqsProg [FReqsSub EmptyS [], NonFReqsSub]
   , LCsSec
   , TraceabilitySec $ TraceabilityProg $ traceMatStandard si  -- FIXME: the SRSDecl referencing the SystemInformation is akin to a cyclic dependency (talking about Drasil, not Haskell).
-    -- , AuxConstntSec $ AuxConsProg prog [] -- FIXME: In a similar fashion to the above, I should not have to manually reference the 'progName' from here! It should be filled in for me.
+    , AuxConstntSec $ AuxConsProg cs [] -- FIXME: In a similar fashion to the above, I should not have to manually reference the 'progName' from here! It should be filled in for me.
   , Bibliography]
 
 stdFields :: Fields

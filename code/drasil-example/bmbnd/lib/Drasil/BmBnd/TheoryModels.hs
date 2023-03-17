@@ -27,6 +27,7 @@ curvature = tm
 
     curveRel :: ModelExpr
     curveRel = (exactDbl 1 $/ sy rho)
-      $= (nthderiv 2 (sy f) a $/ (exactDbl 1 `addRe` (deriv (sy f) a $^ exactDbl 2)) $^ frac 3 2)
+      $= (nthderiv 2 (sy f) a
+          $/ ((exactDbl 1 `addRe` (deriv (sy f) a $^ exactDbl 2)) $^ frac 3 2))
 
     curvatureCS = mkConstraintSet curveConceptChunk $ NE.fromList [curveRel]

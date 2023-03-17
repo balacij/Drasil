@@ -30,6 +30,7 @@ import qualified Drasil.BmBnd.Quantities as Qs
 import qualified Drasil.BmBnd.References as Rs
 import           Drasil.BmBnd.SRS
 import qualified Drasil.BmBnd.TheoryModels as TMs
+import qualified Drasil.BmBnd.Figures as Fs
 
 caseStudy :: CI
 caseStudy =
@@ -76,6 +77,9 @@ terms = nw caseStudy
     ++ map nw CM.mathcon')
   ++ map nw Qs.quantities -- TODO: this is required, but feels like it should be done automatically, look into this
 
+shownTerms :: [ConceptChunk]
+shownTerms = []
+
 conceptChunks :: [ConceptChunk]
 conceptChunks = Doc.srsDomains
 
@@ -116,7 +120,7 @@ refDB :: ReferenceDB
 refDB = rdb Rs.references conceptInstances
 
 realSrsBody :: SRSDecl
-realSrsBody = srsBody si
+realSrsBody = srsBody si caseStudy Fs.bmBndDiagram shownTerms
 
 srs :: Document
 srs = mkDoc realSrsBody (S.forGen titleize phrase) si

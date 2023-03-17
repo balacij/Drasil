@@ -68,6 +68,8 @@
               <li>
                 <a href=#Sec:ProbDesc>Problem Description</a>
                 <ul class="list">
+                  <li><a href=#Sec:TermDefs>Terminology and Definitions</a></li>
+                  <li><a href=#Sec:PhysSyst>Physical System Description</a></li>
                   <li><a href=#Sec:GoalStmt>Goal Statements</a></li>
                 </ul>
               </li>
@@ -93,6 +95,9 @@
           <li><a href=#Sec:LCs>Likely Changes</a></li>
           <li>
             <a href=#Sec:TraceMatrices>Traceability Matrices and Graphs</a>
+          </li>
+          <li>
+            <a href=#Sec:AuxConstants>Values of Auxiliary Constants</a>
           </li>
           <li><a href=#Sec:References>References</a></li>
         </ul>
@@ -323,6 +328,30 @@
           <div class="subsection">
             <h2>Problem Description</h2>
             <p class="paragraph">A system is needed to .</p>
+            <div id="Sec:TermDefs">
+              <div class="subsubsection">
+                <h3>Terminology and Definitions</h3>
+                <p class="paragraph">
+                  This subsection provides a list of terms that are used in the subsequent sections and their meaning, with the purpose of reducing ambiguity and making it easier to correctly understand the requirements.
+                </p>
+                <ul class="list"></ul>
+              </div>
+            </div>
+            <div id="Sec:PhysSyst">
+              <div class="subsubsection">
+                <h3>Physical System Description</h3>
+                <p class="paragraph">
+                  The physical system of BmBnd, as shown in <a href=#Figure:bmbndFull>Fig:bmbndFull</a>, includes the following elements:
+                </p>
+                <div class="list"></div>
+                <div id="Figure:bmbndFull">
+                  <figure>
+                    <img src="../../../../datafiles/bmbnd/beam_bending_diagram_annotated.drawio.png" alt="physical system" width="70.0%" >
+                    <figcaption>physical system</figcaption>
+                  </figure>
+                </div>
+              </div>
+            </div>
             <div id="Sec:GoalStmt">
               <div class="subsubsection">
                 <h3>Goal Statements</h3>
@@ -373,8 +402,8 @@
                     </div>
                   </p>
                   <p>
-                    <div id="beamStaticSecondMomentOfArea">
-                      beamStaticSecondMomentOfArea: The beam has a static second moment of area.
+                    <div id="beamConstantSecondMomentOfArea">
+                      beamConstantSecondMomentOfArea: The beam has a constant second moment of area.
                     </div>
                   </p>
                   <p>
@@ -383,8 +412,48 @@
                     </div>
                   </p>
                   <p>
-                    <div id="beamStaticModulusOfElasticity">
-                      beamStaticModulusOfElasticity: The beam's modulus of elasticity is static along the beam.
+                    <div id="beamConstantModulusOfElasticity">
+                      beamConstantModulusOfElasticity: The beam's modulus of elasticity is constant along the beam.
+                    </div>
+                  </p>
+                  <p>
+                    <div id="beamSmallDeflections">
+                      beamSmallDeflections: Only relatively small deflections will be examined (whereby the maximum deflection is at most SLENDER of the beam's length).
+                    </div>
+                  </p>
+                  <p>
+                    <div id="beamLocallySmallSlopes">
+                      beamLocallySmallSlopes: The deflection of the beam will have locally small slopes across the beam.
+                    </div>
+                  </p>
+                  <p>
+                    <div id="beamSimplySupported">
+                      beamSimplySupported: The beam is simply supported.
+                    </div>
+                  </p>
+                  <p>
+                    <div id="beamLoadingPolynomial">
+                      beamLoadingPolynomial: The beam's loading may be captured by a third-order polynomial of standard form.
+                    </div>
+                  </p>
+                  <p>
+                    <div id="beamNoPointLoads">
+                      beamNoPointLoads: The beam's loading contains no point loads.
+                    </div>
+                  </p>
+                  <p>
+                    <div id="beamNoAxialLoading">
+                      beamNoAxialLoading: The beam has no loading applied axially
+                    </div>
+                  </p>
+                  <p>
+                    <div id="beamDeflectionFunctionDifferentiable">
+                      beamDeflectionFunctionDifferentiable: The beam deflection function is continuously differentiable 4 times on [0, L].
+                    </div>
+                  </p>
+                  <p>
+                    <div id="beamLoadingFunctionIntegrable">
+                      beamLoadingFunctionIntegrable: The beam loading function is integrable 4 times on [0, L].
                     </div>
                   </p>
                 </div>
@@ -628,17 +697,39 @@
               </th>
               <th><a href=#beamFlat>A:beamFlat</a></th>
               <th>
-                <a href=#beamStaticSecondMomentOfArea>A:beamStaticSecondMomentOfArea</a>
+                <a href=#beamConstantSecondMomentOfArea>A:beamConstantSecondMomentOfArea</a>
               </th>
               <th>
                 <a href=#beamVerticalLinearElasticLoad>A:beamVerticalLinearElasticLoad</a>
               </th>
               <th>
-                <a href=#beamStaticModulusOfElasticity>A:beamStaticModulusOfElasticity</a>
+                <a href=#beamConstantModulusOfElasticity>A:beamConstantModulusOfElasticity</a>
+              </th>
+              <th><a href=#beamSmallDeflections>A:beamSmallDeflections</a></th>
+              <th>
+                <a href=#beamLocallySmallSlopes>A:beamLocallySmallSlopes</a>
+              </th>
+              <th><a href=#beamSimplySupported>A:beamSimplySupported</a></th>
+              <th><a href=#beamLoadingPolynomial>A:beamLoadingPolynomial</a></th>
+              <th><a href=#beamNoPointLoads>A:beamNoPointLoads</a></th>
+              <th><a href=#beamNoAxialLoading>A:beamNoAxialLoading</a></th>
+              <th>
+                <a href=#beamDeflectionFunctionDifferentiable>A:beamDeflectionFunctionDifferentiable</a>
+              </th>
+              <th>
+                <a href=#beamLoadingFunctionIntegrable>A:beamLoadingFunctionIntegrable</a>
               </th>
             </tr>
             <tr>
               <td><a href=#world>A:world</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -658,9 +749,25 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#beamPrismatic>A:beamPrismatic</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -682,6 +789,14 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#beamFlat>A:beamFlat</a></td>
@@ -693,11 +808,27 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
             <tr>
               <td>
-                <a href=#beamStaticSecondMomentOfArea>A:beamStaticSecondMomentOfArea</a>
+                <a href=#beamConstantSecondMomentOfArea>A:beamConstantSecondMomentOfArea</a>
               </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -719,11 +850,185 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
             <tr>
               <td>
-                <a href=#beamStaticModulusOfElasticity>A:beamStaticModulusOfElasticity</a>
+                <a href=#beamConstantModulusOfElasticity>A:beamConstantModulusOfElasticity</a>
               </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#beamSmallDeflections>A:beamSmallDeflections</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>
+                <a href=#beamLocallySmallSlopes>A:beamLocallySmallSlopes</a>
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#beamSimplySupported>A:beamSimplySupported</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#beamLoadingPolynomial>A:beamLoadingPolynomial</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#beamNoPointLoads>A:beamNoPointLoads</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#beamNoAxialLoading>A:beamNoAxialLoading</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>
+                <a href=#beamDeflectionFunctionDifferentiable>A:beamDeflectionFunctionDifferentiable</a>
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>
+                <a href=#beamLoadingFunctionIntegrable>A:beamLoadingFunctionIntegrable</a>
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -750,17 +1055,39 @@
               </th>
               <th><a href=#beamFlat>A:beamFlat</a></th>
               <th>
-                <a href=#beamStaticSecondMomentOfArea>A:beamStaticSecondMomentOfArea</a>
+                <a href=#beamConstantSecondMomentOfArea>A:beamConstantSecondMomentOfArea</a>
               </th>
               <th>
                 <a href=#beamVerticalLinearElasticLoad>A:beamVerticalLinearElasticLoad</a>
               </th>
               <th>
-                <a href=#beamStaticModulusOfElasticity>A:beamStaticModulusOfElasticity</a>
+                <a href=#beamConstantModulusOfElasticity>A:beamConstantModulusOfElasticity</a>
+              </th>
+              <th><a href=#beamSmallDeflections>A:beamSmallDeflections</a></th>
+              <th>
+                <a href=#beamLocallySmallSlopes>A:beamLocallySmallSlopes</a>
+              </th>
+              <th><a href=#beamSimplySupported>A:beamSimplySupported</a></th>
+              <th><a href=#beamLoadingPolynomial>A:beamLoadingPolynomial</a></th>
+              <th><a href=#beamNoPointLoads>A:beamNoPointLoads</a></th>
+              <th><a href=#beamNoAxialLoading>A:beamNoAxialLoading</a></th>
+              <th>
+                <a href=#beamDeflectionFunctionDifferentiable>A:beamDeflectionFunctionDifferentiable</a>
+              </th>
+              <th>
+                <a href=#beamLoadingFunctionIntegrable>A:beamLoadingFunctionIntegrable</a>
               </th>
             </tr>
             <tr>
               <td><a href=#DD:loading>DD:loading</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -780,9 +1107,25 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#inputValues>FR:Input-Values</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -897,6 +1240,12 @@
             <a href="../../../../traceygraphs/bmbnd/allvsall.svg">TraceGraphAllvsAll</a>
           </li>
         </ul>
+      </div>
+    </div>
+    <div id="Sec:AuxConstants">
+      <div class="section">
+        <h1>Values of Auxiliary Constants</h1>
+        <p class="paragraph">There are no auxiliary constants.</p>
       </div>
     </div>
     <div id="Sec:References">
