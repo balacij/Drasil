@@ -64,7 +64,7 @@ The symbols used in this document are summarized in the \hyperref[Table:ToS]{Tab
 \\
 \midrule
 \endhead
-$a$ & A & ${\text{m}}$
+$a$ & Horizontal component of a point on a 2D coordinate system & ${\text{m}}$
 \\
 ${a_{\text{0}}}$ & Coefficient of w\_B's term of power 0 & $\frac{\text{N}}{\text{m}}$
 \\
@@ -78,7 +78,7 @@ $E$ & Modulus of elasticity of the abstract beam & ${\text{Pa}}$
 \\
 ${E_{B}}$ & Modulus of elasticity of the beam & ${\text{Pa}}$
 \\
-$f$ & F & ${\text{m}}$
+$f$ & Vertical component of a point on a 2D coordinate system & ${\text{m}}$
 \\
 $I$ & Moment of second area of a cross-section of the abstract beam & ${\text{m}}$
 \\
@@ -88,7 +88,7 @@ $L$ & Length of the abstract beam & ${\text{m}}$
 \\
 ${L_{B}}$ & Length of the beam & ${\text{m}}$
 \\
-$M$ & Moment & ${\text{N}}$
+$M$ & Second moment of area & ${\text{N}}$
 \\
 ${w_{B}}$ & Load at a particular point along the beam & $\frac{\text{N}}{\text{m}}$
 \\
@@ -98,7 +98,7 @@ $y$ & Deflection at a particular point along the abstract beam & ${\text{m}}$
 \\
 ${y_{B}}$ & Deflection at a particular point along the beam & ${\text{m}}$
 \\
-$ρ$ & Rho & ${\text{m}}$
+$ρ$ & Radius of curvature & ${\text{m}}$
 \\
 \bottomrule
 \caption{Table of Symbols}
@@ -167,7 +167,7 @@ This subsection provides a list of terms that are used in the subsequent section
 \item{Beam: Structural component intended to carry loads perpendicularly to their ``long'' axis.}
 \item{Bending moment: The internal reaction of a structural element when force is imposed.}
 \item{Deflection: Displacement due to deformation under load.}
-\item{Load: An applied load.}
+\item{Load: An applied force.}
 \item{Modulus of elasticity: Measure of lengthwise stiffness of an element as a force is applied lengthwise.}
 \item{Second moment of area: A measure of how well a cross-section resists bending.}
 \item{Pinned support: A structural support that allows for rotation but neither vertical nor horizontal movement.}
@@ -240,9 +240,39 @@ Equation & \begin{displaymath}
            \end{displaymath}
 \\ \midrule \\
 Description & \begin{symbDescription}
-              \item{$ρ$ is the rho (${\text{m}}$)}
-              \item{$a$ is the a (${\text{m}}$)}
-              \item{$f$ is the f (${\text{m}}$)}
+              \item{$ρ$ is the radius of curvature (${\text{m}}$)}
+              \item{$a$ is the horizontal component of a point on a 2D coordinate system (${\text{m}}$)}
+              \item{$f$ is the vertical component of a point on a 2D coordinate system (${\text{m}}$)}
+              \end{symbDescription}
+\\ \midrule \\
+Source & \hyperref[world]{A:world}
+         
+\\ \midrule \\
+RefBy & 
+\\ \bottomrule
+\end{tabular}
+\end{minipage}
+\vspace{\baselineskip}
+\noindent
+\begin{minipage}{\textwidth}
+\begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
+\toprule \textbf{Refname} & \textbf{TM:prismaticBeamArc}
+\phantomsection 
+\label{TM:prismaticBeamArc}
+\\ \midrule \\
+Label & Curvature of a plane
+        
+\\ \midrule \\
+Equation & \begin{displaymath}
+           \frac{1}{ρ}=\frac{M\left(x\right)}{E I}
+           \end{displaymath}
+\\ \midrule \\
+Description & \begin{symbDescription}
+              \item{$ρ$ is the radius of curvature (${\text{m}}$)}
+              \item{$M$ is the second moment of area (${\text{N}}$)}
+              \item{$x$ is the one-dimensional point along the beam, from the left-hand side (at the pinned support) (${\text{m}}$)}
+              \item{$E$ is the modulus of elasticity of the abstract beam (${\text{Pa}}$)}
+              \item{$I$ is the moment of second area of a cross-section of the abstract beam (${\text{m}}$)}
               \end{symbDescription}
 \\ \midrule \\
 Source & \hyperref[world]{A:world}
@@ -324,11 +354,15 @@ Input Constraints &
 Output Constraints & 
 \\ \midrule \\
 Equation & \begin{displaymath}
-           {E_{B}}
+           {E_{B}} {I_{B}} \frac{\,d^{4}{y_{B}}}{\,dx^{4}}={w_{B}}\left(x\right)
            \end{displaymath}
 \\ \midrule \\
 Description & \begin{symbDescription}
               \item{${E_{B}}$ is the modulus of elasticity of the beam (${\text{Pa}}$)}
+              \item{${I_{B}}$ is the moment of second area of a cross-section of the beam (${\text{m}}$)}
+              \item{$x$ is the one-dimensional point along the beam, from the left-hand side (at the pinned support) (${\text{m}}$)}
+              \item{${y_{B}}$ is the deflection at a particular point along the beam (${\text{m}}$)}
+              \item{${w_{B}}$ is the load at a particular point along the beam ($\frac{\text{N}}{\text{m}}$)}
               \end{symbDescription}
 \\ \midrule \\
 Notes & Analyzing the deflection of the beam as a boundary value problem.
@@ -441,6 +475,8 @@ The purpose of the traceability matrices is to provide easy references on what h
 \\
 \hyperref[TM:curvatureThm]{TM:curvatureThm} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
+\hyperref[TM:prismaticBeamArc]{TM:prismaticBeamArc} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
 \hyperref[IM:deflection]{IM:deflection} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
 \hyperref[inputValues]{FR:Input-Values} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
@@ -449,31 +485,33 @@ The purpose of the traceability matrices is to provide easy references on what h
 \caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
 \label{Table:TraceMatAvsAll}
 \end{longtable}
-\begin{longtable}{l l l l}
+\begin{longtable}{l l l l l}
 \toprule
-\textbf{} & \textbf{\hyperref[DD:loading]{DD:loading}} & \textbf{\hyperref[TM:curvatureThm]{TM:curvatureThm}} & \textbf{\hyperref[IM:deflection]{IM:deflection}}
+\textbf{} & \textbf{\hyperref[DD:loading]{DD:loading}} & \textbf{\hyperref[TM:curvatureThm]{TM:curvatureThm}} & \textbf{\hyperref[TM:prismaticBeamArc]{TM:prismaticBeamArc}} & \textbf{\hyperref[IM:deflection]{IM:deflection}}
 \\
 \midrule
 \endhead
-\hyperref[DD:loading]{DD:loading} &  &  & 
+\hyperref[DD:loading]{DD:loading} &  &  &  & 
 \\
-\hyperref[TM:curvatureThm]{TM:curvatureThm} &  &  & 
+\hyperref[TM:curvatureThm]{TM:curvatureThm} &  &  &  & 
 \\
-\hyperref[IM:deflection]{IM:deflection} &  &  & 
+\hyperref[TM:prismaticBeamArc]{TM:prismaticBeamArc} &  &  &  & 
+\\
+\hyperref[IM:deflection]{IM:deflection} &  &  &  & 
 \\
 \bottomrule
 \caption{Traceability Matrix Showing the Connections Between Items and Other Sections}
 \label{Table:TraceMatRefvsRef}
 \end{longtable}
-\begin{longtable}{l l l l l}
+\begin{longtable}{l l l l l l}
 \toprule
-\textbf{} & \textbf{\hyperref[DD:loading]{DD:loading}} & \textbf{\hyperref[TM:curvatureThm]{TM:curvatureThm}} & \textbf{\hyperref[IM:deflection]{IM:deflection}} & \textbf{\hyperref[inputValues]{FR:Input-Values}}
+\textbf{} & \textbf{\hyperref[DD:loading]{DD:loading}} & \textbf{\hyperref[TM:curvatureThm]{TM:curvatureThm}} & \textbf{\hyperref[TM:prismaticBeamArc]{TM:prismaticBeamArc}} & \textbf{\hyperref[IM:deflection]{IM:deflection}} & \textbf{\hyperref[inputValues]{FR:Input-Values}}
 \\
 \midrule
 \endhead
-\hyperref[deflection]{GS:deflection} &  &  &  & 
+\hyperref[deflection]{GS:deflection} &  &  &  &  & 
 \\
-\hyperref[inputValues]{FR:Input-Values} &  &  &  & 
+\hyperref[inputValues]{FR:Input-Values} &  &  &  &  & 
 \\
 \bottomrule
 \caption{Traceability Matrix Showing the Connections Between Goal Statements and Other Items}

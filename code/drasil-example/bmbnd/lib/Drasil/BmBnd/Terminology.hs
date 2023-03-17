@@ -45,7 +45,7 @@ deflection :: ConceptChunk
 deflection = mkTerm "deflection" "displacement due to deformation under load"
 
 load :: ConceptChunk
-load = mkTerm "load" "an applied load"
+load = mkTerm "load" "an applied force"
 
 modulusOfElasticity :: ConceptChunk
 modulusOfElasticity = mkTerm

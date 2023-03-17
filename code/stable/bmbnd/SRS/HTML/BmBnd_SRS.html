@@ -157,7 +157,7 @@
                 </tr>
                 <tr>
                   <td><em>a</em></td>
-                  <td>A</td>
+                  <td>Horizontal component of a point on a 2D coordinate system</td>
                   <td><em>m</em></td>
                 </tr>
                 <tr>
@@ -192,7 +192,7 @@
                 </tr>
                 <tr>
                   <td><em>f</em></td>
-                  <td>F</td>
+                  <td>Vertical component of a point on a 2D coordinate system</td>
                   <td><em>m</em></td>
                 </tr>
                 <tr>
@@ -219,7 +219,7 @@
                 </tr>
                 <tr>
                   <td><em>M</em></td>
-                  <td>Moment</td>
+                  <td>Second moment of area</td>
                   <td><em>N</em></td>
                 </tr>
                 <tr>
@@ -246,7 +246,7 @@
                 </tr>
                 <tr>
                   <td><em>ρ</em></td>
-                  <td>Rho</td>
+                  <td>Radius of curvature</td>
                   <td><em>m</em></td>
                 </tr>
               </table>
@@ -355,7 +355,7 @@
                     Bending moment: The internal reaction of a structural element when force is imposed.
                   </li>
                   <li>Deflection: Displacement due to deformation under load.</li>
-                  <li>Load: An applied load.</li>
+                  <li>Load: An applied force.</li>
                   <li>
                     Modulus of elasticity: Measure of lengthwise stiffness of an element as a force is applied lengthwise.
                   </li>
@@ -524,9 +524,55 @@
                       <th>Description</th>
                       <td>
                         <ul class="hide-list-style-no-indent">
-                          <li><em>ρ</em> is the rho (<em>m</em>)</li>
-                          <li><em>a</em> is the a (<em>m</em>)</li>
-                          <li><em>f</em> is the f (<em>m</em>)</li>
+                          <li><em>ρ</em> is the radius of curvature (<em>m</em>)</li>
+                          <li>
+                            <em>a</em> is the horizontal component of a point on a 2D coordinate system (<em>m</em>)
+                          </li>
+                          <li>
+                            <em>f</em> is the vertical component of a point on a 2D coordinate system (<em>m</em>)
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Source</th>
+                      <td><p class="paragraph"><a href=#world>A:world</a></p></td>
+                    </tr>
+                    <tr>
+                      <th>RefBy</th>
+                      <td><p class="paragraph"></p></td>
+                    </tr>
+                  </table>
+                </div>
+                <div id="TM:prismaticBeamArc">
+                  <table class="tdefn">
+                    <tr>
+                      <th>Refname</th>
+                      <td><b>TM:prismaticBeamArc</b></td>
+                    </tr>
+                    <tr>
+                      <th>Label</th>
+                      <td><p class="paragraph">Curvature of a plane</p></td>
+                    </tr>
+                    <tr>
+                      <th>Equation</th>
+                      <td>\[\frac{1}{ρ}=\frac{M\left(x\right)}{E I}\]</td>
+                    </tr>
+                    <tr>
+                      <th>Description</th>
+                      <td>
+                        <ul class="hide-list-style-no-indent">
+                          <li><em>ρ</em> is the radius of curvature (<em>m</em>)</li>
+                          <li><em>M</em> is the second moment of area (<em>N</em>)</li>
+                          <li>
+                            <em>x</em> is the one-dimensional point along the beam, from the left-hand side (at the pinned support) (<em>m</em>)
+                          </li>
+                          <li>
+                            <em>E</em> is the modulus of elasticity of the abstract beam (<em>Pa</em>)
+                          </li>
+                          <li>
+                            <em>I</em> is the moment of second area of a cross-section of the abstract beam (<em>m</em>)
+                          </li>
                         </ul>
                       </td>
                     </tr>
@@ -658,7 +704,9 @@
                     </tr>
                     <tr>
                       <th>Equation</th>
-                      <td>\[{E_{B}}\]</td>
+                      <td>
+                        \[{E_{B}} {I_{B}} \frac{\,d^{4}{y_{B}}}{\,dx^{4}}={w_{B}}\left(x\right)\]
+                      </td>
                     </tr>
                     <tr>
                       <th>Description</th>
@@ -666,6 +714,18 @@
                         <ul class="hide-list-style-no-indent">
                           <li>
                             <em>E<sub>B</sub></em> is the modulus of elasticity of the beam (<em>Pa</em>)
+                          </li>
+                          <li>
+                            <em>I<sub>B</sub></em> is the moment of second area of a cross-section of the beam (<em>m</em>)
+                          </li>
+                          <li>
+                            <em>x</em> is the one-dimensional point along the beam, from the left-hand side (at the pinned support) (<em>m</em>)
+                          </li>
+                          <li>
+                            <em>y<sub>B</sub></em> is the deflection at a particular point along the beam (<em>m</em>)
+                          </li>
+                          <li>
+                            <em>w<sub>B</sub></em> is the load at a particular point along the beam (<em>\(\frac{\text{N}}{\text{m}}\)</em>)
                           </li>
                         </ul>
                       </td>
@@ -1221,6 +1281,25 @@
               <td></td>
             </tr>
             <tr>
+              <td><a href=#TM:prismaticBeamArc>TM:prismaticBeamArc</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
               <td><a href=#IM:deflection>IM:deflection</a></td>
               <td></td>
               <td></td>
@@ -1269,10 +1348,12 @@
               <th></th>
               <th><a href=#DD:loading>DD:loading</a></th>
               <th><a href=#TM:curvatureThm>TM:curvatureThm</a></th>
+              <th><a href=#TM:prismaticBeamArc>TM:prismaticBeamArc</a></th>
               <th><a href=#IM:deflection>IM:deflection</a></th>
             </tr>
             <tr>
               <td><a href=#DD:loading>DD:loading</a></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -1282,9 +1363,18 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#TM:prismaticBeamArc>TM:prismaticBeamArc</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#IM:deflection>IM:deflection</a></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -1300,6 +1390,7 @@
               <th></th>
               <th><a href=#DD:loading>DD:loading</a></th>
               <th><a href=#TM:curvatureThm>TM:curvatureThm</a></th>
+              <th><a href=#TM:prismaticBeamArc>TM:prismaticBeamArc</a></th>
               <th><a href=#IM:deflection>IM:deflection</a></th>
               <th><a href=#inputValues>FR:Input-Values</a></th>
             </tr>
@@ -1309,9 +1400,11 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#inputValues>FR:Input-Values</a></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>

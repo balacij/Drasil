@@ -1,7 +1,7 @@
 module Drasil.BmBnd.InstanceModels where
 
 import           Theory.Drasil
-import           Drasil.BmBnd.Quantities (y_B, w_B, l_B, e_B, i_B)
+import           Drasil.BmBnd.Quantities
 import           Language.Drasil
 import qualified Drasil.BmBnd.Assumptions as As
 
@@ -29,5 +29,5 @@ deflection = im
       (S "deflection as a relation concept description") -- FIXME: description
       deflectionME
 
-    deflectionME :: ModelExpr
-    deflectionME = sy e_B
+    deflectionME :: ModelExpr -- FIXME: This should technically have a universal quantifier for x
+    deflectionME = (sy e_B `mulRe` sy i_B `mulRe` nthderiv 4 (sy y_B) x) $= apply1 w_B x

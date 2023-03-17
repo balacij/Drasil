@@ -154,7 +154,7 @@ a_3 = a_n 3 forcePerMetreQtc
 rho :: UnitalChunk
 rho = uc'
   "rho"
-  (nounPhraseSent $ S "rho") -- FIXME: Improve descriptions :)
+  (nounPhraseSent $ S "radius of curvature")
   (S "radius of curvature")
   lRho
   Real
@@ -163,8 +163,8 @@ rho = uc'
 a :: UnitalChunk
 a = uc'
   "a"
-  (nounPhraseSent $ S "a") -- FIXME: Improve descriptions :)
-  (S "a")
+  (nounPhraseSent $ S "horizontal component of a point on a 2D coordinate system")
+  (S "horizontal component")
   lA
   Real
   metre -- FIXME: I need it to be unitless -- switch type to QuantityDict or DefinedQD
@@ -172,8 +172,8 @@ a = uc'
 f :: UnitalChunk
 f = uc'
   "f"
-  (nounPhraseSent $ S "f") -- FIXME: Improve descriptions :)
-  (S "f")
+  (nounPhraseSent $ S "vertical component of a point on a 2D coordinate system")
+  (S "vertical component")
   lF
   (mkFunction [Real] Real)
   metre -- FIXME: I need it to be unitless -- switch type to QuantityDict or DefinedQD
@@ -181,7 +181,7 @@ f = uc'
 moment :: UnitalChunk
 moment = uc'
   "moment"
-  (nounPhraseSent $ S "moment") -- FIXME: Improve descriptions :)
+  (nounPhraseSent $ S "second moment of area") -- FIXME: Improve descriptions :)
   (S "moment")
   cM
   (mkFunction [Real] Real)
