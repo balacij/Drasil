@@ -22,7 +22,7 @@ intermediateUnitals :: [UnitalChunk]
 intermediateUnitals = [x, w_B]
 
 abstractUnitals :: [UnitalChunk]
-abstractUnitals = [l, e, i, y, rho, a, f, moment]
+abstractUnitals = [l, w, e, i, y, rho, a, f, moment]
 
 inputUnitals :: [UnitalChunk]
 inputUnitals = [a_0, a_1, a_2, a_3, l_B, e_B, i_B]
@@ -87,6 +87,15 @@ y_B = uc'
   (sub lY cB)
   (mkFunction [Real] Real)
   metre
+
+w :: UnitalChunk
+w = uc'
+  "w"
+  (nounPhraseSent $ S "loading at a particular point along the beam")
+  (S "loading function")
+  lW
+  (mkFunction [Real] Real)
+  forcePerMeterU
 
 l :: UnitalChunk
 l = uc'
