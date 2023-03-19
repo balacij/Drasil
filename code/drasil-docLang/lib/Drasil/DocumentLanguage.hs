@@ -413,8 +413,11 @@ mkLCsSec (LCsProg c) = SRS.likeChg (intro : mkEnumSimpleD c) []
 -- | Helper for making the Unikely Changes section.
 mkUCsSec :: UCsSec -> Section
 mkUCsSec (UCsProg c) = SRS.unlikeChg (intro : mkEnumSimpleD c) []
-  where intro = foldlSP [S "This", phrase Doc.section_, S "lists the",
-                plural Doc.unlikelyChg, S "to be made to the", phrase Doc.software]
+  where
+    changes = [S "This", phrase Doc.section_, S "lists the"]
+    noChanges = [S "There are no"]
+    intro = foldlSP $ (if null c then noChanges else changes) 
+      ++ [plural Doc.unlikelyChg, S "to be made to the", phrase Doc.software]
 
 -- ** Traceability
 
