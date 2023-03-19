@@ -17,6 +17,7 @@ packages:
 - ../drasil-sysinfo
 - ../drasil-theory
 - ../drasil-utils
+- ../drasil-example/bmbnd
 - ../drasil-example/sglpendulum
 - ../drasil-example/dblpendulum
 - ../drasil-example/gamephysics

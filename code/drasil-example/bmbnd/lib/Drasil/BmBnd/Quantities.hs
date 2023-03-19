@@ -190,8 +190,17 @@ f = uc'
 moment :: UnitalChunk
 moment = uc'
   "moment"
-  (nounPhraseSent $ S "second moment of area") -- FIXME: Improve descriptions :)
+  (nounPhraseSP "second moment of area") -- FIXME: Improve descriptions :)
   (S "moment")
   cM
   (mkFunction [Real] Real)
   newton -- FIXME: Unit?
+
+slender :: UnitalChunk
+slender = uc'
+  "slender"
+  (nounPhraseSP "minimum ratio for object to be considered slender")
+  (S "slender")
+  (variable "SLENDER") -- FIXME: I _feel_ like this should be done differently?
+  Real
+  metre -- FIXME: unit 1

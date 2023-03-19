@@ -1,6 +1,6 @@
 module Drasil.BmBnd.References where
 
-import           Language.Drasil (Reference, BibRef)
+import           Language.Drasil
 import           Data.Drasil.Citations
 
 -- FIXME: All of these are 'background' knowledge, they should be a part of the

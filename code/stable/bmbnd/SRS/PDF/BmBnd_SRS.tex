@@ -90,6 +90,8 @@ ${L_{B}}$ & Length of the beam & ${\text{m}}$
 \\
 $M$ & Second moment of area & ${\text{N}}$
 \\
+$w$ & Loading at a particular point along the beam & $\frac{\text{N}}{\text{m}}$
+\\
 ${w_{B}}$ & Load at a particular point along the beam & $\frac{\text{N}}{\text{m}}$
 \\
 $x$ & One-dimensional point along the beam, from the left-hand side (at the pinned support) & ${\text{m}}$
@@ -282,6 +284,66 @@ RefBy &
 \\ \bottomrule
 \end{tabular}
 \end{minipage}
+\vspace{\baselineskip}
+\noindent
+\begin{minipage}{\textwidth}
+\begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
+\toprule \textbf{Refname} & \textbf{TM:elasticCurveODE}
+\phantomsection 
+\label{TM:elasticCurveODE}
+\\ \midrule \\
+Label & Simply supported beam bending curve
+        
+\\ \midrule \\
+Equation & \begin{displaymath}
+           \frac{\,d^{2}y}{\,dx^{2}}=\frac{M\left(x\right)}{E I}
+           \end{displaymath}
+\\ \midrule \\
+Description & \begin{symbDescription}
+              \item{$x$ is the one-dimensional point along the beam, from the left-hand side (at the pinned support) (${\text{m}}$)}
+              \item{$y$ is the deflection at a particular point along the abstract beam (${\text{m}}$)}
+              \item{$M$ is the second moment of area (${\text{N}}$)}
+              \item{$E$ is the modulus of elasticity of the abstract beam (${\text{Pa}}$)}
+              \item{$I$ is the moment of second area of a cross-section of the abstract beam (${\text{m}}$)}
+              \end{symbDescription}
+\\ \midrule \\
+Source & \hyperref[world]{A:world}
+         
+\\ \midrule \\
+RefBy & 
+\\ \bottomrule
+\end{tabular}
+\end{minipage}
+\vspace{\baselineskip}
+\noindent
+\begin{minipage}{\textwidth}
+\begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
+\toprule \textbf{Refname} & \textbf{TM:eulerBernoulliBeamDeflection}
+\phantomsection 
+\label{TM:eulerBernoulliBeamDeflection}
+\\ \midrule \\
+Label & Euler-Bernoulli Beam Deflection
+        
+\\ \midrule \\
+Equation & \begin{displaymath}
+           E I \frac{\,d^{4}y}{\,dx^{4}}=w\left(x\right)
+           \end{displaymath}
+\\ \midrule \\
+Description & \begin{symbDescription}
+              \item{$E$ is the modulus of elasticity of the abstract beam (${\text{Pa}}$)}
+              \item{$I$ is the moment of second area of a cross-section of the abstract beam (${\text{m}}$)}
+              \item{$x$ is the one-dimensional point along the beam, from the left-hand side (at the pinned support) (${\text{m}}$)}
+              \item{$y$ is the deflection at a particular point along the abstract beam (${\text{m}}$)}
+              \item{$w$ is the loading at a particular point along the beam ($\frac{\text{N}}{\text{m}}$)}
+              \end{symbDescription}
+\\ \midrule \\
+Source & \hyperref[world]{A:world}
+         
+\\ \midrule \\
+RefBy & 
+\\ \bottomrule
+\end{tabular}
+\end{minipage}
 \subsubsection{General Definitions}
 \label{Sec:GDs}
 There are no general definitions.
@@ -419,6 +481,15 @@ This section provides the non-functional requirements, the qualities that the so
 \label{Sec:LCs}
 This section lists the likely changes to be made to the software.
 
+\begin{itemize}
+\item[loadingFunction:\phantomsection\label{loadingFunction}]{the loading function is currently fixed as a 3rd order polynomial, but should be entirely from user input}
+\item[units:\phantomsection\label{units}]{the units of the variables may be changed if numbers have poor readability}
+\item[beamConfiguration:\phantomsection\label{beamConfiguration}]{the loading function is currently fixed as a 3rd order polynomial, but should be entirely from user input}
+\end{itemize}
+\section{Unlikely Changes}
+\label{Sec:UCs}
+This section lists the unlikely changes to be made to the software.
+
 \section{Traceability Matrices and Graphs}
 \label{Sec:TraceMatrices}
 The purpose of the traceability matrices is to provide easy references on what has to be additionally modified if a certain component is changed. Every time a component is changed, the items in the column of that component that are marked with an ``X'' should be modified as well. \hyperref[Table:TraceMatAvsA]{Tab:TraceMatAvsA} shows the dependencies of assumptions on the assumptions. \hyperref[Table:TraceMatAvsAll]{Tab:TraceMatAvsAll} shows the dependencies of data definitions, theoretical models, general definitions, instance models, requirements, likely changes, and unlikely changes on the assumptions. \hyperref[Table:TraceMatRefvsRef]{Tab:TraceMatRefvsRef} shows the dependencies of data definitions, theoretical models, general definitions, and instance models with each other. \hyperref[Table:TraceMatAllvsR]{Tab:TraceMatAllvsR} shows the dependencies of goal statements on the data definitions, theoretical models, general definitions, and instance models.
@@ -477,41 +548,55 @@ The purpose of the traceability matrices is to provide easy references on what h
 \\
 \hyperref[TM:prismaticBeamArc]{TM:prismaticBeamArc} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
+\hyperref[TM:elasticCurveODE]{TM:elasticCurveODE} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[TM:eulerBernoulliBeamDeflection]{TM:eulerBernoulliBeamDeflection} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
 \hyperref[IM:deflection]{IM:deflection} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
 \hyperref[inputValues]{FR:Input-Values} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[loadingFunction]{LC:loadingFunction} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[units]{LC:units} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[beamConfiguration]{LC:beamConfiguration} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
 \bottomrule
 \caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
 \label{Table:TraceMatAvsAll}
 \end{longtable}
-\begin{longtable}{l l l l l}
+\begin{longtable}{l l l l l l l}
 \toprule
-\textbf{} & \textbf{\hyperref[DD:loading]{DD:loading}} & \textbf{\hyperref[TM:curvatureThm]{TM:curvatureThm}} & \textbf{\hyperref[TM:prismaticBeamArc]{TM:prismaticBeamArc}} & \textbf{\hyperref[IM:deflection]{IM:deflection}}
+\textbf{} & \textbf{\hyperref[DD:loading]{DD:loading}} & \textbf{\hyperref[TM:curvatureThm]{TM:curvatureThm}} & \textbf{\hyperref[TM:prismaticBeamArc]{TM:prismaticBeamArc}} & \textbf{\hyperref[TM:elasticCurveODE]{TM:elasticCurveODE}} & \textbf{\hyperref[TM:eulerBernoulliBeamDeflection]{TM:eulerBernoulliBeamDeflection}} & \textbf{\hyperref[IM:deflection]{IM:deflection}}
 \\
 \midrule
 \endhead
-\hyperref[DD:loading]{DD:loading} &  &  &  & 
+\hyperref[DD:loading]{DD:loading} &  &  &  &  &  & 
 \\
-\hyperref[TM:curvatureThm]{TM:curvatureThm} &  &  &  & 
+\hyperref[TM:curvatureThm]{TM:curvatureThm} &  &  &  &  &  & 
 \\
-\hyperref[TM:prismaticBeamArc]{TM:prismaticBeamArc} &  &  &  & 
+\hyperref[TM:prismaticBeamArc]{TM:prismaticBeamArc} &  &  &  &  &  & 
 \\
-\hyperref[IM:deflection]{IM:deflection} &  &  &  & 
+\hyperref[TM:elasticCurveODE]{TM:elasticCurveODE} &  &  &  &  &  & 
+\\
+\hyperref[TM:eulerBernoulliBeamDeflection]{TM:eulerBernoulliBeamDeflection} &  &  &  &  &  & 
+\\
+\hyperref[IM:deflection]{IM:deflection} &  &  &  &  &  & 
 \\
 \bottomrule
 \caption{Traceability Matrix Showing the Connections Between Items and Other Sections}
 \label{Table:TraceMatRefvsRef}
 \end{longtable}
-\begin{longtable}{l l l l l l}
+\begin{longtable}{l l l l l l l l}
 \toprule
-\textbf{} & \textbf{\hyperref[DD:loading]{DD:loading}} & \textbf{\hyperref[TM:curvatureThm]{TM:curvatureThm}} & \textbf{\hyperref[TM:prismaticBeamArc]{TM:prismaticBeamArc}} & \textbf{\hyperref[IM:deflection]{IM:deflection}} & \textbf{\hyperref[inputValues]{FR:Input-Values}}
+\textbf{} & \textbf{\hyperref[DD:loading]{DD:loading}} & \textbf{\hyperref[TM:curvatureThm]{TM:curvatureThm}} & \textbf{\hyperref[TM:prismaticBeamArc]{TM:prismaticBeamArc}} & \textbf{\hyperref[TM:elasticCurveODE]{TM:elasticCurveODE}} & \textbf{\hyperref[TM:eulerBernoulliBeamDeflection]{TM:eulerBernoulliBeamDeflection}} & \textbf{\hyperref[IM:deflection]{IM:deflection}} & \textbf{\hyperref[inputValues]{FR:Input-Values}}
 \\
 \midrule
 \endhead
-\hyperref[deflection]{GS:deflection} &  &  &  &  & 
+\hyperref[deflection]{GS:deflection} &  &  &  &  &  &  & 
 \\
-\hyperref[inputValues]{FR:Input-Values} &  &  &  &  & 
+\hyperref[inputValues]{FR:Input-Values} &  &  &  &  &  &  & 
 \\
 \bottomrule
 \caption{Traceability Matrix Showing the Connections Between Goal Statements and Other Items}

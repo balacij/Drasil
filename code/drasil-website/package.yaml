@@ -24,6 +24,7 @@ dependencies:
 - drasil-sysinfo
 - drasil-theory
 - drasil-utils
+- bmbnd
 - sglpendulum
 - dblpendulum
 - gamephysics

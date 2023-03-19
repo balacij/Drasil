@@ -1,6 +1,3 @@
-{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
-
-{-# HLINT ignore "Use fewer imports" #-}
 module Drasil.BmBnd.Meta where
 
 -- FIXME: These below dependencies are all required for the main layout of the
@@ -29,6 +26,8 @@ import qualified Drasil.BmBnd.TheoryModels as TMs
 import qualified Drasil.BmBnd.Figures as Fs
 import qualified Drasil.BmBnd.Units as Us
 import qualified Drasil.BmBnd.Terminology as Ts
+import qualified Drasil.BmBnd.Changes.Likely as LCs
+import qualified Drasil.BmBnd.Changes.Unlikely as UCs
 
 caseStudy :: CI
 caseStudy =
@@ -80,7 +79,7 @@ conceptChunks :: [ConceptChunk]
 conceptChunks = Doc.srsDomains
 
 conceptInstances :: [ConceptInstance]
-conceptInstances = As.assumptions ++ Gs.goals
+conceptInstances = As.assumptions ++ Gs.goals ++ LCs.changes ++ UCs.changes
 
 symbMap :: ChunkDB
 symbMap = cdb
@@ -116,7 +115,7 @@ refDB :: ReferenceDB
 refDB = rdb Rs.references conceptInstances
 
 realSrsBody :: SRSDecl -- FIXME: This is suboptimal.
-realSrsBody = srsBody si caseStudy Fs.bmBndDiagram Ts.terminology
+realSrsBody = srsBody si caseStudy Fs.bmBndDiagram Ts.terminology Cs.constants
 
 srs :: Document
 srs = mkDoc realSrsBody (S.forGen titleize phrase) si

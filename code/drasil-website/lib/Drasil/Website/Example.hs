@@ -8,6 +8,7 @@ import SysInfo.Drasil (SystemInformation(..))
 import Language.Drasil.Code (Choices(..), Lang(..))
 import Data.Char (toLower, isSpace)
 
+import qualified Drasil.BmBnd.Meta as BmBnd (fullSI)
 import qualified Drasil.DblPendulum.Body as DblPendulum (fullSI)
 import qualified Drasil.GamePhysics.Body as GamePhysics (fullSI)
 import qualified Drasil.GlassBR.Body as GlassBR (fullSI)
@@ -53,11 +54,11 @@ data Example = E {
 
 -- | Records example system information.
 allExampleSI :: [SystemInformation]
-allExampleSI = [DblPendulum.fullSI, GamePhysics.fullSI, GlassBR.fullSI, HGHC.fullSI, NoPCM.fullSI, PDController.fullSI, Projectile.fullSI, SglPendulum.fullSI, SSP.fullSI, SWHS.fullSI]
+allExampleSI = [BmBnd.fullSI, DblPendulum.fullSI, GamePhysics.fullSI, GlassBR.fullSI, HGHC.fullSI, NoPCM.fullSI, PDController.fullSI, Projectile.fullSI, SglPendulum.fullSI, SSP.fullSI, SWHS.fullSI]
 
 -- | Records example descriptions.
 allExampleDesc :: [Sentence]
-allExampleDesc = [dblPendulumDesc, gamePhysDesc, glassBRDesc, hghcDesc, noPCMDesc, pdControllerDesc, projectileDesc, sglPendulumDesc, sspDesc, swhsDesc]
+allExampleDesc = [bmBndDesc, dblPendulumDesc, gamePhysDesc, glassBRDesc, hghcDesc, noPCMDesc, pdControllerDesc, projectileDesc, sglPendulumDesc, sspDesc, swhsDesc]
 
 -- To developer: Fill this list in when more examples can run code. The list
 -- needs to be of this form since projectile comes with a list of choice combos.
@@ -153,8 +154,9 @@ exampleIntro = S "The development of Drasil follows an example-driven approach, 
 
 -- | Project descriptions.
 sglPendulumDesc, dblPendulumDesc, gamePhysDesc, glassBRDesc, hghcDesc, noPCMDesc, pdControllerDesc,
-  projectileDesc, sspDesc, swhsDesc :: Sentence
+  projectileDesc, sspDesc, swhsDesc, bmBndDesc :: Sentence
 
+bmBndDesc        = S "analyzes beam deflection under load"
 dblPendulumDesc  = S "describes the motion of a double pendulum in 2D."
 gamePhysDesc     = S "describes the modeling of an open source 2D rigid body physics library used for games."
 glassBRDesc      = S "predicts whether a given glass slab is likely to resist a specified blast."

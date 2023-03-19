@@ -93,6 +93,7 @@
             </ul>
           </li>
           <li><a href=#Sec:LCs>Likely Changes</a></li>
+          <li><a href=#Sec:UCs>Unlikely Changes</a></li>
           <li>
             <a href=#Sec:TraceMatrices>Traceability Matrices and Graphs</a>
           </li>
@@ -221,6 +222,11 @@
                   <td><em>M</em></td>
                   <td>Second moment of area</td>
                   <td><em>N</em></td>
+                </tr>
+                <tr>
+                  <td><em>w</em></td>
+                  <td>Loading at a particular point along the beam</td>
+                  <td><em>\(\frac{\text{N}}{\text{m}}\)</em></td>
                 </tr>
                 <tr>
                   <td><em>w<sub>B</sub></em></td>
@@ -586,6 +592,98 @@
                     </tr>
                   </table>
                 </div>
+                <div id="TM:elasticCurveODE">
+                  <table class="tdefn">
+                    <tr>
+                      <th>Refname</th>
+                      <td><b>TM:elasticCurveODE</b></td>
+                    </tr>
+                    <tr>
+                      <th>Label</th>
+                      <td>
+                        <p class="paragraph">Simply supported beam bending curve</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Equation</th>
+                      <td>\[\frac{\,d^{2}y}{\,dx^{2}}=\frac{M\left(x\right)}{E I}\]</td>
+                    </tr>
+                    <tr>
+                      <th>Description</th>
+                      <td>
+                        <ul class="hide-list-style-no-indent">
+                          <li>
+                            <em>x</em> is the one-dimensional point along the beam, from the left-hand side (at the pinned support) (<em>m</em>)
+                          </li>
+                          <li>
+                            <em>y</em> is the deflection at a particular point along the abstract beam (<em>m</em>)
+                          </li>
+                          <li><em>M</em> is the second moment of area (<em>N</em>)</li>
+                          <li>
+                            <em>E</em> is the modulus of elasticity of the abstract beam (<em>Pa</em>)
+                          </li>
+                          <li>
+                            <em>I</em> is the moment of second area of a cross-section of the abstract beam (<em>m</em>)
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Source</th>
+                      <td><p class="paragraph"><a href=#world>A:world</a></p></td>
+                    </tr>
+                    <tr>
+                      <th>RefBy</th>
+                      <td><p class="paragraph"></p></td>
+                    </tr>
+                  </table>
+                </div>
+                <div id="TM:eulerBernoulliBeamDeflection">
+                  <table class="tdefn">
+                    <tr>
+                      <th>Refname</th>
+                      <td><b>TM:eulerBernoulliBeamDeflection</b></td>
+                    </tr>
+                    <tr>
+                      <th>Label</th>
+                      <td><p class="paragraph">Euler-Bernoulli Beam Deflection</p></td>
+                    </tr>
+                    <tr>
+                      <th>Equation</th>
+                      <td>\[E I \frac{\,d^{4}y}{\,dx^{4}}=w\left(x\right)\]</td>
+                    </tr>
+                    <tr>
+                      <th>Description</th>
+                      <td>
+                        <ul class="hide-list-style-no-indent">
+                          <li>
+                            <em>E</em> is the modulus of elasticity of the abstract beam (<em>Pa</em>)
+                          </li>
+                          <li>
+                            <em>I</em> is the moment of second area of a cross-section of the abstract beam (<em>m</em>)
+                          </li>
+                          <li>
+                            <em>x</em> is the one-dimensional point along the beam, from the left-hand side (at the pinned support) (<em>m</em>)
+                          </li>
+                          <li>
+                            <em>y</em> is the deflection at a particular point along the abstract beam (<em>m</em>)
+                          </li>
+                          <li>
+                            <em>w</em> is the loading at a particular point along the beam (<em>\(\frac{\text{N}}{\text{m}}\)</em>)
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Source</th>
+                      <td><p class="paragraph"><a href=#world>A:world</a></p></td>
+                    </tr>
+                    <tr>
+                      <th>RefBy</th>
+                      <td><p class="paragraph"></p></td>
+                    </tr>
+                  </table>
+                </div>
               </div>
             </div>
             <div id="Sec:GDs">
@@ -839,6 +937,31 @@
         <h1>Likely Changes</h1>
         <p class="paragraph">
           This section lists the likely changes to be made to the software.
+        </p>
+        <div class="list">
+          <p>
+            <div id="loadingFunction">
+              loadingFunction: the loading function is currently fixed as a 3rd order polynomial, but should be entirely from user input
+            </div>
+          </p>
+          <p>
+            <div id="units">
+              units: the units of the variables may be changed if numbers have poor readability
+            </div>
+          </p>
+          <p>
+            <div id="beamConfiguration">
+              beamConfiguration: the loading function is currently fixed as a 3rd order polynomial, but should be entirely from user input
+            </div>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div id="Sec:UCs">
+      <div class="section">
+        <h1>Unlikely Changes</h1>
+        <p class="paragraph">
+          This section lists the unlikely changes to be made to the software.
         </p>
         <div class="list"></div>
       </div>
@@ -1300,6 +1423,46 @@
               <td></td>
             </tr>
             <tr>
+              <td><a href=#TM:elasticCurveODE>TM:elasticCurveODE</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>
+                <a href=#TM:eulerBernoulliBeamDeflection>TM:eulerBernoulliBeamDeflection</a>
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
               <td><a href=#IM:deflection>IM:deflection</a></td>
               <td></td>
               <td></td>
@@ -1320,6 +1483,63 @@
             </tr>
             <tr>
               <td><a href=#inputValues>FR:Input-Values</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#loadingFunction>LC:loadingFunction</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#units>LC:units</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#beamConfiguration>LC:beamConfiguration</a></td>
               <td></td>
               <td></td>
               <td></td>
@@ -1349,10 +1569,16 @@
               <th><a href=#DD:loading>DD:loading</a></th>
               <th><a href=#TM:curvatureThm>TM:curvatureThm</a></th>
               <th><a href=#TM:prismaticBeamArc>TM:prismaticBeamArc</a></th>
+              <th><a href=#TM:elasticCurveODE>TM:elasticCurveODE</a></th>
+              <th>
+                <a href=#TM:eulerBernoulliBeamDeflection>TM:eulerBernoulliBeamDeflection</a>
+              </th>
               <th><a href=#IM:deflection>IM:deflection</a></th>
             </tr>
             <tr>
               <td><a href=#DD:loading>DD:loading</a></td>
+              <td></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -1364,6 +1590,8 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#TM:prismaticBeamArc>TM:prismaticBeamArc</a></td>
@@ -1371,9 +1599,33 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#TM:elasticCurveODE>TM:elasticCurveODE</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>
+                <a href=#TM:eulerBernoulliBeamDeflection>TM:eulerBernoulliBeamDeflection</a>
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#IM:deflection>IM:deflection</a></td>
+              <td></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -1391,6 +1643,10 @@
               <th><a href=#DD:loading>DD:loading</a></th>
               <th><a href=#TM:curvatureThm>TM:curvatureThm</a></th>
               <th><a href=#TM:prismaticBeamArc>TM:prismaticBeamArc</a></th>
+              <th><a href=#TM:elasticCurveODE>TM:elasticCurveODE</a></th>
+              <th>
+                <a href=#TM:eulerBernoulliBeamDeflection>TM:eulerBernoulliBeamDeflection</a>
+              </th>
               <th><a href=#IM:deflection>IM:deflection</a></th>
               <th><a href=#inputValues>FR:Input-Values</a></th>
             </tr>
@@ -1401,9 +1657,13 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#inputValues>FR:Input-Values</a></td>
+              <td></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>

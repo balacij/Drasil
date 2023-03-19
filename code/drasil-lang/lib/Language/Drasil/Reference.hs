@@ -16,8 +16,9 @@ import Language.Drasil.UID (UID, HasUID(..))
 
 import Control.Lens ((^.), makeLenses, Lens')
 
--- | A Reference contains the identifier ('UID'), a reference address ('LblType'),
--- a human-readable shortname ('ShortName'), and any extra information about the reference ('RefInfo').
+-- | A Reference contains the identifier ('UID'), a reference address
+-- ('LblType'), a human-readable shortname ('ShortName'), and any extra
+-- information about the reference ('RefInfo').
 data Reference = Reference
   { _ui :: UID
   ,  ra :: LblType

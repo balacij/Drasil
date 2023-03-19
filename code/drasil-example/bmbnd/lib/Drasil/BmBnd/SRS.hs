@@ -6,8 +6,13 @@ import           Language.Drasil
 
 -- FIXME: I added this argument for the SRSDecl, but I don't think it should be
 -- needed. This is temporary work to avoid the cyclic dependency shown below.
-srsBody :: SystemInformation -> CI -> LabelledContent -> [ConceptChunk] -> SRSDecl
-srsBody si cs fig terms =
+srsBody :: SystemInformation
+        -> CI
+        -> LabelledContent
+        -> [ConceptChunk]
+        -> [ConstQDef]
+        -> SRSDecl
+srsBody si cs psdFig terms constQDs =
   [ TableOfContents
   , RefSec $ RefProg intro [TUnits, tsymb [TSPurpose, SymbOrder], TAandA]
   , IntroSec
@@ -18,7 +23,12 @@ srsBody si cs fig terms =
   , SSDSec
     $ SSDProg
       [ SSDProblem
-        $ PDProg (S "") [] [TermsAndDefs Nothing terms, PhySysDesc cs [] fig [], Goals [S ""]]
+        $ PDProg
+          (S "")
+          []
+          [ TermsAndDefs Nothing terms
+          , PhySysDesc cs [] psdFig []
+          , Goals [S ""]]
       , SSDSolChSpec
         $ SCSProg
           [ Assumptions
@@ -32,8 +42,9 @@ srsBody si cs fig terms =
               ShowDerivation]]
   , ReqrmntSec $ ReqsProg [FReqsSub EmptyS [], NonFReqsSub]
   , LCsSec
+  , UCsSec
   , TraceabilitySec $ TraceabilityProg $ traceMatStandard si  -- FIXME: the SRSDecl referencing the SystemInformation is akin to a cyclic dependency (talking about Drasil, not Haskell).
-    , AuxConstntSec $ AuxConsProg cs [] -- FIXME: In a similar fashion to the above, I should not have to manually reference the 'progName' from here! It should be filled in for me.
+  , AuxConstntSec $ AuxConsProg cs constQDs -- FIXME: In a similar fashion to the above, I should not have to manually reference the case study nor the constants! It should be filled in for me.
   , Bibliography]
 
 stdFields :: Fields
