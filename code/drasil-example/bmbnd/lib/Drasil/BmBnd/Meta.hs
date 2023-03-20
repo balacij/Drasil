@@ -28,6 +28,8 @@ import qualified Drasil.BmBnd.Units as Us
 import qualified Drasil.BmBnd.Terminology as Ts
 import qualified Drasil.BmBnd.Changes.Likely as LCs
 import qualified Drasil.BmBnd.Changes.Unlikely as UCs
+import qualified Drasil.BmBnd.Requirements.Functional as FRs
+import qualified Drasil.BmBnd.Requirements.NonFunctional as NFRs
 
 caseStudy :: CI
 caseStudy =
@@ -79,14 +81,20 @@ conceptChunks :: [ConceptChunk]
 conceptChunks = Doc.srsDomains
 
 conceptInstances :: [ConceptInstance]
-conceptInstances = As.assumptions ++ Gs.goals ++ LCs.changes ++ UCs.changes
+conceptInstances = As.assumptions
+  ++ Gs.goals
+  ++ LCs.changes
+  ++ UCs.changes
+  ++ FRs.requirements
+  ++ NFRs.requirements
 
 symbMap :: ChunkDB
 symbMap = cdb
   Qs.quantities
   terms
   conceptChunks
-  (map unitWrapper [metre, newton, pascal, radian] ++ Us.units) -- FIXME: shouldn't the SI units be presupposed?
+  (map unitWrapper [metre, newton, pascal, radian]
+   ++ Us.units) -- FIXME: shouldn't the SI units be presupposed?
   DDs.models
   IMs.models
   [] -- no general definitions

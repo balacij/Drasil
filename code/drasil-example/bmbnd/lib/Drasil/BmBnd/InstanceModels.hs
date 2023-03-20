@@ -17,7 +17,7 @@ deflection = im
   (map qwUC [w_B, l_B, e_B, i_B]) -- FIXME: Other than the obvious type confliction, why should I need to convert the unitals to quantitydicts
   (qw y_B) -- FIXME: Same as above conflict
   []
-  [dRef As.world] -- FIXME: I need to have a better 'decorated reference' here
+  [dRef As.beamLoadingFunctionIntegrable]
   Nothing -- FIXME: Derivation
   "deflection"
   [S "Analyzing the deflection of the beam as a boundary value problem."]

@@ -5,7 +5,8 @@ import           Data.Drasil.Concepts.Documentation
 
 assumptions :: [ConceptInstance]
 assumptions =
-  [ world
+  [ worldDimension
+  , worldTime
   , beamSlender
   , beamPrismatic
   , beamUniformCrossSection
@@ -22,12 +23,18 @@ assumptions =
   , beamDeflectionFunctionDifferentiable
   , beamLoadingFunctionIntegrable]
 
-world :: ConceptInstance
-world = cic
-  "world" -- human-readable label (i.e., id/href _text_)
-  (S
-     "The world model is two-dimensional, observing the instant a load is applied on the beam.")
-  "world" -- internal label (i.e., id/href)
+worldDimension :: ConceptInstance
+worldDimension = cic
+  "worldDimension" -- human-readable label (i.e., id/href _text_)
+  (S "The world model is two-dimensional.")
+  "worldDimension" -- internal label (i.e., id/href)
+  assumpDom
+
+worldTime :: ConceptInstance
+worldTime = cic
+  "worldTime" -- human-readable label (i.e., id/href _text_)
+  (S "The world model observes the instant a load is applied on the beam.")
+  "worldTime" -- internal label (i.e., id/href)
   assumpDom
 
 beamSlender :: ConceptInstance

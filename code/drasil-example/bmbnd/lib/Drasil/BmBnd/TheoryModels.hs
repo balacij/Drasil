@@ -18,7 +18,7 @@ curvature = tm
   []
   [curveRel] -- FIXME: I should not need to manually reference curveRel twice.
   []
-  [dRef As.world] -- FIXME: This is the wrong 'source', but I really shouldn't _need_ a source for the code to compile.
+  [dRef As.worldDimension] -- FIXME: This is the wrong 'source', but I really shouldn't _need_ a source for the code to compile.
   "curvatureThm"
   [] -- FIXME: NOTES!
   where
@@ -40,7 +40,7 @@ prismaticBeamArc = tm
   []
   [arcRel]
   []
-  [dRef As.world] -- FIXME: This is the wrong 'source', but I really shouldn't _need_ a source for the code to compile.
+  [dRef As.beamLocallySmallSlopes] -- FIXME: This is the wrong 'source', but I really shouldn't _need_ a source for the code to compile.
   "prismaticBeamArc"
   []
   where
@@ -59,7 +59,7 @@ elasticCurveODE = tm
   []
   [elasticCurveEqn]
   []
-  [dRef As.world] -- FIXME: This is the wrong 'source', but I really shouldn't _need_ a source for the code to compile.
+  [dRef As.worldDimension] -- FIXME: This is the wrong 'source', but I really shouldn't _need_ a source for the code to compile.
   "elasticCurveODE"
   []
   where
@@ -83,7 +83,14 @@ eulerBernoulliBeamDeflection = tm
   []
   [eulerBernoulliBeamDeflectionEqn]
   []
-  [dRef As.world] -- FIXME: This is the wrong 'source', but I really shouldn't _need_ a source for the code to compile.
+  [ dRef As.beamSlender
+  , dRef As.beamSmallDeflections
+  , dRef As.beamSimplySupported
+  , dRef As.beamPrismatic
+  , dRef As.beamFlat
+  , dRef As.beamNoAxialLoading
+  , dRef As.beamNoPointLoads
+  , dRef As.beamLocallySmallSlopes] -- FIXME: This is the wrong 'source', but I really shouldn't _need_ a source for the code to compile.
   "eulerBernoulliBeamDeflection"
   []
   where

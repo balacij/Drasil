@@ -1,0 +1,27 @@
+digraph avsa {
+
+
+	worldDimension	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:worldDimension"];
+	worldTime	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:worldTime"];
+	beamSlender	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamSlender"];
+	beamPrismatic	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamPrismatic"];
+	beamUniformCrossSection	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamUniformCrossSection"];
+	beamFlat	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamFlat"];
+	beamConstantSecondMomentOfArea	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamConstantSecondMomentOfArea"];
+	beamVerticalLinearElasticLoad	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamVerticalLinearElasticLoad"];
+	beamConstantModulusOfElasticity	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamConstantModulusOfElasticity"];
+	beamSmallDeflections	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamSmallDeflections"];
+	beamLocallySmallSlopes	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamLocallySmallSlopes"];
+	beamSimplySupported	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamSimplySupported"];
+	beamLoadingPolynomial	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamLoadingPolynomial"];
+	beamNoPointLoads	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamNoPointLoads"];
+	beamNoAxialLoading	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamNoAxialLoading"];
+	beamDeflectionFunctionDifferentiable	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamDeflectionFunctionDifferentiable"];
+	beamLoadingFunctionIntegrable	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamLoadingFunctionIntegrable"];
+
+	subgraph A {
+	rank="same"
+	{worldDimension, worldTime, beamSlender, beamPrismatic, beamUniformCrossSection, beamFlat, beamConstantSecondMomentOfArea, beamVerticalLinearElasticLoad, beamConstantModulusOfElasticity, beamSmallDeflections, beamLocallySmallSlopes, beamSimplySupported, beamLoadingPolynomial, beamNoPointLoads, beamNoAxialLoading, beamDeflectionFunctionDifferentiable, beamLoadingFunctionIntegrable}
+	}
+
+}

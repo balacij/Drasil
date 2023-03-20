@@ -90,6 +90,8 @@ ${L_{B}}$ & Length of the beam & ${\text{m}}$
 \\
 $M$ & Second moment of area & ${\text{N}}$
 \\
+$\mathit{SLENDER}$ & Minimum ratio for object to be considered slender & ${\text{m}}$
+\\
 $w$ & Loading at a particular point along the beam & $\frac{\text{N}}{\text{m}}$
 \\
 ${w_{B}}$ & Load at a particular point along the beam & $\frac{\text{N}}{\text{m}}$
@@ -205,7 +207,8 @@ The instance models that govern BmBnd are presented in the \hyperref[Sec:IMs]{In
 This section simplifies the original problem and helps in developing the theoretical models by filling in the missing information for the physical system. The assumptions refine the scope by providing more detail.
 
 \begin{itemize}
-\item[world:\phantomsection\label{world}]{The world model is two-dimensional, observing the instant a load is applied on the beam.}
+\item[worldDimension:\phantomsection\label{worldDimension}]{The world model is two-dimensional.}
+\item[worldTime:\phantomsection\label{worldTime}]{The world model observes the instant a load is applied on the beam.}
 \item[beamSlender:\phantomsection\label{beamSlender}]{The beam is slender.}
 \item[beamPrismatic:\phantomsection\label{beamPrismatic}]{The beam is prismatic.}
 \item[beamUniformCrossSection:\phantomsection\label{beamUniformCrossSection}]{The beam has a uniform cross-section.}
@@ -247,7 +250,7 @@ Description & \begin{symbDescription}
               \item{$f$ is the vertical component of a point on a 2D coordinate system (${\text{m}}$)}
               \end{symbDescription}
 \\ \midrule \\
-Source & \hyperref[world]{A:world}
+Source & \hyperref[worldDimension]{A:worldDimension}
          
 \\ \midrule \\
 RefBy & 
@@ -277,7 +280,7 @@ Description & \begin{symbDescription}
               \item{$I$ is the moment of second area of a cross-section of the abstract beam (${\text{m}}$)}
               \end{symbDescription}
 \\ \midrule \\
-Source & \hyperref[world]{A:world}
+Source & \hyperref[beamLocallySmallSlopes]{A:beamLocallySmallSlopes}
          
 \\ \midrule \\
 RefBy & 
@@ -307,7 +310,7 @@ Description & \begin{symbDescription}
               \item{$I$ is the moment of second area of a cross-section of the abstract beam (${\text{m}}$)}
               \end{symbDescription}
 \\ \midrule \\
-Source & \hyperref[world]{A:world}
+Source & \hyperref[worldDimension]{A:worldDimension}
          
 \\ \midrule \\
 RefBy & 
@@ -337,7 +340,7 @@ Description & \begin{symbDescription}
               \item{$w$ is the loading at a particular point along the beam ($\frac{\text{N}}{\text{m}}$)}
               \end{symbDescription}
 \\ \midrule \\
-Source & \hyperref[world]{A:world}
+Source & \hyperref[beamSlender]{A:beamSlender}, \hyperref[beamSmallDeflections]{A:beamSmallDeflections}, \hyperref[beamSimplySupported]{A:beamSimplySupported}, \hyperref[beamPrismatic]{A:beamPrismatic}, \hyperref[beamFlat]{A:beamFlat}, \hyperref[beamNoAxialLoading]{A:beamNoAxialLoading}, \hyperref[beamNoPointLoads]{A:beamNoPointLoads}, and \hyperref[beamLocallySmallSlopes]{A:beamLocallySmallSlopes}
          
 \\ \midrule \\
 RefBy & 
@@ -382,7 +385,7 @@ Description & \begin{symbDescription}
               \item{${a_{\text{3}}}$ is the coefficient of w\_B's term of power 3 ($\frac{\text{N}}{\text{m}^{4}}$)}
               \end{symbDescription}
 \\ \midrule \\
-Source & \hyperref[world]{A:world}
+Source & \hyperref[beamLoadingPolynomial]{A:beamLoadingPolynomial}
          
 \\ \midrule \\
 RefBy & 
@@ -430,7 +433,7 @@ Description & \begin{symbDescription}
 Notes & Analyzing the deflection of the beam as a boundary value problem.
         
 \\ \midrule \\
-Source & \hyperref[world]{A:world}
+Source & \hyperref[beamLoadingFunctionIntegrable]{A:beamLoadingFunctionIntegrable}
          
 \\ \midrule \\
 RefBy & 
@@ -448,6 +451,10 @@ This section provides the functional requirements, the tasks and behaviours that
 
 \begin{itemize}
 \item[Input-Values:\phantomsection\label{inputValues}]{Input the values from \hyperref[Table:ReqInputs]{Tab:ReqInputs}.}
+\item[inputDisplay:\phantomsection\label{inputDisplay}]{}
+\item[inputValidation:\phantomsection\label{inputValidation}]{}
+\item[calculate:\phantomsection\label{calculate}]{}
+\item[output:\phantomsection\label{output}]{}
 \end{itemize}
 \begin{longtabu}{l X[l] l}
 \toprule
@@ -477,6 +484,14 @@ ${L_{B}}$ & Length of the beam & ${\text{m}}$
 \label{Sec:NFRs}
 This section provides the non-functional requirements, the qualities that the software is expected to exhibit.
 
+\begin{itemize}
+\item[accuracy:\phantomsection\label{accuracy}]{}
+\item[usability:\phantomsection\label{usability}]{}
+\item[maintainability:\phantomsection\label{maintainability}]{}
+\item[portability:\phantomsection\label{portability}]{}
+\item[verifiable:\phantomsection\label{verifiable}]{}
+\item[reusable:\phantomsection\label{reusable}]{}
+\end{itemize}
 \section{Likely Changes}
 \label{Sec:LCs}
 This section lists the likely changes to be made to the software.
@@ -492,75 +507,97 @@ There are no unlikely changes to be made to the software.
 
 \section{Traceability Matrices and Graphs}
 \label{Sec:TraceMatrices}
-The purpose of the traceability matrices is to provide easy references on what has to be additionally modified if a certain component is changed. Every time a component is changed, the items in the column of that component that are marked with an ``X'' should be modified as well. \hyperref[Table:TraceMatAvsA]{Tab:TraceMatAvsA} shows the dependencies of assumptions on the assumptions. \hyperref[Table:TraceMatAvsAll]{Tab:TraceMatAvsAll} shows the dependencies of data definitions, theoretical models, general definitions, instance models, requirements, likely changes, and unlikely changes on the assumptions. \hyperref[Table:TraceMatRefvsRef]{Tab:TraceMatRefvsRef} shows the dependencies of data definitions, theoretical models, general definitions, and instance models with each other. \hyperref[Table:TraceMatAllvsR]{Tab:TraceMatAllvsR} shows the dependencies of goal statements on the data definitions, theoretical models, general definitions, and instance models.
+The purpose of the traceability matrices is to provide easy references on what has to be additionally modified if a certain component is changed. Every time a component is changed, the items in the column of that component that are marked with an ``X'' should be modified as well. \hyperref[Table:TraceMatAvsA]{Tab:TraceMatAvsA} shows the dependencies of assumptions on the assumptions. \hyperref[Table:TraceMatAvsAll]{Tab:TraceMatAvsAll} shows the dependencies of data definitions, theoretical models, general definitions, instance models, requirements, likely changes, and unlikely changes on the assumptions. \hyperref[Table:TraceMatRefvsRef]{Tab:TraceMatRefvsRef} shows the dependencies of data definitions, theoretical models, general definitions, and instance models with each other. \hyperref[Table:TraceMatAllvsR]{Tab:TraceMatAllvsR} shows the dependencies of requirements, goal statements on the data definitions, theoretical models, general definitions, and instance models.
 
-\begin{longtable}{l l l l l l l l l l l l l l l l l}
+\begin{longtable}{l l l l l l l l l l l l l l l l l l}
 \toprule
-\textbf{} & \textbf{\hyperref[world]{A:world}} & \textbf{\hyperref[beamSlender]{A:beamSlender}} & \textbf{\hyperref[beamPrismatic]{A:beamPrismatic}} & \textbf{\hyperref[beamUniformCrossSection]{A:beamUniformCrossSection}} & \textbf{\hyperref[beamFlat]{A:beamFlat}} & \textbf{\hyperref[beamConstantSecondMomentOfArea]{A:beamConstantSecondMomentOfArea}} & \textbf{\hyperref[beamVerticalLinearElasticLoad]{A:beamVerticalLinearElasticLoad}} & \textbf{\hyperref[beamConstantModulusOfElasticity]{A:beamConstantModulusOfElasticity}} & \textbf{\hyperref[beamSmallDeflections]{A:beamSmallDeflections}} & \textbf{\hyperref[beamLocallySmallSlopes]{A:beamLocallySmallSlopes}} & \textbf{\hyperref[beamSimplySupported]{A:beamSimplySupported}} & \textbf{\hyperref[beamLoadingPolynomial]{A:beamLoadingPolynomial}} & \textbf{\hyperref[beamNoPointLoads]{A:beamNoPointLoads}} & \textbf{\hyperref[beamNoAxialLoading]{A:beamNoAxialLoading}} & \textbf{\hyperref[beamDeflectionFunctionDifferentiable]{A:beamDeflectionFunctionDifferentiable}} & \textbf{\hyperref[beamLoadingFunctionIntegrable]{A:beamLoadingFunctionIntegrable}}
+\textbf{} & \textbf{\hyperref[worldDimension]{A:worldDimension}} & \textbf{\hyperref[worldTime]{A:worldTime}} & \textbf{\hyperref[beamSlender]{A:beamSlender}} & \textbf{\hyperref[beamPrismatic]{A:beamPrismatic}} & \textbf{\hyperref[beamUniformCrossSection]{A:beamUniformCrossSection}} & \textbf{\hyperref[beamFlat]{A:beamFlat}} & \textbf{\hyperref[beamConstantSecondMomentOfArea]{A:beamConstantSecondMomentOfArea}} & \textbf{\hyperref[beamVerticalLinearElasticLoad]{A:beamVerticalLinearElasticLoad}} & \textbf{\hyperref[beamConstantModulusOfElasticity]{A:beamConstantModulusOfElasticity}} & \textbf{\hyperref[beamSmallDeflections]{A:beamSmallDeflections}} & \textbf{\hyperref[beamLocallySmallSlopes]{A:beamLocallySmallSlopes}} & \textbf{\hyperref[beamSimplySupported]{A:beamSimplySupported}} & \textbf{\hyperref[beamLoadingPolynomial]{A:beamLoadingPolynomial}} & \textbf{\hyperref[beamNoPointLoads]{A:beamNoPointLoads}} & \textbf{\hyperref[beamNoAxialLoading]{A:beamNoAxialLoading}} & \textbf{\hyperref[beamDeflectionFunctionDifferentiable]{A:beamDeflectionFunctionDifferentiable}} & \textbf{\hyperref[beamLoadingFunctionIntegrable]{A:beamLoadingFunctionIntegrable}}
 \\
 \midrule
 \endhead
-\hyperref[world]{A:world} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[worldDimension]{A:worldDimension} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[beamSlender]{A:beamSlender} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[worldTime]{A:worldTime} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[beamPrismatic]{A:beamPrismatic} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[beamSlender]{A:beamSlender} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[beamUniformCrossSection]{A:beamUniformCrossSection} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[beamPrismatic]{A:beamPrismatic} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[beamFlat]{A:beamFlat} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[beamUniformCrossSection]{A:beamUniformCrossSection} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[beamConstantSecondMomentOfArea]{A:beamConstantSecondMomentOfArea} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[beamFlat]{A:beamFlat} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[beamVerticalLinearElasticLoad]{A:beamVerticalLinearElasticLoad} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[beamConstantSecondMomentOfArea]{A:beamConstantSecondMomentOfArea} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[beamConstantModulusOfElasticity]{A:beamConstantModulusOfElasticity} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[beamVerticalLinearElasticLoad]{A:beamVerticalLinearElasticLoad} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[beamSmallDeflections]{A:beamSmallDeflections} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[beamConstantModulusOfElasticity]{A:beamConstantModulusOfElasticity} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[beamLocallySmallSlopes]{A:beamLocallySmallSlopes} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[beamSmallDeflections]{A:beamSmallDeflections} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[beamSimplySupported]{A:beamSimplySupported} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[beamLocallySmallSlopes]{A:beamLocallySmallSlopes} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[beamLoadingPolynomial]{A:beamLoadingPolynomial} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[beamSimplySupported]{A:beamSimplySupported} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[beamNoPointLoads]{A:beamNoPointLoads} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[beamLoadingPolynomial]{A:beamLoadingPolynomial} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[beamNoAxialLoading]{A:beamNoAxialLoading} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[beamNoPointLoads]{A:beamNoPointLoads} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[beamDeflectionFunctionDifferentiable]{A:beamDeflectionFunctionDifferentiable} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[beamNoAxialLoading]{A:beamNoAxialLoading} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[beamLoadingFunctionIntegrable]{A:beamLoadingFunctionIntegrable} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[beamDeflectionFunctionDifferentiable]{A:beamDeflectionFunctionDifferentiable} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[beamLoadingFunctionIntegrable]{A:beamLoadingFunctionIntegrable} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
 \bottomrule
 \caption{Traceability Matrix Showing the Connections Between Assumptions and Other Assumptions}
 \label{Table:TraceMatAvsA}
 \end{longtable}
-\begin{longtable}{l l l l l l l l l l l l l l l l l}
+\begin{longtable}{l l l l l l l l l l l l l l l l l l}
 \toprule
-\textbf{} & \textbf{\hyperref[world]{A:world}} & \textbf{\hyperref[beamSlender]{A:beamSlender}} & \textbf{\hyperref[beamPrismatic]{A:beamPrismatic}} & \textbf{\hyperref[beamUniformCrossSection]{A:beamUniformCrossSection}} & \textbf{\hyperref[beamFlat]{A:beamFlat}} & \textbf{\hyperref[beamConstantSecondMomentOfArea]{A:beamConstantSecondMomentOfArea}} & \textbf{\hyperref[beamVerticalLinearElasticLoad]{A:beamVerticalLinearElasticLoad}} & \textbf{\hyperref[beamConstantModulusOfElasticity]{A:beamConstantModulusOfElasticity}} & \textbf{\hyperref[beamSmallDeflections]{A:beamSmallDeflections}} & \textbf{\hyperref[beamLocallySmallSlopes]{A:beamLocallySmallSlopes}} & \textbf{\hyperref[beamSimplySupported]{A:beamSimplySupported}} & \textbf{\hyperref[beamLoadingPolynomial]{A:beamLoadingPolynomial}} & \textbf{\hyperref[beamNoPointLoads]{A:beamNoPointLoads}} & \textbf{\hyperref[beamNoAxialLoading]{A:beamNoAxialLoading}} & \textbf{\hyperref[beamDeflectionFunctionDifferentiable]{A:beamDeflectionFunctionDifferentiable}} & \textbf{\hyperref[beamLoadingFunctionIntegrable]{A:beamLoadingFunctionIntegrable}}
+\textbf{} & \textbf{\hyperref[worldDimension]{A:worldDimension}} & \textbf{\hyperref[worldTime]{A:worldTime}} & \textbf{\hyperref[beamSlender]{A:beamSlender}} & \textbf{\hyperref[beamPrismatic]{A:beamPrismatic}} & \textbf{\hyperref[beamUniformCrossSection]{A:beamUniformCrossSection}} & \textbf{\hyperref[beamFlat]{A:beamFlat}} & \textbf{\hyperref[beamConstantSecondMomentOfArea]{A:beamConstantSecondMomentOfArea}} & \textbf{\hyperref[beamVerticalLinearElasticLoad]{A:beamVerticalLinearElasticLoad}} & \textbf{\hyperref[beamConstantModulusOfElasticity]{A:beamConstantModulusOfElasticity}} & \textbf{\hyperref[beamSmallDeflections]{A:beamSmallDeflections}} & \textbf{\hyperref[beamLocallySmallSlopes]{A:beamLocallySmallSlopes}} & \textbf{\hyperref[beamSimplySupported]{A:beamSimplySupported}} & \textbf{\hyperref[beamLoadingPolynomial]{A:beamLoadingPolynomial}} & \textbf{\hyperref[beamNoPointLoads]{A:beamNoPointLoads}} & \textbf{\hyperref[beamNoAxialLoading]{A:beamNoAxialLoading}} & \textbf{\hyperref[beamDeflectionFunctionDifferentiable]{A:beamDeflectionFunctionDifferentiable}} & \textbf{\hyperref[beamLoadingFunctionIntegrable]{A:beamLoadingFunctionIntegrable}}
 \\
 \midrule
 \endhead
-\hyperref[DD:loading]{DD:loading} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[DD:loading]{DD:loading} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[TM:curvatureThm]{TM:curvatureThm} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[TM:curvatureThm]{TM:curvatureThm} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[TM:prismaticBeamArc]{TM:prismaticBeamArc} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[TM:prismaticBeamArc]{TM:prismaticBeamArc} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[TM:elasticCurveODE]{TM:elasticCurveODE} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[TM:elasticCurveODE]{TM:elasticCurveODE} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[TM:eulerBernoulliBeamDeflection]{TM:eulerBernoulliBeamDeflection} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[TM:eulerBernoulliBeamDeflection]{TM:eulerBernoulliBeamDeflection} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[IM:deflection]{IM:deflection} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[IM:deflection]{IM:deflection} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[inputValues]{FR:Input-Values} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[inputValues]{FR:Input-Values} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[loadingFunction]{LC:loadingFunction} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[inputDisplay]{FR:inputDisplay} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[units]{LC:units} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[inputValidation]{FR:inputValidation} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[beamConfiguration]{LC:beamConfiguration} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\hyperref[calculate]{FR:calculate} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[output]{FR:output} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[accuracy]{NFR:accuracy} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[usability]{NFR:usability} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[maintainability]{NFR:maintainability} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[portability]{NFR:portability} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[verifiable]{NFR:verifiable} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[reusable]{NFR:reusable} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[loadingFunction]{LC:loadingFunction} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[units]{LC:units} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[beamConfiguration]{LC:beamConfiguration} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
 \bottomrule
 \caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
@@ -588,21 +625,41 @@ The purpose of the traceability matrices is to provide easy references on what h
 \caption{Traceability Matrix Showing the Connections Between Items and Other Sections}
 \label{Table:TraceMatRefvsRef}
 \end{longtable}
-\begin{longtable}{l l l l l l l l}
+\begin{longtable}{l l l l l l l l l l l l l l l l l l}
 \toprule
-\textbf{} & \textbf{\hyperref[DD:loading]{DD:loading}} & \textbf{\hyperref[TM:curvatureThm]{TM:curvatureThm}} & \textbf{\hyperref[TM:prismaticBeamArc]{TM:prismaticBeamArc}} & \textbf{\hyperref[TM:elasticCurveODE]{TM:elasticCurveODE}} & \textbf{\hyperref[TM:eulerBernoulliBeamDeflection]{TM:eulerBernoulliBeamDeflection}} & \textbf{\hyperref[IM:deflection]{IM:deflection}} & \textbf{\hyperref[inputValues]{FR:Input-Values}}
+\textbf{} & \textbf{\hyperref[DD:loading]{DD:loading}} & \textbf{\hyperref[TM:curvatureThm]{TM:curvatureThm}} & \textbf{\hyperref[TM:prismaticBeamArc]{TM:prismaticBeamArc}} & \textbf{\hyperref[TM:elasticCurveODE]{TM:elasticCurveODE}} & \textbf{\hyperref[TM:eulerBernoulliBeamDeflection]{TM:eulerBernoulliBeamDeflection}} & \textbf{\hyperref[IM:deflection]{IM:deflection}} & \textbf{\hyperref[inputValues]{FR:Input-Values}} & \textbf{\hyperref[inputDisplay]{FR:inputDisplay}} & \textbf{\hyperref[inputValidation]{FR:inputValidation}} & \textbf{\hyperref[calculate]{FR:calculate}} & \textbf{\hyperref[output]{FR:output}} & \textbf{\hyperref[accuracy]{NFR:accuracy}} & \textbf{\hyperref[usability]{NFR:usability}} & \textbf{\hyperref[maintainability]{NFR:maintainability}} & \textbf{\hyperref[portability]{NFR:portability}} & \textbf{\hyperref[verifiable]{NFR:verifiable}} & \textbf{\hyperref[reusable]{NFR:reusable}}
 \\
 \midrule
 \endhead
-\hyperref[deflection]{GS:deflection} &  &  &  &  &  &  & 
+\hyperref[deflection]{GS:deflection} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[inputValues]{FR:Input-Values} &  &  &  &  &  &  & 
+\hyperref[inputValues]{FR:Input-Values} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[inputDisplay]{FR:inputDisplay} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[inputValidation]{FR:inputValidation} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[calculate]{FR:calculate} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[output]{FR:output} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[accuracy]{NFR:accuracy} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[usability]{NFR:usability} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[maintainability]{NFR:maintainability} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[portability]{NFR:portability} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[verifiable]{NFR:verifiable} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+\\
+\hyperref[reusable]{NFR:reusable} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
 \\
 \bottomrule
-\caption{Traceability Matrix Showing the Connections Between Goal Statements and Other Items}
+\caption{Traceability Matrix Showing the Connections Between Requirements, Goal Statements and Other Items}
 \label{Table:TraceMatAllvsR}
 \end{longtable}
-The purpose of the traceability graphs is also to provide easy references on what has to be additionally modified if a certain component is changed. The arrows in the graphs represent dependencies. The component at the tail of an arrow is depended on by the component at the head of that arrow. Therefore, if a component is changed, the components that it points to should also be changed. \hyperref[Figure:TraceGraphAvsA]{Fig:TraceGraphAvsA} shows the dependencies of assumptions on the assumptions. \hyperref[Figure:TraceGraphAvsAll]{Fig:TraceGraphAvsAll} shows the dependencies of data definitions, theoretical models, general definitions, instance models, requirements, likely changes, and unlikely changes on the assumptions. \hyperref[Figure:TraceGraphRefvsRef]{Fig:TraceGraphRefvsRef} shows the dependencies of data definitions, theoretical models, general definitions, and instance models with each other. \hyperref[Figure:TraceGraphAllvsR]{Fig:TraceGraphAllvsR} shows the dependencies of goal statements on the data definitions, theoretical models, general definitions, and instance models. \hyperref[Figure:TraceGraphAllvsAll]{Fig:TraceGraphAllvsAll} shows the dependencies of dependencies of assumptions, models, definitions, requirements, goals, and changes with each other.
+The purpose of the traceability graphs is also to provide easy references on what has to be additionally modified if a certain component is changed. The arrows in the graphs represent dependencies. The component at the tail of an arrow is depended on by the component at the head of that arrow. Therefore, if a component is changed, the components that it points to should also be changed. \hyperref[Figure:TraceGraphAvsA]{Fig:TraceGraphAvsA} shows the dependencies of assumptions on the assumptions. \hyperref[Figure:TraceGraphAvsAll]{Fig:TraceGraphAvsAll} shows the dependencies of data definitions, theoretical models, general definitions, instance models, requirements, likely changes, and unlikely changes on the assumptions. \hyperref[Figure:TraceGraphRefvsRef]{Fig:TraceGraphRefvsRef} shows the dependencies of data definitions, theoretical models, general definitions, and instance models with each other. \hyperref[Figure:TraceGraphAllvsR]{Fig:TraceGraphAllvsR} shows the dependencies of requirements, goal statements on the data definitions, theoretical models, general definitions, and instance models. \hyperref[Figure:TraceGraphAllvsAll]{Fig:TraceGraphAllvsAll} shows the dependencies of dependencies of assumptions, models, definitions, requirements, goals, and changes with each other.
 
 \begin{figure}
 \begin{center}
@@ -650,8 +707,20 @@ For convenience, the following graphs can be found at the links below:
 \end{itemize}
 \section{Values of Auxiliary Constants}
 \label{Sec:AuxConstants}
-There are no auxiliary constants.
+This section contains the standard values that are used for calculations in BmBnd.
 
+\begin{longtable}{l l l l}
+\toprule
+\textbf{Symbol} & \textbf{Description} & \textbf{Value} & \textbf{Unit}
+\\
+\midrule
+\endhead
+$\mathit{SLENDER}$ & minimum ratio for object to be considered slender & $10.0\%$ & ${\text{m}}$
+\\
+\bottomrule
+\caption{Auxiliary Constants}
+\label{Table:TAuxConsts}
+\end{longtable}
 \section{References}
 \label{Sec:References}
 \begin{filecontents*}{bibfile.bib}

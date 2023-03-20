@@ -19,7 +19,7 @@ unitals =
   intermediateUnitals ++ abstractUnitals ++ inputUnitals ++ outputUnitals
 
 intermediateUnitals :: [UnitalChunk]
-intermediateUnitals = [x, w_B]
+intermediateUnitals = [x, w_B, slender]
 
 abstractUnitals :: [UnitalChunk]
 abstractUnitals = [l, w, e, i, y, rho, a, f, moment]

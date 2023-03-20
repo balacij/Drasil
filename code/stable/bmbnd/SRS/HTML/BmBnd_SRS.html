@@ -224,6 +224,11 @@
                   <td><em>N</em></td>
                 </tr>
                 <tr>
+                  <td><em>SLENDER</em></td>
+                  <td>Minimum ratio for object to be considered slender</td>
+                  <td><em>m</em></td>
+                </tr>
+                <tr>
                   <td><em>w</em></td>
                   <td>Loading at a particular point along the beam</td>
                   <td><em>\(\frac{\text{N}}{\text{m}}\)</em></td>
@@ -426,8 +431,13 @@
                 </p>
                 <div class="list">
                   <p>
-                    <div id="world">
-                      world: The world model is two-dimensional, observing the instant a load is applied on the beam.
+                    <div id="worldDimension">
+                      worldDimension: The world model is two-dimensional.
+                    </div>
+                  </p>
+                  <p>
+                    <div id="worldTime">
+                      worldTime: The world model observes the instant a load is applied on the beam.
                     </div>
                   </p>
                   <p>
@@ -542,7 +552,11 @@
                     </tr>
                     <tr>
                       <th>Source</th>
-                      <td><p class="paragraph"><a href=#world>A:world</a></p></td>
+                      <td>
+                        <p class="paragraph">
+                          <a href=#worldDimension>A:worldDimension</a>
+                        </p>
+                      </td>
                     </tr>
                     <tr>
                       <th>RefBy</th>
@@ -584,7 +598,11 @@
                     </tr>
                     <tr>
                       <th>Source</th>
-                      <td><p class="paragraph"><a href=#world>A:world</a></p></td>
+                      <td>
+                        <p class="paragraph">
+                          <a href=#beamLocallySmallSlopes>A:beamLocallySmallSlopes</a>
+                        </p>
+                      </td>
                     </tr>
                     <tr>
                       <th>RefBy</th>
@@ -630,7 +648,11 @@
                     </tr>
                     <tr>
                       <th>Source</th>
-                      <td><p class="paragraph"><a href=#world>A:world</a></p></td>
+                      <td>
+                        <p class="paragraph">
+                          <a href=#worldDimension>A:worldDimension</a>
+                        </p>
+                      </td>
                     </tr>
                     <tr>
                       <th>RefBy</th>
@@ -676,7 +698,11 @@
                     </tr>
                     <tr>
                       <th>Source</th>
-                      <td><p class="paragraph"><a href=#world>A:world</a></p></td>
+                      <td>
+                        <p class="paragraph">
+                          <a href=#beamSlender>A:beamSlender</a>, <a href=#beamSmallDeflections>A:beamSmallDeflections</a>, <a href=#beamSimplySupported>A:beamSimplySupported</a>, <a href=#beamPrismatic>A:beamPrismatic</a>, <a href=#beamFlat>A:beamFlat</a>, <a href=#beamNoAxialLoading>A:beamNoAxialLoading</a>, <a href=#beamNoPointLoads>A:beamNoPointLoads</a>, and <a href=#beamLocallySmallSlopes>A:beamLocallySmallSlopes</a>
+                        </p>
+                      </td>
                     </tr>
                     <tr>
                       <th>RefBy</th>
@@ -753,7 +779,11 @@
                     </tr>
                     <tr>
                       <th>Source</th>
-                      <td><p class="paragraph"><a href=#world>A:world</a></p></td>
+                      <td>
+                        <p class="paragraph">
+                          <a href=#beamLoadingPolynomial>A:beamLoadingPolynomial</a>
+                        </p>
+                      </td>
                     </tr>
                     <tr>
                       <th>RefBy</th>
@@ -838,7 +868,11 @@
                     </tr>
                     <tr>
                       <th>Source</th>
-                      <td><p class="paragraph"><a href=#world>A:world</a></p></td>
+                      <td>
+                        <p class="paragraph">
+                          <a href=#beamLoadingFunctionIntegrable>A:beamLoadingFunctionIntegrable</a>
+                        </p>
+                      </td>
                     </tr>
                     <tr>
                       <th>RefBy</th>
@@ -871,6 +905,10 @@
                   Input-Values: Input the values from <a href=#Table:ReqInputs>Tab:ReqInputs</a>.
                 </div>
               </p>
+              <p><div id="inputDisplay">inputDisplay: </div></p>
+              <p><div id="inputValidation">inputValidation: </div></p>
+              <p><div id="calculate">calculate: </div></p>
+              <p><div id="output">output: </div></p>
             </div>
             <div id="Table:ReqInputs">
               <table class="table">
@@ -927,7 +965,14 @@
             <p class="paragraph">
               This section provides the non-functional requirements, the qualities that the software is expected to exhibit.
             </p>
-            <div class="list"></div>
+            <div class="list">
+              <p><div id="accuracy">accuracy: </div></p>
+              <p><div id="usability">usability: </div></p>
+              <p><div id="maintainability">maintainability: </div></p>
+              <p><div id="portability">portability: </div></p>
+              <p><div id="verifiable">verifiable: </div></p>
+              <p><div id="reusable">reusable: </div></p>
+            </div>
           </div>
         </div>
       </div>
@@ -970,13 +1015,14 @@
       <div class="section">
         <h1>Traceability Matrices and Graphs</h1>
         <p class="paragraph">
-          The purpose of the traceability matrices is to provide easy references on what has to be additionally modified if a certain component is changed. Every time a component is changed, the items in the column of that component that are marked with an "X" should be modified as well. <a href=#Table:TraceMatAvsA>Tab:TraceMatAvsA</a> shows the dependencies of assumptions on the assumptions. <a href=#Table:TraceMatAvsAll>Tab:TraceMatAvsAll</a> shows the dependencies of data definitions, theoretical models, general definitions, instance models, requirements, likely changes, and unlikely changes on the assumptions. <a href=#Table:TraceMatRefvsRef>Tab:TraceMatRefvsRef</a> shows the dependencies of data definitions, theoretical models, general definitions, and instance models with each other. <a href=#Table:TraceMatAllvsR>Tab:TraceMatAllvsR</a> shows the dependencies of goal statements on the data definitions, theoretical models, general definitions, and instance models.
+          The purpose of the traceability matrices is to provide easy references on what has to be additionally modified if a certain component is changed. Every time a component is changed, the items in the column of that component that are marked with an "X" should be modified as well. <a href=#Table:TraceMatAvsA>Tab:TraceMatAvsA</a> shows the dependencies of assumptions on the assumptions. <a href=#Table:TraceMatAvsAll>Tab:TraceMatAvsAll</a> shows the dependencies of data definitions, theoretical models, general definitions, instance models, requirements, likely changes, and unlikely changes on the assumptions. <a href=#Table:TraceMatRefvsRef>Tab:TraceMatRefvsRef</a> shows the dependencies of data definitions, theoretical models, general definitions, and instance models with each other. <a href=#Table:TraceMatAllvsR>Tab:TraceMatAllvsR</a> shows the dependencies of requirements, goal statements on the data definitions, theoretical models, general definitions, and instance models.
         </p>
         <div id="Table:TraceMatAvsA">
           <table class="table">
             <tr>
               <th></th>
-              <th><a href=#world>A:world</a></th>
+              <th><a href=#worldDimension>A:worldDimension</a></th>
+              <th><a href=#worldTime>A:worldTime</a></th>
               <th><a href=#beamSlender>A:beamSlender</a></th>
               <th><a href=#beamPrismatic>A:beamPrismatic</a></th>
               <th>
@@ -1008,7 +1054,28 @@
               </th>
             </tr>
             <tr>
-              <td><a href=#world>A:world</a></td>
+              <td><a href=#worldDimension>A:worldDimension</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#worldTime>A:worldTime</a></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -1044,9 +1111,11 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#beamPrismatic>A:beamPrismatic</a></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -1084,9 +1153,11 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#beamFlat>A:beamFlat</a></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -1124,11 +1195,13 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
             </tr>
             <tr>
               <td>
                 <a href=#beamVerticalLinearElasticLoad>A:beamVerticalLinearElasticLoad</a>
               </td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -1166,9 +1239,11 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#beamSmallDeflections>A:beamSmallDeflections</a></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -1206,9 +1281,11 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#beamSimplySupported>A:beamSimplySupported</a></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -1244,6 +1321,7 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#beamNoPointLoads>A:beamNoPointLoads</a></td>
@@ -1263,9 +1341,11 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#beamNoAxialLoading>A:beamNoAxialLoading</a></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -1303,11 +1383,13 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
             </tr>
             <tr>
               <td>
                 <a href=#beamLoadingFunctionIntegrable>A:beamLoadingFunctionIntegrable</a>
               </td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -1334,7 +1416,8 @@
           <table class="table">
             <tr>
               <th></th>
-              <th><a href=#world>A:world</a></th>
+              <th><a href=#worldDimension>A:worldDimension</a></th>
+              <th><a href=#worldTime>A:worldTime</a></th>
               <th><a href=#beamSlender>A:beamSlender</a></th>
               <th><a href=#beamPrismatic>A:beamPrismatic</a></th>
               <th>
@@ -1383,9 +1466,11 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#TM:curvatureThm>TM:curvatureThm</a></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -1421,9 +1506,11 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#TM:elasticCurveODE>TM:elasticCurveODE</a></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -1461,9 +1548,11 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#IM:deflection>IM:deflection</a></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -1499,9 +1588,211 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#inputDisplay>FR:inputDisplay</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#inputValidation>FR:inputValidation</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#calculate>FR:calculate</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#output>FR:output</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#accuracy>NFR:accuracy</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#usability>NFR:usability</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#maintainability>NFR:maintainability</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#portability>NFR:portability</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#verifiable>NFR:verifiable</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#reusable>NFR:reusable</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#loadingFunction>LC:loadingFunction</a></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -1537,9 +1828,11 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
             </tr>
             <tr>
               <td><a href=#beamConfiguration>LC:beamConfiguration</a></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -1649,9 +1942,29 @@
               </th>
               <th><a href=#IM:deflection>IM:deflection</a></th>
               <th><a href=#inputValues>FR:Input-Values</a></th>
+              <th><a href=#inputDisplay>FR:inputDisplay</a></th>
+              <th><a href=#inputValidation>FR:inputValidation</a></th>
+              <th><a href=#calculate>FR:calculate</a></th>
+              <th><a href=#output>FR:output</a></th>
+              <th><a href=#accuracy>NFR:accuracy</a></th>
+              <th><a href=#usability>NFR:usability</a></th>
+              <th><a href=#maintainability>NFR:maintainability</a></th>
+              <th><a href=#portability>NFR:portability</a></th>
+              <th><a href=#verifiable>NFR:verifiable</a></th>
+              <th><a href=#reusable>NFR:reusable</a></th>
             </tr>
             <tr>
               <td><a href=#deflection>GS:deflection</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -1669,14 +1982,224 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#inputDisplay>FR:inputDisplay</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#inputValidation>FR:inputValidation</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#calculate>FR:calculate</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#output>FR:output</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#accuracy>NFR:accuracy</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#usability>NFR:usability</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#maintainability>NFR:maintainability</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#portability>NFR:portability</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#verifiable>NFR:verifiable</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><a href=#reusable>NFR:reusable</a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
           </table>
           <p class="caption">
-            Traceability Matrix Showing the Connections Between Goal Statements and Other Items
+            Traceability Matrix Showing the Connections Between Requirements, Goal Statements and Other Items
           </p>
         </div>
         <p class="paragraph">
-          The purpose of the traceability graphs is also to provide easy references on what has to be additionally modified if a certain component is changed. The arrows in the graphs represent dependencies. The component at the tail of an arrow is depended on by the component at the head of that arrow. Therefore, if a component is changed, the components that it points to should also be changed. <a href=#Figure:TraceGraphAvsA>Fig:TraceGraphAvsA</a> shows the dependencies of assumptions on the assumptions. <a href=#Figure:TraceGraphAvsAll>Fig:TraceGraphAvsAll</a> shows the dependencies of data definitions, theoretical models, general definitions, instance models, requirements, likely changes, and unlikely changes on the assumptions. <a href=#Figure:TraceGraphRefvsRef>Fig:TraceGraphRefvsRef</a> shows the dependencies of data definitions, theoretical models, general definitions, and instance models with each other. <a href=#Figure:TraceGraphAllvsR>Fig:TraceGraphAllvsR</a> shows the dependencies of goal statements on the data definitions, theoretical models, general definitions, and instance models. <a href=#Figure:TraceGraphAllvsAll>Fig:TraceGraphAllvsAll</a> shows the dependencies of dependencies of assumptions, models, definitions, requirements, goals, and changes with each other.
+          The purpose of the traceability graphs is also to provide easy references on what has to be additionally modified if a certain component is changed. The arrows in the graphs represent dependencies. The component at the tail of an arrow is depended on by the component at the head of that arrow. Therefore, if a component is changed, the components that it points to should also be changed. <a href=#Figure:TraceGraphAvsA>Fig:TraceGraphAvsA</a> shows the dependencies of assumptions on the assumptions. <a href=#Figure:TraceGraphAvsAll>Fig:TraceGraphAvsAll</a> shows the dependencies of data definitions, theoretical models, general definitions, instance models, requirements, likely changes, and unlikely changes on the assumptions. <a href=#Figure:TraceGraphRefvsRef>Fig:TraceGraphRefvsRef</a> shows the dependencies of data definitions, theoretical models, general definitions, and instance models with each other. <a href=#Figure:TraceGraphAllvsR>Fig:TraceGraphAllvsR</a> shows the dependencies of requirements, goal statements on the data definitions, theoretical models, general definitions, and instance models. <a href=#Figure:TraceGraphAllvsAll>Fig:TraceGraphAllvsAll</a> shows the dependencies of dependencies of assumptions, models, definitions, requirements, goals, and changes with each other.
         </p>
         <div id="Figure:TraceGraphAvsA">
           <figure>
@@ -1733,7 +2256,26 @@
     <div id="Sec:AuxConstants">
       <div class="section">
         <h1>Values of Auxiliary Constants</h1>
-        <p class="paragraph">There are no auxiliary constants.</p>
+        <p class="paragraph">
+          This section contains the standard values that are used for calculations in BmBnd.
+        </p>
+        <div id="Table:TAuxConsts">
+          <table class="table">
+            <tr>
+              <th>Symbol</th>
+              <th>Description</th>
+              <th>Value</th>
+              <th>Unit</th>
+            </tr>
+            <tr>
+              <td><em>SLENDER</em></td>
+              <td>minimum ratio for object to be considered slender</td>
+              <td><em>10.0%</em></td>
+              <td><em>m</em></td>
+            </tr>
+          </table>
+          <p class="caption">Auxiliary Constants</p>
+        </div>
       </div>
     </div>
     <div id="Sec:References">

@@ -1,0 +1,75 @@
+digraph allvsr {
+
+
+	worldDimension	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:worldDimension"];
+	worldTime	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:worldTime"];
+	beamSlender	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamSlender"];
+	beamPrismatic	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamPrismatic"];
+	beamUniformCrossSection	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamUniformCrossSection"];
+	beamFlat	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamFlat"];
+	beamConstantSecondMomentOfArea	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamConstantSecondMomentOfArea"];
+	beamVerticalLinearElasticLoad	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamVerticalLinearElasticLoad"];
+	beamConstantModulusOfElasticity	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamConstantModulusOfElasticity"];
+	beamSmallDeflections	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamSmallDeflections"];
+	beamLocallySmallSlopes	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamLocallySmallSlopes"];
+	beamSimplySupported	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamSimplySupported"];
+	beamLoadingPolynomial	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamLoadingPolynomial"];
+	beamNoPointLoads	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamNoPointLoads"];
+	beamNoAxialLoading	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamNoAxialLoading"];
+	beamDeflectionFunctionDifferentiable	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamDeflectionFunctionDifferentiable"];
+	beamLoadingFunctionIntegrable	[shape=box, color=black, style=filled, fillcolor=mistyrose, label="A:beamLoadingFunctionIntegrable"];
+
+	subgraph A {
+	rank="same"
+	{worldDimension, worldTime, beamSlender, beamPrismatic, beamUniformCrossSection, beamFlat, beamConstantSecondMomentOfArea, beamVerticalLinearElasticLoad, beamConstantModulusOfElasticity, beamSmallDeflections, beamLocallySmallSlopes, beamSimplySupported, beamLoadingPolynomial, beamNoPointLoads, beamNoAxialLoading, beamDeflectionFunctionDifferentiable, beamLoadingFunctionIntegrable}
+	}
+
+	w_b	[shape=box, color=black, style=filled, fillcolor=paleturquoise1, label="DD:loading"];
+
+	subgraph DD {
+	rank="same"
+	{w_b}
+	}
+
+	curve	[shape=box, color=black, style=filled, fillcolor=pink, label="TM:curvatureThm"];
+	arc	[shape=box, color=black, style=filled, fillcolor=pink, label="TM:prismaticBeamArc"];
+	elasticCurve	[shape=box, color=black, style=filled, fillcolor=pink, label="TM:elasticCurveODE"];
+	eulerBernoulliBeamDeflection	[shape=box, color=black, style=filled, fillcolor=pink, label="TM:eulerBernoulliBeamDeflection"];
+
+	subgraph TM {
+	rank="same"
+	{curve, arc, elasticCurve, eulerBernoulliBeamDeflection}
+	}
+
+	deflectionIM	[shape=box, color=black, style=filled, fillcolor=khaki1, label="IM:deflection"];
+
+	subgraph IM {
+	rank="same"
+	{deflectionIM}
+	}
+
+	inputValues	[shape=box, color=black, style=filled, fillcolor=ivory, label="FR:inputValues"];
+	inputDisplay	[shape=box, color=black, style=filled, fillcolor=ivory, label="FR:inputDisplay"];
+	inputValidation	[shape=box, color=black, style=filled, fillcolor=ivory, label="FR:inputValidation"];
+	calculate	[shape=box, color=black, style=filled, fillcolor=ivory, label="FR:calculate"];
+	output	[shape=box, color=black, style=filled, fillcolor=ivory, label="FR:output"];
+	accuracy	[shape=box, color=black, style=filled, fillcolor=ivory, label="NFR:accuracy"];
+	usability	[shape=box, color=black, style=filled, fillcolor=ivory, label="NFR:usability"];
+	maintainability	[shape=box, color=black, style=filled, fillcolor=ivory, label="NFR:maintainability"];
+	portability	[shape=box, color=black, style=filled, fillcolor=ivory, label="NFR:portability"];
+	verifiable	[shape=box, color=black, style=filled, fillcolor=ivory, label="NFR:verifiable"];
+	reusable	[shape=box, color=black, style=filled, fillcolor=ivory, label="NFR:reusable"];
+
+	subgraph FR {
+	rank="same"
+	{inputValues, inputDisplay, inputValidation, calculate, output, accuracy, usability, maintainability, portability, verifiable, reusable}
+	}
+
+	deflection	[shape=box, color=black, style=filled, fillcolor=darkgoldenrod1, label="GS:deflection"];
+
+	subgraph GS {
+	rank="same"
+	{deflection}
+	}
+
+}
