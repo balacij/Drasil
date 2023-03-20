@@ -107,7 +107,7 @@ symbMap = cdb
 usedDB :: ChunkDB
 usedDB = cdb
   ([] :: [QuantityDict])
-  [nw caseStudy]
+  (nw caseStudy : map nw Doc.doccon')
   ([] :: [ConceptChunk])
   ([] :: [UnitDefn])
   ([] :: [DataDefinition])
@@ -123,7 +123,7 @@ refDB :: ReferenceDB
 refDB = rdb Rs.references conceptInstances
 
 realSrsBody :: SRSDecl -- FIXME: This is suboptimal.
-realSrsBody = srsBody si caseStudy Fs.bmBndDiagram Ts.terminology Cs.constants
+realSrsBody = srsBody si caseStudy Fs.systemContext Fs.bmBndDiagram Ts.terminology Cs.constants
 
 srs :: Document
 srs = mkDoc realSrsBody (S.forGen titleize phrase) si

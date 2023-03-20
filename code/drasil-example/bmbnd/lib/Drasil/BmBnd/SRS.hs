@@ -9,17 +9,21 @@ import           Language.Drasil
 srsBody :: SystemInformation
         -> CI
         -> LabelledContent
+        -> LabelledContent
         -> [ConceptChunk]
         -> [ConstQDef]
         -> SRSDecl
-srsBody si cs psdFig terms constQDs =
+srsBody si cs sysCntxtFig psdFig terms constQDs =
   [ TableOfContents
   , RefSec $ RefProg intro [TUnits, tsymb [TSPurpose, SymbOrder], TAandA]
   , IntroSec
     $ IntroProg (S "") (S "") [IPurpose [], IScope (S ""), IChar [] [] []]
        -- IOrgSec
   , GSDSec
-    $ GSDProg [SysCntxt [], UsrChars [userCharacteristics], SystCons [] []]
+    $ GSDProg
+      [ SysCntxt [LlC sysCntxtFig]
+      , UsrChars [userCharacteristics]
+      , SystCons [sysCnstrnts] []]
   , SSDSec
     $ SSDProg
       [ SSDProblem
@@ -53,3 +57,6 @@ stdFields =
 
 userCharacteristics :: Contents
 userCharacteristics = foldlSP [S "Hello world!"]
+
+sysCnstrnts :: Contents
+sysCnstrnts = foldlSP [S "Hello world!"]
