@@ -1,5 +1,5 @@
 resolver:
-  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/20/12.yaml
+  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/20/15.yaml
 
 packages:
 - .
