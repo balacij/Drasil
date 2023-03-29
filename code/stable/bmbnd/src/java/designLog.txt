@@ -1,4 +1,4 @@
-Languages selected as Cpp Java CSharp Swift.
+Languages selected as Cpp Java CSharp Swift Python.
 Modularity selected as Modular Combined.
 Input Structure selected as Unbundled.
 Constant Structure selected as Store Bundled.
@@ -16,5 +16,5 @@ Successfully matched String with String.
 Successfully matched Actor "Constants" with Object "Constants".
 Successfully matched Actor "InputParameters" with Object "InputParameters".
 Successfully matched Real with Double.
-Successfully matched Function (Real :| []) Real with Func [Double,Float] Double.
+Successfully matched Vect Real with List Double.
 Successfully matched Rational with Double.

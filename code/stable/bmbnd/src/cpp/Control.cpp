@@ -3,12 +3,14 @@
     \brief Controls the flow of the program
 */
 #include <string>
+#include <vector>
 
 #include "Calculations.hpp"
 #include "InputParameters.hpp"
 #include "OutputFormat.hpp"
 
 using std::string;
+using std::vector;
 
 /** \brief Controls the flow of the program
     \param argc Number of command-line arguments
@@ -25,7 +27,7 @@ int main(int argc, const char *argv[]) {
     double E_B;
     double I_B;
     get_input(filename, a_0, a_1, a_2, a_3, L_B, E_B, I_B);
-    y_B = func_y_B(E_B);
+    vector<double> y_B = func_y_B(E_B);
     write_output(y_B);
     
     return 0;

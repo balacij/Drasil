@@ -49,7 +49,7 @@ w_B = uc'
   (nounPhraseSent $ S "load at a particular point along the beam")
   (S "loading function")
   (sub lW cB)
-  (mkFunction [Real] Real)
+  Real
   forcePerMeterU
 
 l_B :: UnitalChunk
@@ -85,7 +85,7 @@ y_B = uc'
   (nounPhraseSent $ S "deflection at a particular point along the beam")
   (S "deflection function")
   (sub lY cB)
-  (mkFunction [Real] Real)
+  (Vect Real)
   metre
 
 w :: UnitalChunk
@@ -94,7 +94,7 @@ w = uc'
   (nounPhraseSent $ S "loading at a particular point along the beam")
   (S "loading function")
   lW
-  (mkFunction [Real] Real)
+  Real
   forcePerMeterU
 
 l :: UnitalChunk
@@ -132,7 +132,7 @@ y = uc'
    $ S "deflection at a particular point along the abstract beam")
   (S "deflection function")
   lY
-  (mkFunction [Real] Real)
+  (Vect Real)
   metre
 
 -- TODO: I have 2 things to implicitly keep in mind (which I shouldn't) while I write these unital chunks:
@@ -144,7 +144,8 @@ a_n n ud
     ("a_" ++ show n)
     (nounPhraseSent s)
     s
-    (subStr lA $ show n) -- FIXME: Somewhat cheating here with making the symbol for "a_n"
+    (subStr lA
+     $ show n) -- FIXME: Somewhat cheating here with making the symbol for "a_n"
     Real
     ud
   | otherwise = error "'a_n' only allows non-negative 'n's"
@@ -172,7 +173,8 @@ rho = uc'
 a :: UnitalChunk
 a = uc'
   "a"
-  (nounPhraseSent $ S "horizontal component of a point on a 2D coordinate system")
+  (nounPhraseSent
+   $ S "horizontal component of a point on a 2D coordinate system")
   (S "horizontal component")
   lA
   Real

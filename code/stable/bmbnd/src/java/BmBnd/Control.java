@@ -6,6 +6,7 @@ package BmBnd;
 */
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Control {
     
@@ -29,7 +30,7 @@ public class Control {
         L_B = (double)(outputs[4]);
         E_B = (double)(outputs[5]);
         I_B = (double)(outputs[6]);
-        y_B = Calculations.func_y_B(E_B);
+        ArrayList<Double> y_B = Calculations.func_y_B(E_B);
         OutputFormat.write_output(y_B);
     }
 }

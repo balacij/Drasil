@@ -6,13 +6,15 @@
 #define OutputFormat_h
 
 #include <string>
+#include <vector>
 
 using std::ofstream;
 using std::string;
+using std::vector;
 
 /** \brief Writes the output values to output.txt
     \param y_B deflection at a particular point along the beam (m)
 */
-void write_output(y_B);
+void write_output(vector<double> &y_B);
 
 #endif
