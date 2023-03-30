@@ -16,7 +16,7 @@ main = do
   setLocaleEncoding utf8
   typeCheckSI fullSI
   gen (DocSpec (docChoices SRS [HTML, TeX]) "BmBnd_SRS") srs printSetting
-  genCode codeChoices bCodeSpec
+  -- genCode codeChoices bCodeSpec
   genDot fullSI
   genLog fullSI printSetting
 
