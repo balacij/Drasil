@@ -6,6 +6,7 @@ import           GHC.IO.Encoding (setLocaleEncoding, utf8)
 import           Drasil.BmBnd.Meta (srs, fullSI)
 import           Language.Drasil.Generate
 import           Language.Drasil.Code
+import           BVPCheatModule (bvpCheatModule)
 
 printSetting :: PrintingInformation
 printSetting = piSys fullSI Equational defaultConfiguration
@@ -20,11 +21,11 @@ main = do
   genLog fullSI printSetting
 
 bCodeSpec :: CodeSpec
-bCodeSpec = codeSpec fullSI codeChoices []
+bCodeSpec = codeSpec fullSI codeChoices [bvpCheatModule]
 
 codeChoices :: Choices
 codeChoices =
-  defaultChoices { lang = [Cpp, Java, CSharp, Swift, Python]
+  defaultChoices { lang = [Python]
                  , architecture = makeArchit (Modular Combined) Program
                  , dataInfo = makeData Unbundled (Store Bundled) Const
                  , optFeats = makeOptFeats

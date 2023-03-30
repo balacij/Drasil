@@ -19,7 +19,7 @@ unitals =
   intermediateUnitals ++ abstractUnitals ++ inputUnitals ++ outputUnitals
 
 intermediateUnitals :: [UnitalChunk]
-intermediateUnitals = [x, w_B, slender]
+intermediateUnitals = [x, w_B, slender, cheat]
 
 abstractUnitals :: [UnitalChunk]
 abstractUnitals = [l, w, e, i, y, rho, a, f, moment]
@@ -85,6 +85,15 @@ y_B = uc'
   (nounPhraseSent $ S "deflection at a particular point along the beam")
   (S "deflection function")
   (sub lY cB)
+  (Vect Real)
+  metre
+
+cheat :: UnitalChunk
+cheat = uc'
+  "cheat"
+  (nounPhraseSent $ S "cheat for deflection at a particular point along the beam")
+  (S "deflection function cheat")
+  (variable "cheat")
   (Vect Real)
   metre
 
