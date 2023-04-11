@@ -21,8 +21,6 @@ I = 14200
 # increasing nodes to 5000 gives an error?! 500 seems to work okay.
 nodes = 5
 
-# TODO: Explain the background mathematics
-
 # Uniformly distributed -800 N/m load application
 def uniformly_distributed_800Npm_load(x, y):
     return np.vstack((y[1], y[2], y[3], (y[0] - 800) / (E * I)))
@@ -38,6 +36,8 @@ fun = uniformly_distributed_800Npm_load
 # 1. ends are vertically fixed:   y(0) = 0,   y(L) = 0
 # 2. moments at ends are zero:  y''(0) = 0, y''(L) = 0
 def bc(ya, yb):
+    # ya is the initial values, the index is the power
+    # yb is the final values, the index is the power
     return np.array([ya[0], yb[0], ya[2], yb[2]])
 
 x = np.linspace(0, L, nodes)
@@ -56,7 +56,7 @@ if not res.success:
 
 x_plot = np.linspace(0, L, 100)
 y_plot = res.sol(x_plot)[0]
-# TODO: Show the solutions of the other derivatives
+# TODO: Show the solutions of the other derivatives?
 
 import matplotlib.pyplot as plt
 
