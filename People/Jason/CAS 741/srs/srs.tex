@@ -776,6 +776,22 @@ on.
 
 \noindent
 \deftheory
+% #1 derivation - not applicable by default
+[ Starting with \tref{TM:PC}:
+
+    \[\frac{1}{\rho} = \frac{\frac{d^{2}y}{dx^{2}}}{(1+(\frac{dy}{dx})^{2})^{\frac{3}{2}}}\]
+
+    We may recognize that in the context of an abstract prismatic beam, the
+    slope \(\frac{dy}{dx}\) is relatively ``small'' (\aref{beam_slope}).
+    Similarly, its square is also small. Considering it negligible, we may drop
+    it:
+
+    \[\frac{1}{\rho} = \frac{d^{2}y}{dx^{2}}\]
+
+    Substituting \(\frac{1}{\rho}\) from \tref{TM:PBPBA}, we obtain:
+
+    \[\frac{d^{2}y}{dx^{2}} = \frac{M(x)}{EI}\]
+]
 % #2 refname of theory
 {TM:OREC}
 % #3 label
@@ -803,25 +819,14 @@ on.
 {
     None.
 }
-% #1 derivation - not applicable by default
-{ Starting with \tref{TM:PC}:
-
-    \[\frac{1}{\rho} = \frac{\frac{d^{2}y}{dx^{2}}}{(1+(\frac{dy}{dx})^{2})^{\frac{3}{2}}}\]
-
-    We may recognize that in the context of an abstract prismatic beam, the
-    slope \(\frac{dy}{dx}\) is relatively ``small'' (\aref{beam_slope}).
-    Similarly, its square is also small. Considering it negligible, we may drop
-    it:
-
-    \[\frac{1}{\rho} = \frac{d^{2}y}{dx^{2}}\]
-
-    Substituting \(\frac{1}{\rho}\) from \tref{TM:PBPBA}, we obtain:
-
-    \[\frac{d^{2}y}{dx^{2}} = \frac{M(x)}{EI}\]
-}
 
 \noindent
 \deftheory
+% #1 derivation - not applicable by default
+[ When a prismatic beam supports an applied loading, (\(w(x)\)), its elastic
+    curve is governed by the fourth-order ODE found by integrating the equation
+    found in \tref{TM:OREC} twice.
+]
 % #2 refname of theory
 {TM:EBBDE}
 % #3 label
@@ -862,11 +867,6 @@ on.
 }
 % #9 Preconditions
 { None. }
-% #1 derivation - not applicable by default
-{ When a prismatic beam supports an applied loading, (\(w(x)\)), its elastic
-    curve is governed by the fourth-order ODE found by integrating the equation
-    found in \tref{TM:OREC} twice.
-}
 
 \newpage
 
