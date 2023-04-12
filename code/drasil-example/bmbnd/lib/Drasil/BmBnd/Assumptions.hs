@@ -55,7 +55,7 @@ beamUniformCrossSection = cic
 beamFlat :: ConceptInstance
 beamFlat = cic
   "beamFlat"
-  (S "The beam is flat within a reasonable tolerance.")
+  (S "The beam is straight/flat within a reasonable tolerance.")
   "beamFlat"
   assumpDom
 
@@ -121,7 +121,7 @@ beamNoPointLoads = cic
 beamNoAxialLoading :: ConceptInstance
 beamNoAxialLoading = cic
   "beamNoAxialLoading"
-  (S "The beam has no loading applied axially")
+  (S "The beam has no loading applied axially.")
   "beamNoAxialLoading"
   assumpDom
 
