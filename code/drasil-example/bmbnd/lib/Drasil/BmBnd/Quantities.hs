@@ -100,7 +100,7 @@ cheat = uc'
 w :: UnitalChunk
 w = uc'
   "w"
-  (nounPhraseSent $ S "loading at a particular point along the beam")
+  (nounPhraseSent $ S "load at a particular point along the abstract beam")
   (S "loading function")
   lW
   Real
