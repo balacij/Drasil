@@ -486,19 +486,19 @@ to the functional and nonfunctional requirements\footnote{Note that $*$ is used
 to quantify over each individual test case as it is redundant to have identical
 rows for the tests that are each intended to test the same concepts.}.
 
-\begin{longtable}{|c|c|c|c|c|c|c|c|c|}
+\begin{longtable}{|c|c|c|c|c|c|c|c|c|c|}
     \caption{Tracing Tests to Requirements}
     \label{tab:trace_tests_to_reqs} \\
     
     \hline
 
-                    & R1 & R2 & R3 & NFR1 & NFR2 & NFR3 & NFR4 \\ \hline
-    $T*_\text{BVP}$ & X  & X  &    &      &      &      &      \\ \hline
-    $T*$            & X  & X  & X  &      &      &      &      \\ \hline
-    $T_\text{NFR1}$ & X  & X  & X  & X    &      &      &      \\ \hline
-    $T_\text{NFR2}$ &    &    &    &      & X    &      &      \\ \hline
-    $T_\text{NFR3}$ &    &    &    &      &      & X    &      \\ \hline
-    $T_\text{NFR4}$ &    &    &    &      &      &      & X    \\ \hline
+                    & R1 & R2 & R3 & R4 & NFR1 & NFR2 & NFR3 & NFR4 \\ \hline
+    $T*_\text{BVP}$ & X  & X  &    &    &      &      &      &      \\ \hline
+    $T*$            & X  & X  & X  & X  &      &      &      &      \\ \hline
+    $T_\text{NFR1}$ &    &    &    & X  & X    &      &      &      \\ \hline
+    $T_\text{NFR2}$ &    &    &    &    &      & X    &      &      \\ \hline
+    $T_\text{NFR3}$ &    &    &    &    &      &      & X    &      \\ \hline
+    $T_\text{NFR4}$ &    &    &    &    &      &      &      & X    \\ \hline
 
 \end{longtable}
 
