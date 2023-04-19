@@ -196,7 +196,8 @@ responsibility for various aspects of verification and validation.
 
 Roles (\Cref{table:vnv_roles}) are assigned to each team member
 (\Cref{table:vnv_teammates}), dictating the minimum responsibilities each member
-has for each related project.
+has for each related project. Note that Sam Crawford is also the ``primary''
+reviewer (at least for as long as CAS 741 runs).
 
 \begin{longtable}{|r|p{8cm}|}
     \caption{Table of VnV Roles}
@@ -236,11 +237,13 @@ has for each related project.
 \label{srs-verification-plan}
 
 In addition to checking that \progname{}'s SRS conforms to Dr.\ Smith's provided
-SRS checklist, we will have:
+SRS checklist\footnote{Which all reviewers should do loosely, but that my
+primary reviewer (Sam Crawford) is in charge of.}, we will have:
 
 \begin{enumerate}
 
-    \item a designated reviewing committee with a supervisor,
+    \item a designated reviewing committee with a supervisor and a primary
+          reviewer,
 
     \item a public presentation with a reviewing audience,
 
@@ -278,28 +281,34 @@ Drasil team\footnote{Including, but not limited to, Dr.\ Spencer Smith, Sam
 
 To assure that the Verification and Validation Plan adequately tests both the
 SRS document and the relevant software, we will largely assume the ``many eyes''
-hypothesis~\cite{Caraco1980avian} with many ``eyes'' of different skill-sets and
-academic backgrounds (see \Cref{table:vnv_teammates}). Each team member should
-test that this document conforms to the general VnV Checklist
-document~\cite{SmithCapTemplate}.
+hypothesis~\cite{Caraco1980avian}\footnote{It might help to think of Linus's
+Law~\cite{LinussLawWiki} here.} with many ``eyes'' of different
+skill-sets\footnote{It might help to think of Linus's Law~\cite{LinussLawWiki}
+here.} and academic backgrounds (see \Cref{table:vnv_teammates} and the general
+Drasil research team present and future). Each team member should test that this
+document conforms to the general VnV Checklist document~\cite{SmithCapTemplate}.
 
 \subsection{Implementation Verification Plan}
 
 A proof of concept should be built and manually tested. When the project is
 recreated in Drasil, the generated software artifacts should be similar to the
 proof of concept, up to code style and organization. The generated software
-artifacts should be tested against the manually created artifacts for nontrivial
-or significant differences (to assure there are none\footnote{Unless the
-manually created artifacts had problems, of course.}). Additionally, as Drasil
-does not yet generate unit tests\footnote{But Sam might fix this for us!}, the
-unit tests will be performed on the generated software artifacts with a bit of
-manual effort to ensure compatibility.
+artifacts should be tested against the manually created artifacts to see if
+there are nontrivial or significant differences (to assure there are
+none\footnote{Unless the manually created artifacts had problems, of course.}).
+Additionally, as Drasil does not yet generate unit tests\footnote{But Sam might
+fix this for us!}, the unit tests will be performed on the generated software
+artifacts with a bit of manual effort to ensure compatibility.
 
 By re-writing the SRS with Drasil, the software implementation will be
-generated. We have faith in the Drasil work, and so, the ``Implementation
-Verification Plan'' is largely a ``Solution Validation Plan'' with an extra set
-of requirements for the inputs and configuration of Drasil's code generator to
-also be validated. 
+generated. We have faith in the Drasil work\footnote{The faith is okay for now
+as Drasil has already been audited by enough reviewers. However, we should
+hopefully one day have a more concrete SRS document for each related aspect of
+Drasil that we can use to audit Drasil itself, to ultimately assure programs are
+indeed correct by construction.}, and so, the ``Implementation Verification
+Plan'' is largely a ``Solution Validation Plan'' with an extra set of
+requirements for the inputs and configuration of Drasil's code generator to also
+be validated. 
 
 \textit{Disclaimer: the scheme for auditing the Drasil-encoding of the SRS, and
 the Drasil-generated solutions is fairly conventional (or so I believe), and so
@@ -362,7 +371,8 @@ automatically test the code against a series of unit tests (see
 that changes to the SRS encoding in Drasil does not change against the
 well-tested artifacts\footnote{These are captured in the ``stable'' folder in
 Drasil's code repository, where ``stable'' artifacts remain manually tested.}.
-The Python code will be aggressively formatted with Black~\cite{PythonBlack}.
+The Python code will be ``aggressively formatted'' with
+Black~\cite{PythonBlack}.
 
 \subsection{Software Validation Plan}
 
