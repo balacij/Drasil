@@ -382,7 +382,7 @@ information contained in the SRS and the software satisfies stakeholders.
 
 \subsection{Tests for Functional Requirements}
 
-The tests for functional requirements may be split up into 3 categories, as
+The tests for functional requirements may be split up into 3 categories as
 follows:
 
 \begin{enumerate}
@@ -397,28 +397,31 @@ follows:
     
 \end{enumerate}
 
-\subsubsection{Testing Inputs Are Outputted Accurately}
+\subsubsection{Inputs Are Outputted Accurately}
 
-Throughout the next two categories of testing the functional requirements, we
-will have tests on the program, and each test should be additionally
-automatically checked that the re-iterated outputs match the intended inputs.
+When conducting all other functional tests on the program, each test should
+additionally check to ensure that the inputs are re-iterated by the program
+before any sort of calculation. This may be done automatically by observing the
+outputs of the program, or manually in a similar fashion.
 
-\subsubsection{Testing BVP Solver}
+\subsubsection{BVP Solver}
 
 All of the tests for testing the BVP solver (\Cref{tab:simple_automatic_tests})
 are done \textit{automatically} with a trivially ``empty'' initial state (e.g.,
 the program is not started and has been provided no inputs yet), and trivial
 inputs other than the BVPs themselves. The focus of this section is to test the
 BVP solver. The inputs should be provided as appropriate and the expected output
-should be printed. Each test will observe \(\forall x : \mathbb{R} ~.~x \in (0,
-L_B) \Rightarrow (y(x) \approx_{\epsilon} y_a(x))\) (with pytest using samples
-or symbolic equivalence, depending on solution). The expected outputs are
-confirmed using WolframAlpha~\cite{WolframAlpha}.
+should be printed. Each test will observe \(\forall x : \mathbb{R} ~.~x \in [0,
+L_B] \Rightarrow (y(x) \approx_{\epsilon} y_a(x))\) (with pytest using samples
+or symbolic equivalence, depending on solution). Please see the SRS document for
+reasonable values for $E_B$ and $I_B$, obeying the constraints set forth in the
+SRS. The expected outputs should be confirmed using
+WolframAlpha~\cite{WolframAlpha}.
 
 Once all tests with trivial inputs are completed, all of the tests from
 \Cref{tab:simple_automatic_tests} should be performed again\footnote{Note:
 referencing here will be done with the BVP subscript removed, $T*$.} with
-non-trivial $E_B$s and $I_B$s (e.g., not $1$). Since numeric scaling isn't very
+non-trivial $E_B$ and $I_B$ (e.g., not $1$). Since numeric scaling isn't very
 consequential to the output, we will omit for brevity. Testing with randomized
 inputs is a good strategy, similar to how testing is done via
 \href{https://hackage.haskell.org/package/QuickCheck}{QuickCheck}, and should be
