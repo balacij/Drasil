@@ -131,17 +131,18 @@ in this document:\\
 \section{General Information}
 
 This document describes the plan of action related to the Verification and
-Validation (VnV) of the Beam Bending analysis program (\progname{}). This VnV
-plan will describe a plan of action for \textit{validating} that the Software
-Requirements Specification (SRS)~\cite{BalaciBeamBendingSRS2023} for \progname{}
-satisfies stakeholders, and \textit{verifying} that a supposedly conforming
-software does indeed accurately satisfy the requirements.
+Validation (VnV) of the ``Beam Bending analysis program'' (\progname{}). The VnV
+describes a plan of action for \textit{validating} that the Software
+Requirements Specification (SRS)~\cite{SmithAndLai2005} for
+\progname{}~\cite{BalaciBeamBendingSRS2023} satisfies stakeholders, and
+\textit{verifying} that a supposedly conforming software does indeed accurately
+satisfy the requirements.
 
 \subsection{Summary}
 
 The BeamBending SRS~\cite{BalaciBeamBendingSRS2023} describes the requirements
-of a hypothetical program that analyzes beam deflection under imposed,
-distributed loads on a simply-supported beam.
+of a hypothetical program that analyzes beam deflection under imposed
+distributed loads on a simply supported beam.
 
 \subsection{Objectives}
 
@@ -154,10 +155,8 @@ The objective of this document is to outline a plan of action for:
 
     \item \textit{validating} said SRS satisfies stakeholder requirements, and
 
-    \item \textit{verifying} that a produced software artifact conforms
-          everything laid out in the SRS (including, but not limited to, the
-          functional and nonfunctional requirements), through both transparent
-          and opaque testing.
+    \item \textit{verifying} that a produced software artifact conforms to the
+          SRS (through both transparent and opaque testing).
 
 \end{enumerate}
 
@@ -179,7 +178,9 @@ documentation is that which is originally manually built, including:
 \end{enumerate}
 
 \noindent{}When the \progname{} program is re-created in Drasil, we may think of
-that as a sort of ``documentation'' that we can to the above list.
+that as a sort of ``documentation'' that we can add to the above list.
+Furthermore, when Drasil can generate the solution program, the generated
+documentation of the program will also be relevant.
 
 %------------------------------------------------------------------------------
 % PLAN
