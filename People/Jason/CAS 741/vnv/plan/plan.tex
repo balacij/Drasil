@@ -187,10 +187,10 @@ that as a sort of ``documentation'' that we can to the above list.
 
 \section{Plan}
 
-The ``whole'' Verification and Validation Plan for \progname{} consists of
-multiple sub-plans. Notably, it has a designated team (with sub-teams) who will
-be executing the related sub-plans stipulated in this document. Team members
-will take responsibility for various aspects of verification and validation.
+The Verification and Validation Plan for \progname{} consists of multiple
+smaller plans. Notably, it has a designated team (with subteams) who will be
+executing the related plans stipulated in this document. Team members will take
+responsibility for various aspects of verification and validation.
 
 \subsection{Verification and Validation Team}
 
@@ -204,7 +204,7 @@ has for each related project.
 
     \\ \hline
     \rowcolor{Maroon}
-    \textbf{Role}        & \textbf{Description/responsibilities}                                           \\ \hline
+    \textbf{Role}        & \textbf{Description/Responsibilities}                                           \\ \hline
     \rowcolor{White}
     Supervisor           & Manager of all review committees, and distinguished reviewer and domain expert. \\ \hline
     Domain Expert        & Reviewer with considerable knowledge on underlying domains.                     \\ \hline
@@ -288,11 +288,12 @@ document~\cite{SmithCapTemplate}.
 A proof of concept should be built and manually tested. When the project is
 recreated in Drasil, the generated software artifacts should be similar to the
 proof of concept, up to code style and organization. The generated software
-artifacts should be tested against the manually created artifacts for
-non-trivial or significant differences (to assure there are none\footnote{Unless
-the manually created artifacts had problems, of course.}). Additionally, as
-Drasil does not yet generate unit tests\footnote{But Sam might fix this for
-us!}, the unit tests will be ported over to the generated software artifacts.
+artifacts should be tested against the manually created artifacts for nontrivial
+or significant differences (to assure there are none\footnote{Unless the
+manually created artifacts had problems, of course.}). Additionally, as Drasil
+does not yet generate unit tests\footnote{But Sam might fix this for us!}, the
+unit tests will be performed on the generated software artifacts with a bit of
+manual effort to ensure compatibility.
 
 By re-writing the SRS with Drasil, the software implementation will be
 generated. We have faith in the Drasil work, and so, the ``Implementation
@@ -309,7 +310,7 @@ aspect of the project may be similarly verified by peer review, code
 walkthrough, external audit, audit by assigned reviewers (see
 \Cref{table:vnv_roles}), and audit by the supervisor (Dr.~Smith). However, the
 focus of this will need to shift towards assuring that the encoding of the SRS
-is of non-trivial depth and breadth\footnote{Whereby non-trivial structure of
+is of nontrivial depth and breadth\footnote{Whereby nontrivial structure of
 the knowledge is captured by the encoding. See Chapter 2 of \cite{Balaci2022MSc}
 for a ``deeper'' explanation.} and accurately represents the original SRS. The
 code walkthrough in particular should be done with fellow Drasil researchers to
@@ -334,9 +335,9 @@ as follows:
                         defined as any logical component of a codebase (such as
                         functions, data types, classes, etc.).}, and
 
-              \item ``full'' modularity\footnote{The generated software artifact
-                        should be broken up into multiple logically grouped
-                        software artifacts.},
+              \item with ``full'' modularity\footnote{The generated software
+                        artifact should be broken up into multiple logically
+                        grouped software artifacts.},
 
           \end{enumerate}
 
@@ -355,12 +356,12 @@ The configuration requirements should be verified similarly by all reviewers.
 \subsection{Automated Testing and Verification Tools}
 
 The reference code implementation and final generated code artifacts will be
-tested (along with code coverage) using \textbf{pytest}~\cite{PyTest} to
+tested (along with code coverage) using \textit{pytest}~\cite{PyTest} to
 automatically test the code against a series of unit tests (see
 \Cref{sec:unit_test_description}). Continuous integration will be used to assure
 that changes to the SRS encoding in Drasil does not change against the
 well-tested artifacts\footnote{These are captured in the ``stable'' folder in
-    Drasil's code repository, where ``stable'' artifacts remain manually tested.}.
+Drasil's code repository, where ``stable'' artifacts remain manually tested.}.
 The Python code will be aggressively formatted with Black~\cite{PythonBlack}.
 
 \subsection{Software Validation Plan}
@@ -369,9 +370,10 @@ As the problem described in the SRS is similar to beam deflection problems
 commonly found in engineering textbooks (such as \cite{BeerJohnston1981}), we
 will assume a potential stakeholder is a writer of one of said textbooks.
 Dr.~Spencer Smith will also be an assumed stakeholder in the project as he
-suggested this project to the author. ``Input,'' ``output,'' and
-``theory''-focused inspection will primarily be done to ensure that that
-information contained in the SRS and the software satisfies stakeholders.
+suggested this project to Jason Balaci (the author of this work). ``Input,''
+``output,'' and ``theory''-focused inspection will primarily be done to ensure
+that that information contained in the SRS and the software satisfies
+stakeholders.
 
 %------------------------------------------------------------------------------
 % SYSTEM TEST DESCRIPTION 
@@ -421,7 +423,7 @@ WolframAlpha~\cite{WolframAlpha}.
 Once all tests with trivial inputs are completed, all of the tests from
 \Cref{tab:simple_automatic_tests} should be performed again\footnote{Note:
 referencing here will be done with the BVP subscript removed, $T*$.} with
-non-trivial $E_B$ and $I_B$ (e.g., not $1$). Since numeric scaling isn't very
+nontrivial $E_B$ and $I_B$ (e.g., not $1$). Since numeric scaling isn't very
 consequential to the output, we will omit for brevity. Testing with randomized
 inputs is a good strategy, similar to how testing is done via
 \href{https://hackage.haskell.org/package/QuickCheck}{QuickCheck}, and should be
