@@ -389,6 +389,17 @@ L_B) \Rightarrow (y(x) \approx_{\epsilon} y_a(x))\) (with pytest using samples
 or symbolic equivalence, depending on solution). The expected outputs are
 confirmed using WolframAlpha~\cite{WolframAlpha}.
 
+Once all tests with trivial inputs are completed, all of the tests from
+\Cref{tab:simple_automatic_tests} should be performed again\footnote{Note:
+referencing here will be done with the BVP subscript removed, $T*$.} with
+non-trivial $E_B$s and $I_B$s (e.g., not $1$). Since numeric scaling isn't very
+consequential to the output, we will omit for brevity. Testing with randomized
+inputs is a good strategy, similar to how testing is done via
+\href{https://hackage.haskell.org/package/QuickCheck}{QuickCheck}, and should be
+used with a reasonable range of values (see the Table of Software and Physical
+constraints in the related SRS document). WolframAlpha may be similarly used as
+a control, but having a trusted solver locally may be beneficial.
+
 \begin{landscape}
     \begin{longtable}[c]{|l|ccc|c|l|}
         \caption{Simple, Automatic, Tests}
@@ -434,14 +445,6 @@ confirmed using WolframAlpha~\cite{WolframAlpha}.
         % &                                                         \\ \hline
     \end{longtable}
 \end{landscape}
-
-\subsubsection{Testing Outputs with Non-trivial Inputs}
-
-All of the tests from \Cref{tab:simple_automatic_tests} should be performed
-again\footnote{Note: referencing here will be done with the BVP subscript
-removed, $T*$.} with non-trivial $E_B$s and $I_B$s (e.g., not $1$). Since
-numeric scaling isn't very consequential to the output, we will omit for
-brevity. WolframAlpha may be similarly used as a control.
 
 \subsection{Tests for Nonfunctional Requirements}
 
