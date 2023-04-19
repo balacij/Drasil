@@ -104,8 +104,9 @@
 
 \section{Symbols, Abbreviations, and Acronyms}
 
-The Symbols, Abbreviations, and Acronyms in this document builds upon those from
-\progname{}'s related SRS document \cite{BalaciBeamBendingSRS2023}.\\
+In addition to the symbols, abbreviations, and acronyms from \progname{}'s
+related SRS~\cite{BalaciBeamBendingSRS2023}, the following symbols are also used
+in this document:\\
 
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{l l}
@@ -148,15 +149,15 @@ The objective of this document is to outline a plan of action for:
 
 \begin{enumerate}
 
-    \item \textit{auditing} a continuously developed SRS document
+    \item \textit{auditing} a continuously developed SRS
           \cite{ParnasAndClements1986} for logical consistency,
 
     \item \textit{validating} said SRS satisfies stakeholder requirements, and
 
     \item \textit{verifying} that a produced software artifact conforms
-          everything laid out in the SRS document (including, but not limited
-          to, the functional and nonfunctional requirements), through both
-          transparent and opaque testing.
+          everything laid out in the SRS (including, but not limited to, the
+          functional and nonfunctional requirements), through both transparent
+          and opaque testing.
 
 \end{enumerate}
 
@@ -171,7 +172,7 @@ documentation is that which is originally manually built, including:
 
 \begin{enumerate}
 
-    \item the SRS document \cite{BalaciBeamBendingSRS2023}, and
+    \item the SRS~\cite{BalaciBeamBendingSRS2023}, and
 
     \item this VnV Plan.
 
@@ -280,7 +281,7 @@ Drasil team\footnote{Including, but not limited to, Dr.\ Spencer Smith, Sam
 \subsection{Verification and Validation Plan Verification Plan}
 
 To assure that the Verification and Validation Plan adequately tests both the
-SRS document and the relevant software, we will largely assume the ``many eyes''
+SRS and the relevant software, we will largely assume the ``many eyes''
 hypothesis~\cite{Caraco1980avian}\footnote{It might help to think of Linus's
 Law~\cite{LinussLawWiki} here.} with many ``eyes'' of different
 skill-sets\footnote{It might help to think of Linus's Law~\cite{LinussLawWiki}
@@ -303,12 +304,11 @@ artifacts with a bit of manual effort to ensure compatibility.
 By re-writing the SRS with Drasil, the software implementation will be
 generated. We have faith in the Drasil work\footnote{The faith is okay for now
 as Drasil has already been audited by enough reviewers. However, we should
-hopefully one day have a more concrete SRS document for each related aspect of
-Drasil that we can use to audit Drasil itself, to ultimately assure programs are
-indeed correct by construction.}, and so, the ``Implementation Verification
-Plan'' is largely a ``Solution Validation Plan'' with an extra set of
-requirements for the inputs and configuration of Drasil's code generator to also
-be validated. 
+hopefully one day have a more concrete SRS for each related aspect of Drasil
+that we can use to audit Drasil itself, to ultimately assure programs are indeed
+correct by construction.}, and so, the ``Implementation Verification Plan'' is
+largely a ``Solution Validation Plan'' with an extra set of requirements for the
+inputs and configuration of Drasil's code generator to also be validated. 
 
 \textit{Disclaimer: the scheme for auditing the Drasil-encoding of the SRS, and
 the Drasil-generated solutions is fairly conventional (or so I believe), and so
@@ -425,9 +425,9 @@ inputs other than the BVPs themselves. The focus of this section is to test the
 BVP solver. The inputs should be provided as appropriate and the expected output
 should be printed. Each test will observe \(\forall x : \mathbb{R} ~.~x \in [0,
 L_B] \Rightarrow (y(x) \approx_{\epsilon} y_a(x))\) (with pytest using samples
-or symbolic equivalence, depending on solution). Please see the SRS document for
-reasonable values for $E_B$ and $I_B$, obeying the constraints set forth in the
-SRS. The expected outputs should be confirmed using
+or symbolic equivalence, depending on solution). Please see the SRS for
+reasonable values for $E_B$ and $I_B$, obeying the Physical and Software
+constraints described. The expected outputs should be confirmed using
 WolframAlpha~\cite{WolframAlpha}.
 
 Once all tests with trivial inputs are completed, all of the tests from
@@ -438,8 +438,8 @@ consequential to the output, we will omit for brevity. Testing with randomized
 inputs is a good strategy, similar to how testing is done via
 \href{https://hackage.haskell.org/package/QuickCheck}{QuickCheck}, and should be
 used with a reasonable range of values (see the Table of Software and Physical
-constraints in the related SRS document). WolframAlpha may be similarly used as
-a control, but having a trusted solver locally may be beneficial.
+constraints in the related SRS). WolframAlpha may be similarly used as a
+control, but having a trusted solver locally may be beneficial.
 
 \begin{landscape}
     \begin{longtable}[c]{|l|ccc|c|l|}
@@ -503,9 +503,9 @@ because of the usage of Drasil:
                 ability to generate code that can output
                 data\footnote{Unfortunately, list-like functionality remains
                 limited, but will be improved. Also note that ``usability'' was
-                defined in the SRS document. Specifically, we will not be
-                testing for accessibility nor any other facet as this software
-                is meant to be an intermediate program used for calculation, not
+                defined in the SRS. Specifically, we will not be testing for
+                accessibility nor any other facet as this software is meant to
+                be an intermediate program used for calculation, not
                 visualization.},
 
     \item[$T_\text{NFR3}$] \textbf{Maintainability} is satisfied through being
@@ -524,7 +524,7 @@ As Drasil is used to generate the code and is already fairly mature, we need no
 further work to assure these non-functional requirements are satisfied. All
 future improvements to Drasil will likely further improve the generated
 artifacts, and the qualities thereof. So as long as Drasil is sufficiently
-tested and the encoding of the SRS documents is audited, then the non-functional
+tested and the encoding of the SRS is audited, then the non-functional
 requirements should all be satisfied by construction\footnote{A kind of
 ``correct by construction''-style programming is created through Drasil.}.
 
