@@ -537,7 +537,7 @@ easier to correctly understand the requirements:
     \item modulus of elasticity: the measure of lengthwise stiffness of an
           element as a force is applied lengthwise\nc{},
 
-    \item second moment of area: a measure of how well a cross-section resists
+    \item bending moment: a measure of how well a cross-section resists
           bending\cite{SmithAdviceAndDiscussion2023},
 
     \item pinned support: a structural support that allows for rotation but
@@ -614,10 +614,9 @@ tips. Additionally, it should be noted that the beam is \textit{statically
 \subsubsection{Goal Statements}
 \label{sssec_goals}
 
-\noindent{}Given constant length, modulus of elasticity, and second moment (of
-area across the beam's cross-section), and the applied distributed load on the
-beam as a function from the distance of the leftward pinned support, the goal
-statements are:
+\noindent{}Given constant length, modulus of elasticity, and bending moment, and
+the applied distributed load on the beam as a function from the distance of the
+leftward pinned support, the goal statements are:
 
 \begin{itemize}
 
@@ -659,8 +658,8 @@ Change (LC), in which the respective assumption is used.
     \assume{beam_straight_faces}{The beam is straight/flat within a reasonable
         tolerance.}
 
-    \assume{beam_moment_inertia_constant}{The beam has a constant second moment
-        of area.}
+    \assume{beam_moment_inertia_constant}{The beam has a constant bending
+        moment.}
 
     \assume{beam_vertical_elastic}{The beam experiences vertical linear elastic
         load.}
@@ -712,8 +711,8 @@ on.
 }
 % #5 description
 { From elementary calculus, the curvature of a plane curve at a point
-    \((a,f(a))\) of a curve may be expressed by the above equation, where
-    \cite{BeerJohnston1981}:
+    \((a,f(a))\) of a curve may be expressed by the above
+    equation~\cite{BeerJohnston1981}, where:
 
     \begin{itemize}
         \item \(\rho\) is the radius of curvature ($1$),
@@ -801,8 +800,9 @@ on.
     \[\frac{d^{2}y}{dx^{2}} = \frac{M(x)}{EI}\]
 }
 % #5 description
-{
-}
+{ For a beam, the second derivative of the deflection function (i.e., the shear
+  force at a point along the beam) may be expressed as a ratio of the bending
+  moment ($M(x)$) to the flexural rigidity ($EI$).}
 % #6 Notes
 {
     None.
@@ -825,8 +825,7 @@ on.
 % #1 derivation - not applicable by default
 [ When a prismatic beam supports an applied loading, (\(w(x)\)), its elastic
     curve is governed by the fourth-order ODE found by integrating the equation
-    found in \tref{TM:OREC} twice.
-]
+    found in \tref{TM:OREC} twice~\cite{EulerBernoulliWiki}. ]
 % #2 refname of theory
 {TM:EBBDE}
 % #3 label
