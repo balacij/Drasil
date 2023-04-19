@@ -70,15 +70,15 @@
 \section{Revision History}
 
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X} \toprule {
-    \bf Date} & {\bf Version} & {\bf Notes}                                               \\
+    \bf Date} & {\bf Version} & {\bf Notes}                                                                                                       \\
     \midrule
-    Feb 12    & 0.0           & Format template.                                          \\
-    Feb 13    & 0.1           & Preliminary work, read through and filling in easy spots. \\
-    Feb 14    & 0.2           & Preliminary copy of ``general information'' section.      \\
-    Feb 14    & 0.3           & Preliminary copy of ``plan'' section.                     \\
-    Feb 14    & 0.4           & Preliminary dubious ``system'' (unit) tests.              \\
+    Feb 12    & 0.0           & Format template.                                                                                                  \\
+    Feb 13    & 0.1           & Preliminary work, read through and filling in easy spots.                                                         \\
+    Feb 14    & 0.2           & Preliminary copy of ``general information'' section.                                                              \\
+    Feb 14    & 0.3           & Preliminary copy of ``plan'' section.                                                                             \\
+    Feb 14    & 0.4           & Preliminary dubious ``system'' (unit) tests.                                                                      \\
     Feb 16    & 0.5           & I guess the system tests weren't as dubious as I thought! Cleaning up as per in-class feedback ($E$, $I$, zeroes) \\
-    Feb 17    & 0.6           & Complete draft.                                           \\
+    Feb 17    & 0.6           & Complete draft.                                                                                                   \\
     \bottomrule
 \end{tabularx}
 
@@ -206,15 +206,15 @@ reviewer (at least for as long as CAS 741 runs).
 
     \\ \hline
     \rowcolor{Maroon}
-    \textbf{Role}        & \textbf{Description/Responsibilities}                                           \\ \hline
+    \textbf{Role} & \textbf{Description/Responsibilities}                                                \\ \hline
     \rowcolor{White}
-    Supervisor           & Manager of all review committees, and distinguished reviewer and domain expert. \\ \hline
-    Domain Expert        & Reviewer with considerable knowledge on underlying domains.                     \\ \hline
-    Author               & Writer.                                                                         \\ \hline
-    Reviewer             & Ensures documents are logically coherent and well-formed.                       \\ \hline
-    Verifier             & Assures Drasil encoding of SRS accurately re-creates the manually created SRS.  \\ \hline
-    Validator            & Assures SRS satisfies stakeholder requirements.                                 \\ \hline
-    VnV-er               & Verifier \(\cup\) Validator.                                                    \\ \hline
+    Supervisor    & Manager of all review committees, distinguished reviewer, and expert of all domains. \\ \hline
+    Domain Expert & Reviewer with considerable knowledge on underlying domains.                          \\ \hline
+    Author        & Primary writer of all documentation and initial reviewer of all facets.              \\ \hline
+    Reviewer      & Ensures documents are logically coherent and well-formed.                            \\ \hline
+    Verifier      & Assures Drasil encoding of SRS accurately depicts the manually created SRS.          \\ \hline
+    Validator     & Assures SRS satisfies stakeholder requirements.                                      \\ \hline
+    VnV-er        & Verifier \(\cup\) Validator.                                                         \\ \hline
 \end{longtable}
 
 \begin{longtable}{|r|c|l|}
@@ -223,15 +223,16 @@ reviewer (at least for as long as CAS 741 runs).
 
     \\ \hline
     \rowcolor{Maroon}
-    \textbf{Assignee}    & \textbf{Project}                  & \textbf{Role(s)}                                              \\ \hline
+    \textbf{Assignee}    & \textbf{Project}                  & \textbf{Role(s)}                     \\ \hline
     \rowcolor{White}
-    Dr.\ Smith           & \(*\)\footnote{\(*\): match all.} & Supervisor.                                                   \\ \hline
-    Jason Balaci         & \(*\)                             & Author.                                                       \\ \hline
-    Sam Crawford         & \(*\)                             & Domain Expert, Reviewer, and VnV-er.                          \\ \hline
-    Mina Mahdipour       & SRS                               & Reviewer.                                                     \\ \hline
-    Deesha Patel         & VnV                               & Reviewer.                                                     \\ \hline
-    Maryam Valian        & Drasil                            & Reviewer \& VnV-er.                                           \\ \hline
-    Class of CAS \(741\) & \(*\)                             & \(*\)                                                         \\ \hline
+    Dr.\ Smith           & \(*\)\footnote{\(*\): 
+        all projects in this column.}                        & Supervisor.                          \\ \hline
+    Jason Balaci         & \(*\)                             & Author.                              \\ \hline
+    Sam Crawford         & \(*\)                             & Domain Expert, Reviewer, and VnV-er. \\ \hline
+    Mina Mahdipour       & SRS                               & Reviewer.                            \\ \hline
+    Deesha Patel         & VnV                               & Reviewer.                            \\ \hline
+    Maryam Valian        & Drasil Implementation             & Reviewer \& VnV-er.                  \\ \hline
+    Class of CAS \(741\) & \(*\)                             & Reviewer.                            \\ \hline
 \end{longtable}
 
 \subsection{SRS Verification Plan}
@@ -239,7 +240,7 @@ reviewer (at least for as long as CAS 741 runs).
 
 In addition to checking that \progname{}'s SRS conforms to Dr.\ Smith's provided
 SRS checklist\footnote{Which all reviewers should do loosely, but that my
-primary reviewer (Sam Crawford) is in charge of.}, we will have:
+    primary reviewer (Sam Crawford) is in charge of.}, we will have:
 
 \begin{enumerate}
 
@@ -263,8 +264,8 @@ primary reviewer (Sam Crawford) is in charge of.}, we will have:
 
 A further external audit may be needed if the software is to be used in
 non-educational applications\footnote{Note that this software, documentation,
-and the likes is purely for educational purposes and hence comes with no
-warranty and no liability by the authors.}. As this is out of scope, we will
+    and the likes is purely for educational purposes and hence comes with no
+    warranty and no liability by the authors.}. As this is out of scope, we will
 provide no instruction.
 
 \subsection{Design Verification Plan}
@@ -283,9 +284,9 @@ Drasil team\footnote{Including, but not limited to, Dr.\ Spencer Smith, Sam
 To assure that the Verification and Validation Plan adequately tests both the
 SRS and the relevant software, we will largely assume the ``many eyes''
 hypothesis~\cite{Caraco1980avian}\footnote{It might help to think of Linus's
-Law~\cite{LinussLawWiki} here.} with many ``eyes'' of different
+    Law~\cite{LinussLawWiki} here.} with many ``eyes'' of different
 skill-sets\footnote{It might help to think of Linus's Law~\cite{LinussLawWiki}
-here.} and academic backgrounds (see \Cref{table:vnv_teammates} and the general
+    here.} and academic backgrounds (see \Cref{table:vnv_teammates} and the general
 Drasil research team present and future). Each team member should test that this
 document conforms to the general VnV Checklist document~\cite{SmithCapTemplate}.
 
@@ -298,21 +299,21 @@ artifacts should be tested against the manually created artifacts to see if
 there are nontrivial or significant differences (to assure there are
 none\footnote{Unless the manually created artifacts had problems, of course.}).
 Additionally, as Drasil does not yet generate unit tests\footnote{But Sam might
-fix this for us!}, the unit tests will be performed on the generated software
+    fix this for us!}, the unit tests will be performed on the generated software
 artifacts with a bit of manual effort to ensure compatibility.
 
 By re-writing the SRS with Drasil, the software implementation will be
 generated. We have faith in the Drasil work\footnote{The faith is okay for now
-as Drasil has already been audited by enough reviewers. However, we should
-hopefully one day have a more concrete SRS for each related aspect of Drasil
-that we can use to audit Drasil itself, to ultimately assure programs are indeed
-correct by construction.}, and so, the ``Implementation Verification Plan'' is
+    as Drasil has already been audited by enough reviewers. However, we should
+    hopefully one day have a more concrete SRS for each related aspect of Drasil
+    that we can use to audit Drasil itself, to ultimately assure programs are indeed
+    correct by construction.}, and so, the ``Implementation Verification Plan'' is
 largely a ``Solution Validation Plan'' with an extra set of requirements for the
-inputs and configuration of Drasil's code generator to also be validated. 
+inputs and configuration of Drasil's code generator to also be validated.
 
 \textit{Disclaimer: the scheme for auditing the Drasil-encoding of the SRS, and
-the Drasil-generated solutions is fairly conventional (or so I believe), and so
-is reiterated here for educational purposes.}
+    the Drasil-generated solutions is fairly conventional (or so I believe), and so
+    is reiterated here for educational purposes.}
 
 After the SRS has been verified (\Cref{srs-verification-plan}), the ``Drasil''
 aspect of the project may be similarly verified by peer review, code
@@ -320,11 +321,11 @@ walkthrough, external audit, audit by assigned reviewers (see
 \Cref{table:vnv_roles}), and audit by the supervisor (Dr.~Smith). However, the
 focus of this will need to shift towards assuring that the encoding of the SRS
 is of nontrivial depth and breadth\footnote{Whereby nontrivial structure of
-the knowledge is captured by the encoding. See Chapter 2 of \cite{Balaci2022MSc}
-for a ``deeper'' explanation.} and accurately represents the original SRS. The
+    the knowledge is captured by the encoding. See Chapter 2 of \cite{Balaci2022MSc}
+    for a ``deeper'' explanation.} and accurately represents the original SRS. The
 code walkthrough in particular should be done with fellow Drasil researchers to
 further assure that the capture of knowledge is indeed accurate and of
-sufficient depth and breadth. 
+sufficient depth and breadth.
 
 By auditing the encoding of the SRS, we are effectively auditing the ``input''
 given to Drasil. The configuration requirements for Drasil's code generator are
@@ -370,7 +371,7 @@ automatically test the code against a series of unit tests (see
 \Cref{sec:unit_test_description}). Continuous integration will be used to assure
 that changes to the SRS encoding in Drasil does not change against the
 well-tested artifacts\footnote{These are captured in the ``stable'' folder in
-Drasil's code repository, where ``stable'' artifacts remain manually tested.}.
+    Drasil's code repository, where ``stable'' artifacts remain manually tested.}.
 The Python code will be ``aggressively formatted'' with
 Black~\cite{PythonBlack}.
 
@@ -398,15 +399,15 @@ The tests for functional requirements may be split up into 3 categories as
 follows:
 
 \begin{enumerate}
-    
+
     \item testing that inputs match the understood inputs
           (R2~\cite{BalaciBeamBendingSRS2023}),
 
     \item testing that the BVP solver functions as expected, and
-    
+
     \item testing that the whole program accurately follows the instance models
           as described in the SRS (R3~\cite{BalaciBeamBendingSRS2023}).
-    
+
 \end{enumerate}
 
 \subsubsection{Inputs Are Outputted Accurately}
@@ -424,7 +425,7 @@ the program is not started and has been provided no inputs yet), and trivial
 inputs other than the BVPs themselves. The focus of this section is to test the
 BVP solver. The inputs should be provided as appropriate and the expected output
 should be printed. Each test will observe \(\forall x : \mathbb{R} ~.~x \in [0,
-L_B] \Rightarrow (y(x) \approx_{\epsilon} y_a(x))\) (with pytest using samples
+    L_B] \Rightarrow (y(x) \approx_{\epsilon} y_a(x))\) (with pytest using samples
 or symbolic equivalence, depending on solution). Please see the SRS for
 reasonable values for $E_B$ and $I_B$, obeying the Physical and Software
 constraints described. The expected outputs should be confirmed using
@@ -432,7 +433,7 @@ WolframAlpha~\cite{WolframAlpha}.
 
 Once all tests with trivial inputs are completed, all of the tests from
 \Cref{tab:simple_automatic_tests} should be performed again\footnote{Note:
-referencing here will be done with the BVP subscript removed, $T*$.} with
+    referencing here will be done with the BVP subscript removed, $T*$.} with
 nontrivial $E_B$ and $I_B$ (e.g., not $1$). Since numeric scaling isn't very
 consequential to the output, we will omit for brevity. Testing with randomized
 inputs is a good strategy, similar to how testing is done via
@@ -444,44 +445,44 @@ control, but having a trusted solver locally may be beneficial.
 \begin{landscape}
     \begin{longtable}[c]{|l|ccc|c|l|}
         \caption{Simple, Automatic, Tests}
-        \label{tab:simple_automatic_tests}                                                                                                                                                                                                                                                                                                                                          \\
+        \label{tab:simple_automatic_tests}                                                                                                                                                                                                                                                                                                                                                                   \\
         \hline
         \rowcolor{lightgray}
-        \cellcolor{lightgray}                              & \multicolumn{3}{c|}{\cellcolor{lightgray}\textbf{Inputs}} & \textbf{Outputs}                              & \cellcolor{lightgray}                                                                                                                                                                                      \\ \cline{2-5}
+        \cellcolor{lightgray}                              & \multicolumn{3}{c|}{\cellcolor{lightgray}\textbf{Inputs}}   & \textbf{Outputs}                                & \cellcolor{lightgray}                                                                                                                                                                                                           \\ \cline{2-5}
         \rowcolor{lightgray}
-        \multirow{-2}{*}{\cellcolor{lightgray}\textbf{ID}} & \multicolumn{1}{c|}{\cellcolor{lightgray}$w_B(x)$}          & \multicolumn{1}{c|}{\cellcolor{lightgray}$E_B$} & $I_B$                   & $y_a(x)$                                                                                                                 & \multirow{-2}{*}{\cellcolor{lightgray}\textbf{Control}} \\ \hline
+        \multirow{-2}{*}{\cellcolor{lightgray}\textbf{ID}} & \multicolumn{1}{c|}{\cellcolor{lightgray}$w_B(x)$}          & \multicolumn{1}{c|}{\cellcolor{lightgray}$E_B$} & $I_B$                 & $y_a(x)$                                                                                                                                      & \multirow{-2}{*}{\cellcolor{lightgray}\textbf{Control}} \\ \hline
         \endfirsthead
         \endhead
-        T1$_{\text{BVP}}$                                                 & \multicolumn{1}{c|}{$0$}                                  & \multicolumn{1}{l|}{$1$}                      & $1$                   & $0$                                                                                                                      
-                                                           & \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D0%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                        \\ \hline
-    
-        T2$_{\text{BVP}}$                                                 & \multicolumn{1}{c|}{$1$}                                  & \multicolumn{1}{l|}{$1$}                      & $1$                   & \(\frac{x}{24} (x^3 - 20x^2 + 1 \text{E}^3)\)
-                                                           & \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D1%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                                                                                                                                                                                                                                                                                       \\ \hline
-    
-        T3$_{\text{BVP}}$                                                 & \multicolumn{1}{c|}{$-1$}                                 & \multicolumn{1}{l|}{$1$}                      & $1$                   & \(- \frac{x}{24} (x^3 - 20x^2 + 1 \text{E}^3)\)
-                                                           & \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D-1%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                                                                                                                                                                                                                                                                                       \\ \hline
-    
-        T4$_{\text{BVP}}$                                                 & \multicolumn{1}{c|}{$x$}                                  & \multicolumn{1}{l|}{$1$}                      & $1$                   & \(\frac{x}{360} (3x^4 - 1 \text{E}^3x^3 + 7 \text{E}^4)\)
-                                                           & \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3Dx%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                                                                                                                                                                                                                                                                                       \\ \hline
-    
-        T5$_{\text{BVP}}$                                                 & \multicolumn{1}{c|}{$- x$}                                & \multicolumn{1}{l|}{$1$}                      & $1$                   & \(- \frac{x}{360} (3x^4 - 1 \text{E}^3x^3 + 7 \text{E}^4)\)
-                                                           & \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D-x%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                                                                                                                                                                                                                                                                                       \\ \hline
-    
-        T6$_{\text{BVP}}$                                                 & \multicolumn{1}{c|}{$8 \text{E}^4 x^3$}             & \multicolumn{1}{l|}{$1$}                      & $1$                   & \(\frac{2 \text{E}^4x}{21} (x^6 - 7 \text{E}^4x^2 + 6 \text{E}^6)\)
-                                                           & \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D80000x%5E3%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                                                                                                                                                                                                                                                                                       \\ \hline
-    
-        T7$_{\text{BVP}}$                                                 & \multicolumn{1}{c|}{$8 \text{E}^4 x^2$}                           & \multicolumn{1}{l|}{$1$}                      & $1$                   & \(\frac{2 \text{E}^3x}{9} (x^5 - 5 \text{E}^3x^4 + 4 \text{E}^5)\)
-                                                           & \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D80000x%5E2%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                                                                                                                                                                                                                                                                                       \\ \hline
-    
-        T8$_{\text{BVP}}$                                                 & \multicolumn{1}{c|}{$8 \text{E}^5 \sin{}(\frac{x\pi}{L})$}       & \multicolumn{1}{l|}{$1$}                      & $1$                   & \(\frac{1}{3\pi^{4}} (4 \text{E}^4L^2x(\pi^2(x^2 - 100) - 6L^2)\sin{}(\frac{10\pi}{L})+60L^2\sin{}(\frac{x\pi}{L}))\)
-                                                           & \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D800000*sin%28%28x%2FL%29*pi%29%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                                                                                                                                                                                                                                                                                       \\ \hline
-    
-        T9$_{\text{BVP}}$                                                 & \multicolumn{1}{c|}{$8 \text{E}^5 \sin{}(\frac{2x\pi}{L})$}      & \multicolumn{1}{l|}{$1$}                      & $1$                   & \(\frac{1}{3\pi^{4}} (5 \text{E}^3L^2x(2\pi^2(x^2 - 100) \linebreak{}\newline{}- 3L^2)\sin{}(\frac{20\pi}{L})+30L^2\sin{}(\frac{2x\pi}{L}))\)
-                                                           & \href{https://www.wolframalpha.com/input?i=%5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D800000*sin%28%282x%2FL%29*pi%29%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                                                                                                                                                                                                                                                                                       \\ \hline
-    
+        T1$_{\text{BVP}}$                                  & \multicolumn{1}{c|}{$0$}                                    & \multicolumn{1}{l|}{$1$}                        & $1$                   & $0$
+                                                           & \href{https://www.wolframalpha.com/input?i=                                                                                                                                                                                                                                                                                                     %5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D0%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                        \\ \hline
+
+        T2$_{\text{BVP}}$                                  & \multicolumn{1}{c|}{$1$}                                    & \multicolumn{1}{l|}{$1$}                        & $1$                   & \(\frac{x}{24} (x^3 - 20x^2 + 1 \text{E}^3)\)
+                                                           & \href{https://www.wolframalpha.com/input?i=                                                                                                                                                                                                                                                                                                     %5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D1%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                                                                                                                                                                                                                                                                                       \\ \hline
+
+        T3$_{\text{BVP}}$                                  & \multicolumn{1}{c|}{$-1$}                                   & \multicolumn{1}{l|}{$1$}                        & $1$                   & \(- \frac{x}{24} (x^3 - 20x^2 + 1 \text{E}^3)\)
+                                                           & \href{https://www.wolframalpha.com/input?i=                                                                                                                                                                                                                                                                                                     %5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D-1%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                                                                                                                                                                                                                                                                                       \\ \hline
+
+        T4$_{\text{BVP}}$                                  & \multicolumn{1}{c|}{$x$}                                    & \multicolumn{1}{l|}{$1$}                        & $1$                   & \(\frac{x}{360} (3x^4 - 1 \text{E}^3x^3 + 7 \text{E}^4)\)
+                                                           & \href{https://www.wolframalpha.com/input?i=                                                                                                                                                                                                                                                                                                     %5B%2F%2Fmath%3Asolve+y%27%27%27%27%3Dx%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                                                                                                                                                                                                                                                                                       \\ \hline
+
+        T5$_{\text{BVP}}$                                  & \multicolumn{1}{c|}{$- x$}                                  & \multicolumn{1}{l|}{$1$}                        & $1$                   & \(- \frac{x}{360} (3x^4 - 1 \text{E}^3x^3 + 7 \text{E}^4)\)
+                                                           & \href{https://www.wolframalpha.com/input?i=                                                                                                                                                                                                                                                                                                     %5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D-x%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                                                                                                                                                                                                                                                                                       \\ \hline
+
+        T6$_{\text{BVP}}$                                  & \multicolumn{1}{c|}{$8 \text{E}^4 x^3$}                     & \multicolumn{1}{l|}{$1$}                        & $1$                   & \(\frac{2 \text{E}^4x}{21} (x^6 - 7 \text{E}^4x^2 + 6 \text{E}^6)\)
+                                                           & \href{https://www.wolframalpha.com/input?i=                                                                                                                                                                                                                                                                                                     %5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D80000x%5E3%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                                                                                                                                                                                                                                                                                       \\ \hline
+
+        T7$_{\text{BVP}}$                                  & \multicolumn{1}{c|}{$8 \text{E}^4 x^2$}                     & \multicolumn{1}{l|}{$1$}                        & $1$                   & \(\frac{2 \text{E}^3x}{9} (x^5 - 5 \text{E}^3x^4 + 4 \text{E}^5)\)
+                                                           & \href{https://www.wolframalpha.com/input?i=                                                                                                                                                                                                                                                                                                     %5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D80000x%5E2%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                                                                                                                                                                                                                                                                                       \\ \hline
+
+        T8$_{\text{BVP}}$                                  & \multicolumn{1}{c|}{$8 \text{E}^5 \sin{}(\frac{x\pi}{L})$}  & \multicolumn{1}{l|}{$1$}                        & $1$                   & \(\frac{1}{3\pi^{4}} (4 \text{E}^4L^2x(\pi^2(x^2 - 100) - 6L^2)\sin{}(\frac{10\pi}{L})+60L^2\sin{}(\frac{x\pi}{L}))\)
+                                                           & \href{https://www.wolframalpha.com/input?i=                                                                                                                                                                                                                                                                                                     %5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D800000*sin%28%28x%2FL%29*pi%29%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                                                                                                                                                                                                                                                                                       \\ \hline
+
+        T9$_{\text{BVP}}$                                  & \multicolumn{1}{c|}{$8 \text{E}^5 \sin{}(\frac{2x\pi}{L})$} & \multicolumn{1}{l|}{$1$}                        & $1$                   & \(\frac{1}{3\pi^{4}} (5 \text{E}^3L^2x(2\pi^2(x^2 - 100) \linebreak{}\newline{}- 3L^2)\sin{}(\frac{20\pi}{L})+30L^2\sin{}(\frac{2x\pi}{L}))\)
+                                                           & \href{https://www.wolframalpha.com/input?i=                                                                                                                                                                                                                                                                                                     %5B%2F%2Fmath%3Asolve+y%27%27%27%27%3D800000*sin%28%282x%2FL%29*pi%29%2Cy%280%29%3D0%2Cy%2810%29%3D0%2Cy%27%27%280%29%3D0%2Cy%27%27%2810%29%3D0%2F%2F%5D}{WolframAlpha}                                                                                                                                                                                                                                                                                                                       \\ \hline
+
         % T10                                                & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{$1$}                      & $1$                   &          
         % &                                                         \\ \hline
-    
+
         % T11                                                & \multicolumn{1}{c|}{}                                     & \multicolumn{1}{l|}{$1$}                      & $1$                   &          
         % &                                                         \\ \hline
     \end{longtable}
@@ -495,28 +496,28 @@ because of the usage of Drasil:
 \begin{enumerate}
 
     \item[$T_\text{NFR1}$] \textbf{Accuracy} is satisfied primarily through the
-                tests of the functional requirements having a low
-                tolerance\footnote{As this software is purely educational,
-                accepting a higher tolerance is fine too.},
+        tests of the functional requirements having a low
+        tolerance\footnote{As this software is purely educational,
+            accepting a higher tolerance is fine too.},
 
     \item[$T_\text{NFR2}$] \textbf{Usability} is strongly tied to Drasil's
-                ability to generate code that can output
-                data\footnote{Unfortunately, list-like functionality remains
-                limited, but will be improved. Also note that ``usability'' was
-                defined in the SRS. Specifically, we will not be testing for
-                accessibility nor any other facet as this software is meant to
-                be an intermediate program used for calculation, not
-                visualization.},
+        ability to generate code that can output
+        data\footnote{Unfortunately, list-like functionality remains
+            limited, but will be improved. Also note that ``usability'' was
+            defined in the SRS. Specifically, we will not be testing for
+            accessibility nor any other facet as this software is meant to
+            be an intermediate program used for calculation, not
+            visualization.},
 
     \item[$T_\text{NFR3}$] \textbf{Maintainability} is satisfied through being
-                constructed in Drasil, where changes in information have
-                rippling effects and regeneration allows us to update everything
-                to accommodate changes,
+        constructed in Drasil, where changes in information have
+        rippling effects and regeneration allows us to update everything
+        to accommodate changes,
 
     \item[$T_\text{NFR4}$] \textbf{Portability} is satisfied because we aim to
-                generate Python code, but also because all of Drasil's supported
-                output languages are supported on the three (3) major personal
-                operating systems.
+        generate Python code, but also because all of Drasil's supported
+        output languages are supported on the three (3) major personal
+        operating systems.
 
 \end{enumerate}
 
@@ -526,19 +527,19 @@ future improvements to Drasil will likely further improve the generated
 artifacts, and the qualities thereof. So as long as Drasil is sufficiently
 tested and the encoding of the SRS is audited, then the non-functional
 requirements should all be satisfied by construction\footnote{A kind of
-``correct by construction''-style programming is created through Drasil.}.
+    ``correct by construction''-style programming is created through Drasil.}.
 
 \subsection{Traceability Between Test Cases and Requirements}
 
 The following table traces the test cases as shown in the earlier sections back
 to the functional and nonfunctional requirements\footnote{Note that $*$ is used
-to quantify over each individual test case as it is redundant to have identical
-rows for the tests that are each intended to test the same concepts.}.
+    to quantify over each individual test case as it is redundant to have identical
+    rows for the tests that are each intended to test the same concepts.}.
 
 \begin{longtable}{|c|c|c|c|c|c|c|c|c|c|}
     \caption{Tracing Tests to Requirements}
-    \label{tab:trace_tests_to_reqs} \\
-    
+    \label{tab:trace_tests_to_reqs}                                 \\
+
     \hline
 
                     & R1 & R2 & R3 & R4 & NFR1 & NFR2 & NFR3 & NFR4 \\ \hline
@@ -548,7 +549,6 @@ rows for the tests that are each intended to test the same concepts.}.
     $T_\text{NFR2}$ &    &    &    &    &      & X    &      &      \\ \hline
     $T_\text{NFR3}$ &    &    &    &    &      &      & X    &      \\ \hline
     $T_\text{NFR4}$ &    &    &    &    &      &      &      & X    \\ \hline
-
 \end{longtable}
 
 %------------------------------------------------------------------------------
@@ -563,7 +563,7 @@ As no software design documents will be constructed for Team Drasil's projects,
 we will bootstrap the Drasil-generated software artifacts for testing (by
 setting up a testing environment around the software artifacts). This section
 will be filled in once we have Drasil generating code\footnote{Or generated, if
-Sam finishes his work first!}.
+    Sam finishes his work first!}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Bibliography
