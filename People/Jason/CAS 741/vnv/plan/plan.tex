@@ -234,6 +234,7 @@ has for each related project.
 \end{longtable}
 
 \subsection{SRS Verification Plan}
+\label{srs-verification-plan}
 
 In addition to checking that \progname{}'s Software Requirements Specification
 (SRS) conforms to Dr.\ Smith's provided SRS checklist, we will have:
@@ -256,6 +257,12 @@ In addition to checking that \progname{}'s Software Requirements Specification
           case study of Drasil).
 
 \end{enumerate}
+
+A further external audit may be needed if the software is to be used in
+non-educational applications\footnote{Note that this software, documentation,
+and the likes is purely for educational purposes and hence comes with no
+warranty and no liability by the authors.}. As this is out of scope, we will
+provide no instruction.
 
 \subsection{Design Verification Plan}
 
@@ -280,7 +287,7 @@ document~\cite{SmithCapTemplate}.
 \subsection{Implementation Verification Plan}
 
 A proof of concept should be built and manually tested. When the project is
-re-created in Drasil, the generated software artifacts should be similar to the
+recreated in Drasil, the generated software artifacts should be similar to the
 proof of concept, up to code style and organization. The generated software
 artifacts should be tested against the manually created artifacts for
 non-trivial or significant differences (to assure there are none\footnote{Unless
@@ -294,33 +301,25 @@ Verification Plan'' is largely a ``Solution Validation Plan'' with an extra set
 of requirements for the inputs and configuration of Drasil's code generator to
 also be validated. 
 
-\textit{Disclaimer: the scheme for auditing the SRS, the Drasil-encoding of said
-SRS, and the Drasil-generated solutions is fairly conventional (or so I
-believe), and so is reiterated here for educational purposes.}
+\textit{Disclaimer: the scheme for auditing the Drasil-encoding of the SRS, and
+the Drasil-generated solutions is fairly conventional (or so I believe), and so
+is reiterated here for educational purposes.}
 
-The solution proposed in the SRS is to be validated by peer review, peer
+After the SRS has been verified (\Cref{srs-verification-plan}), the ``Drasil''
+aspect of the project may be similarly verified by peer review, code
 walkthrough, external audit, audit by assigned reviewers (see
-\Cref{table:vnv_roles}), and audit by the supervisor (Dr.~Smith). The peer
-review may be done by asking some colleagues (familiar with the problem domain)
-to audit the SRS. The peer walkthrough may be done by presenting the SRS to
-peers, preferably those familiar with the problem domain. The external audit is
-only needed to have completely fresh eyes read everything and should be thought
-of as a ``peer review mixed with peer walkthroughs'' but with external
-reviewers. The external audit should only be needed if the software is to be
-used in non-educational applications\footnote{Note that this software,
-documentation, and the likes is purely for educational purposes and hence comes
-with no warranty and no liability by the authors.}.
+\Cref{table:vnv_roles}), and audit by the supervisor (Dr.~Smith). However, the
+focus of this will need to shift towards assuring that the encoding of the SRS
+is of non-trivial depth and breadth\footnote{Whereby non-trivial structure of
+the knowledge is captured by the encoding. See Chapter 2 of \cite{Balaci2022MSc}
+for a ``deeper'' explanation.} and accurately represents the original SRS. The
+code walkthrough in particular should be done with fellow Drasil researchers to
+further assure that the capture of knowledge is indeed accurate and of
+sufficient depth and breadth. 
 
-The ``Drasil'' aspect of the project may be similarly validated by peer review,
-code walkthrough, external audit, audit by assigned reviewers, and audit by the
-supervisor. However, the focus of this will need to shift towards assuring that
-the encoding of the SRS is of non-trivial depth and breadth\footnote{See Chapter
-2 of \cite{Balaci2022MSc} for a ``deeper'' explanation.} whereby non-trivial
-structure of the knowledge is captured by the encoding. The code walkthrough in
-particular should be done with fellow Drasil researchers to further assure that
-the capture of knowledge is indeed accurate and of sufficient depth and breadth.
-
-The configuration requirements for Drasil's code generator are as follows:
+By auditing the encoding of the SRS, we are effectively auditing the ``input''
+given to Drasil. The configuration requirements for Drasil's code generator are
+as follows:
 
 \begin{enumerate}
 
@@ -352,6 +351,8 @@ The configuration requirements for Drasil's code generator are as follows:
 
 \end{enumerate}
 
+The configuration requirements should be verified similarly by all reviewers.
+
 \subsection{Automated Testing and Verification Tools}
 
 The reference code implementation and final generated code artifacts will be
@@ -369,9 +370,9 @@ As the problem described in the SRS is similar to beam deflection problems
 commonly found in engineering textbooks (such as \cite{BeerJohnston1981}), we
 will assume a potential stakeholder is a writer of one of said textbooks.
 Dr.~Spencer Smith will also be an assumed stakeholder in the project as he
-suggested this project to the author. Input, output, and theory-based inspection
-will primarily be done to ensure that that information contained in the SRS and
-the software satisfies stakeholders.
+suggested this project to the author. ``Input,'' ``output,'' and
+``theory''-focused inspection will primarily be done to ensure that that
+information contained in the SRS and the software satisfies stakeholders.
 
 %------------------------------------------------------------------------------
 % SYSTEM TEST DESCRIPTION 
