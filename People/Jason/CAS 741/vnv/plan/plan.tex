@@ -495,7 +495,7 @@ because of the usage of Drasil:
 
     \item[$T_\text{NFR3}$] \textbf{Maintainability} is satisfied through being
                 constructed in Drasil, where changes in information have
-                rippling effects and generation allows us to update everything
+                rippling effects and regeneration allows us to update everything
                 to accommodate changes,
 
     \item[$T_\text{NFR4}$] \textbf{Portability} is satisfied because we aim to
@@ -508,7 +508,10 @@ because of the usage of Drasil:
 As Drasil is used to generate the code and is already fairly mature, we need no
 further work to assure these non-functional requirements are satisfied. All
 future improvements to Drasil will likely further improve the generated
-artifacts, and the qualities thereof.
+artifacts, and the qualities thereof. So as long as Drasil is sufficiently
+tested and the encoding of the SRS documents is audited, then the non-functional
+requirements should all be satisfied by construction\footnote{A kind of
+``correct by construction''-style programming is created through Drasil.}.
 
 \subsection{Traceability Between Test Cases and Requirements}
 
