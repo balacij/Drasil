@@ -72,13 +72,14 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X} \toprule {
     \bf Date} & {\bf Version} & {\bf Notes}                                                                                                       \\
     \midrule
-    Feb 12    & 0.0           & Format template.                                                                                                  \\
-    Feb 13    & 0.1           & Preliminary work, read through and filling in easy spots.                                                         \\
-    Feb 14    & 0.2           & Preliminary copy of ``general information'' section.                                                              \\
-    Feb 14    & 0.3           & Preliminary copy of ``plan'' section.                                                                             \\
-    Feb 14    & 0.4           & Preliminary dubious ``system'' (unit) tests.                                                                      \\
-    Feb 16    & 0.5           & I guess the system tests weren't as dubious as I thought! Cleaning up as per in-class feedback ($E$, $I$, zeroes) \\
-    Feb 17    & 0.6           & Complete draft.                                                                                                   \\
+    Feb. 12    & 0.0           & Format template.                                                                                                  \\
+    Feb. 13    & 0.1           & Preliminary work, read through and filling in easy spots.                                                         \\
+    Feb. 14    & 0.2           & Preliminary copy of ``general information'' section.                                                              \\
+    Feb. 14    & 0.3           & Preliminary copy of ``plan'' section.                                                                             \\
+    Feb. 14    & 0.4           & Preliminary dubious ``system'' (unit) tests.                                                                      \\
+    Feb. 16    & 0.5           & I guess the system tests weren't as dubious as I thought! Cleaning up as per in-class feedback ($E$, $I$, zeroes) \\
+    Feb. 17    & 0.6           & Complete draft.                                                                                                   \\
+    Apr. 24    & 1.0           & Final submission after addressing Dr.~Smith and other reviewer's comments.                                                                                                   \\
     \bottomrule
 \end{tabularx}
 
@@ -113,7 +114,7 @@ in this document:\\
     \toprule
     \textbf{Symbol} & \textbf{Description}                                    \\
     \midrule
-    CAS             & Computing and Software department (McMaster University) \\
+    CAS             & Computing And Software department (McMaster University) \\
     SRS             & Software Requirements Specification                     \\
     T               & Test                                                    \\
     VnV             & Verification and Validation                             \\
@@ -135,8 +136,8 @@ Validation (VnV) of the ``Beam Bending analysis program'' (\progname{}). The VnV
 describes a plan of action for \textit{validating} that the Software
 Requirements Specification (SRS)~\cite{SmithAndLai2005} for
 \progname{}~\cite{BalaciBeamBendingSRS2023} satisfies stakeholders, and
-\textit{verifying} that a supposedly conforming software does indeed accurately
-satisfy the requirements.
+\textit{verifying} that a conforming software does indeed accurately satisfy the
+requirements.
 
 \subsection{Summary}
 
@@ -173,7 +174,7 @@ documentation is that which is originally manually built, including:
 
     \item the SRS~\cite{BalaciBeamBendingSRS2023}, and
 
-    \item this VnV Plan.
+    \item this VnV Plan (and the future VnV Report).
 
 \end{enumerate}
 
@@ -273,12 +274,12 @@ provide no instruction.
 
 The software design does not need verification as the design of the software
 will be based on Drasil's existing software family generator~\cite{Drasil2023}.
-However, in order to build the Boundary Value Problem (BVP) in Drasil, we will
-need to extend Drasil to generate BVP solving methods\footnote{This will be done
-    and assumed as ``trusted'' when accepted into Drasil's main
-    codebase~\cite{Drasil2023}.}. The onus of Drasil's validation is up to the
+However, to build the Boundary Value Problem (BVP) in Drasil, we will need to
+extend Drasil to generate BVP solving methods\footnote{This will be done and
+assumed as ``trusted'' when accepted into Drasil's main
+codebase~\cite{Drasil2023}.}. The onus of Drasil's validation is up to the
 Drasil team\footnote{Including, but not limited to, Dr.\ Spencer Smith, Sam
-    Crawford, and Jason Balaci.}.
+Crawford, and Jason Balaci.}.
 
 \subsection{Verification and Validation Plan Verification Plan}
 
@@ -364,6 +365,16 @@ as follows:
 
 The configuration requirements should be verified similarly by all reviewers.
 
+The Drasil-related code walkthrough should start with a quick overview of the
+goals of the project and the SRS, and then proceed to the actual code analysis.
+The analysis should explain the general flow of the program first, and then
+explain the individual components that form the ``flow''\footnote{If I had a
+module guide document, I might also suggest that to be read first.} of the
+program. Afterwards, the author should explain how the various pieces of code
+relate to the: original SRS, and generated software artifacts (such as SRS and
+code). The walkthrough host should also explain some of Drasil's internal
+libraries to the reviewer so that they may critically audit the code.
+
 \subsection{Automated Testing and Verification Tools}
 
 The reference code implementation and final generated code artifacts will be
@@ -425,23 +436,25 @@ are done \textit{automatically} with a trivially ``empty'' initial state (e.g.,
 the program is not started and has been provided no inputs yet), and trivial
 inputs other than the BVPs themselves. The focus of this section is to test the
 BVP solver. The inputs should be provided as appropriate and the expected output
-should be printed. Each test will observe \(\forall x : \mathbb{R} ~.~x \in [0,
-    L_B] \Rightarrow (y(x) \approx_{\epsilon} y_a(x))\) (with pytest using samples
-or symbolic equivalence, depending on solution). Please see the SRS for
-reasonable values for $E_B$ and $I_B$, obeying the Physical and Software
-constraints described. The expected outputs should be confirmed using
-WolframAlpha~\cite{WolframAlpha}.
+should be printed. Assuming \(y_a(x)\) is the expected and \(y(x)\) is the
+calculated deflection along a point on the beam, each test will observe
+\(\forall x : \mathbb{R} ~.~x \in [0, L_B] \Rightarrow (y(x) \approx_{\epsilon}
+y_a(x))\) (with pytest using samples or symbolic equivalence, depending on
+solution). Please see the SRS for reasonable values for $E_B$ and $I_B$, obeying
+the Physical and Software constraints described. The expected outputs should be
+confirmed using WolframAlpha~\cite{WolframAlpha}.
 
 Once all tests with trivial inputs are completed, all of the tests from
 \Cref{tab:simple_automatic_tests} should be performed again\footnote{Note:
-    referencing here will be done with the BVP subscript removed, $T*$.} with
+referencing here will be done with the BVP subscript removed, $T*$.} with
 nontrivial $E_B$ and $I_B$ (e.g., not $1$). Since numeric scaling isn't very
 consequential to the output, we will omit for brevity. Testing with randomized
 inputs is a good strategy, similar to how testing is done via
 \href{https://hackage.haskell.org/package/QuickCheck}{QuickCheck}, and should be
 used with a reasonable range of values (see the Table of Software and Physical
-constraints in the related SRS). WolframAlpha may be similarly used as a
-control, but having a trusted solver locally may be beneficial.
+constraints in the related SRS\footnote{The end points of the constraints and
+randomized points between them is a good start.}). WolframAlpha may be similarly
+used as a control, but having a trusted solver locally may be beneficial.
 
 \begin{landscape}
     \begin{longtable}[c]{|l|ccc|c|l|}
