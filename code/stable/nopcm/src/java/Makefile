@@ -1,3 +1,8 @@
+# Project Name: NoPCM
+
+# Project Purpose: Investigate the heating of water in a solar water heating
+# tank.
+
 build: NoPCM/Control.class
 
 NoPCM/Control.class: NoPCM/Control.java NoPCM/InputParameters.java NoPCM/Constants.java NoPCM/Calculations.java NoPCM/OutputFormat.java NoPCM/ODE.java NoPCM/ODEStepHandler.java

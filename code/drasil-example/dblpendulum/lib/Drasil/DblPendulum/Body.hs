@@ -14,9 +14,10 @@ import Data.Drasil.People (dong)
 import Data.Drasil.SI_Units (metre, second, newton, kilogram, degree, radian, hertz)
 import Data.Drasil.Concepts.Computation (inDatum, compcon, inValue, algorithm)
 import qualified Data.Drasil.Concepts.Documentation as Doc (srs, physics, variable)
-import Data.Drasil.Concepts.Documentation (assumption, condition, endUser, environment, datum, document,
-  input_, interface, output_, organization, problem, product_, physical, sysCont, software, softwareConstraint,
-  softwareSys, srsDomains, system, template, user, doccon, doccon', analysis)
+import Data.Drasil.Concepts.Documentation (assumption, condition, endUser,
+  environment, datum, input_, interface, output_, problem, product_,
+  physical, sysCont, software, softwareConstraint, softwareSys, srsDomains,
+  system, user, doccon, doccon', analysis)
 import Data.Drasil.Concepts.Education (highSchoolPhysics, highSchoolCalculus, calculus, undergraduate, educon, )
 import Data.Drasil.Concepts.Math (mathcon, cartesian, ode, mathcon', graph)
 import Data.Drasil.Concepts.Physics (gravity, physicCon, physicCon', pendulum, twoD, motion)
@@ -24,7 +25,7 @@ import Data.Drasil.Concepts.PhysicalProperties (mass, len, physicalcon)
 import Data.Drasil.Concepts.Software (program, errMsg)
 import Data.Drasil.Quantities.Physics (physicscon)
 import Data.Drasil.Quantities.Math (unitVect, unitVectj)
-import Data.Drasil.Software.Products (prodtcon, sciCompS)
+import Data.Drasil.Software.Products (prodtcon)
 import Data.Drasil.Theories.Physics (newtonSL, accelerationTM, velocityTM, newtonSLR)
 import Data.Drasil.TheoryConcepts (inModel)
 
@@ -38,9 +39,10 @@ import Drasil.DblPendulum.GenDefs (genDefns)
 import Drasil.DblPendulum.Unitals (lenRod_1, lenRod_2, symbols, inputs, outputs,
   inConstraints, outConstraints, acronyms, pendDisAngle, constants)
 import Drasil.DblPendulum.Requirements (funcReqs, nonFuncReqs)
-import Drasil.DblPendulum.References (citations, koothoor2013, smithLai2005)
-import Data.Drasil.ExternalLibraries.ODELibraries (scipyODESymbols, osloSymbols, apacheODESymbols, odeintSymbols, arrayVecDepVar)
-import Language.Drasil.Code (listToArray, quantvar)
+import Drasil.DblPendulum.References (citations)
+import Data.Drasil.ExternalLibraries.ODELibraries (scipyODESymbols,
+  osloSymbols, apacheODESymbols, odeintSymbols, arrayVecDepVar)
+import Language.Drasil.Code (quantvar)
 import Drasil.DblPendulum.ODEs (dblPenODEInfo)
 
 
@@ -67,7 +69,7 @@ mkSRS = [TableOfContents, -- This creates the Table of Contents
       [IPurpose $ purpDoc progName Verbose,
        IScope scope,
        IChar [] charsOfReader [],
-       IOrgSec organizationOfDocumentsIntro inModel (SRS.inModel [] []) EmptyS],
+       IOrgSec inModel (SRS.inModel [] []) EmptyS],
   GSDSec $ 
     GSDProg [
       SysCntxt [sysCtxIntro, LlC sysCtxFig1, sysCtxDesc, sysCtxList],
@@ -75,7 +77,7 @@ mkSRS = [TableOfContents, -- This creates the Table of Contents
       SystCons [] []],                            
   SSDSec $ 
     SSDProg
-      [ SSDProblem $ PDProg prob []                --  This adds a is used to define the problem your system will solve
+      [ SSDProblem $ PDProg purp []                --  This adds a is used to define the problem your system will solve
         [ TermsAndDefs Nothing terms               -- This is used to define the terms to be defined in terminology sub section
       , PhySysDesc progName physSystParts figMotion [] -- This defines the Physicalsystem sub-section, define the parts
                                                           -- of the system using physSysParts, figMotion is a function in figures for the image
@@ -88,8 +90,8 @@ mkSRS = [TableOfContents, -- This creates the Table of Contents
         , IMs [] ([Label, Input, Output, InConstraints, OutConstraints] ++ stdFields) ShowDerivation
         , Constraints EmptyS inConstraints
         , CorrSolnPpties outConstraints []
-       ]
-     ],
+        ]
+      ],
   ReqrmntSec $ ReqsProg
     [ FReqsSub EmptyS []
     , NonFReqsSub
@@ -105,7 +107,7 @@ si = SI {
   _sys         = progName, 
   _kind        = Doc.srs,
   _authors     = [dong],
-  _purpose     = [],
+  _purpose     = [purp],
   _background  = [], 
   _quants      = symbolsAll,
   _concepts    = [] :: [DefinedQuantityDict],
@@ -121,6 +123,9 @@ si = SI {
   _usedinfodb  = usedDB,
    refdb       = refDB
 }
+
+purp :: Sentence
+purp = foldlSent_ [S "predict the", phraseNP (motion `ofA` pendulum)]
 
 symbolsAll :: [QuantityDict]
 symbolsAll = symbols ++ scipyODESymbols ++ osloSymbols ++ apacheODESymbols ++ odeintSymbols 
@@ -185,13 +190,8 @@ charsOfReader = [phrase undergraduate +:+ S "level 2" +:+ phrase Doc.physics,
 -------------------------------------
 -- 2.4 : Organization of Documents --
 -------------------------------------
-organizationOfDocumentsIntro :: Sentence
-organizationOfDocumentsIntro = foldlSent 
-  [atStartNP (the organization), S "of this", phrase document, 
-  S "follows the", phrase template, S "for an", getAcc Doc.srs, S "for", 
-  phrase sciCompS, S "proposed by", refS koothoor2013 `S.and_`
-  refS smithLai2005]
-
+-- Starting intro sentence of Organization of Documents automatically generated
+-- in IOrg
 
 --------------------------------------------
 -- Section 3: GENERAL SYSTEM DESCRIPTION --
@@ -266,8 +266,7 @@ userCharacteristicsIntro = foldlSP
 -------------------------------
 -- 4.1 : System Constraints  --
 -------------------------------
-prob :: Sentence
-prob = foldlSent_ [S "efficiently and correctly to predict the", phraseNP (motion `ofA` pendulum)]
+-- Introduction of the Problem Description section derived from purp
 
 ---------------------------------
 -- 4.1.1 Terminology and Definitions --

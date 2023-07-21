@@ -25,10 +25,15 @@ module Language.Drasil (
   -- ** Expression Modelling Language 
   -- | Defines display-related expression functions. Used in models.
 
-  -- Language.Drasil.Expr.ModelExpr
+  -- Language.Drasil.ModelExpr
   , ModelExpr
   , DerivType
   , ModelExprC(..)
+
+  --Language.Drasil.CodeExpr
+  , CodeExpr
+  , CodeExprC(..)
+
   -- ** Unicode symbols
   -- | Some expressions need special unicode characters.
 
@@ -80,16 +85,19 @@ module Language.Drasil (
   , UID, mkUid
   -- Language.Drasil.Chunk.NamedIdea
   , (+++), (+++.), (+++!)
-  , NamedChunk, nc, ncUID, IdeaDict , mkIdea
+  , nc, ncUID, IdeaDict , mkIdea
   , nw -- bad name (historical)
+  -- Language.Drasil.Chunk.CodeBase
+  , CodeIdea(..), CodeChunk(..), CodeVarChunk(..), CodeFuncChunk(..), VarOrFunc(..)
+  , obv, qc, ccf, ccv, listToArray, programName, funcPrefix, DefiningCodeExpr(..)
   -- Language.Drasil.Chunk.CommonIdea
   , CI, commonIdea, getAcc, getAccStr, commonIdeaWithDict, prependAbrv
 
   -- *** Concepts
   -- Language.Drasil.Chunk.Concept.Core
-  , ConceptChunk, CommonConcept, ConceptInstance, sDom
+  , ConceptChunk, ConceptInstance, sDom
   -- Language.Drasil.Chunk.Concept
-  , dcc, dcc', dccWDS, dccWDS', cc, cc', ccs, cw, cic
+  , dcc, dccWDS, cc, cc', ccs, cw, cic
   -- Language.Drasil.Chunk.Relation
   , RelationConcept, makeRC, addRelToCC
   -- Language.Drasil.Chunk.DifferentialModel
@@ -181,7 +189,7 @@ module Language.Drasil (
   -- We also use 'NounPhrase's to record the proper pluralization and capitalization of terms.
 
   -- Language.Drasil.Sentence
-  , Sentence(..), SentenceStyle(..), TermCapitalization(..), RefInfo(..), (+:+), (+:+.), (+:), (!.), capSent
+  , Sentence(..), SentenceStyle(..), TermCapitalization(..), RefInfo(..), (+:+), (+:+.), (+:), (!.), capSent, headSent
   , ch, eS, eS', sC, sDash, sParen
   -- Language.Drasil.NounPhrase
   , NounPhrase(..), NP, pn, pn', pn'', pn''', pnIrr, cn, cn', cn'', cn''', cnIP
@@ -211,7 +219,7 @@ module Language.Drasil (
 
   -- *** Sentence-related
   , foldlEnumList, foldlList, foldlSP, foldlSP_, foldlSPCol, foldlSent
-  , foldlSent_,foldlSentCol, foldlsC, foldNums, numList
+  , foldlSent_,foldlSentCol, foldlsC, foldNums, numList 
 
 
   -- * Basic Document Language
@@ -232,7 +240,7 @@ module Language.Drasil (
 
   -- | Language.Drasil.Document.Contents
   , enumBullet, enumBulletU, enumSimple, enumSimpleU, mkEnumSimpleD
-  , lbldExpr, unlbldExpr
+  , lbldExpr, unlbldExpr, unlbldCode
 
   -- * Document combinators
   -- | From "Language.Drasil.Document.Combinators". General sorting functions, useful combinators,
@@ -305,6 +313,8 @@ import Language.Drasil.Literal.Class (LiteralC(..))
 import Language.Drasil.Literal.Lang (Literal)
 import Language.Drasil.ModelExpr.Class (ModelExprC(..))
 import Language.Drasil.ModelExpr.Lang (ModelExpr, DerivType)
+import Language.Drasil.CodeExpr.Lang (CodeExpr)
+import Language.Drasil.CodeExpr.Class (CodeExprC(..))
 import Language.Drasil.Document (section, fig, figWithWidth
   , Section(..), SecCons(..) , llcc, ulcc, Document(..)
   , mkParagraph, mkFig, mkRawLC, ShowTableOfContents(..), checkToC, extractSection
@@ -314,7 +324,7 @@ import Language.Drasil.Document.Core (Contents(..), ListType(..), ItemType(..), 
   , RawContent(..), ListTuple, MaxWidthPercent
   , HasContents(accessContents)
   , LabelledContent(..), UnlabelledContent(..) )
-import Language.Drasil.Document.Contents (lbldExpr, unlbldExpr
+import Language.Drasil.Document.Contents (lbldExpr, unlbldExpr, unlbldCode
   , enumBullet, enumBulletU, enumSimple, enumSimpleU, mkEnumSimpleD)
 import Language.Drasil.Document.Combinators
 import Language.Drasil.Unicode (RenderSpecial(..), Special(..))
@@ -335,6 +345,8 @@ import Language.Drasil.Chunk.Citation (
   , cInBookACP, cInBookECP, cInBookAC, cInBookEC, cInBookAP, cInBookEP
   , cInCollection, cInProceedings, cManual, cMThesis, cMisc, cPhDThesis
   , cProceedings, cTechReport, cUnpublished)
+import Language.Drasil.Chunk.CodeBase (CodeIdea(..), CodeChunk(..), CodeVarChunk(..), CodeFuncChunk(..), 
+  VarOrFunc(..), obv, qc, ccf, ccv, listToArray, programName, funcPrefix, DefiningCodeExpr(..))
 import Language.Drasil.Chunk.CommonIdea
 import Language.Drasil.Chunk.Concept
 import Language.Drasil.Chunk.Concept.Core (sDom) -- exported for drasil-database FIXME: move to development package?
@@ -369,7 +381,7 @@ import Language.Drasil.Space (Space(..), RealInterval(..), Inclusive(..),
   RTopology(..), DomainDesc(..), ContinuousDomainDesc, DiscreteDomainDesc,
   getActorName, getInnerSpace, HasSpace(..), mkFunction, Primitive)
 import Language.Drasil.Sentence (Sentence(..), SentenceStyle(..), TermCapitalization(..), RefInfo(..), (+:+),
-  (+:+.), (+:), (!.), capSent, ch, eS, eS', sC, sDash, sParen)
+  (+:+.), (+:), (!.), capSent, headSent, ch, eS, eS', sC, sDash, sParen)
 import Language.Drasil.Sentence.Fold
 import Language.Drasil.Reference (Reference(..), namedRef, complexRef, namedComplexRef, ref, refS, HasReference(..))
 import Language.Drasil.DecoratedReference(DecRef(refInfo), dRefInfo, dRef, HasDecRef(..))

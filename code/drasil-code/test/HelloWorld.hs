@@ -15,7 +15,7 @@ import Helper (helper)
 
 -- | Creates the HelloWorld program and necessary files.
 helloWorld :: (OOProg r) => GSProgram r
-helloWorld = prog "HelloWorld" [docMod description 
+helloWorld = prog "HelloWorld" "" [docMod description 
   ["Brooks MacLachlan"] "" $ fileDoc (buildModule "HelloWorld" [] 
   [helloWorldMain] []), helper]
 
@@ -87,7 +87,7 @@ helloIfBody = addComments "If body" (body [
 
     listDec 5 (var "myList" (listType int)),
     objDecDef (var "myObj" char) (litChar 'o'),
-    constDecDef (const "myConst" string) (litString "Imconstant"),
+    constDecDef (constant "myConst" string) (litString "Imconstant"),
 
     printLn (valueOf $ var "a" int),
     printLn (valueOf $ var "b" int),

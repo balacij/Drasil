@@ -1,3 +1,7 @@
+# Project Name: DblPendulum
+
+# Project Purpose: Predict the motion of a pendulum.
+
 build: DblPendulum/Control.class
 
 DblPendulum/Control.class: DblPendulum/Control.java DblPendulum/InputParameters.java DblPendulum/Constants.java DblPendulum/Calculations.java DblPendulum/OutputFormat.java DblPendulum/ODE.java DblPendulum/ODEStepHandler.java

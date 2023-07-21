@@ -7,7 +7,7 @@ import Theory.Drasil (TheoryModel)
 import Language.Drasil.Chunk.Concept.NamedCombinators
 import qualified Language.Drasil.Sentence.Combinators as S
 
-import Language.Drasil.Code (quantvar, listToArray)
+import Language.Drasil.Code (quantvar)
 
 import Data.List ((\\))
 import Data.Drasil.People (thulasi)
@@ -41,8 +41,8 @@ import Data.Drasil.SI_Units (metre, kilogram, second, centigrade, joule, watt,
 -- of the SWHS libraries.  If the source for something cannot be found in
 -- NoPCM, check SWHS.
 import Drasil.SWHS.Body (charsOfReader, dataContMid, introEnd, introStart,
-  orgDocIntro, physSyst1, physSyst2, sysCntxtDesc, sysCntxtFig,
-  systContRespBullets, sysCntxtRespIntro, userChars)
+  physSyst1, physSyst2, sysCntxtDesc, sysCntxtFig, systContRespBullets,
+  sysCntxtRespIntro, userChars)
 import Drasil.SWHS.Changes (likeChgTCVOD, likeChgTCVOL, likeChgTLH)
 import Drasil.SWHS.Concepts (acronyms, coil, progName, sWHT, tank, transient, water, con, phsChgMtrl)
 import Drasil.SWHS.Requirements (nfRequirements)
@@ -122,7 +122,7 @@ mkSRS = [TableOfContents,
     [ IPurpose $ purpDoc progName Verbose
     , IScope scope
     , IChar [] charsOfReader []
-    , IOrgSec orgDocIntro inModel (SRS.inModel [] []) orgDocEnd
+    , IOrgSec inModel (SRS.inModel [] []) orgDocEnd
     ],
   GSDSec $
     GSDProg
@@ -132,7 +132,7 @@ mkSRS = [TableOfContents,
       ],
   SSDSec $
     SSDProg
-    [ SSDProblem $ PDProg probDescIntro []
+    [ SSDProblem $ PDProg purp []
       [ TermsAndDefs Nothing terms
       , PhySysDesc progName physSystParts figTank []
       , Goals goalInputs]
@@ -174,7 +174,7 @@ si = SI {
   _sys         = srsSWHS,
   _kind        = Doc.srs,
   _authors     = [thulasi],
-  _purpose     = [],
+  _purpose     = [purp],
   _background  = [],
   -- FIXME: Everything after (and including) \\ should be removed when
   -- #1658 is resolved. Basically, _quants is used here, but 
@@ -193,6 +193,9 @@ si = SI {
   _usedinfodb  = usedDB,
    refdb       = refDB
 }
+
+purp :: Sentence
+purp = foldlSent_ [S "investigate the heating" `S.of_` phraseNP (water `inA` sWHT)]
 
 refDB :: ReferenceDB
 refDB = rdb citations concIns
@@ -279,8 +282,7 @@ orgDocEnd = foldlSent_ [atStartNP (the inModel),
 --Section 4.1 : PROBLEM DESCRIPTION
 -----------------------------------
 
-probDescIntro :: Sentence
-probDescIntro = foldlSent_ [S "investigate the heating" `S.of_` phraseNP (water `inA` sWHT)]
+--Introduction of Problem Description section derived from purp
 
 terms :: [ConceptChunk]
 terms = [htFlux, heatCapSpec, thermalConduction, transient]

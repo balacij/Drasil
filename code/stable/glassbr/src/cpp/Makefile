@@ -10,6 +10,11 @@ else
     endif
 endif
 
+# Project Name: GlassBR
+
+# Project Purpose: Predict whether a glass slab can withstand a blast under
+# given conditions.
+
 build: GlassBR$(TARGET_EXTENSION)
 
 GlassBR$(TARGET_EXTENSION): InputParameters.hpp InputFormat.hpp DerivedValues.hpp InputConstraints.hpp Calculations.hpp OutputFormat.hpp ReadTable.hpp Interpolation.hpp Control.cpp InputFormat.cpp DerivedValues.cpp InputConstraints.cpp Calculations.cpp OutputFormat.cpp ReadTable.cpp Interpolation.cpp

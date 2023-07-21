@@ -10,6 +10,10 @@ else
     endif
 endif
 
+# Project Name: Projectile
+
+# Project Purpose: Predict whether a launched projectile hits its target.
+
 build: Projectile$(LIB_EXTENSION)
 
 Projectile$(LIB_EXTENSION): InputFormat.swift InputConstraints.swift Calculations.swift OutputFormat.swift

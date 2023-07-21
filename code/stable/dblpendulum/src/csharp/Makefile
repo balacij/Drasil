@@ -13,6 +13,10 @@ else
     endif
 endif
 
+# Project Name: DblPendulum
+
+# Project Purpose: Predict the motion of a pendulum.
+
 build: DblPendulum$(TARGET_EXTENSION)
 
 DblPendulum$(TARGET_EXTENSION): Control.cs InputParameters.cs Constants.cs Calculations.cs OutputFormat.cs

@@ -10,6 +10,11 @@ else
     endif
 endif
 
+# Project Name: GlassBR
+
+# Project Purpose: Predict whether a glass slab can withstand a blast under
+# given conditions.
+
 build: GlassBR$(TARGET_EXTENSION)
 
 GlassBR$(TARGET_EXTENSION): main.swift InputParameters.swift InputFormat.swift DerivedValues.swift InputConstraints.swift Calculations.swift OutputFormat.swift ReadTable.swift Interpolation.swift

@@ -13,6 +13,10 @@ else
     endif
 endif
 
+# Project Name: Projectile
+
+# Project Purpose: Predict whether a launched projectile hits its target.
+
 build: Projectile$(TARGET_EXTENSION)
 
 Projectile$(TARGET_EXTENSION): Projectile.cs

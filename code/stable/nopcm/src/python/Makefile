@@ -1,3 +1,8 @@
+# Project Name: NoPCM
+
+# Project Purpose: Investigate the heating of water in a solar water heating
+# tank.
+
 build:
 
 run: build

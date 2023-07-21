@@ -7,7 +7,6 @@ module Language.Drasil.Code.Imperative.DrasilState (
 import Language.Drasil
 import GOOL.Drasil (ScopeTag(..), CodeType)
 
-import Language.Drasil.Chunk.Code (codeName)
 import Language.Drasil.Chunk.ConstraintMap (ConstraintCE)
 import Language.Drasil.Code.ExtLibImport (ExtLibState)
 import Language.Drasil.Choices (Choices(..), Architecture (..), DataInfo(..),
@@ -70,6 +69,7 @@ data DrasilState = DrasilState {
   libEMap :: ModExportMap, 
   clsMap :: ClassDefinitionMap,
   defList :: [Name],
+  getVal :: Int,
   -- Stateful
   currentModule :: String,
   currentClass :: String,

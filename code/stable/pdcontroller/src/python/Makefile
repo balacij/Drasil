@@ -1,3 +1,8 @@
+# Project Name: PD_Controller
+
+# Project Purpose: Provide a model of a pd controller that can be used for the
+# tuning of the gain constants before the deployment of the controller.
+
 build:
 
 run: build

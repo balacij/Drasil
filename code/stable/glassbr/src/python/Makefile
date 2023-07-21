@@ -1,3 +1,8 @@
+# Project Name: GlassBR
+
+# Project Purpose: Predict whether a glass slab can withstand a blast under
+# given conditions.
+
 build:
 
 run: build

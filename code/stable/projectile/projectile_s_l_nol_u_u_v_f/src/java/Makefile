@@ -1,3 +1,7 @@
+# Project Name: Projectile
+
+# Project Purpose: Predict whether a launched projectile hits its target.
+
 build: Projectile.jar
 
 Projectile.jar: Projectile/InputFormat.java Projectile/InputConstraints.java Projectile/Calculations.java Projectile/OutputFormat.java
