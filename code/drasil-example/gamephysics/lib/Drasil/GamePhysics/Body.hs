@@ -1,11 +1,12 @@
 module Drasil.GamePhysics.Body where
 
+import Control.Lens ((^.))
 import Data.Maybe (mapMaybe)
 
 import Language.Drasil hiding (organization, section)
 import Drasil.SRSDocument
 import qualified Drasil.DocLang.SRS as SRS
-import Theory.Drasil (qdEFromDD)
+import Theory.Drasil (qdEFromDD, output)
 import Language.Drasil.Chunk.Concept.NamedCombinators
 import qualified Language.Drasil.Sentence.Combinators as S
 
@@ -147,11 +148,12 @@ units :: [UnitDefn] -- FIXME
 units = map unitWrapper [metre, kilogram, second, joule] ++ map unitWrapper [newton, radian]
 
 symbMap :: ChunkDB
-symbMap = cdb (map qw iMods ++ map qw symbolsAll) (map nw symbolsAll
-  ++ map nw acronyms ++ map nw prodtcon ++ map nw generalDefns ++ map nw iMods
-  ++ map nw softwarecon ++ map nw doccon ++ map nw doccon'
-  ++ map nw CP.physicCon ++ map nw educon ++ [nw algorithm] ++ map nw derived
-  ++ map nw fundamentals ++ map nw CM.mathcon ++ map nw CM.mathcon') 
+symbMap = cdb (map (^. output) iMods ++ map qw symbolsAll) (nw gamePhysics :
+  map nw symbolsAll ++ map nw acronyms ++ map nw prodtcon ++ map nw generalDefns
+  ++ map nw iMods ++ map (nw . (^. output)) iMods ++ map nw softwarecon
+  ++ map nw doccon ++ map nw doccon' ++ map nw CP.physicCon ++ map nw educon
+  ++ [nw algorithm] ++ map nw derived ++ map nw fundamentals
+  ++ map nw CM.mathcon ++ map nw CM.mathcon')
   (map cw defSymbols ++ srsDomains ++ map cw iMods) units dataDefs
   iMods generalDefns tMods concIns section [] []
 

@@ -179,13 +179,6 @@
                   <th>Units</th>
                 </tr>
                 <tr>
-                  <td><em>(x,y)</em></td>
-                  <td>
-                    Cartesian Position Coordinates: <em>y</em> is considered parallel to the direction of the force of gravity and <em>x</em> is considered perpendicular to <em>y</em>.
-                  </td>
-                  <td><em>m</em></td>
-                </tr>
-                <tr>
                   <td><em>A</em></td>
                   <td>Area: A part of an object or surface.</td>
                   <td><em>m<sup>2</sup></em></td>
@@ -909,7 +902,7 @@
           <div class="subsection">
             <h2>Purpose of Document</h2>
             <p class="paragraph">
-              The primary purpose of this document is to record the requirements of the Slope Stability analysis Program. Goals, assumptions, theoretical models, definitions, and other model derivation information are specified, allowing the reader to fully understand and verify the purpose and scientific basis of SSP. With the exception of <a href=#Sec:SysConstraints>system constraints</a>, this SRS will remain abstract, describing what problem is being solved, but not how to solve it.
+              The primary purpose of this document is to record the requirements of SSP. Goals, assumptions, theoretical models, definitions, and other model derivation information are specified, allowing the reader to fully understand and verify the purpose and scientific basis of SSP. With the exception of <a href=#Sec:SysConstraints>system constraints</a>, this SRS will remain abstract, describing what problem is being solved, but not how to solve it.
             </p>
             <p class="paragraph">
               This document will be used as a starting point for subsequent development phases, including writing the design specification and the software verification and validation plan. The design document will show how the requirements are to be realized, including decisions on the numerical algorithms and programming environment. The verification and validation plan will show the steps that will be used to increase confidence in the software documentation and the implementation. Although the SRS fits in a series of documents that follow the so-called waterfall model, the actual development process is not constrained in any way. Even when the waterfall model is not followed, as Parnas and Clements point out <a href=#parnasClements1986>parnasClements1986</a>, the most logical way to present the documentation is still to "fake" a rational design process.
@@ -1191,7 +1184,7 @@
                   </p>
                   <p>
                     <div id="assumpINSFL">
-                      Interslice-Norm-Shear-Forces-Linear: Following the assumption of Morgenstern and Price (<a href=#morgenstern1965>morgenstern1965</a>), interslice normal forces and interslice shear forces have a proportional relationship, depending on a proportionality constant (<em>λ</em>) and a function (<em><b>f</b></em>) describing variation depending on <em>x</em> position. (RefBy: <a href=#IM:nrmShrFor>IM:nrmShrFor</a>, <a href=#GD:normShrR>GD:normShrR</a>, <a href=#UC_normshearlinear>UC:Normal-And-Shear-Linear-Only</a>, and <a href=#IM:fctSfty>IM:fctSfty</a>.)
+                      Interslice-Norm-Shear-Forces-Linear: Following the assumption of Morgenstern and Price (<a href=#morgenstern1965>morgenstern1965</a>), interslice normal forces and interslice shear forces have a proportional relationship, depending on a proportionality constant (<em>λ</em>) and a function (<em><b>f</b></em>) describing variation depending on <em>x</em> position. (RefBy: <a href=#GD:normShrR>GD:normShrR</a>, <a href=#IM:fctSfty>IM:fctSfty</a>, <a href=#IM:nrmShrFor>IM:nrmShrFor</a>, and <a href=#UC_normshearlinear>UC:Normal-And-Shear-Linear-Only</a>.)
                     </div>
                   </p>
                   <p>
@@ -1206,22 +1199,22 @@
                   </p>
                   <p>
                     <div id="assumpSBSBISL">
-                      Surface-Base-Slice-between-Interslice-Straight-Lines: The surface and base of a slice are approximated as straight lines. (RefBy: <a href=#GD:srfWtrF>GD:srfWtrF</a>, <a href=#GD:sliceWght>GD:sliceWght</a>, <a href=#TM:mcShrStrgth>TM:mcShrStrgth</a>, <a href=#DD:slcHeight>DD:slcHeight</a>, <a href=#DD:angleB>DD:angleB</a>, <a href=#GD:baseWtrF>GD:baseWtrF</a>, and <a href=#DD:angleA>DD:angleA</a>.)
+                      Surface-Base-Slice-between-Interslice-Straight-Lines: The surface and base of a slice are approximated as straight lines. (RefBy: <a href=#GD:srfWtrF>GD:srfWtrF</a>, <a href=#GD:sliceWght>GD:sliceWght</a>, <a href=#GD:baseWtrF>GD:baseWtrF</a>, <a href=#TM:mcShrStrgth>TM:mcShrStrgth</a>, <a href=#DD:slcHeight>DD:slcHeight</a>, <a href=#DD:angleB>DD:angleB</a>, and <a href=#DD:angleA>DD:angleA</a>.)
                     </div>
                   </p>
                   <p>
                     <div id="assumpES">
-                      Edge-Slices: The interslice forces at the 0th and <em>n</em>th interslice interfaces are zero. (RefBy: <a href=#IM:nrmShrFor>IM:nrmShrFor</a>, <a href=#IM:intsliceFs>IM:intsliceFs</a>, and <a href=#IM:fctSfty>IM:fctSfty</a>.)
+                      Edge-Slices: The interslice forces at the 0th and <em>n</em>th interslice interfaces are zero. (RefBy: <a href=#IM:intsliceFs>IM:intsliceFs</a>, <a href=#IM:fctSfty>IM:fctSfty</a>, and <a href=#IM:nrmShrFor>IM:nrmShrFor</a>.)
                     </div>
                   </p>
                   <p>
                     <div id="assumpSF">
-                      Seismic-Force: There is no seismic force acting on the slope. (RefBy: <a href=#IM:nrmShrFor>IM:nrmShrFor</a>, <a href=#LC_seismic>LC:Calculate-Seismic-Force</a>, and <a href=#IM:fctSfty>IM:fctSfty</a>.)
+                      Seismic-Force: There is no seismic force acting on the slope. (RefBy: <a href=#IM:fctSfty>IM:fctSfty</a>, <a href=#IM:nrmShrFor>IM:nrmShrFor</a>, and <a href=#LC_seismic>LC:Calculate-Seismic-Force</a>.)
                     </div>
                   </p>
                   <p>
                     <div id="assumpSL">
-                      Surface-Load: There is no imposed surface load, and therefore no external forces, acting on the slope. (RefBy: <a href=#IM:nrmShrFor>IM:nrmShrFor</a>, <a href=#LC_external>LC:Calculate-External-Force</a>, and <a href=#IM:fctSfty>IM:fctSfty</a>.)
+                      Surface-Load: There is no imposed surface load, and therefore no external forces, acting on the slope. (RefBy: <a href=#IM:fctSfty>IM:fctSfty</a>, <a href=#IM:nrmShrFor>IM:nrmShrFor</a>, and <a href=#LC_external>LC:Calculate-External-Force</a>.)
                     </div>
                   </p>
                   <p>
@@ -1963,7 +1956,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="GD:mobShearWO">
                   <table class="gdefn">
                     <tr>
@@ -2038,7 +2030,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="GD:normShrR">
                   <table class="gdefn">
                     <tr>
@@ -2092,13 +2083,12 @@
                       <th>RefBy</th>
                       <td>
                         <p class="paragraph">
-                          <a href=#IM:nrmShrFor>IM:nrmShrFor</a> and <a href=#IM:fctSfty>IM:fctSfty</a>
+                          <a href=#IM:fctSfty>IM:fctSfty</a> and <a href=#IM:nrmShrFor>IM:nrmShrFor</a>
                         </p>
                       </td>
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="GD:momentEql">
                   <table class="gdefn">
                     <tr>
@@ -2476,7 +2466,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="GD:baseWtrF">
                   <table class="gdefn">
                     <tr>
@@ -2738,7 +2727,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:angleA">
                   <table class="ddefn">
                     <tr>
@@ -2796,13 +2784,12 @@
                       <th>RefBy</th>
                       <td>
                         <p class="paragraph">
-                          <a href=#GD:resShearWO>GD:resShearWO</a>, <a href=#IM:nrmShrForNum>IM:nrmShrForNum</a>, <a href=#GD:normForcEq>GD:normForcEq</a>, <a href=#GD:momentEql>GD:momentEql</a>, <a href=#GD:mobShearWO>GD:mobShearWO</a>, <a href=#DD:lengthLb>DD:lengthLb</a>, <a href=#GD:bsShrFEq>GD:bsShrFEq</a>, <a href=#DD:convertFunc2>DD:convertFunc2</a>, and <a href=#DD:convertFunc1>DD:convertFunc1</a>
+                          <a href=#GD:resShearWO>GD:resShearWO</a>, <a href=#IM:nrmShrForNum>IM:nrmShrForNum</a>, <a href=#GD:normForcEq>GD:normForcEq</a>, <a href=#GD:momentEql>GD:momentEql</a>, <a href=#GD:mobShearWO>GD:mobShearWO</a>, <a href=#GD:bsShrFEq>GD:bsShrFEq</a>, <a href=#DD:lengthLb>DD:lengthLb</a>, <a href=#DD:convertFunc2>DD:convertFunc2</a>, and <a href=#DD:convertFunc1>DD:convertFunc1</a>
                         </p>
                       </td>
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:angleB">
                   <table class="ddefn">
                     <tr>
@@ -2860,13 +2847,12 @@
                       <th>RefBy</th>
                       <td>
                         <p class="paragraph">
-                          <a href=#GD:resShearWO>GD:resShearWO</a>, <a href=#IM:nrmShrForNum>IM:nrmShrForNum</a>, <a href=#GD:normForcEq>GD:normForcEq</a>, <a href=#GD:momentEql>GD:momentEql</a>, <a href=#GD:mobShearWO>GD:mobShearWO</a>, <a href=#DD:lengthLs>DD:lengthLs</a>, and <a href=#GD:bsShrFEq>GD:bsShrFEq</a>
+                          <a href=#GD:resShearWO>GD:resShearWO</a>, <a href=#IM:nrmShrForNum>IM:nrmShrForNum</a>, <a href=#GD:normForcEq>GD:normForcEq</a>, <a href=#GD:momentEql>GD:momentEql</a>, <a href=#GD:mobShearWO>GD:mobShearWO</a>, <a href=#GD:bsShrFEq>GD:bsShrFEq</a>, and <a href=#DD:lengthLs>DD:lengthLs</a>
                         </p>
                       </td>
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:lengthB">
                   <table class="ddefn">
                     <tr>
@@ -2919,7 +2905,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:lengthLb">
                   <table class="ddefn">
                     <tr>
@@ -2981,7 +2966,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:lengthLs">
                   <table class="ddefn">
                     <tr>
@@ -3041,7 +3025,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:slcHeight">
                   <table class="ddefn">
                     <tr>
@@ -3112,7 +3095,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:normStress">
                   <table class="ddefn">
                     <tr>
@@ -3157,13 +3139,12 @@
                       <th>RefBy</th>
                       <td>
                         <p class="paragraph">
-                          <a href=#GD:resShr>GD:resShr</a>, <a href=#TM:effStress>TM:effStress</a>, and <a href=#GD:effNormF>GD:effNormF</a>
+                          <a href=#GD:resShr>GD:resShr</a>, <a href=#GD:effNormF>GD:effNormF</a>, and <a href=#TM:effStress>TM:effStress</a>
                         </p>
                       </td>
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:tangStress">
                   <table class="ddefn">
                     <tr>
@@ -3210,7 +3191,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:torque">
                   <table class="ddefn">
                     <tr>
@@ -3263,7 +3243,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:ratioVariation">
                   <table class="ddefn">
                     <tr>
@@ -3330,7 +3309,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:convertFunc1">
                   <table class="ddefn">
                     <tr>
@@ -3399,13 +3377,12 @@
                       <th>RefBy</th>
                       <td>
                         <p class="paragraph">
-                          <a href=#IM:intsliceFs>IM:intsliceFs</a>, <a href=#DD:convertFunc2>DD:convertFunc2</a>, and <a href=#IM:fctSfty>IM:fctSfty</a>
+                          <a href=#IM:intsliceFs>IM:intsliceFs</a>, <a href=#IM:fctSfty>IM:fctSfty</a>, and <a href=#DD:convertFunc2>DD:convertFunc2</a>
                         </p>
                       </td>
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:convertFunc2">
                   <table class="ddefn">
                     <tr>
@@ -3483,7 +3460,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:nrmForceSumDD">
                   <table class="ddefn">
                     <tr>
@@ -3538,7 +3514,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:watForceSumDD">
                   <table class="ddefn">
                     <tr>
@@ -3593,7 +3568,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:sliceHghtRightDD">
                   <table class="ddefn">
                     <tr>
@@ -3651,7 +3625,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:sliceHghtLeftDD">
                   <table class="ddefn">
                     <tr>
@@ -3709,7 +3682,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
               </div>
             </div>
             <div id="Sec:IMs">
@@ -3800,7 +3772,7 @@
                       <th>RefBy</th>
                       <td>
                         <p class="paragraph">
-                          <a href=#IM:nrmShrFor>IM:nrmShrFor</a>, <a href=#IM:intsliceFs>IM:intsliceFs</a>, <a href=#displayShear>FR:Display-Interslice-Shear-Forces</a>, <a href=#displayNormal>FR:Display-Interslice-Normal-Forces</a>, <a href=#displayFS>FR:Display-Factor-of-Safety</a>, <a href=#determineCritSlip>FR:Determine-Critical-Slip-Surface</a>, and <a href=#IM:fctSfty>IM:fctSfty</a>
+                          <a href=#IM:intsliceFs>IM:intsliceFs</a>, <a href=#IM:fctSfty>IM:fctSfty</a>, <a href=#IM:nrmShrFor>IM:nrmShrFor</a>, <a href=#displayShear>FR:Display-Interslice-Shear-Forces</a>, <a href=#displayNormal>FR:Display-Interslice-Normal-Forces</a>, <a href=#displayFS>FR:Display-Factor-of-Safety</a>, and <a href=#determineCritSlip>FR:Determine-Critical-Slip-Surface</a>
                         </p>
                       </td>
                     </tr>
@@ -3969,7 +3941,7 @@
                       <th>RefBy</th>
                       <td>
                         <p class="paragraph">
-                          <a href=#IM:nrmShrForNum>IM:nrmShrForNum</a>, <a href=#IM:nrmShrFor>IM:nrmShrFor</a>, <a href=#IM:nrmShrForDen>IM:nrmShrForDen</a>, <a href=#IM:intsliceFs>IM:intsliceFs</a>, <a href=#displayShear>FR:Display-Interslice-Shear-Forces</a>, <a href=#displayNormal>FR:Display-Interslice-Normal-Forces</a>, <a href=#displayFS>FR:Display-Factor-of-Safety</a>, <a href=#determineCritSlip>FR:Determine-Critical-Slip-Surface</a>, and <a href=#IM:fctSfty>IM:fctSfty</a>
+                          <a href=#IM:nrmShrForNum>IM:nrmShrForNum</a>, <a href=#IM:nrmShrForDen>IM:nrmShrForDen</a>, <a href=#IM:intsliceFs>IM:intsliceFs</a>, <a href=#IM:fctSfty>IM:fctSfty</a>, <a href=#IM:nrmShrFor>IM:nrmShrFor</a>, <a href=#displayShear>FR:Display-Interslice-Shear-Forces</a>, <a href=#displayNormal>FR:Display-Interslice-Normal-Forces</a>, <a href=#displayFS>FR:Display-Factor-of-Safety</a>, and <a href=#determineCritSlip>FR:Determine-Critical-Slip-Surface</a>
                         </p>
                       </td>
                     </tr>
@@ -4284,7 +4256,7 @@
                       <th>RefBy</th>
                       <td>
                         <p class="paragraph">
-                          <a href=#IM:nrmShrFor>IM:nrmShrFor</a>, <a href=#IM:intsliceFs>IM:intsliceFs</a>, <a href=#displayShear>FR:Display-Interslice-Shear-Forces</a>, <a href=#displayNormal>FR:Display-Interslice-Normal-Forces</a>, <a href=#displayFS>FR:Display-Factor-of-Safety</a>, <a href=#determineCritSlip>FR:Determine-Critical-Slip-Surface</a>, and <a href=#IM:fctSfty>IM:fctSfty</a>
+                          <a href=#IM:intsliceFs>IM:intsliceFs</a>, <a href=#IM:fctSfty>IM:fctSfty</a>, <a href=#IM:nrmShrFor>IM:nrmShrFor</a>, <a href=#displayShear>FR:Display-Interslice-Shear-Forces</a>, <a href=#displayNormal>FR:Display-Interslice-Normal-Forces</a>, <a href=#displayFS>FR:Display-Factor-of-Safety</a>, and <a href=#determineCritSlip>FR:Determine-Critical-Slip-Surface</a>
                         </p>
                       </td>
                     </tr>
@@ -4379,7 +4351,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
               </div>
             </div>
             <div id="Sec:DataConstraints">
@@ -4508,10 +4479,6 @@
                     <tr>
                       <td><em>F<sub>S</sub></em></td>
                       <td><em>F<sub>S</sub>&thinsp;&gt;&thinsp;0</em></td>
-                    </tr>
-                    <tr>
-                      <td><em>(x,y)</em></td>
-                      <td>--</td>
                     </tr>
                   </table>
                   <p class="caption">Output Data Constraints</p>
@@ -4718,7 +4685,9 @@
                   <td>minimum <em>y</em>-coordinate</td>
                 </tr>
               </table>
-              <p class="caption">Inputs to be returned as output</p>
+              <p class="caption">
+                Inputs to be Returned as Output following <a href=#displayInput>FR:Display-Input</a>
+              </p>
             </div>
           </div>
         </div>

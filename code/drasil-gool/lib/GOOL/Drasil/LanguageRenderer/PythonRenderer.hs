@@ -95,6 +95,7 @@ import Data.List (intercalate, sort)
 import qualified Data.Map as Map (lookup)
 import Text.PrettyPrint.HughesPJ (Doc, text, (<>), (<+>), parens, empty, equals,
   vcat, colon, brackets, isEmpty, quotes)
+import GOOL.Drasil.LanguageRenderer.LanguagePolymorphic (OptionalSpace(..))
 
 pyExt :: String
 pyExt = "py"
@@ -571,7 +572,7 @@ instance ControlStatement PythonCode where
 
   throw = G.throw pyThrow Empty
 
-  ifCond = G.ifCond parens pyBodyStart pyElseIf pyBodyEnd
+  ifCond = G.ifCond parens pyBodyStart pySpace pyElseIf pyBodyEnd
   switch = switchAsIf
 
   ifExists = M.ifExists
@@ -810,6 +811,9 @@ pyCommentStart = text "#"
 pyDocCommentStart = pyCommentStart <> pyCommentStart
 pyNamedArgSep = equals
 
+pySpace :: OptionalSpace
+pySpace = OSpace {oSpace = empty}
+
 pyNotOp :: (Monad r) => VSOp r
 pyNotOp = unOpPrec "not"
 
@@ -946,9 +950,9 @@ pyWhile v b = vcat [
 
 pyTryCatch :: (RenderSym r) => r (Body r) -> r (Body r) -> Doc
 pyTryCatch tryB catchB = vcat [
-  tryLabel <+> colon,
+  tryLabel <> colon,
   indent $ RC.body tryB,
-  pyExcept <+> exceptionObj' <+> colon,
+  pyExcept <+> exceptionObj' <> colon,
   indent $ RC.body catchB]
 
 pyListSlice :: (RenderSym r, Monad r) => SVariable r -> SValue r -> SValue r -> 

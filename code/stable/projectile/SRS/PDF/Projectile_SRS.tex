@@ -175,7 +175,7 @@ The following section provides an overview of the Software Requirements Specific
 
 \subsection{Purpose of Document}
 \label{Sec:DocPurpose}
-The primary purpose of this document is to record the requirements of the Projectile. Goals, assumptions, theoretical models, definitions, and other model derivation information are specified, allowing the reader to fully understand and verify the purpose and scientific basis of Projectile. With the exception of \hyperref[Sec:SysConstraints]{system constraints}, this SRS will remain abstract, describing what problem is being solved, but not how to solve it.
+The primary purpose of this document is to record the requirements of Projectile. Goals, assumptions, theoretical models, definitions, and other model derivation information are specified, allowing the reader to fully understand and verify the purpose and scientific basis of Projectile. With the exception of \hyperref[Sec:SysConstraints]{system constraints}, this SRS will remain abstract, describing what problem is being solved, but not how to solve it.
 
 This document will be used as a starting point for subsequent development phases, including writing the design specification and the software verification and validation plan. The design document will show how the requirements are to be realized, including decisions on the numerical algorithms and programming environment. The verification and validation plan will show the steps that will be used to increase confidence in the software documentation and the implementation. Although the SRS fits in a series of documents that follow the so-called waterfall model, the actual development process is not constrained in any way. Even when the waterfall model is not followed, as Parnas and Clements point out \cite{parnasClements1986}, the most logical way to present the documentation is still to ``fake'' a rational design process.
 
@@ -304,7 +304,7 @@ This section simplifies the original problem and helps in developing the theoret
 \label{Sec:TMs}
 This section focuses on the general equations and laws that Projectile is based on.
 
-\vspace{\baselineskip}
+\medskip
 \noindent
 \begin{minipage}{\textwidth}
 \begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
@@ -333,7 +333,8 @@ RefBy & \hyperref[GD:rectVel]{GD:rectVel}
 \\ \bottomrule
 \end{tabular}
 \end{minipage}
-\vspace{\baselineskip}
+
+\medskip
 \noindent
 \begin{minipage}{\textwidth}
 \begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
@@ -362,11 +363,12 @@ RefBy & \hyperref[GD:rectPos]{GD:rectPos}
 \\ \bottomrule
 \end{tabular}
 \end{minipage}
+
 \subsubsection{General Definitions}
 \label{Sec:GDs}
 This section collects the laws and equations that will be used to build the instance models.
 
-\vspace{\baselineskip}
+\medskip
 \noindent
 \begin{minipage}{\textwidth}
 \begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
@@ -399,6 +401,7 @@ RefBy & \hyperref[GD:velVec]{GD:velVec} and \hyperref[GD:rectPos]{GD:rectPos}
 \\ \bottomrule
 \end{tabular}
 \end{minipage}
+
 \paragraph{Detailed derivation of rectilinear velocity:}
 \label{GD:rectVelDeriv}
 Assume we have rectilinear motion of a particle (of negligible size and shape, from \hyperref[pointMass]{A:pointMass}); that is, motion in a straight line. The velocity is $v$ and the acceleration is $a$. The motion in \hyperref[TM:acceleration]{TM:acceleration} is now one-dimensional with a constant acceleration, represented by ${a^{c}}$. The initial velocity (at $t=0$, from \hyperref[timeStartZero]{A:timeStartZero}) is represented by ${v^{\text{i}}}$. From \hyperref[TM:acceleration]{TM:acceleration} in 1D, and using the above symbols we have:
@@ -416,7 +419,7 @@ Performing the integration, we have the required equation:
 \begin{displaymath}
 v\text{(}t\text{)}={v^{\text{i}}}+{a^{c}} t
 \end{displaymath}
-\vspace{\baselineskip}
+\medskip
 \noindent
 \begin{minipage}{\textwidth}
 \begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
@@ -450,6 +453,7 @@ RefBy & \hyperref[GD:posVec]{GD:posVec}
 \\ \bottomrule
 \end{tabular}
 \end{minipage}
+
 \paragraph{Detailed derivation of rectilinear position:}
 \label{GD:rectPosDeriv}
 Assume we have rectilinear motion of a particle (of negligible size and shape, from \hyperref[pointMass]{A:pointMass}); that is, motion in a straight line. The position is $p$ and the velocity is $v$. The motion in \hyperref[TM:velocity]{TM:velocity} is now one-dimensional. The initial position (at $t=0$, from \hyperref[timeStartZero]{A:timeStartZero}) is represented by ${p^{\text{i}}}$. From \hyperref[TM:velocity]{TM:velocity} in 1D, and using the above symbols we have:
@@ -472,7 +476,7 @@ Performing the integration, we have the required equation:
 \begin{displaymath}
 p\text{(}t\text{)}={p^{\text{i}}}+{v^{\text{i}}} t+\frac{{a^{c}} t^{2}}{2}
 \end{displaymath}
-\vspace{\baselineskip}
+\medskip
 \noindent
 \begin{minipage}{\textwidth}
 \begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
@@ -509,6 +513,7 @@ RefBy &
 \\ \bottomrule
 \end{tabular}
 \end{minipage}
+
 \paragraph{Detailed derivation of velocity vector:}
 \label{GD:velVecDeriv}
 For a two-dimensional Cartesian coordinate system (\hyperref[twoDMotion]{A:twoDMotion} and \hyperref[cartSyst]{A:cartSyst}), we can represent the velocity vector as $\symbf{v}\text{(}t\text{)}=\begin{bmatrix}
@@ -531,7 +536,7 @@ For a two-dimensional Cartesian coordinate system (\hyperref[twoDMotion]{A:twoDM
                            {{v_{\text{y}}}^{\text{i}}}+{{a_{\text{y}}}^{\text{c}}} t
                            \end{bmatrix}
 \end{displaymath}
-\vspace{\baselineskip}
+\medskip
 \noindent
 \begin{minipage}{\textwidth}
 \begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
@@ -571,6 +576,7 @@ RefBy & \hyperref[IM:calOfLandingDist]{IM:calOfLandingDist} and \hyperref[IM:cal
 \\ \bottomrule
 \end{tabular}
 \end{minipage}
+
 \paragraph{Detailed derivation of position vector:}
 \label{GD:posVecDeriv}
 For a two-dimensional Cartesian coordinate system (\hyperref[twoDMotion]{A:twoDMotion} and \hyperref[cartSyst]{A:cartSyst}), we can represent the position vector as $\symbf{p}\text{(}t\text{)}=\begin{bmatrix}
@@ -600,7 +606,7 @@ For a two-dimensional Cartesian coordinate system (\hyperref[twoDMotion]{A:twoDM
 \label{Sec:DDs}
 This section collects and defines all the data needed to build the instance models.
 
-\vspace{\baselineskip}
+\medskip
 \noindent
 \begin{minipage}{\textwidth}
 \begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
@@ -638,7 +644,7 @@ RefBy & \hyperref[DD:speedIY]{DD:speedIY} and \hyperref[DD:speedIX]{DD:speedIX}
 \end{tabular}
 \end{minipage}
 
-\vspace{\baselineskip}
+\medskip
 \noindent
 \begin{minipage}{\textwidth}
 \begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
@@ -679,7 +685,7 @@ RefBy & \hyperref[IM:calOfLandingDist]{IM:calOfLandingDist}
 \end{tabular}
 \end{minipage}
 
-\vspace{\baselineskip}
+\medskip
 \noindent
 \begin{minipage}{\textwidth}
 \begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
@@ -724,7 +730,7 @@ RefBy & \hyperref[IM:calOfLandingTime]{IM:calOfLandingTime}
 \label{Sec:IMs}
 This section transforms the problem defined in the \hyperref[Sec:ProbDesc]{problem description} into one which is expressed in mathematical terms. It uses concrete symbols defined in the \hyperref[Sec:DDs]{data definitions} to replace the abstract symbols in the models identified in \hyperref[Sec:TMs]{theoretical models} and \hyperref[Sec:GDs]{general definitions}.
 
-\vspace{\baselineskip}
+\medskip
 \noindent
 \begin{minipage}{\textwidth}
 \begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
@@ -773,11 +779,12 @@ Notes & The constraint $0\lt{}θ\lt{}\frac{π}{2}$ is from \hyperref[posXDirecti
 Source & --
          
 \\ \midrule
-RefBy & \hyperref[outputValues]{FR:Output-Values}, \hyperref[IM:calOfLandingDist]{IM:calOfLandingDist}, and \hyperref[calcValues]{FR:Calculate-Values}
+RefBy & \hyperref[IM:calOfLandingDist]{IM:calOfLandingDist}, \hyperref[outputValues]{FR:Output-Values}, and \hyperref[calcValues]{FR:Calculate-Values}
         
 \\ \bottomrule
 \end{tabular}
 \end{minipage}
+
 \paragraph{Detailed derivation of flight duration:}
 \label{IM:calOfLandingTimeDeriv}
 We know that ${{p_{\text{y}}}^{\text{i}}}=0$ (\hyperref[launchOrigin]{A:launchOrigin}) and ${{a_{\text{y}}}^{\text{c}}}=-g$ (\hyperref[accelYGravity]{A:accelYGravity}). Substituting these values into the y-direction of \hyperref[GD:posVec]{GD:posVec} gives us:
@@ -805,7 +812,7 @@ From \hyperref[DD:speedIY]{DD:speedIY} (with ${v^{\text{i}}}={v_{\text{launch}}}
 \begin{displaymath}
 {t_{\text{flight}}}=\frac{2 {v_{\text{launch}}} \sin\left(θ\right)}{g}
 \end{displaymath}
-\vspace{\baselineskip}
+\medskip
 \noindent
 \begin{minipage}{\textwidth}
 \begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
@@ -859,6 +866,7 @@ RefBy & \hyperref[IM:offsetIM]{IM:offsetIM} and \hyperref[calcValues]{FR:Calcula
 \\ \bottomrule
 \end{tabular}
 \end{minipage}
+
 \paragraph{Detailed derivation of landing position:}
 \label{IM:calOfLandingDistDeriv}
 We know that ${{p_{\text{x}}}^{\text{i}}}=0$ (\hyperref[launchOrigin]{A:launchOrigin}) and ${{a_{\text{x}}}^{\text{c}}}=0$ (\hyperref[accelXZero]{A:accelXZero}). Substituting these values into the x-direction of \hyperref[GD:posVec]{GD:posVec} gives us:
@@ -881,7 +889,7 @@ Rearranging this gives us the required equation:
 \begin{displaymath}
 {p_{\text{land}}}=\frac{2 {v_{\text{launch}}}^{2} \sin\left(θ\right) \cos\left(θ\right)}{g}
 \end{displaymath}
-\vspace{\baselineskip}
+\medskip
 \noindent
 \begin{minipage}{\textwidth}
 \begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}
@@ -925,13 +933,13 @@ Notes & ${p_{\text{land}}}$ is from \hyperref[IM:calOfLandingDist]{IM:calOfLandi
 Source & --
          
 \\ \midrule
-RefBy & \hyperref[outputValues]{FR:Output-Values}, \hyperref[IM:messageIM]{IM:messageIM}, and \hyperref[calcValues]{FR:Calculate-Values}
+RefBy & \hyperref[IM:messageIM]{IM:messageIM}, \hyperref[outputValues]{FR:Output-Values}, and \hyperref[calcValues]{FR:Calculate-Values}
         
 \\ \bottomrule
 \end{tabular}
 \end{minipage}
 
-\vspace{\baselineskip}
+\medskip
 \noindent
 \begin{minipage}{\textwidth}
 \begin{tabular}{>{\raggedright}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.82\textwidth}}

@@ -82,16 +82,15 @@ module Language.Drasil (
   -- Similar types are grouped together.
 
   -- *** Basic types
-  , UID, mkUid
+  , UID, mkUid, nsUid
   -- Language.Drasil.Chunk.NamedIdea
   , (+++), (+++.), (+++!)
   , nc, ncUID, IdeaDict , mkIdea
   , nw -- bad name (historical)
-  -- Language.Drasil.Chunk.CodeBase
   , CodeIdea(..), CodeChunk(..), CodeVarChunk(..), CodeFuncChunk(..), VarOrFunc(..)
   , obv, qc, ccf, ccv, listToArray, programName, funcPrefix, DefiningCodeExpr(..)
   -- Language.Drasil.Chunk.CommonIdea
-  , CI, commonIdea, getAcc, getAccStr, commonIdeaWithDict, prependAbrv
+  , CI, commonIdea, getAcc, commonIdeaWithDict, prependAbrv
 
   -- *** Concepts
   -- Language.Drasil.Chunk.Concept.Core
@@ -106,8 +105,8 @@ module Language.Drasil (
 
   -- *** Quantities and Units
   -- Language.Drasil.Chunk.Quantity
-  , QuantityDict, qw, mkQuant, mkQuant', codeVC, implVar, implVar', implVarUID, implVarUID'
-  , vc, vc'', vcSt, vcUnit
+  , QuantityDict, DefinesQuantity(defLhs), qw, mkQuant, mkQuant'
+  , codeVC, implVar, implVar', implVarUID, implVarUID' , vc, vc'', vcSt, vcUnit
   -- Language.Drasil.Chunk.Eq
   , QDefinition, fromEqn, fromEqn', fromEqnSt, fromEqnSt', fromEqnSt''
   , mkQDefSt, mkQuantDef, mkQuantDef', ec
@@ -329,7 +328,7 @@ import Language.Drasil.Document.Contents (lbldExpr, unlbldExpr, unlbldCode
 import Language.Drasil.Document.Combinators
 import Language.Drasil.Unicode (RenderSpecial(..), Special(..))
 import Language.Drasil.UID
-    (UID, HasUID(..), (+++), (+++.), (+++!), mkUid)
+    (UID, HasUID(..), (+++), (+++.), (+++!), mkUid, nsUid)
 import Language.Drasil.Symbol (HasSymbol(symbol), Decoration, Symbol)
 import Language.Drasil.Classes (Definition(defn), ConceptDomain(cdom), Concept, HasUnitSymbol(usymb),
   IsUnit(getUnits), CommonIdea(abrv), HasAdditionalNotes(getNotes), Constrained(constraints),
@@ -345,8 +344,9 @@ import Language.Drasil.Chunk.Citation (
   , cInBookACP, cInBookECP, cInBookAC, cInBookEC, cInBookAP, cInBookEP
   , cInCollection, cInProceedings, cManual, cMThesis, cMisc, cPhDThesis
   , cProceedings, cTechReport, cUnpublished)
-import Language.Drasil.Chunk.CodeBase (CodeIdea(..), CodeChunk(..), CodeVarChunk(..), CodeFuncChunk(..), 
-  VarOrFunc(..), obv, qc, ccf, ccv, listToArray, programName, funcPrefix, DefiningCodeExpr(..))
+import Language.Drasil.Chunk.CodeVar (CodeIdea(..), CodeChunk(..), 
+  CodeVarChunk(..), CodeFuncChunk(..), VarOrFunc(..), obv, qc, ccf, ccv, 
+  listToArray, programName, funcPrefix, DefiningCodeExpr(..))
 import Language.Drasil.Chunk.CommonIdea
 import Language.Drasil.Chunk.Concept
 import Language.Drasil.Chunk.Concept.Core (sDom) -- exported for drasil-database FIXME: move to development package?

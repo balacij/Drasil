@@ -8,21 +8,21 @@ import SysInfo.Drasil (SystemInformation(..))
 import Language.Drasil.Code (Choices(..), Lang(..))
 import Data.Char (toLower, isSpace)
 
-import qualified Drasil.DblPendulum.Body as DblPendulum (fullSI)
+import qualified Drasil.DblPend.Body as DblPend (fullSI)
 import qualified Drasil.GamePhysics.Body as GamePhysics (fullSI)
 import qualified Drasil.GlassBR.Body as GlassBR (fullSI)
 import qualified Drasil.HGHC.Body as HGHC (fullSI)
-import qualified Drasil.NoPCM.Body as NoPCM (fullSI)
+import qualified Drasil.SWHSNoPCM.Body as NoPCM (fullSI)
 import qualified Drasil.PDController.Body as PDController (fullSI)
 import qualified Drasil.Projectile.Body as Projectile (fullSI)
-import qualified Drasil.SglPendulum.Body as SglPendulum (fullSI)
+import qualified Drasil.SglPend.Body as SglPend (fullSI)
 import qualified Drasil.SSP.Body as SSP (fullSI)
 import qualified Drasil.SWHS.Body as SWHS (fullSI)
 
 -- import choices for code generation
-import qualified Drasil.DblPendulum.Choices as DblPendulum (choices)
+import qualified Drasil.DblPend.Choices as DblPend (choices)
 import qualified Drasil.GlassBR.Choices as GlassBR (choices)
-import qualified Drasil.NoPCM.Choices as NoPCM (choices)
+import qualified Drasil.SWHSNoPCM.Choices as NoPCM (choices)
 import qualified Drasil.PDController.Choices as PDController (codeChoices)
 import qualified Drasil.Projectile.Choices as Projectile (codedDirName, choiceCombos)
 -- the other examples currently do not generate any code.
@@ -39,8 +39,6 @@ import qualified Drasil.Projectile.Choices as Projectile (codedDirName, choiceCo
 data Example = E {
   -- | Example system information. Used to get the system name and abbreviation.
   sysInfoE :: SystemInformation,
-  -- | System description. Currently hard-coded.
-  descE :: Sentence,
   -- | Some examples have generated code with specific choices.
   -- They may also have more than one set of choices, so we need a list.
   choicesE :: [Choices],
@@ -53,27 +51,23 @@ data Example = E {
 
 -- | Records example system information.
 allExampleSI :: [SystemInformation]
-allExampleSI = [DblPendulum.fullSI, GamePhysics.fullSI, GlassBR.fullSI, HGHC.fullSI, NoPCM.fullSI, PDController.fullSI, Projectile.fullSI, SglPendulum.fullSI, SSP.fullSI, SWHS.fullSI]
-
--- | Records example descriptions.
-allExampleDesc :: [Sentence]
-allExampleDesc = [dblPendulumDesc, gamePhysDesc, glassBRDesc, hghcDesc, noPCMDesc, pdControllerDesc, projectileDesc, sglPendulumDesc, sspDesc, swhsDesc]
+allExampleSI = [DblPend.fullSI, GamePhysics.fullSI, GlassBR.fullSI, HGHC.fullSI, NoPCM.fullSI, PDController.fullSI, Projectile.fullSI, SglPend.fullSI, SSP.fullSI, SWHS.fullSI]
 
 -- To developer: Fill this list in when more examples can run code. The list
 -- needs to be of this form since projectile comes with a list of choice combos.
 -- | Records example choices. The order of the list must match up with
 -- that in `allExampleSI`, or the Case Studies Table will be incorrect.
 allExampleChoices :: [[Choices]]
-allExampleChoices = [[DblPendulum.choices], [], [GlassBR.choices], [], [NoPCM.choices], [PDController.codeChoices], Projectile.choiceCombos, [], [], []]
+allExampleChoices = [[DblPend.choices], [], [GlassBR.choices], [], [NoPCM.choices], [PDController.codeChoices], Projectile.choiceCombos, [], [], []]
 
 -- | Combine system info, description, choices, and file paths into one nice package.
-allExamples :: [SystemInformation] -> [Sentence] -> [[Choices]] -> FilePath -> FilePath -> [Example]
-allExamples si desc choi srsP doxP = zipWith3 (\x y z -> E x y z srsP doxP) si desc choi
+allExamples :: [SystemInformation] -> [[Choices]] -> FilePath -> FilePath -> [Example]
+allExamples si choi srsP doxP = zipWith (\x y -> E x y srsP doxP) si choi
 
 -- | Calls 'allExamples' on 'allExampleSI', 'allExampleDesc', and 'allExampleChoices'.
 -- Can be considered a "default" version of 'allExamples'.
 examples :: FilePath -> FilePath -> [Example]
-examples = allExamples allExampleSI allExampleDesc allExampleChoices
+examples = allExamples allExampleSI allExampleChoices
 
 -- * Functions to create the list of examples
 
@@ -85,7 +79,7 @@ fullExList codePth srsDoxPth = Enumeration $ Bullet $ map (, Nothing) (allExampl
 allExampleList :: [Example] -> [ItemType]
 allExampleList = map (\x -> Nested (nameAndDesc x) $ Bullet $ map (, Nothing) (individualExList x))
   where
-    nameAndDesc E{sysInfoE = SI{_sys = sys}, descE = desc} = S (programName sys) +:+ desc
+    nameAndDesc E{sysInfoE = SI{_sys = sys, _purpose = purp}} = S (programName sys) +:+ S " - To" +:+. head purp
 
 -- | Display the points for generated documents and call 'versionList' to display the code.
 individualExList :: Example -> [ItemType]
@@ -150,22 +144,6 @@ exampleIntro = S "The development of Drasil follows an example-driven approach, 
   \through the creation of these examples, ranging from mechanics to thermodynamics. Each of the case studies \
   \implemented in Drasil contain their own generated PDF and HTML reports, and in some cases, \
   \their own generated code to solve the problem defined in their respective SRS documents."
-
--- | Project descriptions.
-sglPendulumDesc, dblPendulumDesc, gamePhysDesc, glassBRDesc, hghcDesc, noPCMDesc, pdControllerDesc,
-  projectileDesc, sspDesc, swhsDesc :: Sentence
-
-dblPendulumDesc  = S "describes the motion of a double pendulum in 2D."
-gamePhysDesc     = S "describes the modeling of an open source 2D rigid body physics library used for games."
-glassBRDesc      = S "predicts whether a given glass slab is likely to resist a specified blast."
-hghcDesc         = S "describes heat transfer coefficients related to clad."
-noPCMDesc        = S "describes the modelling of a solar water heating system without phase change material."
-pdControllerDesc = S ""
-projectileDesc   = S "describes the motion of a projectile object in free space."
-sglPendulumDesc  = S "describes the motion of a single pendulum in 2D."
-sspDesc          = S "describes the requirements of a slope stability analysis program."
-swhsDesc         = S "describes the modelling of a solar water heating system with phase change material."
--- templateDesc     = S "is an empty template document."
 
 -- | Example list titles.
 generatedCodeTitle, generatedCodeDocsTitle :: String

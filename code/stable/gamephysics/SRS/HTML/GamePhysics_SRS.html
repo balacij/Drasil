@@ -2,7 +2,7 @@
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="GamePhysics_SRS.css">
-    <title>Software Requirements Specification for Game Physics</title>
+    <title>Software Requirements Specification for GamePhysics</title>
     <meta charset="utf-8">
     <script>
     MathJax = {
@@ -21,7 +21,7 @@
   </head>
   <body>
     <div class="title">
-      <h1>Software Requirements Specification for Game Physics</h1>
+      <h1>Software Requirements Specification for GamePhysics</h1>
     </div>
     <div class="author">
       <h2>Alex Halliwushka, Luthfi Mawarid, and Olu Owojaiye</h2>
@@ -557,10 +557,6 @@
                   <td>Goal Statement</td>
                 </tr>
                 <tr>
-                  <td>Game Physics</td>
-                  <td>game physics library</td>
-                </tr>
-                <tr>
                   <td>IM</td>
                   <td>Instance Model</td>
                 </tr>
@@ -614,13 +610,13 @@
           Due to the rising cost of developing video games, developers are looking for ways to save time and money for their projects. Using an open source physics library that is reliable and free will cut down development costs and lead to better quality products.
         </p>
         <p class="paragraph">
-          The following section provides an overview of the Software Requirements Specification (SRS) for Game Physics. This section explains the purpose of this document, the scope of the requirements, the characteristics of the intended reader, and the organization of the document.
+          The following section provides an overview of the Software Requirements Specification (SRS) for GamePhysics. This section explains the purpose of this document, the scope of the requirements, the characteristics of the intended reader, and the organization of the document.
         </p>
         <div id="Sec:DocPurpose">
           <div class="subsection">
             <h2>Purpose of Document</h2>
             <p class="paragraph">
-              The primary purpose of this document is to record the requirements of the game physics library. Goals, assumptions, theoretical models, definitions, and other model derivation information are specified, allowing the reader to fully understand and verify the purpose and scientific basis of Game Physics. With the exception of <a href=#Sec:SysConstraints>system constraints</a>, this SRS will remain abstract, describing what problem is being solved, but not how to solve it.
+              The primary purpose of this document is to record the requirements of GamePhysics. Goals, assumptions, theoretical models, definitions, and other model derivation information are specified, allowing the reader to fully understand and verify the purpose and scientific basis of GamePhysics. With the exception of <a href=#Sec:SysConstraints>system constraints</a>, this SRS will remain abstract, describing what problem is being solved, but not how to solve it.
             </p>
             <p class="paragraph">
               This document will be used as a starting point for subsequent development phases, including writing the design specification and the software verification and validation plan. The design document will show how the requirements are to be realized, including decisions on the numerical algorithms and programming environment. The verification and validation plan will show the steps that will be used to increase confidence in the software documentation and the implementation. Although the SRS fits in a series of documents that follow the so-called waterfall model, the actual development process is not constrained in any way. Even when the waterfall model is not followed, as Parnas and Clements point out <a href=#parnasClements1986>parnasClements1986</a>, the most logical way to present the documentation is still to "fake" a rational design process.
@@ -639,7 +635,7 @@
           <div class="subsection">
             <h2>Characteristics of Intended Reader</h2>
             <p class="paragraph">
-              Reviewers of this documentation should have an understanding of rigid body dynamics and high school calculus. The users of Game Physics can have a lower level of expertise, as explained in <a href=#Sec:UserChars>Sec:User Characteristics</a>.
+              Reviewers of this documentation should have an understanding of rigid body dynamics and high school calculus. The users of GamePhysics can have a lower level of expertise, as explained in <a href=#Sec:UserChars>Sec:User Characteristics</a>.
             </p>
           </div>
         </div>
@@ -666,7 +662,7 @@
           <div class="subsection">
             <h2>System Context</h2>
             <p class="paragraph">
-              <a href=#Figure:sysCtxDiag>Fig:sysCtxDiag</a> shows the system context. A circle represents an entity external to the software, the user in this case. A rectangle represents the software system itself (Game Physics). Arrows are used to show the data flow between the system and its environment.
+              <a href=#Figure:sysCtxDiag>Fig:sysCtxDiag</a> shows the system context. A circle represents an entity external to the software, the user in this case. A rectangle represents the software system itself (GamePhysics). Arrows are used to show the data flow between the system and its environment.
             </p>
             <div id="Figure:sysCtxDiag">
               <figure>
@@ -693,7 +689,7 @@
                 </ul>
               </li>
               <li>
-                Game Physics Responsibilities
+                GamePhysics Responsibilities
                 <ul class="list">
                   <li>
                     Determine if the inputs and simulation state satisfy the required <a href=#Sec:DataConstraints>physical and system constraints</a>.
@@ -713,7 +709,7 @@
           <div class="subsection">
             <h2>User Characteristics</h2>
             <p class="paragraph">
-              The end user of Game Physics should have an understanding of first year programming concepts and an understanding of high school physics.
+              The end user of GamePhysics should have an understanding of first year programming concepts and an understanding of high school physics.
             </p>
           </div>
         </div>
@@ -797,7 +793,7 @@
           <div class="subsection">
             <h2>Solution Characteristics Specification</h2>
             <p class="paragraph">
-              The instance models that govern Game Physics are presented in the <a href=#Sec:IMs>Instance Model Section</a>. The information to understand the meaning of the instance models and their derivation is also presented, so that the instance models can be verified.
+              The instance models that govern GamePhysics are presented in the <a href=#Sec:IMs>Instance Model Section</a>. The information to understand the meaning of the instance models and their derivation is also presented, so that the instance models can be verified.
             </p>
             <div id="Sec:Assumps">
               <div class="subsubsection">
@@ -808,12 +804,12 @@
                 <div class="list">
                   <p>
                     <div id="assumpOT">
-                      objectTy: All objects are rigid bodies. (RefBy: <a href=#DD:chaslesThm>DD:chaslesThm</a>, <a href=#DD:reVeInColl>DD:reVeInColl</a>, <a href=#DD:potEnergy>DD:potEnergy</a>, <a href=#DD:ctrOfMass>DD:ctrOfMass</a>, <a href=#DD:momentOfInertia>DD:momentOfInertia</a>, <a href=#DD:linVel>DD:linVel</a>, <a href=#DD:linDisp>DD:linDisp</a>, <a href=#DD:linAcc>DD:linAcc</a>, <a href=#DD:kEnergy>DD:kEnergy</a>, <a href=#DD:impulseV>DD:impulseV</a>, <a href=#GD:impulse>GD:impulse</a>, <a href=#IM:col2D>IM:col2D</a>, <a href=#DD:angVel>DD:angVel</a>, <a href=#DD:angDisp>DD:angDisp</a>, <a href=#DD:angAccel>DD:angAccel</a>, <a href=#IM:rotMot>IM:rotMot</a>, and <a href=#IM:transMot>IM:transMot</a>.)
+                      objectTy: All objects are rigid bodies. (RefBy: <a href=#GD:impulse>GD:impulse</a>, <a href=#IM:rotMot>IM:rotMot</a>, <a href=#IM:transMot>IM:transMot</a>, <a href=#DD:chaslesThm>DD:chaslesThm</a>, <a href=#DD:reVeInColl>DD:reVeInColl</a>, <a href=#DD:potEnergy>DD:potEnergy</a>, <a href=#DD:ctrOfMass>DD:ctrOfMass</a>, <a href=#DD:momentOfInertia>DD:momentOfInertia</a>, <a href=#DD:linVel>DD:linVel</a>, <a href=#DD:linDisp>DD:linDisp</a>, <a href=#DD:linAcc>DD:linAcc</a>, <a href=#DD:kEnergy>DD:kEnergy</a>, <a href=#DD:impulseV>DD:impulseV</a>, <a href=#IM:col2D>IM:col2D</a>, <a href=#DD:angVel>DD:angVel</a>, <a href=#DD:angDisp>DD:angDisp</a>, and <a href=#DD:angAccel>DD:angAccel</a>.)
                     </div>
                   </p>
                   <p>
                     <div id="assumpOD">
-                      objectDimension: All objects are 2D. (RefBy: <a href=#DD:potEnergy>DD:potEnergy</a>, <a href=#TM:NewtonSecLawRotMot>TM:NewtonSecLawRotMot</a>, <a href=#DD:kEnergy>DD:kEnergy</a>, <a href=#GD:impulse>GD:impulse</a>, <a href=#IM:col2D>IM:col2D</a>, <a href=#DD:angVel>DD:angVel</a>, <a href=#DD:angDisp>DD:angDisp</a>, <a href=#DD:angAccel>DD:angAccel</a>, <a href=#IM:rotMot>IM:rotMot</a>, and <a href=#IM:transMot>IM:transMot</a>.)
+                      objectDimension: All objects are 2D. (RefBy: <a href=#GD:impulse>GD:impulse</a>, <a href=#IM:rotMot>IM:rotMot</a>, <a href=#IM:transMot>IM:transMot</a>, <a href=#DD:potEnergy>DD:potEnergy</a>, <a href=#TM:NewtonSecLawRotMot>TM:NewtonSecLawRotMot</a>, <a href=#DD:kEnergy>DD:kEnergy</a>, <a href=#IM:col2D>IM:col2D</a>, <a href=#DD:angVel>DD:angVel</a>, <a href=#DD:angDisp>DD:angDisp</a>, and <a href=#DD:angAccel>DD:angAccel</a>.)
                     </div>
                   </p>
                   <p>
@@ -823,22 +819,22 @@
                   </p>
                   <p>
                     <div id="assumpAD">
-                      axesDefined: The axes are defined using right-handed coordinate system. (RefBy: <a href=#GD:impulse>GD:impulse</a>, <a href=#IM:col2D>IM:col2D</a>, and <a href=#IM:rotMot>IM:rotMot</a>.)
+                      axesDefined: The axes are defined using right-handed coordinate system. (RefBy: <a href=#GD:impulse>GD:impulse</a>, <a href=#IM:rotMot>IM:rotMot</a>, and <a href=#IM:col2D>IM:col2D</a>.)
                     </div>
                   </p>
                   <p>
                     <div id="assumpCT">
-                      collisionType: All rigid bodies collisions are vertex-to-edge collisions. (RefBy: <a href=#lcEC>LC:Expanded-Collisions</a>, <a href=#GD:impulse>GD:impulse</a>, and <a href=#IM:col2D>IM:col2D</a>.)
+                      collisionType: All rigid bodies collisions are vertex-to-edge collisions. (RefBy: <a href=#GD:impulse>GD:impulse</a>, <a href=#lcEC>LC:Expanded-Collisions</a>, and <a href=#IM:col2D>IM:col2D</a>.)
                     </div>
                   </p>
                   <p>
                     <div id="assumpDI">
-                      dampingInvolvement: There is no damping involved throughout the simulation and this implies that there are no friction forces. (RefBy: <a href=#DD:potEnergy>DD:potEnergy</a>, <a href=#lcID>LC:Include-Dampening</a>, <a href=#DD:kEnergy>DD:kEnergy</a>, <a href=#IM:col2D>IM:col2D</a>, and <a href=#IM:transMot>IM:transMot</a>.)
+                      dampingInvolvement: There is no damping involved throughout the simulation and this implies that there are no friction forces. (RefBy: <a href=#IM:transMot>IM:transMot</a>, <a href=#DD:potEnergy>DD:potEnergy</a>, <a href=#lcID>LC:Include-Dampening</a>, <a href=#DD:kEnergy>DD:kEnergy</a>, and <a href=#IM:col2D>IM:col2D</a>.)
                     </div>
                   </p>
                   <p>
                     <div id="assumpCAJI">
-                      constraintsAndJointsInvolvement: There are no constraints and joints involved throughout the simulation. (RefBy: <a href=#lcIJC>LC:Include-Joints-Constraints</a>, <a href=#IM:col2D>IM:col2D</a>, and <a href=#IM:transMot>IM:transMot</a>.)
+                      constraintsAndJointsInvolvement: There are no constraints and joints involved throughout the simulation. (RefBy: <a href=#IM:transMot>IM:transMot</a>, <a href=#lcIJC>LC:Include-Joints-Constraints</a>, and <a href=#IM:col2D>IM:col2D</a>.)
                     </div>
                   </p>
                 </div>
@@ -848,7 +844,7 @@
               <div class="subsubsection">
                 <h3>Theoretical Models</h3>
                 <p class="paragraph">
-                  This section focuses on the general equations and laws that Game Physics is based on.
+                  This section focuses on the general equations and laws that GamePhysics is based on.
                 </p>
                 <div id="TM:NewtonSecLawMot">
                   <table class="tdefn">
@@ -1245,7 +1241,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
               </div>
             </div>
             <div id="Sec:DDs">
@@ -1313,13 +1308,12 @@
                       <th>RefBy</th>
                       <td>
                         <p class="paragraph">
-                          <a href=#IM:col2D>IM:col2D</a> and <a href=#IM:transMot>IM:transMot</a>
+                          <a href=#IM:transMot>IM:transMot</a> and <a href=#IM:col2D>IM:col2D</a>
                         </p>
                       </td>
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:linDisp">
                   <table class="ddefn">
                     <tr>
@@ -1374,7 +1368,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:linVel">
                   <table class="ddefn">
                     <tr>
@@ -1433,7 +1426,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:linAcc">
                   <table class="ddefn">
                     <tr>
@@ -1494,7 +1486,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:angDisp">
                   <table class="ddefn">
                     <tr>
@@ -1545,7 +1536,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:angVel">
                   <table class="ddefn">
                     <tr>
@@ -1600,7 +1590,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:angAccel">
                   <table class="ddefn">
                     <tr>
@@ -1659,7 +1648,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:chaslesThm">
                   <table class="ddefn">
                     <tr>
@@ -1728,7 +1716,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:torque">
                   <table class="ddefn">
                     <tr>
@@ -1779,7 +1766,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:kEnergy">
                   <table class="ddefn">
                     <tr>
@@ -1838,7 +1824,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:coeffRestitution">
                   <table class="ddefn">
                     <tr>
@@ -1900,7 +1885,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:reVeInColl">
                   <table class="ddefn">
                     <tr>
@@ -1972,7 +1956,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:impulseV">
                   <table class="ddefn">
                     <tr>
@@ -2098,7 +2081,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
                 <div id="DD:momentOfInertia">
                   <table class="ddefn">
                     <tr>
@@ -2158,7 +2140,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
               </div>
             </div>
             <div id="Sec:IMs">
@@ -2458,7 +2439,6 @@
                     </tr>
                   </table>
                 </div>
-                <p class="paragraph"></p>
               </div>
             </div>
             <div id="Sec:DataConstraints">
