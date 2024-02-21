@@ -85,6 +85,7 @@ jobs:
 
       - name: "Compile generated TeX artifacts"
         run: make tex SUMMARIZE_TEX=yes
+        if: steps.changes.tex.src == 'true'
 
       - name: "Compile generated software artifacts"
         run: make gool
