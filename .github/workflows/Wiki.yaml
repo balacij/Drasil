@@ -1,4 +1,4 @@
-name: Publish wiki
+name: Wiki
 on:
   push:
     branches: [master]
@@ -10,7 +10,7 @@ permissions:
   contents: write
 jobs:
   check_directories:
-    name: "Sanity check"
+    name: "Audit changes"
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     steps:
@@ -26,7 +26,7 @@ jobs:
           fi
 
   wiki:
-    name: "Publish Wiki"
+    name: "Publish changes"
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
     steps:
