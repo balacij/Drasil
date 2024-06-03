@@ -3,14 +3,35 @@ on:
   push:
     branches: [master]
     paths: [wiki/**, .github/workflows/Wiki.yaml]
+  pull_request:
+    branches: [master]
+    paths: [wiki/**, .github/workflows/Wiki.yaml]
 concurrency:
   group: wiki
   cancel-in-progress: true
 permissions:
   contents: write
 jobs:
-  wiki:
+  check_directories:
+    name: "Sanity check"
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: "Ensuring no new directories in ./wiki/"
+        run: |
+          if git diff --name-only --diff-filter=A origin/master... | grep -q '^wiki/.*/'; then
+            echo "New directory detected in wiki folder. This is not allowed."
+            exit 1
+          fi
+
+  wiki:
+    name: "Publish Wiki"
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
     steps:
       - uses: actions/checkout@v4
         with: # Fetch enough history to resolve HEAD^ -- https://github.com/actions/checkout?tab=readme-ov-file#checkout-head
