@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [master]
     paths: [wiki/**, .github/workflows/Wiki.yaml]
-concurrency:
-  group: wiki
-  cancel-in-progress: true
 permissions:
   contents: write
 jobs:
