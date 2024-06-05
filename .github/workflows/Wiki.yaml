@@ -61,7 +61,7 @@ jobs:
 
       - name: "Update ~.wiki.git contents"
         run: |
-          rsync -av --delete wiki/ ${GITHUB_REPOSITORY##*/}.wiki/
+          rsync -av --delete --exclude '.git' wiki/ ${GITHUB_REPOSITORY##*/}.wiki/
 
       - name: "Commit and push changes"
         run: |
