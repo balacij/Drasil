@@ -1,3 +1,0 @@
-<small><i>Warning for Drasil Authors: This wiki should not be edited through the web GUI. Please use the wiki/ folder in the repository and follow the normal commit-PR workflow.</i></small>
-
-This page will outline the progress of [#3086](https://github.com/JacquesCarette/Drasil/issues/3086) to document how we currently use chunks to see if we are doing it "correctly." Each chunk will be discussed in subpages, and any overarching discussion will be tracked here.

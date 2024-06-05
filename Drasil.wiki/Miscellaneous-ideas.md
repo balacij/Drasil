@@ -1,5 +1,0 @@
-<small><i>Warning for Drasil Authors: This wiki should not be edited through the web GUI. Please use the wiki/ folder in the repository and follow the normal commit-PR workflow.</i></small>
-
-Basically a page where all sort of ideas are kept, for future reference.
-## The Drasil development curve / timeline
-Drasil ought to be useful if you are willing to encode all of the knowledge, both declarative and procedural, about a topic inside Drasil. A large undertaking indeed. But the payoff is also huge: you get to generate fully-documented families of programs at an incrementally tiny cost. So the large up-front investment has a large long-term payoff. Current software development, because of continual maintenance, and a small up-front cost to obtain something that works, and ever-increasing maintenance costs to continue to have such. Drasil tries to completely change that effort curve.
