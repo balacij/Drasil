@@ -51,7 +51,7 @@ jobs:
         run: |
           html='<small><i>Warning for Drasil Authors: This wiki should not be edited through the web GUI. Please use the wiki/ folder in the repository and follow the normal commit-PR workflow.</i></small>'
           for file in wiki/*.md; do
-            [ "$(basename "$file")" = "_Sidebar.html" ] && continue
+            [ "$(basename "$file")" = "_Sidebar.md" ] && continue
             sed -i '1s|^|'"$html"'\n\n|' "$file"
           done
 
