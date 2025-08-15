@@ -102,6 +102,9 @@ copy_examples() {
       if [ -d "$example/SRS/mdBook" ]; then
         cp -r "$example/SRS/mdBook/book/" "$target_srs_dir/mdBook"
       fi
+      if [ -d "$example/SRS/Jupyter" ]; then
+        cp -r "$example/SRS/Jupyter/*.html" "$target_srs_dir/Jupyter"
+      fi
       if [ -d "$example/src" ]; then
         mkdir -p "$EXAMPLE_DEST$example_name/$DOX_DEST"
         for lang in "$example/src/"*; do
