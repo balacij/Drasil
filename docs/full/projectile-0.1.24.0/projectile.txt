@@ -75,6 +75,9 @@ learnObjList :: [Sentence]
 assumpResp :: [Sentence]
 solveResp :: [Sentence]
 
+module Drasil.Projectile.MetaConcepts
+progName :: CI
+
 module Drasil.Projectile.References
 citations :: BibRef
 
@@ -93,7 +96,7 @@ launAngle :: ConstrConcept
 launSpeed :: ConstrConcept
 offset :: ConstrConcept
 targPos :: ConstrConcept
-message :: QuantityDict
+message :: DefinedQuantityDict
 tol :: ConstQDef
 
 module Drasil.Projectile.Expressions
@@ -184,11 +187,10 @@ module Drasil.Projectile.Lesson.Body
 nb :: Document
 printSetting :: PrintingInformation
 mkNB :: LsnDecl
-si :: SystemInformation
+si :: System
 symbMap :: ChunkDB
 usedDB :: ChunkDB
-symbols :: [QuantityDict]
-refDB :: ReferenceDB
+symbols :: [DefinedQuantityDict]
 projectileMotion :: CI
 allRefs :: [Reference]
 
@@ -223,10 +225,9 @@ nonfuncReqs :: [ConceptInstance]
 
 module Drasil.Projectile.Body
 printSetting :: PrintingInformation
-si :: SystemInformation
+si :: System
 srs :: Document
-projectileTitle :: CI
-fullSI :: SystemInformation
+fullSI :: System
 
 module Drasil.Projectile.Choices
 genCodeWithChoices :: [Choices] -> IO ()

@@ -1,6 +1,4 @@
 digraph alltypes {
-	subgraph clike {
-	}
 	subgraph csarprendererh {
 		subgraph csharpcodea{
 		CSharpCodea	[shape=oval, color=darkgreen, label="CSharpCodea"];
@@ -42,6 +40,10 @@ digraph alltypes {
 		BinaryOpCSharpCode	[shape=oval, color=red2, label="BinaryOpCSharpCode"];
 		BinaryOpCSharpCode -> OpData;
 		}
+		subgraph scopecsharpcode{
+		ScopeCSharpCode	[shape=oval, color=red2, label="ScopeCSharpCode"];
+		ScopeCSharpCode -> ScopeData;
+		}
 		subgraph variablecsharpcode{
 		VariableCSharpCode	[shape=oval, color=red2, label="VariableCSharpCode"];
 		VariableCSharpCode -> VarData;
@@ -62,9 +64,9 @@ digraph alltypes {
 		StatementCSharpCode	[shape=oval, color=red2, label="StatementCSharpCode"];
 		StatementCSharpCode -> DocTerminator;
 		}
-		subgraph scopecsharpcode{
-		ScopeCSharpCode	[shape=oval, color=red2, label="ScopeCSharpCode"];
-		ScopeCSharpCode -> Doc;
+		subgraph visibilitycsharpcode{
+		VisibilityCSharpCode	[shape=oval, color=red2, label="VisibilityCSharpCode"];
+		VisibilityCSharpCode -> Doc;
 		}
 		subgraph methodtypecsharpcode{
 		MethodTypeCSharpCode	[shape=oval, color=red2, label="MethodTypeCSharpCode"];
@@ -95,14 +97,6 @@ digraph alltypes {
 		BlockCommentCSharpCode -> Doc;
 		}
 	}
-	subgraph commonpeudooos {
-	}
-	subgraph contructorss {
-		subgraph vsopr{
-		VSOpr	[shape=oval, color=red2, label="VSOpr"];
-		VSOpr -> VSrOpData;
-		}
-	}
 	subgraph cpprenderer {
 		subgraph cppcodexya{
 		CppCodexya	[shape=oval, color=cyan3, label="CppCodexya"];
@@ -111,7 +105,7 @@ digraph alltypes {
 		}
 		subgraph methoddata{
 		MethodData	[shape=oval, color=cyan3, label="MethodData"];
-		MethodData -> ScopeTag;
+		MethodData -> VisibilityTag;
 		MethodData -> Doc;
 		}
 		subgraph cppsrccodea{
@@ -158,6 +152,10 @@ digraph alltypes {
 		BinaryOppCppSrcCodeCppHdrCode	[shape=oval, color=red2, label="BinaryOppCppSrcCodeCppHdrCode"];
 		BinaryOppCppSrcCodeCppHdrCode -> OpData;
 		}
+		subgraph scopepcppsrccodecpphdrcode{
+		ScopepCppSrcCodeCppHdrCode	[shape=oval, color=red2, label="ScopepCppSrcCodeCppHdrCode"];
+		ScopepCppSrcCodeCppHdrCode -> ScopeData;
+		}
 		subgraph variablepcppsrccodecpphdrcode{
 		VariablepCppSrcCodeCppHdrCode	[shape=oval, color=red2, label="VariablepCppSrcCodeCppHdrCode"];
 		VariablepCppSrcCodeCppHdrCode -> VarData;
@@ -178,9 +176,9 @@ digraph alltypes {
 		StatementpCppSrcCodeCppHdrCode	[shape=oval, color=red2, label="StatementpCppSrcCodeCppHdrCode"];
 		StatementpCppSrcCodeCppHdrCode -> DocTerminator;
 		}
-		subgraph scopepcppsrccodecpphdrcode{
-		ScopepCppSrcCodeCppHdrCode	[shape=oval, color=red2, label="ScopepCppSrcCodeCppHdrCode"];
-		ScopepCppSrcCodeCppHdrCode -> DocScopeTag;
+		subgraph visibilitypcppsrccodecpphdrcode{
+		VisibilitypCppSrcCodeCppHdrCode	[shape=oval, color=red2, label="VisibilitypCppSrcCodeCppHdrCode"];
+		VisibilitypCppSrcCodeCppHdrCode -> DocVisibilityTag;
 		}
 		subgraph methodtypepcppsrccodecpphdrcode{
 		MethodTypepCppSrcCodeCppHdrCode	[shape=oval, color=red2, label="MethodTypepCppSrcCodeCppHdrCode"];
@@ -258,6 +256,10 @@ digraph alltypes {
 		BinaryOpCppSrcCode	[shape=oval, color=red2, label="BinaryOpCppSrcCode"];
 		BinaryOpCppSrcCode -> OpData;
 		}
+		subgraph scopecppsrccode{
+		ScopeCppSrcCode	[shape=oval, color=red2, label="ScopeCppSrcCode"];
+		ScopeCppSrcCode -> ScopeData;
+		}
 		subgraph variablecppsrccode{
 		VariableCppSrcCode	[shape=oval, color=red2, label="VariableCppSrcCode"];
 		VariableCppSrcCode -> VarData;
@@ -278,9 +280,9 @@ digraph alltypes {
 		StatementCppSrcCode	[shape=oval, color=red2, label="StatementCppSrcCode"];
 		StatementCppSrcCode -> DocTerminator;
 		}
-		subgraph scopecppsrccode{
-		ScopeCppSrcCode	[shape=oval, color=red2, label="ScopeCppSrcCode"];
-		ScopeCppSrcCode -> DocScopeTag;
+		subgraph visibilitycppsrccode{
+		VisibilityCppSrcCode	[shape=oval, color=red2, label="VisibilityCppSrcCode"];
+		VisibilityCppSrcCode -> DocVisibilityTag;
 		}
 		subgraph methodtypecppsrccode{
 		MethodTypeCppSrcCode	[shape=oval, color=red2, label="MethodTypeCppSrcCode"];
@@ -342,6 +344,10 @@ digraph alltypes {
 		BinaryOpCppHdrCode	[shape=oval, color=red2, label="BinaryOpCppHdrCode"];
 		BinaryOpCppHdrCode -> OpData;
 		}
+		subgraph scopecpphdrcode{
+		ScopeCppHdrCode	[shape=oval, color=red2, label="ScopeCppHdrCode"];
+		ScopeCppHdrCode -> ScopeData;
+		}
 		subgraph variablecpphdrcode{
 		VariableCppHdrCode	[shape=oval, color=red2, label="VariableCppHdrCode"];
 		VariableCppHdrCode -> VarData;
@@ -362,9 +368,9 @@ digraph alltypes {
 		StatementCppHdrCode	[shape=oval, color=red2, label="StatementCppHdrCode"];
 		StatementCppHdrCode -> DocTerminator;
 		}
-		subgraph scopecpphdrcode{
-		ScopeCppHdrCode	[shape=oval, color=red2, label="ScopeCppHdrCode"];
-		ScopeCppHdrCode -> DocScopeTag;
+		subgraph visibilitycpphdrcode{
+		VisibilityCppHdrCode	[shape=oval, color=red2, label="VisibilityCppHdrCode"];
+		VisibilityCppHdrCode -> DocVisibilityTag;
 		}
 		subgraph methodtypecpphdrcode{
 		MethodTypeCppHdrCode	[shape=oval, color=red2, label="MethodTypeCppHdrCode"];
@@ -436,6 +442,10 @@ digraph alltypes {
 		BinaryOpJavaCode	[shape=oval, color=red2, label="BinaryOpJavaCode"];
 		BinaryOpJavaCode -> OpData;
 		}
+		subgraph scopejavacode{
+		ScopeJavaCode	[shape=oval, color=red2, label="ScopeJavaCode"];
+		ScopeJavaCode -> ScopeData;
+		}
 		subgraph variablejavacode{
 		VariableJavaCode	[shape=oval, color=red2, label="VariableJavaCode"];
 		VariableJavaCode -> VarData;
@@ -456,9 +466,9 @@ digraph alltypes {
 		StatementJavaCode	[shape=oval, color=red2, label="StatementJavaCode"];
 		StatementJavaCode -> DocTerminator;
 		}
-		subgraph scopejavacode{
-		ScopeJavaCode	[shape=oval, color=red2, label="ScopeJavaCode"];
-		ScopeJavaCode -> Doc;
+		subgraph visibilityjavacode{
+		VisibilityJavaCode	[shape=oval, color=red2, label="VisibilityJavaCode"];
+		VisibilityJavaCode -> Doc;
 		}
 		subgraph methodtypejavacode{
 		MethodTypeJavaCode	[shape=oval, color=red2, label="MethodTypeJavaCode"];
@@ -488,14 +498,6 @@ digraph alltypes {
 		BlockCommentJavaCode	[shape=oval, color=red2, label="BlockCommentJavaCode"];
 		BlockCommentJavaCode -> Doc;
 		}
-	}
-	subgraph languagepolymorpich {
-		subgraph optionalspace{
-		OptionalSpace	[shape=oval, color=darkgreen, label="OptionalSpace"];
-		OptionalSpace -> Doc;
-		}
-	}
-	subgraph macros {
 	}
 	subgraph pytonrendererh {
 		subgraph pythoncodea{
@@ -538,6 +540,10 @@ digraph alltypes {
 		BinaryOpPythonCode	[shape=oval, color=red2, label="BinaryOpPythonCode"];
 		BinaryOpPythonCode -> OpData;
 		}
+		subgraph scopepythoncode{
+		ScopePythonCode	[shape=oval, color=red2, label="ScopePythonCode"];
+		ScopePythonCode -> ScopeData;
+		}
 		subgraph variablepythoncode{
 		VariablePythonCode	[shape=oval, color=red2, label="VariablePythonCode"];
 		VariablePythonCode -> VarData;
@@ -558,9 +564,9 @@ digraph alltypes {
 		StatementPythonCode	[shape=oval, color=red2, label="StatementPythonCode"];
 		StatementPythonCode -> DocTerminator;
 		}
-		subgraph scopepythoncode{
-		ScopePythonCode	[shape=oval, color=red2, label="ScopePythonCode"];
-		ScopePythonCode -> Doc;
+		subgraph visibilitypythoncode{
+		VisibilityPythonCode	[shape=oval, color=red2, label="VisibilityPythonCode"];
+		VisibilityPythonCode -> Doc;
 		}
 		subgraph methodtypepythoncode{
 		MethodTypePythonCode	[shape=oval, color=red2, label="MethodTypePythonCode"];
@@ -632,6 +638,10 @@ digraph alltypes {
 		BinaryOpSwiftCode	[shape=oval, color=red2, label="BinaryOpSwiftCode"];
 		BinaryOpSwiftCode -> OpData;
 		}
+		subgraph scopeswiftcode{
+		ScopeSwiftCode	[shape=oval, color=red2, label="ScopeSwiftCode"];
+		ScopeSwiftCode -> ScopeData;
+		}
 		subgraph variableswiftcode{
 		VariableSwiftCode	[shape=oval, color=red2, label="VariableSwiftCode"];
 		VariableSwiftCode -> VarData;
@@ -652,9 +662,9 @@ digraph alltypes {
 		StatementSwiftCode	[shape=oval, color=red2, label="StatementSwiftCode"];
 		StatementSwiftCode -> DocTerminator;
 		}
-		subgraph scopeswiftcode{
-		ScopeSwiftCode	[shape=oval, color=red2, label="ScopeSwiftCode"];
-		ScopeSwiftCode -> Doc;
+		subgraph visibilityswiftcode{
+		VisibilitySwiftCode	[shape=oval, color=red2, label="VisibilitySwiftCode"];
+		VisibilitySwiftCode -> Doc;
 		}
 		subgraph methodtypeswiftcode{
 		MethodTypeSwiftCode	[shape=oval, color=red2, label="MethodTypeSwiftCode"];
@@ -684,6 +694,279 @@ digraph alltypes {
 		BlockCommentSwiftCode	[shape=oval, color=red2, label="BlockCommentSwiftCode"];
 		BlockCommentSwiftCode -> Doc;
 		}
+	}
+	subgraph codeinfooo {
+		subgraph codeinfoooa{
+		CodeInfoOOa	[shape=oval, color=darkgreen, label="CodeInfoOOa"];
+		CodeInfoOOa -> a;
+		}
+		subgraph programcodeinfooo{
+		ProgramCodeInfoOO	[shape=oval, color=red2, label="ProgramCodeInfoOO"];
+		ProgramCodeInfoOO -> GOOLState;
+		}
+		subgraph filecodeinfooo{
+		FileCodeInfoOO	[shape=oval, color=red2, label="FileCodeInfoOO"];
+		}
+		subgraph permanencecodeinfooo{
+		PermanenceCodeInfoOO	[shape=oval, color=red2, label="PermanenceCodeInfoOO"];
+		}
+		subgraph bodycodeinfooo{
+		BodyCodeInfoOO	[shape=oval, color=red2, label="BodyCodeInfoOO"];
+		}
+		subgraph blockcodeinfooo{
+		BlockCodeInfoOO	[shape=oval, color=red2, label="BlockCodeInfoOO"];
+		}
+		subgraph typecodeinfooo{
+		TypeCodeInfoOO	[shape=oval, color=red2, label="TypeCodeInfoOO"];
+		TypeCodeInfoOO -> String;
+		}
+		subgraph scopecodeinfooo{
+		ScopeCodeInfoOO	[shape=oval, color=red2, label="ScopeCodeInfoOO"];
+		}
+		subgraph variablecodeinfooo{
+		VariableCodeInfoOO	[shape=oval, color=red2, label="VariableCodeInfoOO"];
+		}
+		subgraph valuecodeinfooo{
+		ValueCodeInfoOO	[shape=oval, color=red2, label="ValueCodeInfoOO"];
+		}
+		subgraph functioncodeinfooo{
+		FunctionCodeInfoOO	[shape=oval, color=red2, label="FunctionCodeInfoOO"];
+		}
+		subgraph thunkcodeinfooo{
+		ThunkCodeInfoOO	[shape=oval, color=red2, label="ThunkCodeInfoOO"];
+		}
+		subgraph statementcodeinfooo{
+		StatementCodeInfoOO	[shape=oval, color=red2, label="StatementCodeInfoOO"];
+		}
+		subgraph visibilitycodeinfooo{
+		VisibilityCodeInfoOO	[shape=oval, color=red2, label="VisibilityCodeInfoOO"];
+		VisibilityCodeInfoOO -> VisibilityTag;
+		}
+		subgraph parametercodeinfooo{
+		ParameterCodeInfoOO	[shape=oval, color=red2, label="ParameterCodeInfoOO"];
+		}
+		subgraph methodcodeinfooo{
+		MethodCodeInfoOO	[shape=oval, color=red2, label="MethodCodeInfoOO"];
+		}
+		subgraph statevarcodeinfooo{
+		StateVarCodeInfoOO	[shape=oval, color=red2, label="StateVarCodeInfoOO"];
+		}
+		subgraph classcodeinfooo{
+		ClassCodeInfoOO	[shape=oval, color=red2, label="ClassCodeInfoOO"];
+		}
+		subgraph modulecodeinfooo{
+		ModuleCodeInfoOO	[shape=oval, color=red2, label="ModuleCodeInfoOO"];
+		}
+	}
+	subgraph interfacegool {
+		subgraph gsprograma{
+		GSPrograma	[shape=oval, color=red2, label="GSPrograma"];
+		GSPrograma -> GSaPrograma;
+		}
+		subgraph sfilea{
+		SFilea	[shape=oval, color=red2, label="SFilea"];
+		SFilea -> FSaFilea;
+		}
+		subgraph fsmodulea{
+		FSModulea	[shape=oval, color=red2, label="FSModulea"];
+		FSModulea -> FSaModulea;
+		}
+		subgraph sclassa{
+		SClassa	[shape=oval, color=red2, label="SClassa"];
+		SClassa -> CSaClassa;
+		}
+		subgraph initializersr{
+		Initializersr	[shape=oval, color=red2, label="Initializersr"];
+		Initializersr -> SVariablerSValuer;
+		}
+		subgraph csstatevara{
+		CSStateVara	[shape=oval, color=red2, label="CSStateVara"];
+		CSStateVara -> CSaStateVara;
+		}
+	}
+	subgraph rendererclasesoos {
+		subgraph parentspec{
+		ParentSpec	[shape=oval, color=red2, label="ParentSpec"];
+		ParentSpec -> Doc;
+		}
+	}
+	subgraph abtractprocs {
+	}
+	subgraph juliarenderer {
+		subgraph juliacodea{
+		JuliaCodea	[shape=oval, color=darkgreen, label="JuliaCodea"];
+		JuliaCodea -> a;
+		}
+		subgraph programjuliacode{
+		ProgramJuliaCode	[shape=oval, color=red2, label="ProgramJuliaCode"];
+		ProgramJuliaCode -> ProgData;
+		}
+		subgraph filejuliacode{
+		FileJuliaCode	[shape=oval, color=red2, label="FileJuliaCode"];
+		FileJuliaCode -> FileData;
+		}
+		subgraph importjuliacode{
+		ImportJuliaCode	[shape=oval, color=red2, label="ImportJuliaCode"];
+		ImportJuliaCode -> Doc;
+		}
+		subgraph bodyjuliacode{
+		BodyJuliaCode	[shape=oval, color=red2, label="BodyJuliaCode"];
+		BodyJuliaCode -> Doc;
+		}
+		subgraph blockjuliacode{
+		BlockJuliaCode	[shape=oval, color=red2, label="BlockJuliaCode"];
+		BlockJuliaCode -> Doc;
+		}
+		subgraph typejuliacode{
+		TypeJuliaCode	[shape=oval, color=red2, label="TypeJuliaCode"];
+		TypeJuliaCode -> TypeData;
+		}
+		subgraph unaryopjuliacode{
+		UnaryOpJuliaCode	[shape=oval, color=red2, label="UnaryOpJuliaCode"];
+		UnaryOpJuliaCode -> OpData;
+		}
+		subgraph binaryopjuliacode{
+		BinaryOpJuliaCode	[shape=oval, color=red2, label="BinaryOpJuliaCode"];
+		BinaryOpJuliaCode -> OpData;
+		}
+		subgraph scopejuliacode{
+		ScopeJuliaCode	[shape=oval, color=red2, label="ScopeJuliaCode"];
+		ScopeJuliaCode -> ScopeData;
+		}
+		subgraph variablejuliacode{
+		VariableJuliaCode	[shape=oval, color=red2, label="VariableJuliaCode"];
+		VariableJuliaCode -> VarData;
+		}
+		subgraph valuejuliacode{
+		ValueJuliaCode	[shape=oval, color=red2, label="ValueJuliaCode"];
+		ValueJuliaCode -> ValData;
+		}
+		subgraph thunkjuliacode{
+		ThunkJuliaCode	[shape=oval, color=red2, label="ThunkJuliaCode"];
+		ThunkJuliaCode -> CommonThunkVS;
+		}
+		subgraph statementjuliacode{
+		StatementJuliaCode	[shape=oval, color=red2, label="StatementJuliaCode"];
+		StatementJuliaCode -> DocTerminator;
+		}
+		subgraph functionjuliacode{
+		FunctionJuliaCode	[shape=oval, color=red2, label="FunctionJuliaCode"];
+		FunctionJuliaCode -> FuncData;
+		}
+		subgraph visibilityjuliacode{
+		VisibilityJuliaCode	[shape=oval, color=red2, label="VisibilityJuliaCode"];
+		VisibilityJuliaCode -> Doc;
+		}
+		subgraph methodtypejuliacode{
+		MethodTypeJuliaCode	[shape=oval, color=red2, label="MethodTypeJuliaCode"];
+		MethodTypeJuliaCode -> TypeData;
+		}
+		subgraph parameterjuliacode{
+		ParameterJuliaCode	[shape=oval, color=red2, label="ParameterJuliaCode"];
+		ParameterJuliaCode -> ParamData;
+		}
+		subgraph methodjuliacode{
+		MethodJuliaCode	[shape=oval, color=red2, label="MethodJuliaCode"];
+		MethodJuliaCode -> MethodData;
+		}
+		subgraph modulejuliacode{
+		ModuleJuliaCode	[shape=oval, color=red2, label="ModuleJuliaCode"];
+		ModuleJuliaCode -> ModData;
+		}
+		subgraph blockcommentjuliacode{
+		BlockCommentJuliaCode	[shape=oval, color=red2, label="BlockCommentJuliaCode"];
+		BlockCommentJuliaCode -> Doc;
+		}
+	}
+	subgraph codeinfoproc {
+		subgraph codeinfoproca{
+		CodeInfoProca	[shape=oval, color=darkgreen, label="CodeInfoProca"];
+		CodeInfoProca -> a;
+		}
+		subgraph programcodeinfoproc{
+		ProgramCodeInfoProc	[shape=oval, color=red2, label="ProgramCodeInfoProc"];
+		ProgramCodeInfoProc -> GOOLState;
+		}
+		subgraph filecodeinfoproc{
+		FileCodeInfoProc	[shape=oval, color=red2, label="FileCodeInfoProc"];
+		}
+		subgraph bodycodeinfoproc{
+		BodyCodeInfoProc	[shape=oval, color=red2, label="BodyCodeInfoProc"];
+		}
+		subgraph blockcodeinfoproc{
+		BlockCodeInfoProc	[shape=oval, color=red2, label="BlockCodeInfoProc"];
+		}
+		subgraph typecodeinfoproc{
+		TypeCodeInfoProc	[shape=oval, color=red2, label="TypeCodeInfoProc"];
+		TypeCodeInfoProc -> String;
+		}
+		subgraph scopecodeinfoproc{
+		ScopeCodeInfoProc	[shape=oval, color=red2, label="ScopeCodeInfoProc"];
+		}
+		subgraph variablecodeinfoproc{
+		VariableCodeInfoProc	[shape=oval, color=red2, label="VariableCodeInfoProc"];
+		}
+		subgraph valuecodeinfoproc{
+		ValueCodeInfoProc	[shape=oval, color=red2, label="ValueCodeInfoProc"];
+		}
+		subgraph functioncodeinfoproc{
+		FunctionCodeInfoProc	[shape=oval, color=red2, label="FunctionCodeInfoProc"];
+		}
+		subgraph thunkcodeinfoproc{
+		ThunkCodeInfoProc	[shape=oval, color=red2, label="ThunkCodeInfoProc"];
+		}
+		subgraph statementcodeinfoproc{
+		StatementCodeInfoProc	[shape=oval, color=red2, label="StatementCodeInfoProc"];
+		}
+		subgraph visibilitycodeinfoproc{
+		VisibilityCodeInfoProc	[shape=oval, color=red2, label="VisibilityCodeInfoProc"];
+		VisibilityCodeInfoProc -> VisibilityTag;
+		}
+		subgraph parametercodeinfoproc{
+		ParameterCodeInfoProc	[shape=oval, color=red2, label="ParameterCodeInfoProc"];
+		}
+		subgraph methodcodeinfoproc{
+		MethodCodeInfoProc	[shape=oval, color=red2, label="MethodCodeInfoProc"];
+		}
+		subgraph modulecodeinfoproc{
+		ModuleCodeInfoProc	[shape=oval, color=red2, label="ModuleCodeInfoProc"];
+		}
+	}
+	subgraph interfaceproc {
+		subgraph gsprograma{
+		GSPrograma	[shape=oval, color=red2, label="GSPrograma"];
+		GSPrograma -> GSaPrograma;
+		}
+		subgraph sfilea{
+		SFilea	[shape=oval, color=red2, label="SFilea"];
+		SFilea -> FSaFilea;
+		}
+		subgraph fsmodulea{
+		FSModulea	[shape=oval, color=red2, label="FSModulea"];
+		FSModulea -> FSaModulea;
+		}
+	}
+	subgraph rendererclasesprocs {
+	}
+	subgraph clike {
+	}
+	subgraph common {
+	}
+	subgraph commonpeudooos {
+	}
+	subgraph contructorss {
+		subgraph vsopr{
+		VSOpr	[shape=oval, color=red2, label="VSOpr"];
+		VSOpr -> VSrOpData;
+		}
+	}
+	subgraph languagepolymorpich {
+		subgraph optionalspace{
+		OptionalSpace	[shape=oval, color=darkgreen, label="OptionalSpace"];
+		OptionalSpace -> Doc;
+		}
+	}
+	subgraph macros {
 	}
 	subgraph ast {
 		subgraph binddata{
@@ -723,7 +1006,7 @@ digraph alltypes {
 		}
 		subgraph statevardata{
 		StateVarData	[shape=oval, color=cyan3, label="StateVarData"];
-		StateVarData -> ScopeTag;
+		StateVarData -> VisibilityTag;
 		StateVarData -> Doc;
 		}
 		subgraph typedata{
@@ -735,6 +1018,7 @@ digraph alltypes {
 		subgraph valdata{
 		ValData	[shape=oval, color=cyan3, label="ValData"];
 		ValData -> MaybeInt;
+		ValData -> MaybeInteger;
 		ValData -> TypeData;
 		ValData -> Doc;
 		}
@@ -748,8 +1032,8 @@ digraph alltypes {
 		subgraph terminator{
 		Terminator	[shape=oval, color=darkviolet, label="Terminator"];
 		}
-		subgraph scopetag{
-		ScopeTag	[shape=oval, color=darkviolet, label="ScopeTag"];
+		subgraph visibilitytag{
+		VisibilityTag	[shape=oval, color=darkviolet, label="VisibilityTag"];
 		}
 		subgraph qualifiedname{
 		QualifiedName	[shape=oval, color=darkviolet, label="QualifiedName"];
@@ -764,6 +1048,11 @@ digraph alltypes {
 		Binding -> Binding;
 		Binding -> a;
 		}
+		subgraph scopetag{
+		ScopeTag	[shape=oval, color=darkviolet, label="ScopeTag"];
+		ScopeTag -> ScopeTag;
+		ScopeTag -> ScopeData;
+		}
 		subgraph commonthunks{
 		CommonThunks	[shape=oval, color=darkviolet, label="CommonThunks"];
 		}
@@ -772,7 +1061,26 @@ digraph alltypes {
 		MethodData -> Doc;
 		}
 	}
-	subgraph clasinterfaces {
+	subgraph clasess {
+	}
+	subgraph codeanalyiss {
+		subgraph exceptiontype{
+		ExceptionType	[shape=oval, color=darkviolet, label="ExceptionType"];
+		ExceptionType -> String;
+		}
+	}
+	subgraph codetype {
+		subgraph codetype{
+		CodeType	[shape=oval, color=darkviolet, label="CodeType"];
+		}
+		subgraph classname{
+		ClassName	[shape=oval, color=red2, label="ClassName"];
+		ClassName -> String;
+		}
+	}
+	subgraph helpers {
+	}
+	subgraph interfacecommon {
 		subgraph label{
 		Label	[shape=oval, color=red2, label="Label"];
 		Label -> String;
@@ -780,14 +1088,6 @@ digraph alltypes {
 		subgraph library{
 		Library	[shape=oval, color=red2, label="Library"];
 		Library -> String;
-		}
-		subgraph gsprograma{
-		GSPrograma	[shape=oval, color=red2, label="GSPrograma"];
-		GSPrograma -> GSaPrograma;
-		}
-		subgraph sfilea{
-		SFilea	[shape=oval, color=red2, label="SFilea"];
-		SFilea -> FSaFilea;
 		}
 		subgraph msbodya{
 		MSBodya	[shape=oval, color=red2, label="MSBodya"];
@@ -829,10 +1129,6 @@ digraph alltypes {
 		PosCtorCallr	[shape=oval, color=red2, label="PosCtorCallr"];
 		PosCtorCallr -> VSTyperSValuerSValuer;
 		}
-		subgraph vsfunctiona{
-		VSFunctiona	[shape=oval, color=red2, label="VSFunctiona"];
-		VSFunctiona -> VSaFunctiona;
-		}
 		subgraph vsthunka{
 		VSThunka	[shape=oval, color=red2, label="VSThunka"];
 		VSThunka -> VSaThunka;
@@ -840,6 +1136,10 @@ digraph alltypes {
 		subgraph msstatementa{
 		MSStatementa	[shape=oval, color=red2, label="MSStatementa"];
 		MSStatementa -> MSaStatementa;
+		}
+		subgraph vsfunctiona{
+		VSFunctiona	[shape=oval, color=red2, label="VSFunctiona"];
+		VSFunctiona -> VSaFunctiona;
 		}
 		subgraph inoutcallr{
 		InOutCallr	[shape=oval, color=red2, label="InOutCallr"];
@@ -853,10 +1153,6 @@ digraph alltypes {
 		SMethoda	[shape=oval, color=red2, label="SMethoda"];
 		SMethoda -> MSaMethoda;
 		}
-		subgraph initializersr{
-		Initializersr	[shape=oval, color=red2, label="Initializersr"];
-		Initializersr -> SVariablerSValuer;
-		}
 		subgraph inoutfuncr{
 		InOutFuncr	[shape=oval, color=red2, label="InOutFuncr"];
 		InOutFuncr -> SVariablerSVariablerSVariabler;
@@ -865,97 +1161,6 @@ digraph alltypes {
 		DocInOutFuncr	[shape=oval, color=red2, label="DocInOutFuncr"];
 		DocInOutFuncr -> StringStringSVariabler;
 		}
-		subgraph csstatevara{
-		CSStateVara	[shape=oval, color=red2, label="CSStateVara"];
-		CSStateVara -> CSaStateVara;
-		}
-		subgraph sclassa{
-		SClassa	[shape=oval, color=red2, label="SClassa"];
-		SClassa -> CSaClassa;
-		}
-		subgraph fsmodulea{
-		FSModulea	[shape=oval, color=red2, label="FSModulea"];
-		FSModulea -> FSaModulea;
-		}
-	}
-	subgraph clasess {
-	}
-	subgraph codeanalyiss {
-		subgraph exceptiontype{
-		ExceptionType	[shape=oval, color=darkviolet, label="ExceptionType"];
-		ExceptionType -> String;
-		}
-	}
-	subgraph codeinfo {
-		subgraph codeinfoa{
-		CodeInfoa	[shape=oval, color=darkgreen, label="CodeInfoa"];
-		CodeInfoa -> a;
-		}
-		subgraph programcodeinfo{
-		ProgramCodeInfo	[shape=oval, color=red2, label="ProgramCodeInfo"];
-		ProgramCodeInfo -> GOOLState;
-		}
-		subgraph filecodeinfo{
-		FileCodeInfo	[shape=oval, color=red2, label="FileCodeInfo"];
-		}
-		subgraph permanencecodeinfo{
-		PermanenceCodeInfo	[shape=oval, color=red2, label="PermanenceCodeInfo"];
-		}
-		subgraph bodycodeinfo{
-		BodyCodeInfo	[shape=oval, color=red2, label="BodyCodeInfo"];
-		}
-		subgraph blockcodeinfo{
-		BlockCodeInfo	[shape=oval, color=red2, label="BlockCodeInfo"];
-		}
-		subgraph typecodeinfo{
-		TypeCodeInfo	[shape=oval, color=red2, label="TypeCodeInfo"];
-		TypeCodeInfo -> String;
-		}
-		subgraph variablecodeinfo{
-		VariableCodeInfo	[shape=oval, color=red2, label="VariableCodeInfo"];
-		}
-		subgraph valuecodeinfo{
-		ValueCodeInfo	[shape=oval, color=red2, label="ValueCodeInfo"];
-		}
-		subgraph functioncodeinfo{
-		FunctionCodeInfo	[shape=oval, color=red2, label="FunctionCodeInfo"];
-		}
-		subgraph thunkcodeinfo{
-		ThunkCodeInfo	[shape=oval, color=red2, label="ThunkCodeInfo"];
-		}
-		subgraph statementcodeinfo{
-		StatementCodeInfo	[shape=oval, color=red2, label="StatementCodeInfo"];
-		}
-		subgraph scopecodeinfo{
-		ScopeCodeInfo	[shape=oval, color=red2, label="ScopeCodeInfo"];
-		ScopeCodeInfo -> ScopeTag;
-		}
-		subgraph parametercodeinfo{
-		ParameterCodeInfo	[shape=oval, color=red2, label="ParameterCodeInfo"];
-		}
-		subgraph methodcodeinfo{
-		MethodCodeInfo	[shape=oval, color=red2, label="MethodCodeInfo"];
-		}
-		subgraph statevarcodeinfo{
-		StateVarCodeInfo	[shape=oval, color=red2, label="StateVarCodeInfo"];
-		}
-		subgraph classcodeinfo{
-		ClassCodeInfo	[shape=oval, color=red2, label="ClassCodeInfo"];
-		}
-		subgraph modulecodeinfo{
-		ModuleCodeInfo	[shape=oval, color=red2, label="ModuleCodeInfo"];
-		}
-	}
-	subgraph codetype {
-		subgraph codetype{
-		CodeType	[shape=oval, color=darkviolet, label="CodeType"];
-		}
-		subgraph classname{
-		ClassName	[shape=oval, color=red2, label="ClassName"];
-		ClassName -> String;
-		}
-	}
-	subgraph helpers {
 	}
 	subgraph languagerenderer {
 		subgraph funcdocrenderer{
@@ -971,7 +1176,7 @@ digraph alltypes {
 		ModuleDocRenderer -> StringStringStringStringString;
 		}
 	}
-	subgraph rendererclasess {
+	subgraph rendererclasescommons {
 		subgraph vsunopa{
 		VSUnOpa	[shape=oval, color=red2, label="VSUnOpa"];
 		VSUnOpa -> VSaUnaryOpa;
@@ -983,10 +1188,6 @@ digraph alltypes {
 		subgraph msmthdtypea{
 		MSMthdTypea	[shape=oval, color=red2, label="MSMthdTypea"];
 		MSMthdTypea -> MSaMethodTypea;
-		}
-		subgraph parentspec{
-		ParentSpec	[shape=oval, color=red2, label="ParentSpec"];
-		ParentSpec -> Doc;
 		}
 	}
 	subgraph state {
@@ -1018,10 +1219,11 @@ digraph alltypes {
 		MethodState -> ClassState;
 		MethodState -> String;
 		MethodState -> MapStringInt;
+		MethodState -> MapStringScopeData;
 		MethodState -> Bool;
 		MethodState -> ExceptionType;
 		MethodState -> QualifiedName;
-		MethodState -> ScopeTag;
+		MethodState -> VisibilityTag;
 		MethodState -> Index;
 		}
 		subgraph valuestate{
@@ -1052,6 +1254,8 @@ digraph alltypes {
 		VS -> StateValueState;
 		}
 	}
-	subgraph drails {
+	subgraph gool {
+	}
+	subgraph gproc {
 	}
 }

@@ -4,14 +4,14 @@ ChunkDB -> SymbolMap;
 ChunkDB -> TermMap;
 ChunkDB -> ConceptMap;
 ChunkDB -> UnitMap;
-ChunkDB -> TraceMap;
-ChunkDB -> RefbyMap;
 ChunkDB -> DatadefnMap;
 ChunkDB -> InsModelMap;
 ChunkDB -> GendefMap;
 ChunkDB -> TheoryModelMap;
 ChunkDB -> ConceptInstanceMap;
-ChunkDB -> SectionMap;
+ChunkDB -> CitationMap;
 ChunkDB -> LabelledContentMap;
 ChunkDB -> ReferenceMap;
+ChunkDB -> TraceMap;
+ChunkDB -> RefbyMap;
 }

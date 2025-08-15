@@ -15,7 +15,6 @@ module Drasil.GamePhysics.Concepts
 centreMass :: CI
 threeD :: CI
 twoD :: CI
-gamePhysics :: CI
 acronyms :: [CI]
 
 module Drasil.GamePhysics.Assumptions
@@ -43,26 +42,32 @@ module Drasil.GamePhysics.Changes
 likelyChgs :: [ConceptInstance]
 unlikelyChgs :: [ConceptInstance]
 
+module Drasil.GamePhysics.MetaConcepts
+progName :: CI
+
 module Drasil.GamePhysics.References
 chaslesWiki :: Citation
+jfBeucheIntro :: Citation
+parnas1978 :: Citation
+sciComp2013 :: Citation
 citations :: BibRef
-koothoor2013 :: Citation
-smithEtAl2007 :: Citation
-smithLai2005 :: Citation
-smithKoothoor2016 :: Citation
+uriReferences :: [Reference]
+accelGravitySrc :: Reference
+impulseSrc :: Reference
 
 module Drasil.GamePhysics.Requirements
 funcReqs :: [ConceptInstance]
 nonfuncReqs :: [ConceptInstance]
+pymunk :: Reference
 
 module Drasil.GamePhysics.Unitals
 defSymbols :: [DefinedQuantityDict]
 unitSymbs :: [UnitalChunk]
-symbols :: [QuantityDict]
-symbolsAll :: [QuantityDict]
-inputSymbols :: [QuantityDict]
-outputSymbols :: [QuantityDict]
-unitalChunks :: [UnitalChunk]
+symbolsAll :: [DefinedQuantityDict]
+inputSymbols :: [DefinedQuantityDict]
+outputSymbols :: [DefinedQuantityDict]
+unitalSymbols :: [UnitalChunk]
+unitalTerms :: [UnitalChunk]
 forceParam :: String -> String -> Symbol -> UnitalChunk
 massParam :: String -> String -> Symbol -> UnitalChunk
 timeParam :: String -> String -> Symbol -> UnitalChunk
@@ -135,8 +140,8 @@ lCMass :: Symbol
 lColl :: Symbol
 lOrigin :: Symbol
 lPoint :: Symbol
-unitless :: [QuantityDict]
-numParticles :: QuantityDict
+unitless :: [DefinedQuantityDict]
+numParticles :: DefinedQuantityDict
 lengthCons :: ConstrConcept
 massCons :: ConstrConcept
 mmntOfInCons :: ConstrConcept
@@ -210,20 +215,23 @@ instModIntro :: Sentence
 
 module Drasil.GamePhysics.Body
 srs :: Document
-fullSI :: SystemInformation
+fullSI :: System
 printSetting :: PrintingInformation
 resourcePath :: String
 mkSRS :: SRSDecl
-si :: SystemInformation
+si :: System
 purp :: Sentence
 concIns :: [ConceptInstance]
-section :: [Section]
 stdFields :: Fields
-refDB :: ReferenceDB
-units :: [UnitDefn]
+ideaDicts :: [IdeaDict]
+conceptChunks :: [ConceptChunk]
 symbMap :: ChunkDB
-usedDB :: ChunkDB
+abbreviationsList :: [IdeaDict]
+
+-- | Holds all references and links used in the document.
+allRefs :: [Reference]
 para1_introduction_intro :: Sentence
+externalLinkRef :: Reference
 scope :: Sentence
 sysCtxIntro :: Contents
 sysCtxFig1 :: LabelledContent
@@ -238,7 +246,13 @@ terms :: [ConceptChunk]
 generalDefinitionsIntro :: Contents
 dataDefinitionsIntro :: Sentence
 offShelfSols :: [Contents]
+offShelfSolRefs :: [Reference]
 offShelfSolsIntro :: Contents
 offShelfSols2DList :: Contents
 offShelfSolsMid :: Contents
 offShelfSols3DList :: Contents
+box2D :: Reference
+napePhysicsEngine :: Reference
+bullet :: Reference
+openDynamicsEngine :: Reference
+newtonGameDynamics :: Reference

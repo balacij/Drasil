@@ -307,7 +307,6 @@ quantity :: IdeaDict
 realtime :: IdeaDict
 review :: IdeaDict
 reference :: IdeaDict
-requirement_ :: IdeaDict
 response :: IdeaDict
 result :: IdeaDict
 reviewer :: IdeaDict
@@ -456,7 +455,6 @@ structural :: IdeaDict
 mechanics :: IdeaDict
 undergraduate :: IdeaDict
 highSchool :: IdeaDict
-physical_ :: IdeaDict
 chemistry :: IdeaDict
 undergradDegree :: IdeaDict
 scndYrCalculus :: IdeaDict
@@ -485,9 +483,7 @@ computer :: IdeaDict
 structure :: IdeaDict
 os :: CI
 dataStruct :: IdeaDict
-dataStruct' :: IdeaDict
 dataType :: IdeaDict
-dataType' :: IdeaDict
 inDatum :: IdeaDict
 outDatum :: IdeaDict
 inParam :: IdeaDict
@@ -543,6 +539,7 @@ modOdeDesc :: ConceptChunk
 module Data.Drasil.SI_Units
 fundamentals :: [UnitDefn]
 derived :: [UnitDefn]
+common :: [UnitDefn]
 siUnits :: [UnitDefn]
 metre :: UnitDefn
 kilogram :: UnitDefn
@@ -589,6 +586,8 @@ specificWeight :: UnitDefn
 -- | Assigns a symbol and possibly units (quantities) to mathematical
 --   quantities.
 module Data.Drasil.Quantities.Math
+mathquants :: [DefinedQuantityDict]
+mathunitals :: [UnitalChunk]
 gradient :: DefinedQuantityDict
 normalVect :: DefinedQuantityDict
 unitVect :: DefinedQuantityDict
@@ -624,6 +623,7 @@ densityU :: UnitDefn
 
 -- | Assigns symbols and units (quantities) to common physical properties.
 module Data.Drasil.Quantities.PhysicalProperties
+physicalquants :: [UnitalChunk]
 density :: UnitalChunk
 specWeight :: UnitalChunk
 mass :: UnitalChunk
@@ -719,6 +719,7 @@ yPos :: ConceptChunk
 yVel :: ConceptChunk
 momentum :: ConceptChunk
 moment :: ConceptChunk
+moment2D :: ConceptChunk
 fOfGravity :: ConceptChunk
 positionVec :: ConceptChunk
 pendulum :: ConceptChunk
@@ -962,6 +963,7 @@ volHtGenU :: UnitDefn
 -- | Assigns symbols and units (quantities) to thermodynamics-related
 --   concepts.
 module Data.Drasil.Quantities.Thermodynamics
+thermoquants :: [UnitalChunk]
 boilPt :: UnitalChunk
 temp :: UnitalChunk
 heatCapSpec :: UnitalChunk

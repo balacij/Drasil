@@ -1,6 +1,4 @@
 digraph alltypes {
-	subgraph teoryconcepths {
-	}
 	subgraph clasess {
 	}
 	subgraph contraintsets {
@@ -13,6 +11,7 @@ digraph alltypes {
 	subgraph datadefinition {
 		subgraph ddpkt{
 		DDPkt	[shape=oval, color=cyan3, label="DDPkt"];
+		DDPkt -> UID;
 		DDPkt -> ScopeType;
 		DDPkt -> DecRef;
 		DDPkt -> MaybeDerivation;
@@ -64,7 +63,7 @@ digraph alltypes {
 		}
 		subgraph input{
 		Input	[shape=oval, color=red2, label="Input"];
-		Input -> QuantityDictMaybeRealIntervalExprExpr;
+		Input -> DefinedQuantityDictMaybeRealIntervalExprExpr;
 		}
 		subgraph inputs{
 		Inputs	[shape=oval, color=red2, label="Inputs"];
@@ -72,7 +71,7 @@ digraph alltypes {
 		}
 		subgraph output{
 		Output	[shape=oval, color=red2, label="Output"];
-		Output -> QuantityDict;
+		Output -> DefinedQuantityDict;
 		}
 		subgraph outputconstraints{
 		OutputConstraints	[shape=oval, color=red2, label="OutputConstraints"];
@@ -107,7 +106,7 @@ digraph alltypes {
 		subgraph multidefne{
 		MultiDefne	[shape=oval, color=cyan3, label="MultiDefne"];
 		MultiDefne -> UID;
-		MultiDefne -> QuantityDict;
+		MultiDefne -> DefinedQuantityDict;
 		MultiDefne -> Sentence;
 		MultiDefne -> NonEmptyDefiningExpre;
 		}
@@ -118,7 +117,7 @@ digraph alltypes {
 		TheoryModel -> ModelKindModelExpr;
 		TheoryModel -> TheoryModel;
 		TheoryModel -> SpaceDefn;
-		TheoryModel -> QuantityDict;
+		TheoryModel -> DefinedQuantityDict;
 		TheoryModel -> ConceptChunk;
 		TheoryModel -> ModelQDef;
 		TheoryModel -> ModelExpr;

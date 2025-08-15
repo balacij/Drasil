@@ -9,9 +9,13 @@
 @package drasil-metadata
 @version 0.1.1.0
 
+module Drasil.Metadata
 
--- | Defines domains of knowledge for use in Drasil.
-module Data.Drasil.Domains
+-- | Drasil metadata.
+drasilMeta :: DrasilMeta
+
+-- | Drasil's watermark for generated files.
+watermark :: String
 
 -- | For ideas, concepts, or terms related to Computer Science.
 --   
@@ -57,14 +61,29 @@ documentc :: IdeaDict
 --   
 --   Various domains that are used in Drasil. May have an abbreviation.
 knowledgemng :: IdeaDict
+runnableSoftware :: IdeaDict
+website :: IdeaDict
 
-module Metadata.Drasil.DrasilMetaCall
+-- | Data definition.
+--   
+--   These are internal-to-Drasil common ideas, and need to be defined at
+--   the same time as theories.
+dataDefn :: CI
 
--- | Reads drasilMeta at compile-time
-drasilMeta :: DrasilMeta
+-- | General definition.
+--   
+--   These are internal-to-Drasil common ideas, and need to be defined at
+--   the same time as theories.
+genDefn :: CI
 
--- | Create DrasilMeta newtype
-newtype DrasilMeta
-DrasilMeta :: String -> DrasilMeta
-[version] :: DrasilMeta -> String
-watermark :: String
+-- | Instance model.
+--   
+--   These are internal-to-Drasil common ideas, and need to be defined at
+--   the same time as theories.
+inModel :: CI
+
+-- | Theoretical model.
+--   
+--   These are internal-to-Drasil common ideas, and need to be defined at
+--   the same time as theories.
+thModel :: CI

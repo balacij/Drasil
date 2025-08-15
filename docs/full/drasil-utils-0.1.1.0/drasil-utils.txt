@@ -10,6 +10,24 @@
 @version 0.1.1.0
 
 
+-- | Functions for constructing CSV files as a <a>Doc</a>.
+module Utils.Drasil.CSV
+
+-- | Creates a CSV file as a <a>Doc</a> from a <a>String</a> matrix.
+makeCSV :: [[String]] -> Doc
+
+module Utils.Drasil.Directory
+
+-- | Creates a directory if it does not already exist (optionally with all
+--   missing parent directories).
+--   
+--   Implementation uses doesPathExist to check if the directory exists
+--   rather than createDirectoryIfMissing True, which would create the
+--   directory regardless of whether it exists or not, potentially leading
+--   to an error that appears in `make debug` logs.
+createDirIfMissing :: Bool -> FilePath -> IO ()
+
+
 -- | Common <a>Doc</a>-related functions for writting printers with a
 --   little more clarity.
 module Utils.Drasil.Document
@@ -78,6 +96,21 @@ foldle1 :: (a -> a -> a) -> (a -> a -> a) -> [a] -> a
 -- | Convert "row" of elements into "column" of elements.
 toColumn :: [a] -> [[a]]
 
+-- | Create a table body (not including header row) by applying the given
+--   functions to the column elements of the table rows (in order). The
+--   first argument is a list of functions to be applied (one per column).
+--   This essentially creates the rows. The second argument is a list of
+--   elements apply the functions to.
+--   
+--   For example, <tt>mkTable [id, *5] [1,2,3]</tt> should produce a table:
+--   
+--   <pre>
+--   | 1 |  5 |
+--   | 2 | 10 |
+--   | 3 | 15 |
+--   </pre>
+mkTable :: [a -> b] -> [a] -> [[b]]
+
 module Utils.Drasil.Maps
 invert :: Ord v => Map k [v] -> Map v [k]
 
@@ -91,9 +124,21 @@ module Utils.Drasil.Strings
 --   other than a-z, A-Z, or 0-9 could probably be replaced.
 toPlainName :: String -> String
 
+-- | Replace underscores in a string with periods (<tt>.</tt>).
+repUnd :: String -> String
+
 
 -- | Gather Drasil's utility functions and re-export for easy use.
 module Utils.Drasil
+
+-- | Creates a directory if it does not already exist (optionally with all
+--   missing parent directories).
+--   
+--   Implementation uses doesPathExist to check if the directory exists
+--   rather than createDirectoryIfMissing True, which would create the
+--   directory regardless of whether it exists or not, potentially leading
+--   to an error that appears in `make debug` logs.
+createDirIfMissing :: Bool -> FilePath -> IO ()
 
 -- | Creates a blank document with no text.
 blank :: Doc
@@ -150,6 +195,21 @@ foldle1 :: (a -> a -> a) -> (a -> a -> a) -> [a] -> a
 
 -- | Convert "row" of elements into "column" of elements.
 toColumn :: [a] -> [[a]]
+
+-- | Create a table body (not including header row) by applying the given
+--   functions to the column elements of the table rows (in order). The
+--   first argument is a list of functions to be applied (one per column).
+--   This essentially creates the rows. The second argument is a list of
+--   elements apply the functions to.
+--   
+--   For example, <tt>mkTable [id, *5] [1,2,3]</tt> should produce a table:
+--   
+--   <pre>
+--   | 1 |  5 |
+--   | 2 | 10 |
+--   | 3 | 15 |
+--   </pre>
+mkTable :: [a -> b] -> [a] -> [[b]]
 invert :: Ord v => Map k [v] -> Map v [k]
 
 -- | Replace occurences of special characters
@@ -159,3 +219,9 @@ invert :: Ord v => Map k [v] -> Map v [k]
 --   TODO: This can probably become a bit more comprehensive, anything
 --   other than a-z, A-Z, or 0-9 could probably be replaced.
 toPlainName :: String -> String
+
+-- | Replace underscores in a string with periods (<tt>.</tt>).
+repUnd :: String -> String
+
+-- | Creates a CSV file as a <a>Doc</a> from a <a>String</a> matrix.
+makeCSV :: [[String]] -> Doc

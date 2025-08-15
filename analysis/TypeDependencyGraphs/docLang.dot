@@ -60,7 +60,7 @@ digraph alltypes {
 		LsnChapter -> Example;
 		LsnChapter -> Smmry;
 		LsnChapter -> Apndx;
-		LsnChapter -> SystemInformation;
+		LsnChapter -> System;
 		LsnChapter -> LsnDecl;
 		LsnChapter -> LsnDesc;
 		}
@@ -98,6 +98,7 @@ digraph alltypes {
 		RefTab -> LabelledContent;
 		RefTab -> TSIntro;
 		RefTab -> LFunc;
+		RefTab -> IdeaDict;
 		}
 		subgraph tsintro{
 		TSIntro	[shape=oval, color=darkviolet, label="TSIntro"];
@@ -375,7 +376,7 @@ digraph alltypes {
 		ReqsSub -> Sentence;
 		ReqsSub -> LabelledContent;
 		ReqsSub -> ReqsSub;
-		ReqsSub -> SystemInformation;
+		ReqsSub -> System;
 		ReqsSub -> SRSDecl;
 		ReqsSub -> DocDesc;
 		}
@@ -397,6 +398,8 @@ digraph alltypes {
 	subgraph documentlanguage {
 	}
 	subgraph extractdocdecs {
+	}
+	subgraph getcunkhs {
 	}
 	subgraph srsdocument {
 	}

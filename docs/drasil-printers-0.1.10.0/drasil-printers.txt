@@ -18,13 +18,14 @@ module Language.Drasil.Printers
 data DocType
 SRS :: DocType
 Website :: DocType
-Jupyter :: DocType
+Lesson :: DocType
 
 -- | Possible formats for printer output.
 data Format
 TeX :: Format
 HTML :: Format
-JSON :: Format
+Jupyter :: Format
+MDBook :: Format
 
 -- | Holds all important and relevant information for generating a
 --   traceability graph. Includes nodes, graph edges, and node family
@@ -108,7 +109,7 @@ makeCSS :: Document -> Doc
 makeMd :: [Doc] -> Doc
 
 -- | Example title, authors, and maybe purpose section.
-introInfo :: String -> [String] -> Maybe String -> Doc
+introInfo :: String -> [String] -> Maybe String -> Maybe String -> Doc
 
 -- | Language version section.
 verInfo :: String -> String -> Doc
@@ -133,9 +134,9 @@ extLibSec :: [(String, String)] -> [String] -> Doc
 -- | End section.
 endNote :: Int -> [String] -> Doc
 
--- | <tt>What</tt> section in generated README file, does not display if
---   empty
-whatInfo :: Maybe String -> Doc
+-- | <tt>What</tt> section in generated README file, displays description
+--   and scope if not empty
+whatInfo :: Maybe String -> Maybe String -> Doc
 
 -- | Data is either linear or not.
 data SingleLine
@@ -169,7 +170,17 @@ genTeX :: Document -> PrintingInformation -> Doc
 -- | Generate a python notebook document (using json). build : build the
 --   SRS document in JSON format build': build the general Jupyter Notbook
 --   document
-genJSON :: PrintingInformation -> DocType -> Document -> Doc
+genJupyter :: PrintingInformation -> DocType -> Document -> Doc
+
+-- | Generate a mdBook SRS
+genMDBook :: PrintingInformation -> Document -> [(Filename, Doc)]
+
+-- | Prints the .toml config file for mdBook.
+makeBook :: Document -> PrintingInformation -> Doc
+
+-- | Prints the .csv file mapping the original filepaths of assets to the
+--   location mdBook uses.
+makeRequirements :: PrintingInformation -> Doc
 
 -- | Gathers all printing functions and creates the debugging tables from
 --   them.
@@ -185,7 +196,7 @@ PI :: ChunkDB -> Stage -> PrintingConfiguration -> PrintingInformation
 
 -- | Builds a document's printing information based on the system
 --   information.
-piSys :: SystemInformation -> Stage -> PrintingConfiguration -> PrintingInformation
+piSys :: System -> Stage -> PrintingConfiguration -> PrintingInformation
 
 -- | Able to be printed.
 class HasPrintingOptions c

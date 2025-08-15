@@ -9,6 +9,9 @@
 @package sglpend
 @version 0.1.24.0
 
+module Drasil.SglPend.Assumptions
+assumpSingle :: [ConceptInstance]
+
 module Drasil.SglPend.Figures
 figMotion :: LabelledContent
 sysCtxFig1 :: LabelledContent
@@ -17,10 +20,13 @@ module Drasil.SglPend.Goals
 goals :: [ConceptInstance]
 goalsInputs :: [Sentence]
 
+module Drasil.SglPend.MetaConcepts
+progName :: CI
+
 module Drasil.SglPend.Unitals
-symbols :: [QuantityDict]
-inputs :: [QuantityDict]
-outputs :: [QuantityDict]
+symbols :: [DefinedQuantityDict]
+inputs :: [DefinedQuantityDict]
+outputs :: [DefinedQuantityDict]
 units :: [UnitalChunk]
 unitalChunks :: [UnitalChunk]
 lenRod :: UnitalChunk
@@ -113,15 +119,18 @@ outputValuesDesc :: Sentence
 
 module Drasil.SglPend.Body
 srs :: Document
-fullSI :: SystemInformation
+fullSI :: System
 printSetting :: PrintingInformation
 mkSRS :: SRSDecl
-progName :: CI
-si :: SystemInformation
+si :: System
 purp :: Sentence
+ideaDicts :: [IdeaDict]
+conceptChunks :: [ConceptChunk]
+abbreviationsList :: [IdeaDict]
 symbMap :: ChunkDB
-usedDB :: ChunkDB
-refDB :: ReferenceDB
+
+-- | Holds all references and links used in the document.
+allRefs :: [Reference]
 concIns :: [ConceptInstance]
 physSystParts :: [Sentence]
 tMods :: [TheoryModel]

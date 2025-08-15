@@ -58,6 +58,9 @@ module Drasil.SWHSNoPCM.Changes
 likelyChgs :: [ConceptInstance]
 unlikelyChgs :: [ConceptInstance]
 
+module Drasil.SWHSNoPCM.MetaConcepts
+progName :: CI
+
 module Drasil.SWHSNoPCM.ODEs
 noPCMODEOpts :: ODEOptions
 noPCMODEInfo :: ODEInfo
@@ -65,23 +68,23 @@ noPCMODEInfo :: ODEInfo
 module Drasil.SWHSNoPCM.References
 citations :: BibRef
 
+module Drasil.SWHSNoPCM.Requirements
+funcReqs :: [ConceptInstance]
+inReqDesc :: Sentence
+
 module Drasil.SWHSNoPCM.Unitals
-inputs :: [QuantityDict]
-unconstrained :: [UncertainChunk]
+inputs :: [DefinedQuantityDict]
+unconstrained :: [UncertQ]
 constrained :: [UncertQ]
 tempInit :: UncertQ
 specParamValList :: [ConstQDef]
 
-module Drasil.SWHSNoPCM.Requirements
-funcReqs :: [ConceptInstance]
-inputInitValsTable :: LabelledContent
-
 module Drasil.SWHSNoPCM.Body
-si :: SystemInformation
+si :: System
 srs :: Document
 printSetting :: PrintingInformation
 noPCMODEInfo :: ODEInfo
-fullSI :: SystemInformation
+fullSI :: System
 
 module Drasil.SWHSNoPCM.Choices
 code :: CodeSpec

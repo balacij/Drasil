@@ -3,9 +3,10 @@ MethodState	[shape=oval, color=cyan3, label="MethodState"];
 MethodState -> ClassState;
 MethodState -> String;
 MethodState -> MapStringInt;
+MethodState -> MapStringScopeData;
 MethodState -> Bool;
 MethodState -> ExceptionType;
 MethodState -> QualifiedName;
-MethodState -> ScopeTag;
+MethodState -> VisibilityTag;
 MethodState -> Index;
 }

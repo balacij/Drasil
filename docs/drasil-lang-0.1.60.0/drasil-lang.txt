@@ -575,6 +575,7 @@ data ModelExpr
 
 -- | Takes an associative boolean operator with a list of expressions.
 [AssocB] :: AssocBoolOper -> [ModelExpr] -> ModelExpr
+[AssocC] :: AssocConcatOper -> [ModelExpr] -> ModelExpr
 
 -- | Derivative syntax is: Type (<a>Part</a>ial or <a>Total</a>) -&gt;
 --   principal part of change -&gt; with respect to For example: Deriv Part
@@ -593,6 +594,12 @@ data ModelExpr
 
 -- | Represents a matrix of expressions.
 [Matrix] :: [[ModelExpr]] -> ModelExpr
+
+-- | Represents a set of expressions
+[Set] :: Space -> [ModelExpr] -> ModelExpr
+
+-- | used to refernce the (name + type = variable )
+[Variable] :: String -> ModelExpr -> ModelExpr
 
 -- | Unary operation for most functions (eg. sin, cos, log, etc.).
 [UnaryOp] :: UFunc -> ModelExpr -> ModelExpr
@@ -641,9 +648,15 @@ data ModelExpr
 --   (scaling).
 [NVVBinaryOp] :: NVVBinOp -> ModelExpr -> ModelExpr -> ModelExpr
 
+-- | Set operator for Element + Set -&gt; Set
+[ESSBinaryOp] :: ESSBinOp -> ModelExpr -> ModelExpr -> ModelExpr
+
+-- | Set operator for Element + Set -&gt; Bool
+[ESBBinaryOp] :: ESBBinOp -> ModelExpr -> ModelExpr -> ModelExpr
+
 -- | Operators are generalized arithmetic operators over a
 --   <a>DomainDesc</a> of an <tt>Expr</tt>. Could be called BigOp. ex:
---   Summation is represented via <tt>Add</tt> over a discrete domain.
+--   Summation is represented via <a>Add</a> over a discrete domain.
 [Operator] :: AssocArithOper -> DomainDesc t ModelExpr ModelExpr -> ModelExpr -> ModelExpr
 
 -- | A different kind of <a>IsIn</a>. A <a>UID</a> is an element of an
@@ -704,6 +717,7 @@ NEq :: EqBinOp
 -- | Index operator.
 data LABinOp
 Index :: LABinOp
+IndexOf :: LABinOp
 
 -- | Ordered binary operators (less than, greater than, less than or equal
 --   to, greater than or equal to).
@@ -736,19 +750,28 @@ Dot :: VVNBinOp
 data NVVBinOp
 Scale :: NVVBinOp
 
+-- | Element + Set -&gt; Set
+data ESSBinOp
+SAdd :: ESSBinOp
+SRemove :: ESSBinOp
+
+-- | Element + Set -&gt; Bool
+data ESBBinOp
+SContains :: ESBBinOp
+
 -- | Associative operators (adding and multiplication). Also specifies
 --   whether it is for integers or for real numbers.
 data AssocArithOper
-AddI :: AssocArithOper
-AddRe :: AssocArithOper
-MulI :: AssocArithOper
-MulRe :: AssocArithOper
+Add :: AssocArithOper
+Mul :: AssocArithOper
 
 -- | Associative boolean operators (and, or).
 data AssocBoolOper
 And :: AssocBoolOper
 Or :: AssocBoolOper
 Equivalence :: AssocBoolOper
+data AssocConcatOper
+SUnion :: AssocConcatOper
 
 -- | Determines the type of the derivative (either a partial derivative or
 --   a total derivative).
@@ -767,6 +790,7 @@ meDep :: ModelExpr -> [UID]
 
 -- | eprec - <a>ModelExpr</a> precedence.
 mePrec :: ModelExpr -> Int
+precC :: AssocConcatOper -> Int
 
 -- | precB - precedence for boolean-related Binary-Associative
 --   (Commutative) operators.
@@ -800,8 +824,7 @@ lnames :: Sentence -> [UID]
 -- | Get <i>reference</i> <a>UID</a>s from <a>Sentence</a>s.
 lnames' :: [Sentence] -> [UID]
 
--- | Grabs the UID from something that has a UID and displays it as a
---   String.
+-- | Get something's <a>UID</a> as a <a>Value</a>.
 showUID :: HasUID a => a -> String
 
 module Language.Drasil.Expr.Development
@@ -819,6 +842,7 @@ data Expr
 
 -- | Takes an associative boolean operator with a list of expressions.
 [AssocB] :: AssocBoolOper -> [Expr] -> Expr
+[AssocC] :: AssocConcatOper -> [Expr] -> Expr
 
 -- | C stands for <a>Chunk</a>, for referring to a chunk in an expression.
 --   Implicitly assumes that the chunk has a symbol.
@@ -832,6 +856,12 @@ data Expr
 
 -- | Represents a matrix of expressions.
 [Matrix] :: [[Expr]] -> Expr
+
+-- | Represents a set of expressions
+[Set] :: Space -> [Expr] -> Expr
+
+-- | used to refernce the (name + type = variable )
+[Variable] :: String -> Expr -> Expr
 
 -- | Unary operation for most functions (eg. sin, cos, log, etc.).
 [UnaryOp] :: UFunc -> Expr -> Expr
@@ -874,9 +904,15 @@ data Expr
 --   (scaling).
 [NVVBinaryOp] :: NVVBinOp -> Expr -> Expr -> Expr
 
+-- | Set operator for Element + Set -&gt; Set
+[ESSBinaryOp] :: ESSBinOp -> Expr -> Expr -> Expr
+
+-- | Set operator for Element + Set -&gt; Bool
+[ESBBinaryOp] :: ESBBinOp -> Expr -> Expr -> Expr
+
 -- | Operators are generalized arithmetic operators over a
 --   <tt>DomainDesc</tt> of an <a>Expr</a>. Could be called BigOp. ex:
---   Summation is represented via <tt>Add</tt> over a discrete domain.
+--   Summation is represented via <a>Add</a> over a discrete domain.
 [Operator] :: AssocArithOper -> DiscreteDomainDesc Expr Expr -> Expr -> Expr
 
 -- | A different kind of <tt>IsIn</tt>. A <a>UID</a> is an element of an
@@ -931,9 +967,12 @@ data EqBinOp
 Eq :: EqBinOp
 NEq :: EqBinOp
 
--- | Index operator.
+-- | Index operator. <a>Index</a> represents accessing an element at a
+--   specific index, while <a>IndexOf</a> represents finding the index of a
+--   specific element.
 data LABinOp
 Index :: LABinOp
+IndexOf :: LABinOp
 
 -- | Ordered binary operators (less than, greater than, less than or equal
 --   to, greater than or equal to).
@@ -958,18 +997,27 @@ Dot :: VVNBinOp
 data NVVBinOp
 Scale :: NVVBinOp
 
+-- | Element + Set -&gt; Set
+data ESSBinOp
+SAdd :: ESSBinOp
+SRemove :: ESSBinOp
+
+-- | Element + Set -&gt; Bool
+data ESBBinOp
+SContains :: ESBBinOp
+
 -- | Associative operators (adding and multiplication). Also specifies
 --   whether it is for integers or for real numbers.
 data AssocArithOper
-AddI :: AssocArithOper
-AddRe :: AssocArithOper
-MulI :: AssocArithOper
-MulRe :: AssocArithOper
+Add :: AssocArithOper
+Mul :: AssocArithOper
 
 -- | Associative boolean operators (and, or).
 data AssocBoolOper
 And :: AssocBoolOper
 Or :: AssocBoolOper
+data AssocConcatOper
+SUnion :: AssocConcatOper
 
 -- | For case expressions (either complete or incomplete).
 data Completeness
@@ -1002,6 +1050,7 @@ precA :: AssocArithOper -> Int
 -- | precB - precedence for boolean-related Binary-Associative
 --   (Commutative) operators.
 precB :: AssocBoolOper -> Int
+precC :: AssocConcatOper -> Int
 
 -- | eprec - <a>Expression</a> precedence.
 eprec :: Expr -> Int
@@ -1456,7 +1505,7 @@ combineNINI :: (NamedIdea c, NamedIdea d) => c -> d -> NP
 
 
 -- | Re-exporting modules
-module Language.Drasil.CodeExpr.Development
+module Drasil.Code.CodeExpr.Development
 
 -- | Expression language where all terms also denote a term in GOOL (i.e.
 --   translation is total and meaning preserving).
@@ -1470,6 +1519,7 @@ data CodeExpr
 
 -- | Takes an associative boolean operator with a list of expressions.
 [AssocB] :: AssocBoolOper -> [CodeExpr] -> CodeExpr
+[AssocC] :: AssocConcatOper -> [CodeExpr] -> CodeExpr
 
 -- | C stands for <a>Chunk</a>, for referring to a chunk in an expression.
 --   Implicitly assumes that the chunk has a symbol.
@@ -1509,6 +1559,12 @@ data CodeExpr
 
 -- | Represents a matrix of expressions.
 [Matrix] :: [[CodeExpr]] -> CodeExpr
+
+-- | Represents a set of expressions
+[Set] :: Space -> [CodeExpr] -> CodeExpr
+
+-- | used to refernce the (name + type = variable )
+[Variable] :: String -> CodeExpr -> CodeExpr
 
 -- | Unary operation for most functions (eg. sin, cos, log, etc.).
 [UnaryOp] :: UFunc -> CodeExpr -> CodeExpr
@@ -1551,9 +1607,15 @@ data CodeExpr
 --   (scaling).
 [NVVBinaryOp] :: NVVBinOp -> CodeExpr -> CodeExpr -> CodeExpr
 
+-- | Set operator for Set + Set -&gt; Set
+[ESSBinaryOp] :: ESSBinOp -> CodeExpr -> CodeExpr -> CodeExpr
+
+-- | Set operator for Element + Set -&gt; Bool
+[ESBBinaryOp] :: ESBBinOp -> CodeExpr -> CodeExpr -> CodeExpr
+
 -- | Operators are generalized arithmetic operators over a
 --   <tt>DomainDesc</tt> of an <tt>Expr</tt>. Could be called BigOp. ex:
---   Summation is represented via <tt>Add</tt> over a discrete domain.
+--   Summation is represented via <a>Add</a> over a discrete domain.
 [Operator] :: AssocArithOper -> DiscreteDomainDesc CodeExpr CodeExpr -> CodeExpr -> CodeExpr
 
 -- | The expression is an element of a space. IsIn :: Expr -&gt; Space
@@ -1581,6 +1643,7 @@ Iff :: BoolBinOp
 -- | Index operator.
 data LABinOp
 Index :: LABinOp
+IndexOf :: LABinOp
 
 -- | Ordered binary operators (less than, greater than, less than or equal
 --   to, greater than or equal to).
@@ -1605,18 +1668,27 @@ Dot :: VVNBinOp
 data NVVBinOp
 Scale :: NVVBinOp
 
+-- | Element + Set -&gt; Set
+data ESSBinOp
+SAdd :: ESSBinOp
+SRemove :: ESSBinOp
+
+-- | Element + Set -&gt; Bool
+data ESBBinOp
+SContains :: ESBBinOp
+
 -- | Associative operators (adding and multiplication). Also specifies
 --   whether it is for integers or for real numbers.
 data AssocArithOper
-AddI :: AssocArithOper
-AddRe :: AssocArithOper
-MulI :: AssocArithOper
-MulRe :: AssocArithOper
+Add :: AssocArithOper
+Mul :: AssocArithOper
 
 -- | Associative boolean operators (and, or).
 data AssocBoolOper
 And :: AssocBoolOper
 Or :: AssocBoolOper
+data AssocConcatOper
+SUnion :: AssocConcatOper
 
 -- | Unary functions (abs, log, ln, sin, etc.).
 data UFunc
@@ -1711,7 +1783,7 @@ toCodeExpr :: CanGenCode e => e -> CodeExpr
 
 
 -- | Re-export CodeExpr constructors.
-module Language.Drasil.CodeExpr
+module Drasil.Code.CodeExpr
 
 -- | Expression language where all terms also denote a term in GOOL (i.e.
 --   translation is total and meaning preserving).
@@ -1758,17 +1830,11 @@ lit :: ExprC r => Literal -> r
 -- | Smart constructor for the dot product of two equations.
 ($.) :: ExprC r => r -> r -> r
 
--- | Add two expressions (Integers).
-addI :: ExprC r => r -> r -> r
+-- | Add two expressions.
+($+) :: ExprC r => r -> r -> r
 
--- | Add two expressions (Real numbers).
-addRe :: ExprC r => r -> r -> r
-
--- | Multiply two expressions (Integers).
-mulI :: ExprC r => r -> r -> r
-
--- | Multiply two expressions (Real numbers).
-mulRe :: ExprC r => r -> r -> r
+-- | Multiply two expressions.
+($*) :: ExprC r => r -> r -> r
 ($-) :: ExprC r => r -> r -> r
 ($/) :: ExprC r => r -> r -> r
 ($^) :: ExprC r => r -> r -> r
@@ -1776,6 +1842,10 @@ mulRe :: ExprC r => r -> r -> r
 ($<=>) :: ExprC r => r -> r -> r
 ($&&) :: ExprC r => r -> r -> r
 ($||) :: ExprC r => r -> r -> r
+
+-- | Smart constructor for set-theoretic membership relation. Added ' to
+--   avoid conflict.
+in' :: ExprC r => r -> r -> r
 
 -- | Smart constructor for taking the absolute value of an expression.
 abs_ :: ExprC r => r -> r
@@ -1837,6 +1907,10 @@ not_ :: ExprC r => r -> r
 -- | Smart constructor for indexing.
 idx :: ExprC r => r -> r -> r
 
+-- | Smart constructor for indexOf. Finds the index of the first occurrence
+--   of a value in a list.
+idxOf :: ExprC r => r -> r -> r
+
 -- | Smart constructor for the summation, product, and integral functions
 --   over an interval.
 defint :: ExprC r => Symbol -> r -> r -> r -> r
@@ -1877,15 +1951,18 @@ incompleteCase :: ExprC r => [(r, r)] -> r
 -- | Create a matrix.
 matrix :: ExprC r => [[r]] -> r
 
+-- | Create a Set.
+set' :: ExprC r => Space -> [r] -> r
+
 -- | Applies a given function with a list of parameters.
 apply :: (ExprC r, HasUID f, HasSymbol f) => f -> [r] -> r
 
 -- | Create an <a>Expr</a> from a <a>Symbol</a>ic Chunk.
 sy :: (ExprC r, HasUID c, HasSymbol c) => c -> r
 infixr 4 $=
-infixr 9 $&&
 infixl 7 $/
 infixr 8 $^
+infixr 9 $&&
 infixr 9 $||
 class LiteralC r
 int :: LiteralC r => Integer -> r
@@ -1927,17 +2004,11 @@ lit :: ExprC r => Literal -> r
 -- | Smart constructor for the dot product of two equations.
 ($.) :: ExprC r => r -> r -> r
 
--- | Add two expressions (Integers).
-addI :: ExprC r => r -> r -> r
+-- | Add two expressions.
+($+) :: ExprC r => r -> r -> r
 
--- | Add two expressions (Real numbers).
-addRe :: ExprC r => r -> r -> r
-
--- | Multiply two expressions (Integers).
-mulI :: ExprC r => r -> r -> r
-
--- | Multiply two expressions (Real numbers).
-mulRe :: ExprC r => r -> r -> r
+-- | Multiply two expressions.
+($*) :: ExprC r => r -> r -> r
 ($-) :: ExprC r => r -> r -> r
 ($/) :: ExprC r => r -> r -> r
 ($^) :: ExprC r => r -> r -> r
@@ -1945,6 +2016,10 @@ mulRe :: ExprC r => r -> r -> r
 ($<=>) :: ExprC r => r -> r -> r
 ($&&) :: ExprC r => r -> r -> r
 ($||) :: ExprC r => r -> r -> r
+
+-- | Smart constructor for set-theoretic membership relation. Added ' to
+--   avoid conflict.
+in' :: ExprC r => r -> r -> r
 
 -- | Smart constructor for taking the absolute value of an expression.
 abs_ :: ExprC r => r -> r
@@ -2006,6 +2081,10 @@ not_ :: ExprC r => r -> r
 -- | Smart constructor for indexing.
 idx :: ExprC r => r -> r -> r
 
+-- | Smart constructor for indexOf. Finds the index of the first occurrence
+--   of a value in a list.
+idxOf :: ExprC r => r -> r -> r
+
 -- | Smart constructor for the summation, product, and integral functions
 --   over an interval.
 defint :: ExprC r => Symbol -> r -> r -> r -> r
@@ -2046,15 +2125,18 @@ incompleteCase :: ExprC r => [(r, r)] -> r
 -- | Create a matrix.
 matrix :: ExprC r => [[r]] -> r
 
+-- | Create a Set.
+set' :: ExprC r => Space -> [r] -> r
+
 -- | Applies a given function with a list of parameters.
 apply :: (ExprC r, HasUID f, HasSymbol f) => f -> [r] -> r
 
 -- | Create an <a>Expr</a> from a <a>Symbol</a>ic Chunk.
 sy :: (ExprC r, HasUID c, HasSymbol c) => c -> r
 infixr 4 $=
-infixr 9 $&&
 infixl 7 $/
 infixr 8 $^
+infixr 9 $&&
 infixr 9 $||
 
 -- | Smart constructor for fractions.
@@ -2110,6 +2192,7 @@ rowVec :: ExprC r => [r] -> r
 
 -- | Create a column vector
 columnVec :: ExprC r => [r] -> r
+mkSet :: ExprC r => Space -> [r] -> r
 
 -- | For case expressions (either complete or incomplete).
 data Completeness
@@ -2128,6 +2211,9 @@ perc :: LiteralC r => Integer -> Integer -> r
 --   but that meaning may not be that of a definite value. For example,
 --   specification expressions, especially with quantifiers, belong here.
 data ModelExpr
+
+-- | Introduce Space values into the expression language.
+[Spc] :: Space -> ModelExpr
 
 -- | Determines the type of the derivative (either a partial derivative or
 --   a total derivative).
@@ -2212,7 +2298,7 @@ special :: RenderSpecial r => Special -> r
 class HasUID c
 
 -- | Provides a <i>unique</i> id for internal Drasil use.
-uid :: HasUID c => Lens' c UID
+uid :: HasUID c => Getter c UID
 
 -- | A HasSymbol is anything which has a <a>Symbol</a>.
 class HasSymbol c
@@ -2236,7 +2322,9 @@ class NamedIdea c => Idea c
 getA :: Idea c => c -> Maybe String
 
 -- | CommonIdea is a <a>NamedIdea</a> with the additional constraint that
---   it <b>must</b> have an abbreviation.
+--   it <b>must</b> have an abbreviation. This is the main distinction
+--   between getA and abrv, where getA may return Nothing, while abrv will
+--   always return the abbreviation.
 class NamedIdea c => CommonIdea c
 
 -- | Introduces abrv which necessarily provides an abbreviation.
@@ -2346,28 +2434,33 @@ class HasReference c
 getReferences :: HasReference c => Lens' c [Reference]
 
 -- | Some chunks can be called like functions.
-class (HasSymbol c) => Callable c
+class HasSymbol c => Callable c
 
 -- | Members must have a named argument.
-class (HasSymbol c) => IsArgumentName c
+class HasSymbol c => IsArgumentName c
 
 -- | A <tt>UID</tt> is a 'unique identifier' for things that we will put
 --   into our database of information. We use a newtype wrapper to make
 --   sure we are only using <a>UID</a>s where desired.
 data UID
 
--- | Smart constructor for making a <a>UID</a> from a <a>Value</a>.
+-- | Smart constructor for <a>UID</a>s from raw <a>Value</a>s.
 mkUid :: String -> UID
 
--- | Nest UID under a namespace
+-- | Nest a <a>UID</a> under a namespace.
 nsUid :: String -> UID -> UID
 
--- | For when we need to modify a UID. We first take the base chunk's UID
---   and then append a suffix to it.
+-- | Get something's <a>UID</a> as a <a>Value</a>.
+showUID :: HasUID a => a -> String
+
+-- | Append a suffix to a thing with a <a>UID</a> and get the resulting
+--   <a>UID</a>.
 (+++) :: HasUID a => a -> String -> UID
 
--- | For when we need to append something to a UID.
+-- | Append a suffix to a <a>UID</a>.
 (+++.) :: UID -> String -> UID
+
+-- | Merge the <a>UID</a>s of two chunks through simple concatenation.
 (+++!) :: (HasUID a, HasUID b) => a -> b -> UID
 
 -- | <a>IdeaDict</a> constructor, takes a <a>String</a> for its <a>UID</a>
@@ -2407,10 +2500,10 @@ codeName :: CodeIdea c => c -> String
 codeChunk :: CodeIdea c => c -> CodeChunk
 
 -- | Basic chunk representation in the code generation context. Contains a
---   QuantityDict and the kind of code (variable or function).
+--   DefinedQuantityDict and the kind of code (variable or function).
 data CodeChunk
-CodeC :: QuantityDict -> VarOrFunc -> CodeChunk
-[_qc] :: CodeChunk -> QuantityDict
+CodeC :: DefinedQuantityDict -> VarOrFunc -> CodeChunk
+[_qc] :: CodeChunk -> DefinedQuantityDict
 [kind] :: CodeChunk -> VarOrFunc
 
 -- | Chunk representing a variable. The <tt>obv</tt> field represents the
@@ -2430,7 +2523,7 @@ data VarOrFunc
 Var :: VarOrFunc
 Func :: VarOrFunc
 obv :: Lens' CodeVarChunk (Maybe CodeChunk)
-qc :: Lens' CodeChunk QuantityDict
+qc :: Lens' CodeChunk DefinedQuantityDict
 ccf :: Iso' CodeFuncChunk CodeChunk
 ccv :: Lens' CodeVarChunk CodeChunk
 listToArray :: CodeVarChunk -> CodeVarChunk
@@ -2467,9 +2560,6 @@ data CI
 --   ([<a>UID</a>]).
 commonIdea :: String -> NP -> String -> [UID] -> CI
 
--- | Get abbreviation in <a>Sentence</a> form from a <a>CI</a>.
-getAcc :: CI -> Sentence
-
 -- | Similar to <a>commonIdea</a>, but takes a list of <a>IdeaDict</a>
 --   (often a domain).
 commonIdeaWithDict :: String -> NP -> String -> [IdeaDict] -> CI
@@ -2505,6 +2595,12 @@ sDom :: [UID] -> UID
 --   
 --   Concept domain tagging is not yet implemented in this constructor.
 dcc :: String -> NP -> String -> ConceptChunk
+dccAWDS :: String -> NP -> Sentence -> Maybe String -> ConceptChunk
+
+-- | Smart constructor for creating a concept chunks with an abbreviation
+--   Takes a UID (String), a term (NounPhrase), a definition (String), and
+--   an abbreviation (Maybe String).
+dccA :: String -> NP -> String -> Maybe String -> ConceptChunk
 
 -- | Similar to <a>dcc</a>, except the definition takes a <a>Sentence</a>.
 dccWDS :: String -> NP -> Sentence -> ConceptChunk
@@ -2538,10 +2634,6 @@ data RelationConcept
 -- | Create a <a>RelationConcept</a> from a given <tt>UID</tt>, term
 --   (<a>NP</a>), definition (<a>Sentence</a>), and <tt>Relation</tt>.
 makeRC :: Express e => String -> NP -> Sentence -> e -> RelationConcept
-
--- | Create a new <a>RelationConcept</a> from an old <a>Concept</a>. Takes
---   a <a>Concept</a>, new <tt>UID</tt> and relation.
-addRelToCC :: (Express e, Concept c) => c -> String -> e -> RelationConcept
 
 -- | Describe the structural content of a system of linear ODEs with six
 --   necessary fields
@@ -2598,10 +2690,10 @@ IVP :: Expr -> Expr -> [Expr] -> InitialValueProblem
 ($^^) :: ConstrConcept -> Integer -> Unknown
 
 -- | Operation represent multiple
-($*) :: Expr -> Unknown -> Term
+($**) :: Expr -> Unknown -> Term
 
 -- | Operation represent plus (collection Terms)
-($+) :: [Term] -> Term -> LHS
+($++) :: [Term] -> Term -> LHS
 
 -- | Construct an ODESolverFormat for solving the ODE.
 makeAODESolverFormat :: DifferentialModel -> ODESolverFormat
@@ -2616,66 +2708,6 @@ makeASystemDE :: UnitalChunk -> ConstrConcept -> [[Expr]] -> [Unknown] -> [Expr]
 
 -- | Create a <a>DifferentialModel</a> by the input language
 makeASingleDE :: UnitalChunk -> ConstrConcept -> LHS -> Expr -> String -> NP -> Sentence -> DifferentialModel
-
--- | QuantityDict is a combination of an <a>IdeaDict</a> with a quantity.
---   Contains an <a>IdeaDict</a>, <a>Space</a>, a function from
---   <a>Stage</a> -&gt; <a>Symbol</a>, and <a>Maybe</a> a <a>UnitDefn</a>.
---   
---   Ex. A pendulum arm does not necessarily have to be defined as a
---   concept before we assign a space (Real numbers), a symbol (l), or
---   units (cm, m, etc.).
-data QuantityDict
-class DefinesQuantity d
-defLhs :: DefinesQuantity d => Getter d QuantityDict
-
--- | Smart constructor for a <a>QuantityDict</a> from another
---   <a>Quantity</a> with units.
-qw :: (Quantity q, MayHaveUnit q) => q -> QuantityDict
-
--- | Make a <a>QuantityDict</a> from a <a>UID</a>, <a>NP</a>,
---   <a>Symbol</a>, <a>Space</a>, <a>Maybe</a> <a>UnitDefn</a>, and an
---   abbreviation (<a>Maybe</a> <a>String</a>).
-mkQuant :: String -> NP -> Symbol -> Space -> Maybe UnitDefn -> Maybe String -> QuantityDict
-
--- | Similar to <a>mkQuant</a>, but the abbreviation is moved to the third
---   argument (<a>Maybe</a> <a>String</a>), and the <a>Symbol</a> is now
---   dependent on <a>Stage</a>.
-mkQuant' :: String -> NP -> Maybe String -> Space -> (Stage -> Symbol) -> Maybe UnitDefn -> QuantityDict
-
--- | Makes a <a>QuantityDict</a> from an <a>Idea</a>, <a>Symbol</a>, and
---   <a>Space</a>. <a>Symbol</a> is implementation-only.
-codeVC :: Idea c => c -> Symbol -> Space -> QuantityDict
-
--- | Makes a variable that is implementation-only.
-implVar :: String -> NP -> Space -> Symbol -> QuantityDict
-
--- | Similar to <a>implVar</a> but allows specification of abbreviation and
---   unit.
-implVar' :: String -> NP -> Maybe String -> Space -> Symbol -> Maybe UnitDefn -> QuantityDict
-
--- | Similar to <a>implVar</a> but takes in a <a>UID</a> rather than a
---   <a>String</a>.
-implVarUID :: UID -> NP -> Space -> Symbol -> QuantityDict
-
--- | Similar to <a>implVar'</a> but takes in a <a>UID</a> rather than a
---   <a>String</a>.
-implVarUID' :: UID -> NP -> Maybe String -> Space -> Symbol -> Maybe UnitDefn -> QuantityDict
-
--- | Creates a <a>QuantityDict</a> from a <a>UID</a>, term (<a>NP</a>),
---   <a>Symbol</a>, and <a>Space</a>.
-vc :: String -> NP -> Symbol -> Space -> QuantityDict
-
--- | Creates a <a>QuantityDict</a> from an <a>Idea</a>, <a>Symbol</a>, and
---   <a>Space</a>.
-vc'' :: Idea c => c -> Symbol -> Space -> QuantityDict
-
--- | Similar to <a>vc</a>, but creates a <a>QuantityDict</a> from something
---   that knows about <a>Stage</a>s.
-vcSt :: String -> NP -> (Stage -> Symbol) -> Space -> QuantityDict
-
--- | Creates a <a>QuantityDict</a> from a <a>UID</a>, term (<a>NP</a>),
---   <a>Symbol</a>, <a>Space</a>, and unit (<a>UnitDefn</a>).
-vcUnit :: String -> NP -> Symbol -> Space -> UnitDefn -> QuantityDict
 data QDefinition e
 
 -- | Create a <a>QDefinition</a> with a <a>UID</a> (as a <a>Space</a>),
@@ -2701,7 +2733,7 @@ mkQDefSt :: UID -> NP -> Sentence -> (Stage -> Symbol) -> Space -> Maybe UnitDef
 
 -- | Used to help make <a>QDefinition</a>s when <a>UID</a>, term, and
 --   <a>Symbol</a> come from the same source.
-mkQuantDef :: (Quantity c, MayHaveUnit c) => c -> e -> QDefinition e
+mkQuantDef :: (Quantity c, MayHaveUnit c, Concept c) => c -> e -> QDefinition e
 
 -- | Used to help make <a>QDefinition</a>s when <a>UID</a> and
 --   <a>Symbol</a> come from the same source, with the term separate.
@@ -2723,30 +2755,7 @@ mkFuncDef' :: (HasUID f, HasSymbol f, HasSpace f, HasUID i, HasSymbol i, HasSpac
 --   and a defining Expr
 mkFuncDefByQ :: (Quantity c, MayHaveUnit c, HasSpace c, Quantity i, HasSpace i) => c -> [i] -> e -> QDefinition e
 
--- | A Unitary is a <a>Quantity</a> that <b>must</b> have a unit.
-class (Quantity c) => Unitary c
-unit :: Unitary c => c -> UnitDefn
-
--- | UnitaryChunks are for ideas with quantities that must have units.
---   Contains a <a>QuantityDict</a> and a <a>UnitDefn</a>.
---   
---   Ex. A pendulum arm is an idea associated with a symbol (l) and units
---   (cm, m, etc.).
-data UnitaryChunk
-
--- | Builds the <a>QuantityDict</a> part from the <tt>UID</tt>, term
---   (<a>NP</a>), <a>Symbol</a>, and <a>Space</a>. Assumes there's no
---   abbreviation.
-unitary :: IsUnit u => String -> NP -> Symbol -> u -> Space -> UnitaryChunk
-
--- | Same as <a>unitary</a> but with a <a>Symbol</a> that changes based on
---   the <a>Stage</a>.
-unitary' :: IsUnit u => String -> NP -> (Stage -> Symbol) -> u -> Space -> UnitaryChunk
-
--- | Makes a <a>UnitaryChunk</a> from a quantity with a unit.
-mkUnitary :: (Unitary u, MayHaveUnit u) => u -> UnitaryChunk
-
--- | Helper for getting the unit's <a>Symbol</a> from a chunk, as opposed
+-- | Helper for getting the unit's <tt>Symbol</tt> from a chunk, as opposed
 --   to the symbols of the chunk itself.
 unit_symb :: Unitary c => c -> USymb
 
@@ -2771,14 +2780,28 @@ dqd' :: ConceptChunk -> (Stage -> Symbol) -> Space -> Maybe UnitDefn -> DefinedQ
 
 -- | Similar to <a>dqd</a>, but without any units.
 dqdNoUnit :: ConceptChunk -> Symbol -> Space -> DefinedQuantityDict
+dqdNoUnit' :: ConceptChunk -> (Stage -> Symbol) -> Space -> DefinedQuantityDict
 
 -- | When we want to merge a quantity and a concept. This is suspicious.
-dqdQd :: (Quantity c, MayHaveUnit c) => c -> ConceptChunk -> DefinedQuantityDict
+dqdQd :: (Quantity c, MayHaveUnit c) => c -> Sentence -> DefinedQuantityDict
 
 -- | When the input already has all the necessary information. A
 --   <tt>projection</tt> operator from some a type with instances of listed
 --   classes to a <a>DefinedQuantityDict</a>.
 dqdWr :: (Quantity c, Concept c, MayHaveUnit c) => c -> DefinedQuantityDict
+class DefinesQuantity d
+defLhs :: DefinesQuantity d => Getter d DefinedQuantityDict
+
+-- | Makes a variable that is implementation-only.
+implVar :: String -> NP -> String -> Space -> Symbol -> DefinedQuantityDict
+
+-- | Similar to <a>implVar</a>, but takes in a <a>Sentence</a> for the
+--   description rather than a <a>String</a>.
+implVar' :: String -> NP -> Sentence -> Space -> Symbol -> DefinedQuantityDict
+
+-- | Similar to <a>implVarAU</a> but takes a Sentence for the description
+--   rather than a String.
+implVarAU' :: String -> NP -> Sentence -> Maybe String -> Space -> Symbol -> Maybe UnitDefn -> DefinedQuantityDict
 
 -- | Similar to a <a>DefinedQuantityDict</a>, UnitalChunks are concepts
 --   with quantities that must have a unit definition. Contains
@@ -2925,17 +2948,20 @@ data Constraint a
 
 -- | By default, physical and software constraints are ranges.
 [Range] :: ConstraintReason -> RealInterval a a -> Constraint a
+[Elem] :: ConstraintReason -> a -> Constraint a
 
 -- | Type synonym for <a>ConstraintE</a>
 type ConstraintE = Constraint Expr
 
 -- | Smart constructor for range of <a>Physical</a> constraints between two
 --   given expressions.
-physc :: RealInterval Expr Expr -> ConstraintE
+physRange :: RealInterval Expr Expr -> ConstraintE
 
 -- | Smart constructor for range of <a>Software</a> constraints between two
 --   given expressions.
-sfwrc :: RealInterval Expr Expr -> ConstraintE
+sfwrRange :: RealInterval Expr Expr -> ConstraintE
+physElem :: Expr -> ConstraintE
+sfwrElem :: Expr -> ConstraintE
 
 -- | Helpful for filtering for Physical constraints. True if constraint is
 --   <a>Physical</a>.
@@ -2945,22 +2971,9 @@ isPhysC :: Constraint e -> Bool
 --   <a>Software</a>.
 isSfwrC :: Constraint e -> Bool
 
--- | ConstrainedChunks are symbolic quantities (<a>QuantityDict</a>) with
---   <tt>Constraint</tt>s and maybe a typical value (<a>Maybe</a>
---   <a>Expr</a>).
---   
---   Ex. Measuring the length of a pendulum would have some reasonable
---   value (between 1 cm and 2 m) and the constraint that the length cannot
---   be a negative value.
-data ConstrainedChunk
-ConstrainedChunk :: QuantityDict -> [ConstraintE] -> Maybe Expr -> ConstrainedChunk
-[_qd] :: ConstrainedChunk -> QuantityDict
-[_constr] :: ConstrainedChunk -> [ConstraintE]
-[_reasV] :: ConstrainedChunk -> Maybe Expr
-
 -- | ConstrConcepts are conceptual symbolic quantities
 --   (<a>DefinedQuantityDict</a>) with <tt>Constraint</tt>s and maybe a
---   reasonable value (no units!). Similar to <a>ConstrainedChunk</a> but
+--   reasonable value (no units!). Similar to <tt>ConstrainedChunk</tt> but
 --   includes a definition and domain.
 --   
 --   Ex. Measuring the length of a pendulum arm could be a concept that has
@@ -2971,16 +2984,6 @@ ConstrConcept :: DefinedQuantityDict -> [ConstraintE] -> Maybe Expr -> ConstrCon
 [_defq] :: ConstrConcept -> DefinedQuantityDict
 [_constr'] :: ConstrConcept -> [ConstraintE]
 [_reasV'] :: ConstrConcept -> Maybe Expr
-
--- | Creates a constrained unitary chunk from a <tt>UID</tt>, term
---   (<a>NP</a>), <a>Symbol</a>, unit, <a>Space</a>, <tt>Constraint</tt>s,
---   and an <a>Expr</a>.
-cuc :: IsUnit u => String -> NP -> Symbol -> u -> Space -> [ConstraintE] -> Expr -> ConstrainedChunk
-
--- | Creates a constrained unitary chunk from a <tt>UID</tt>, term
---   (<a>NP</a>), <a>Symbol</a>, <a>Space</a>, <tt>Constraint</tt>s, and a
---   <a>Maybe</a> <a>Expr</a> (Similar to <a>cuc</a> but no units).
-cvc :: String -> NP -> Symbol -> Space -> [ConstraintE] -> Maybe Expr -> ConstrainedChunk
 
 -- | Creates a <a>ConstrConcept</a> with a quantitative concept, a list of
 --   <tt>Constraint</tt>s and an <a>Expr</a>.
@@ -2995,27 +2998,15 @@ cuc' :: IsUnit u => String -> NP -> String -> Symbol -> u -> Space -> [Constrain
 --   <a>Stage</a>.
 cuc'' :: IsUnit u => String -> NP -> String -> (Stage -> Symbol) -> u -> Space -> [ConstraintE] -> Expr -> ConstrConcept
 
+-- | Similar to cuc', but does not include a unit.
+cucNoUnit' :: String -> NP -> String -> Symbol -> Space -> [ConstraintE] -> Expr -> ConstrConcept
+
 -- | Similar to <a>constrained'</a>, but defaults <a>Maybe</a> <a>Expr</a>
 --   to <a>Nothing</a>.
 constrainedNRV' :: (Concept c, MayHaveUnit c, Quantity c) => c -> [ConstraintE] -> ConstrConcept
 
--- | Creates a new ConstrainedChunk from either a <a>ConstrainedChunk</a>,
---   <a>ConstrConcept</a>, <tt>UncertainChunk</tt>, or an <tt>UncertQ</tt>.
-cnstrw :: (Quantity c, Constrained c, HasReasVal c, MayHaveUnit c) => c -> ConstrainedChunk
-
--- | Similar to <a>cnstrw</a>, but types must also have a <a>Concept</a>.
+-- | Similar to <tt>cnstrw</tt>, but types must also have a <a>Concept</a>.
 cnstrw' :: (Quantity c, Concept c, Constrained c, HasReasVal c, MayHaveUnit c) => c -> ConstrConcept
-
--- | UncertainChunk is a symbolic quantity with constraints, a typical
---   value, and an uncertainty. Contains a <a>ConstrainedChunk</a> and an
---   <a>Uncertainty</a>.
---   
---   Ex. Measuring the length of a pendulum arm may be recorded with an
---   uncertainty value.
-data UncertainChunk
-UCh :: ConstrainedChunk -> Uncertainty -> UncertainChunk
-[_conc] :: UncertainChunk -> ConstrainedChunk
-[_unc'] :: UncertainChunk -> Uncertainty
 
 -- | UncertQs are conceptual symbolic quantities with constraints and an
 --   <a>Uncertainty</a>. Contains a <a>ConstrConcept</a> and an
@@ -3034,19 +3025,6 @@ uqc :: IsUnit u => String -> NP -> String -> Symbol -> u -> Space -> [Constraint
 
 -- | Uncertainty quantity constraint (<a>uqc</a>) without a description.
 uqcND :: IsUnit u => String -> NP -> Symbol -> u -> Space -> [ConstraintE] -> Expr -> Uncertainty -> UncertQ
-
--- | Smart constructor that can project to an <a>UncertainChunk</a> (also
---   given an <a>Uncertainty</a>).
-uncrtnChunk :: (Quantity c, Constrained c, HasReasVal c, MayHaveUnit c) => c -> Uncertainty -> UncertainChunk
-
--- | Creates an uncertain variable chunk. Takes <tt>UID</tt>, term
---   (<a>NP</a>), <a>Symbol</a>, <a>Space</a>, <tt>Constrains</tt>,
---   <a>Expr</a>, and <a>Uncertainty</a>.
-uvc :: String -> NP -> Symbol -> Space -> [ConstraintE] -> Expr -> Uncertainty -> UncertainChunk
-
--- | Projection function into an <a>UncertainChunk</a> from <a>UncertQ</a>
---   or an <a>UncertainChunk</a>.
-uncrtnw :: (HasUncertainty c, Quantity c, Constrained c, HasReasVal c, MayHaveUnit c) => c -> UncertainChunk
 
 -- | Something that may contain an uncertainty value and a precision value.
 data Uncertainty
@@ -3357,6 +3335,10 @@ PhDThesis :: CitationKind
 Proceedings :: CitationKind
 TechReport :: CitationKind
 Unpublished :: CitationKind
+
+-- | Orders two authors. If given two of the exact same authors, year, and
+--   title, returns an error.
+compareAuthYearTitle :: HasFields c => c -> c -> Ordering
 
 -- | Smart field constructor for a <a>CiteField</a>.
 author :: People -> CiteField
@@ -3838,7 +3820,11 @@ titleize :: NamedIdea n => n -> Sentence
 --   <a>NamedIdea</a>.
 titleize' :: NamedIdea n => n -> Sentence
 
--- | Get short form (if it exists), else get term of an <a>Idea</a>.
+-- | Get short form (if it exists), else get term of an <a>Idea</a>. Uses
+--   the UID of the <a>Idea</a> in a <tt>Ch</tt> Sentence constructor to
+--   get the short form using getA. getA may return Nothing, in which case
+--   lookupS uses the term, where lookupS is the main helper for looking up
+--   the short form of a <tt>Ch</tt> Sentence.
 short :: Idea c => c -> Sentence
 
 -- | Used for holding the short form of a name (as a <a>Sentence</a> with a
@@ -3991,7 +3977,7 @@ Numeric :: [(ItemType, Maybe String)] -> ListType
 -- | Simple list with items denoted by <tt>:</tt>. Renders as "Title: Item"
 Simple :: [ListTuple] -> ListType
 
--- | Descriptive list, renders as "<b>Title: Item</b>" (see
+-- | Descriptive list, renders as "<b>Title</b>: Item" (see
 --   <a>ListTuple</a>).
 Desc :: [ListTuple] -> ListType
 
@@ -4006,7 +3992,7 @@ Flat :: Sentence -> ItemType
 
 -- | Nest a list (<a>ListType</a>) as an item.
 Nested :: Header -> ListType -> ItemType
-type ListTuple = (Title, ItemType, Maybe String) " Formats as Title: Item. For use in lists."
+type ListTuple = -- | Formats as Title: Item. For use in lists. (Title, ItemType, Maybe String)
 
 -- | Contains a <a>Reference</a> and <a>RawContent</a>.
 data LabelledContent
@@ -4019,9 +4005,10 @@ newtype UnlabelledContent
 UnlblC :: RawContent -> UnlabelledContent
 [_cntnts] :: UnlabelledContent -> RawContent
 
--- | Smart constructor for retrieving the contents (<a>Section</a>s) from a
---   <a>Document</a>.
-extractSection :: Document -> [Section]
+-- | Indicates whether a figure has a caption or not.
+data HasCaption
+NoCaption :: HasCaption
+WithCaption :: HasCaption
 
 -- | Smart constructor that wraps <a>UnlabelledContent</a> into
 --   <a>Contents</a>.
@@ -4048,11 +4035,20 @@ ulcc :: RawContent -> UnlabelledContent
 section :: Sentence -> [Contents] -> [Section] -> Reference -> Section
 
 -- | <a>Figure</a> smart constructor with a <a>Lbl</a> and a
---   <a>Filepath</a>. Assumes 100% of page width as max width.
+--   <a>Filepath</a>. Assumes 100% of page width as max width. Defaults to
+--   <a>WithCaption</a>.
 fig :: Lbl -> Filepath -> RawContent
 
+-- | <a>Figure</a> smart constructor without a caption.
+figNoCap :: Lbl -> Filepath -> RawContent
+
 -- | <a>Figure</a> smart constructor that allows for customized max widths.
+--   Defaults to <a>WithCaption</a>.
 figWithWidth :: Lbl -> Filepath -> MaxWidthPercent -> RawContent
+
+-- | <a>Figure</a> smart constructor with customized max widths and no
+--   caption.
+figNoCapWithWidth :: Lbl -> Filepath -> MaxWidthPercent -> RawContent
 
 -- | MaxWidthPercent should be kept in the range 1-100. Values outside this
 --   range may have unexpected results. Used for specifying max figure
@@ -4087,8 +4083,9 @@ Enumeration :: ListType -> RawContent
 -- | Defines something with a type, identifier, and <a>Contents</a>.
 Defini :: DType -> [(Identifier, [Contents])] -> RawContent
 
--- | For creating figures in a document. Should use relative file path.
-Figure :: Lbl -> Filepath -> MaxWidthPercent -> RawContent
+-- | For creating figures in a document includes whether the figure has a
+--   caption.
+Figure :: Lbl -> Filepath -> MaxWidthPercent -> HasCaption -> RawContent
 
 -- | Grants the ability to reference something.
 Bib :: BibRef -> RawContent
@@ -4245,12 +4242,6 @@ makeListRef :: [a] -> Section -> [Sentence]
 -- | Converts input to a <a>Sentence</a> and appends %.
 addPercent :: Show a => a -> Sentence
 
--- | Produces a <a>Sentence</a> that displays the constraints in a set {}.
-displayStrConstrntsAsSet :: Quantity a => a -> [String] -> Sentence
-
--- | Produces a <a>Sentence</a> that displays the constraints in a set {}.
-displayDblConstrntsAsSet :: Quantity a => a -> [Double] -> Sentence
-
 -- | Prepends the word <a>Equation</a> to an <a>Int</a>.
 eqN :: Int -> Sentence
 
@@ -4384,11 +4375,10 @@ Boolean :: Space
 Char :: Space
 String :: Space
 Vect :: Space -> Space
+Set :: Space -> Space
 Matrix :: Int -> Int -> Space -> Space
 Array :: Space -> Space
 Actor :: String -> Space
-DiscreteD :: [Double] -> Space
-DiscreteS :: [String] -> Space
 Function :: NonEmpty Primitive -> Primitive -> Space
 Void :: Space
 
@@ -4421,7 +4411,7 @@ type DiscreteDomainDesc a b = DomainDesc 'Discrete a b
 -- | Gets the name of an <a>Actor</a>.
 getActorName :: Space -> String
 
--- | Gets the inner <a>Space</a> of a vector.
+-- | Gets the inner <a>Space</a> of a vector or set.
 getInnerSpace :: Space -> Space
 mkFunction :: [Primitive] -> Primitive -> Space
 type Primitive = Space
@@ -4455,21 +4445,6 @@ data Symbol
 --   negative, but should not be zero.
 newtype USymb
 US :: [(Symbol, Integer)] -> USymb
-
--- | Create a table body (not including header row) by applying the given
---   functions to the column elements of the table rows (in order). The
---   first argument is a list of functions to be applied (one per column).
---   This essentially creates the rows. The second argument is a list of
---   elements apply the functions to.
---   
---   For example, <tt>mkTable [id, *5] [1,2,3]</tt> should produce a table:
---   
---   <pre>
---   | 1 |  5 |
---   | 2 | 10 |
---   | 3 | 15 |
---   </pre>
-mkTable :: [a -> b] -> [a] -> [[b]]
 
 -- | Stages are what part of the development process we are in. There are
 --   currently two: 1) The Equational stage (should be called
@@ -4550,7 +4525,7 @@ type TypingContext t = Map UID t
 type TypeError = String
 
 -- | Look for a known type of a specific <a>UID</a>.
-inferFromContext :: TypingContext t -> UID -> Either t TypeError
+inferFromContext :: TypingContext t -> UID -> Either TypeError t
 
 -- | Build a bidirectional type checker for your expression language, e,
 --   with respect to a specific type universe, t.
@@ -4558,11 +4533,11 @@ class (Eq t, Show t) => Typed e t
 
 -- | Given a typing context and an expression, infer a unique type or
 --   explain what went awry.
-infer :: Typed e t => TypingContext t -> e -> Either t TypeError
+infer :: Typed e t => TypingContext t -> e -> Either TypeError t
 
 -- | Given a typing context, an expression, and an expected type, check if
 --   the expression can satisfy the expectation.
-check :: Typed e t => TypingContext t -> e -> t -> Either t TypeError
+check :: Typed e t => TypingContext t -> e -> t -> Either TypeError t
 
 -- | For all containers, c, which contain typed expressions, e, against a
 --   specific type universe, t, expose all expressions and relations that

@@ -10,49 +10,22 @@
 @version 0.1.0.0
 
 
--- | Theory related Drasil concepts, used across Drasil.
-module Data.Drasil.TheoryConcepts
-
--- | Data definition.
---   
---   These are internal-to-Drasil common ideas, and need to be defined at
---   the same time as theories.
-dataDefn :: CI
-
--- | General definition.
---   
---   These are internal-to-Drasil common ideas, and need to be defined at
---   the same time as theories.
-genDefn :: CI
-
--- | Instance model.
---   
---   These are internal-to-Drasil common ideas, and need to be defined at
---   the same time as theories.
-inModel :: CI
-
--- | Theoretical model.
---   
---   These are internal-to-Drasil common ideas, and need to be defined at
---   the same time as theories.
-thModel :: CI
-
-
 -- | Defining all the classes which represent knowledge-about-theories.
 module Theory.Drasil.Classes
 
 -- | Members of this class may have inputs.
 class HasInputs c
 
--- | Provides a <tt>Lens</tt> that holds a <a>QuantityDict</a> and maybe
---   constraints.
-inputs :: HasInputs c => Lens' c [(QuantityDict, Maybe (RealInterval Expr Expr))]
+-- | Provides a <tt>Lens</tt> that holds a <a>DefinedQuantityDict</a> and
+--   maybe constraints.
+inputs :: HasInputs c => Lens' c [(DefinedQuantityDict, Maybe (RealInterval Expr Expr))]
 
 -- | Members of this class may have outputs.
 class HasOutput c
 
--- | Provides a <a>Getter</a> that holds a <a>QuantityDict</a> for output.
-output :: HasOutput c => Getter c QuantityDict
+-- | Provides a <a>Getter</a> that holds a <a>DefinedQuantityDict</a> for
+--   output.
+output :: HasOutput c => Getter c DefinedQuantityDict
 
 -- | Provides a <a>Getter</a> that holds constraints on the output.
 out_constraints :: HasOutput c => Getter c [RealInterval Expr Expr]
@@ -67,7 +40,7 @@ data ConstraintSet e
 
 -- | Smart constructor for building ConstraintSets
 mkConstraintSet :: ConceptChunk -> NonEmpty e -> ConstraintSet e
-instance Language.Drasil.UID.HasUID (Theory.Drasil.ConstraintSet.ConstraintSet e)
+instance Drasil.Database.UID.HasUID (Theory.Drasil.ConstraintSet.ConstraintSet e)
 instance Language.Drasil.Chunk.NamedIdea.NamedIdea (Theory.Drasil.ConstraintSet.ConstraintSet e)
 instance Language.Drasil.Chunk.NamedIdea.Idea (Theory.Drasil.ConstraintSet.ConstraintSet e)
 instance Language.Drasil.Classes.Definition (Theory.Drasil.ConstraintSet.ConstraintSet e)
@@ -93,13 +66,15 @@ Local :: Scope -> ScopeType
 -- | Visible everywhere.
 Global :: ScopeType
 data DDPkt
-DDPkt :: ScopeType -> [DecRef] -> Maybe Derivation -> ShortName -> String -> [Sentence] -> DDPkt
+DDPkt :: UID -> ScopeType -> [DecRef] -> Maybe Derivation -> ShortName -> String -> [Sentence] -> DDPkt
+[_pktUID] :: DDPkt -> UID
 [_pktST] :: DDPkt -> ScopeType
 [_pktDR] :: DDPkt -> [DecRef]
 [_pktMD] :: DDPkt -> Maybe Derivation
 [_pktSN] :: DDPkt -> ShortName
 [_pktS] :: DDPkt -> String
 [_pktSS] :: DDPkt -> [Sentence]
+pktUID :: Lens' DDPkt UID
 pktST :: Lens' DDPkt ScopeType
 pktSS :: Lens' DDPkt [Sentence]
 pktSN :: Lens' DDPkt ShortName
@@ -117,6 +92,7 @@ data DataDefinition
 ddQD :: Lens' SimpleQDef a -> Lens' ModelQDef a -> Lens' DataDefinition a
 ddQDGetter :: (Profunctor p, Contravariant f) => Getter SimpleQDef a -> Getter ModelQDef a -> Optic' p f DataDefinition a
 ddPkt :: Lens' DDPkt a -> Lens' DataDefinition a
+ddUid :: HasUID c => c -> UID
 
 -- | Smart constructor for data definitions.
 ddE :: SimpleQDef -> [DecRef] -> Maybe Derivation -> String -> [Sentence] -> DataDefinition
@@ -133,10 +109,10 @@ ddMENoRefs :: ModelQDef -> Maybe Derivation -> String -> [Sentence] -> DataDefin
 -- | Extracts the 'QDefinition e' from a <a>DataDefinition</a>.
 qdFromDD :: DataDefinition -> Either SimpleQDef ModelQDef
 qdEFromDD :: DataDefinition -> Maybe SimpleQDef
-instance Language.Drasil.UID.HasUID Theory.Drasil.DataDefinition.DataDefinition
+instance Drasil.Database.UID.HasUID Theory.Drasil.DataDefinition.DataDefinition
 instance Language.Drasil.Chunk.NamedIdea.NamedIdea Theory.Drasil.DataDefinition.DataDefinition
 instance Language.Drasil.Chunk.NamedIdea.Idea Theory.Drasil.DataDefinition.DataDefinition
-instance Language.Drasil.Chunk.Quantity.DefinesQuantity Theory.Drasil.DataDefinition.DataDefinition
+instance Language.Drasil.Chunk.DefinedQuantity.DefinesQuantity Theory.Drasil.DataDefinition.DataDefinition
 instance Theory.Drasil.Classes.HasOutput Theory.Drasil.DataDefinition.DataDefinition
 instance Language.Drasil.ExprClasses.Express Theory.Drasil.DataDefinition.DataDefinition
 instance Language.Drasil.DecoratedReference.HasDecRef Theory.Drasil.DataDefinition.DataDefinition
@@ -166,11 +142,11 @@ data DefiningExpr e
 
 -- | Smart constructor for MultiDefns, does nothing special at the moment.
 --   First argument is the <a>Space</a> to become a <a>UID</a>.
-mkMultiDefn :: String -> QuantityDict -> Sentence -> NonEmpty (DefiningExpr e) -> MultiDefn e
+mkMultiDefn :: String -> DefinedQuantityDict -> Sentence -> NonEmpty (DefiningExpr e) -> MultiDefn e
 
 -- | Smart constructor for <a>MultiDefn</a>s defining <a>UID</a>s using
---   that of the <a>QuantityDict</a>.
-mkMultiDefnForQuant :: QuantityDict -> Sentence -> NonEmpty (DefiningExpr e) -> MultiDefn e
+--   that of the <a>DefinedQuantityDict</a>.
+mkMultiDefnForQuant :: DefinedQuantityDict -> Sentence -> NonEmpty (DefiningExpr e) -> MultiDefn e
 
 -- | Smart constructor for <a>DefiningExpr</a>s.
 mkDefiningExpr :: String -> [UID] -> Sentence -> e -> DefiningExpr e
@@ -182,7 +158,7 @@ multiDefnGenQD :: MultiDefn e -> DefiningExpr e -> QDefinition e
 -- | Convert <a>MultiDefn</a>s into <a>QDefinition</a>s via a specific
 --   <a>DefiningExpr</a> (by <a>UID</a>).
 multiDefnGenQDByUID :: MultiDefn e -> UID -> QDefinition e
-instance Language.Drasil.UID.HasUID (Theory.Drasil.MultiDefn.MultiDefn e)
+instance Drasil.Database.UID.HasUID (Theory.Drasil.MultiDefn.MultiDefn e)
 instance Language.Drasil.Symbol.HasSymbol (Theory.Drasil.MultiDefn.MultiDefn e)
 instance Language.Drasil.Chunk.NamedIdea.NamedIdea (Theory.Drasil.MultiDefn.MultiDefn e)
 instance Language.Drasil.Chunk.NamedIdea.Idea (Theory.Drasil.MultiDefn.MultiDefn e)
@@ -194,7 +170,7 @@ instance Language.Drasil.Classes.ConceptDomain (Theory.Drasil.MultiDefn.MultiDef
 instance Language.Drasil.WellTyped.RequiresChecking (Theory.Drasil.MultiDefn.MultiDefn Language.Drasil.Expr.Lang.Expr) Language.Drasil.Expr.Lang.Expr Language.Drasil.Space.Space
 instance Language.Drasil.ExprClasses.Express e => Language.Drasil.ExprClasses.Express (Theory.Drasil.MultiDefn.MultiDefn e)
 instance GHC.Classes.Eq (Theory.Drasil.MultiDefn.DefiningExpr e)
-instance Language.Drasil.UID.HasUID (Theory.Drasil.MultiDefn.DefiningExpr e)
+instance Drasil.Database.UID.HasUID (Theory.Drasil.MultiDefn.DefiningExpr e)
 instance Language.Drasil.Classes.ConceptDomain (Theory.Drasil.MultiDefn.DefiningExpr e)
 instance Language.Drasil.Classes.Definition (Theory.Drasil.MultiDefn.DefiningExpr e)
 
@@ -304,17 +280,20 @@ elimMk :: Getter DifferentialModel a -> Getter RelationConcept a -> Getter (Cons
 -- | Make a <tt>Lens</tt> for <a>ModelKinds</a>.
 lensMk :: forall e a. Lens' DifferentialModel a -> Lens' RelationConcept a -> Lens' (ConstraintSet e) a -> Lens' (QDefinition e) a -> Lens' (MultiDefn e) a -> Lens' (ModelKinds e) a
 
+-- | Make a <a>Getter</a> for <a>ModelKinds</a>.
+getterMk :: forall e a. Getter DifferentialModel a -> Getter RelationConcept a -> Getter (ConstraintSet e) a -> Getter (QDefinition e) a -> Getter (MultiDefn e) a -> Getter (ModelKinds e) a
+
 -- | Extract a list of <a>QDefinition</a>s from a list of
 --   <a>ModelKinds</a>.
 getEqModQds :: [ModelKind e] -> [QDefinition e]
-instance Language.Drasil.UID.HasUID (Theory.Drasil.ModelKinds.ModelKinds e)
+instance Drasil.Database.UID.HasUID (Theory.Drasil.ModelKinds.ModelKinds e)
 instance Language.Drasil.Chunk.NamedIdea.NamedIdea (Theory.Drasil.ModelKinds.ModelKinds e)
 instance Language.Drasil.Chunk.NamedIdea.Idea (Theory.Drasil.ModelKinds.ModelKinds e)
 instance Language.Drasil.Classes.Definition (Theory.Drasil.ModelKinds.ModelKinds e)
 instance Language.Drasil.Classes.ConceptDomain (Theory.Drasil.ModelKinds.ModelKinds e)
 instance Language.Drasil.ExprClasses.Express e => Language.Drasil.ExprClasses.Express (Theory.Drasil.ModelKinds.ModelKinds e)
 instance Language.Drasil.WellTyped.RequiresChecking (Theory.Drasil.ModelKinds.ModelKinds Language.Drasil.Expr.Lang.Expr) Language.Drasil.Expr.Lang.Expr Language.Drasil.Space.Space
-instance Language.Drasil.UID.HasUID (Theory.Drasil.ModelKinds.ModelKind e)
+instance Drasil.Database.UID.HasUID (Theory.Drasil.ModelKinds.ModelKind e)
 instance Language.Drasil.Chunk.NamedIdea.NamedIdea (Theory.Drasil.ModelKinds.ModelKind e)
 instance Language.Drasil.Chunk.NamedIdea.Idea (Theory.Drasil.ModelKinds.ModelKind e)
 instance Language.Drasil.Classes.Definition (Theory.Drasil.ModelKinds.ModelKind e)
@@ -351,11 +330,11 @@ imNoDerivNoRefs :: ModelKind Expr -> Inputs -> Output -> OutputConstraints -> St
 getEqModQdsFromIm :: [InstanceModel] -> [SimpleQDef]
 
 -- | For building a quantity with no constraint.
-qwUC :: (Quantity q, MayHaveUnit q) => q -> Input
+qwUC :: (Quantity q, MayHaveUnit q, Concept q) => q -> Input
 
 -- | For building a quantity with a constraint.
-qwC :: (Quantity q, MayHaveUnit q) => q -> RealInterval Expr Expr -> Input
-instance Language.Drasil.UID.HasUID Theory.Drasil.InstanceModel.InstanceModel
+qwC :: (Quantity q, MayHaveUnit q, Concept q) => q -> RealInterval Expr Expr -> Input
+instance Drasil.Database.UID.HasUID Theory.Drasil.InstanceModel.InstanceModel
 instance Language.Drasil.Chunk.NamedIdea.NamedIdea Theory.Drasil.InstanceModel.InstanceModel
 instance Language.Drasil.Chunk.NamedIdea.Idea Theory.Drasil.InstanceModel.InstanceModel
 instance Language.Drasil.Classes.Definition Theory.Drasil.InstanceModel.InstanceModel
@@ -368,7 +347,7 @@ instance Language.Drasil.Label.Type.HasRefAddress Theory.Drasil.InstanceModel.In
 instance Language.Drasil.Classes.HasAdditionalNotes Theory.Drasil.InstanceModel.InstanceModel
 instance Language.Drasil.Classes.CommonIdea Theory.Drasil.InstanceModel.InstanceModel
 instance Language.Drasil.Label.Type.Referable Theory.Drasil.InstanceModel.InstanceModel
-instance Language.Drasil.Chunk.Quantity.DefinesQuantity Theory.Drasil.InstanceModel.InstanceModel
+instance Language.Drasil.Chunk.DefinedQuantity.DefinesQuantity Theory.Drasil.InstanceModel.InstanceModel
 instance Theory.Drasil.Classes.HasInputs Theory.Drasil.InstanceModel.InstanceModel
 instance Theory.Drasil.Classes.HasOutput Theory.Drasil.InstanceModel.InstanceModel
 instance Language.Drasil.WellTyped.RequiresChecking Theory.Drasil.InstanceModel.InstanceModel Language.Drasil.Expr.Lang.Expr Language.Drasil.Space.Space
@@ -391,7 +370,7 @@ gdNoRefs :: IsUnit u => ModelKind ModelExpr -> Maybe u -> Maybe Derivation -> St
 -- | Grab all related <tt>QDefinitions</tt> from a list of general
 --   definitions.
 getEqModQdsFromGd :: [GenDefn] -> [ModelQDef]
-instance Language.Drasil.UID.HasUID Theory.Drasil.GenDefn.GenDefn
+instance Drasil.Database.UID.HasUID Theory.Drasil.GenDefn.GenDefn
 instance Language.Drasil.Chunk.NamedIdea.NamedIdea Theory.Drasil.GenDefn.GenDefn
 instance Language.Drasil.Chunk.NamedIdea.Idea Theory.Drasil.GenDefn.GenDefn
 instance Language.Drasil.Classes.Definition Theory.Drasil.GenDefn.GenDefn
@@ -415,7 +394,7 @@ module Theory.Drasil.Theory
 class Theory t
 valid_context :: Theory t => Lens' t [TheoryModel]
 spaces :: Theory t => Lens' t [SpaceDefn]
-quantities :: Theory t => Lens' t [QuantityDict]
+quantities :: Theory t => Lens' t [DefinedQuantityDict]
 operations :: Theory t => Lens' t [ConceptChunk]
 defined_quant :: Theory t => Lens' t [ModelQDef]
 invariants :: Theory t => Lens' t [ModelExpr]
@@ -428,7 +407,7 @@ defined_fun :: Theory t => Lens' t [ModelQDef]
 --   <li>con - a ConceptChunk,</li>
 --   <li>vctx - definition context (<a>TheoryModel</a>s),</li>
 --   <li>spc - type definitions (<a>SpaceDefn</a>s),</li>
---   <li>quan - quantities (<a>QuantityDict</a>s),</li>
+--   <li>quan - quantities (<a>DefinedQuantityDict</a>s),</li>
 --   <li>ops - operations (<a>ConceptChunk</a>s),</li>
 --   <li>defq - definitions (<a>QDefinition</a>s),</li>
 --   <li>invs - invariants (<a>ModelExpr</a>s),</li>
@@ -445,12 +424,12 @@ data TheoryModel
 
 -- | Constructor for theory models. Must have a source. Uses the shortname
 --   of the reference address.
-tm :: (Quantity q, MayHaveUnit q, Concept c) => ModelKind ModelExpr -> [q] -> [c] -> [ModelQDef] -> [ModelExpr] -> [ModelQDef] -> [DecRef] -> String -> [Sentence] -> TheoryModel
+tm :: (Quantity q, MayHaveUnit q, Concept q, Concept c) => ModelKind ModelExpr -> [q] -> [c] -> [ModelQDef] -> [ModelExpr] -> [ModelQDef] -> [DecRef] -> String -> [Sentence] -> TheoryModel
 
 -- | Constructor for theory models. Uses the shortname of the reference
 --   address.
-tmNoRefs :: (Quantity q, MayHaveUnit q, Concept c) => ModelKind ModelExpr -> [q] -> [c] -> [ModelQDef] -> [ModelExpr] -> [ModelQDef] -> String -> [Sentence] -> TheoryModel
-instance Language.Drasil.UID.HasUID Theory.Drasil.Theory.TheoryModel
+tmNoRefs :: (Quantity q, MayHaveUnit q, Concept q, Concept c) => ModelKind ModelExpr -> [q] -> [c] -> [ModelQDef] -> [ModelExpr] -> [ModelQDef] -> String -> [Sentence] -> TheoryModel
+instance Drasil.Database.UID.HasUID Theory.Drasil.Theory.TheoryModel
 instance Language.Drasil.Chunk.NamedIdea.NamedIdea Theory.Drasil.Theory.TheoryModel
 instance Language.Drasil.Chunk.NamedIdea.Idea Theory.Drasil.Theory.TheoryModel
 instance Language.Drasil.Classes.Definition Theory.Drasil.Theory.TheoryModel
@@ -470,15 +449,16 @@ module Theory.Drasil
 -- | Members of this class may have inputs.
 class HasInputs c
 
--- | Provides a <tt>Lens</tt> that holds a <a>QuantityDict</a> and maybe
---   constraints.
-inputs :: HasInputs c => Lens' c [(QuantityDict, Maybe (RealInterval Expr Expr))]
+-- | Provides a <tt>Lens</tt> that holds a <a>DefinedQuantityDict</a> and
+--   maybe constraints.
+inputs :: HasInputs c => Lens' c [(DefinedQuantityDict, Maybe (RealInterval Expr Expr))]
 
 -- | Members of this class may have outputs.
 class HasOutput c
 
--- | Provides a <a>Getter</a> that holds a <a>QuantityDict</a> for output.
-output :: HasOutput c => Getter c QuantityDict
+-- | Provides a <a>Getter</a> that holds a <a>DefinedQuantityDict</a> for
+--   output.
+output :: HasOutput c => Getter c DefinedQuantityDict
 
 -- | Provides a <a>Getter</a> that holds constraints on the output.
 out_constraints :: HasOutput c => Getter c [RealInterval Expr Expr]
@@ -539,11 +519,11 @@ data DefiningExpr e
 
 -- | Smart constructor for MultiDefns, does nothing special at the moment.
 --   First argument is the <a>Space</a> to become a <a>UID</a>.
-mkMultiDefn :: String -> QuantityDict -> Sentence -> NonEmpty (DefiningExpr e) -> MultiDefn e
+mkMultiDefn :: String -> DefinedQuantityDict -> Sentence -> NonEmpty (DefiningExpr e) -> MultiDefn e
 
 -- | Smart constructor for <a>MultiDefn</a>s defining <a>UID</a>s using
---   that of the <a>QuantityDict</a>.
-mkMultiDefnForQuant :: QuantityDict -> Sentence -> NonEmpty (DefiningExpr e) -> MultiDefn e
+--   that of the <a>DefinedQuantityDict</a>.
+mkMultiDefnForQuant :: DefinedQuantityDict -> Sentence -> NonEmpty (DefiningExpr e) -> MultiDefn e
 
 -- | Smart constructor for <a>DefiningExpr</a>s.
 mkDefiningExpr :: String -> [UID] -> Sentence -> e -> DefiningExpr e
@@ -639,10 +619,10 @@ imNoRefs :: ModelKind Expr -> Inputs -> Output -> OutputConstraints -> Maybe Der
 imNoDerivNoRefs :: ModelKind Expr -> Inputs -> Output -> OutputConstraints -> String -> [Sentence] -> InstanceModel
 
 -- | For building a quantity with no constraint.
-qwUC :: (Quantity q, MayHaveUnit q) => q -> Input
+qwUC :: (Quantity q, MayHaveUnit q, Concept q) => q -> Input
 
 -- | For building a quantity with a constraint.
-qwC :: (Quantity q, MayHaveUnit q) => q -> RealInterval Expr Expr -> Input
+qwC :: (Quantity q, MayHaveUnit q, Concept q) => q -> RealInterval Expr Expr -> Input
 
 -- | Grab all related <a>QDefinition</a>s from a list of instance models.
 getEqModQdsFromIm :: [InstanceModel] -> [SimpleQDef]
@@ -652,7 +632,7 @@ getEqModQdsFromIm :: [InstanceModel] -> [SimpleQDef]
 class Theory t
 valid_context :: Theory t => Lens' t [TheoryModel]
 spaces :: Theory t => Lens' t [SpaceDefn]
-quantities :: Theory t => Lens' t [QuantityDict]
+quantities :: Theory t => Lens' t [DefinedQuantityDict]
 operations :: Theory t => Lens' t [ConceptChunk]
 defined_quant :: Theory t => Lens' t [ModelQDef]
 invariants :: Theory t => Lens' t [ModelExpr]
@@ -665,7 +645,7 @@ defined_fun :: Theory t => Lens' t [ModelQDef]
 --   <li>con - a ConceptChunk,</li>
 --   <li>vctx - definition context (<a>TheoryModel</a>s),</li>
 --   <li>spc - type definitions (<a>SpaceDefn</a>s),</li>
---   <li>quan - quantities (<a>QuantityDict</a>s),</li>
+--   <li>quan - quantities (<a>DefinedQuantityDict</a>s),</li>
 --   <li>ops - operations (<a>ConceptChunk</a>s),</li>
 --   <li>defq - definitions (<a>QDefinition</a>s),</li>
 --   <li>invs - invariants (<a>ModelExpr</a>s),</li>
@@ -682,8 +662,8 @@ data TheoryModel
 
 -- | Constructor for theory models. Must have a source. Uses the shortname
 --   of the reference address.
-tm :: (Quantity q, MayHaveUnit q, Concept c) => ModelKind ModelExpr -> [q] -> [c] -> [ModelQDef] -> [ModelExpr] -> [ModelQDef] -> [DecRef] -> String -> [Sentence] -> TheoryModel
+tm :: (Quantity q, MayHaveUnit q, Concept q, Concept c) => ModelKind ModelExpr -> [q] -> [c] -> [ModelQDef] -> [ModelExpr] -> [ModelQDef] -> [DecRef] -> String -> [Sentence] -> TheoryModel
 
 -- | Constructor for theory models. Uses the shortname of the reference
 --   address.
-tmNoRefs :: (Quantity q, MayHaveUnit q, Concept c) => ModelKind ModelExpr -> [q] -> [c] -> [ModelQDef] -> [ModelExpr] -> [ModelQDef] -> String -> [Sentence] -> TheoryModel
+tmNoRefs :: (Quantity q, MayHaveUnit q, Concept q, Concept c) => ModelKind ModelExpr -> [q] -> [c] -> [ModelQDef] -> [ModelExpr] -> [ModelQDef] -> String -> [Sentence] -> TheoryModel

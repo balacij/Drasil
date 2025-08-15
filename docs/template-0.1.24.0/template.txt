@@ -11,13 +11,13 @@
 
 module Drasil.Template.Body
 srs :: Document
-fullSI :: SystemInformation
+fullSI :: System
 printSetting :: PrintingInformation
 mkSRS :: SRSDecl
-si :: SystemInformation
+si :: System
+ideaDicts :: [IdeaDict]
+conceptChunks :: [ConceptChunk]
 symbMap :: ChunkDB
-usedDB :: ChunkDB
-refDB :: ReferenceDB
 citations :: BibRef
 inConstraints :: [UncertQ]
 outConstraints :: [UncertQ]

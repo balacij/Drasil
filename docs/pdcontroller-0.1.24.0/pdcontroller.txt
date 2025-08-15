@@ -11,7 +11,6 @@
 
 module Drasil.PDController.Concepts
 acronyms :: [CI]
-pdControllerApp :: CI
 pdControllerCI :: CI
 proportionalCI :: CI
 derivativeCI :: CI
@@ -43,6 +42,7 @@ ccDampingCoeff :: ConceptChunk
 ccStiffCoeff :: ConceptChunk
 concepts :: [IdeaDict]
 defs :: [ConceptChunk]
+termDefs :: [ConceptChunk]
 
 module Drasil.PDController.Assumptions
 assumptions :: [ConceptInstance]
@@ -89,8 +89,13 @@ module Drasil.PDController.IntroSection
 introPara :: Sentence
 introPurposeOfDoc :: Sentence
 introscopeOfReq :: Sentence
+externalLinkRef :: Reference
+scope :: Sentence
 introUserChar1 :: [Sentence]
 introUserChar2 :: [Sentence]
+
+module Drasil.PDController.MetaConcepts
+progName :: CI
 
 module Drasil.PDController.References
 citations :: BibRef
@@ -130,30 +135,32 @@ symAbsTol :: Symbol
 symRelTol :: Symbol
 symDampingCoeff :: Symbol
 symStifnessCoeff :: Symbol
-symbols :: [QuantityDict]
-qdLaplaceTransform :: QuantityDict
-qdFreqDomain :: QuantityDict
-qdFxnTDomain :: QuantityDict
-qdInvLaplaceTransform :: QuantityDict
-qdPropGain :: QuantityDict
-qdDerivGain :: QuantityDict
-qdSetPointTD :: QuantityDict
-qdSetPointFD :: QuantityDict
-qdProcessVariableTD :: QuantityDict
-qdProcessVariableFD :: QuantityDict
-qdProcessErrorTD :: QuantityDict
-qdProcessErrorFD :: QuantityDict
-qdPropControlFD :: QuantityDict
-qdDerivativeControlFD :: QuantityDict
-qdTransferFunctionFD :: QuantityDict
-qdCtrlVarFD :: QuantityDict
-qdCtrlVarTD :: QuantityDict
-qdStepTime :: QuantityDict
-qdSimTime :: QuantityDict
-qdDampingCoeff :: QuantityDict
-qdStiffnessCoeff :: QuantityDict
-inputs :: [QuantityDict]
-outputs :: [QuantityDict]
+symbols :: [DefinedQuantityDict]
+dqdLaplaceTransform :: DefinedQuantityDict
+dqdFreqDomain :: DefinedQuantityDict
+dqdFxnTDomain :: DefinedQuantityDict
+dqdInvLaplaceTransform :: DefinedQuantityDict
+dqdPropGain :: DefinedQuantityDict
+dqdDerivGain :: DefinedQuantityDict
+dqdSetPointTD :: DefinedQuantityDict
+dqdSetPointFD :: DefinedQuantityDict
+dqdProcessVariableTD :: DefinedQuantityDict
+dqdProcessVariableFD :: DefinedQuantityDict
+dqdProcessErrorTD :: DefinedQuantityDict
+dqdProcessErrorFD :: DefinedQuantityDict
+dqdPropControlFD :: DefinedQuantityDict
+dqdDerivativeControlFD :: DefinedQuantityDict
+dqdTransferFunctionFD :: DefinedQuantityDict
+dqdCtrlVarFD :: DefinedQuantityDict
+dqdCtrlVarTD :: DefinedQuantityDict
+dqdStepTime :: DefinedQuantityDict
+dqdSimTime :: DefinedQuantityDict
+dqdDampingCoeff :: DefinedQuantityDict
+dqdStiffnessCoeff :: DefinedQuantityDict
+dqdAbsTol :: DefinedQuantityDict
+dqdRelTol :: DefinedQuantityDict
+inputs :: [DefinedQuantityDict]
+outputs :: [DefinedQuantityDict]
 inputsUC :: [UncertQ]
 inpConstrained :: [ConstrConcept]
 ipPropGain :: ConstrConcept
@@ -169,8 +176,6 @@ ipStepTimeUnc :: UncertQ
 ipSimTimeUnc :: UncertQ
 odeAbsTolConst :: ConstQDef
 odeRelTolConst :: ConstQDef
-dqdAbsTol :: DefinedQuantityDict
-dqdRelTol :: DefinedQuantityDict
 pidConstants :: [ConstQDef]
 pidDqdConstants :: [DefinedQuantityDict]
 
@@ -253,9 +258,9 @@ pidODEInfo :: ODEInfo
 module Drasil.PDController.Body
 pidODEInfo :: ODEInfo
 printSetting :: PrintingInformation
-si :: SystemInformation
+si :: System
 srs :: Document
-fullSI :: SystemInformation
+fullSI :: System
 
 module Drasil.PDController.Choices
 codeSpecs :: CodeSpec

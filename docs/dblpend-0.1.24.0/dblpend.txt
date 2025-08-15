@@ -29,18 +29,13 @@ firstObject :: IdeaDict
 secondObject :: IdeaDict
 defs :: [ConceptChunk]
 arcLen :: ConceptChunk
-progName :: CI
 
 module Drasil.DblPend.Assumptions
 twoDMotion :: ConceptInstance
 cartSys :: ConceptInstance
 cartSysR :: ConceptInstance
 yAxisDir :: ConceptInstance
-startOriginSingle :: ConceptInstance
-startOriginDouble :: ConceptInstance
-firstPend :: ConceptInstance
-secondPend :: ConceptInstance
-assumpSingle :: [ConceptInstance]
+assumpBasic :: [ConceptInstance]
 assumpDouble :: [ConceptInstance]
 
 module Drasil.DblPend.Figures
@@ -51,6 +46,9 @@ module Drasil.DblPend.Goals
 goals :: [ConceptInstance]
 goalsInputs :: [Sentence]
 
+module Drasil.DblPend.MetaConcepts
+progName :: CI
+
 module Drasil.DblPend.References
 citations :: BibRef
 koothoor2013 :: Citation
@@ -59,12 +57,11 @@ smithLai2005 :: Citation
 smithKoothoor2016 :: Citation
 
 module Drasil.DblPend.Unitals
-symbols :: [QuantityDict]
+symbols :: [DefinedQuantityDict]
 acronyms :: [CI]
-inputs :: [QuantityDict]
-outputs :: [QuantityDict]
+inputs :: [DefinedQuantityDict]
+outputs :: [DefinedQuantityDict]
 constants :: [ConstQDef]
-units :: [UnitalChunk]
 unitalChunks :: [UnitalChunk]
 lenRod_1 :: UnitalChunk
 lenRod_2 :: UnitalChunk
@@ -228,18 +225,25 @@ portable :: ConceptInstance
 
 module Drasil.DblPend.Body
 srs :: Document
-fullSI :: SystemInformation
+fullSI :: System
 printSetting :: PrintingInformation
 mkSRS :: SRSDecl
-si :: SystemInformation
+si :: System
 purp :: Sentence
-symbolsAll :: [QuantityDict]
+motivation :: Sentence
+background :: Sentence
+symbolsAll :: [DefinedQuantityDict]
+ideaDicts :: [IdeaDict]
+abbreviationsList :: [IdeaDict]
+conceptChunks :: [ConceptChunk]
 symbMap :: ChunkDB
-usedDB :: ChunkDB
+
+-- | Holds all references and links used in the document.
+allRefs :: [Reference]
 stdFields :: Fields
-refDB :: ReferenceDB
 concIns :: [ConceptInstance]
 justification :: CI -> Sentence
+externalLinkRef :: Reference
 scope :: Sentence
 charsOfReader :: [Sentence]
 sysCtxIntro :: CI -> Contents

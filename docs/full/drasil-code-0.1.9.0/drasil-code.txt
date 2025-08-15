@@ -12,10 +12,10 @@
 module Language.Drasil.Chunk.CodeBase
 
 -- | Construct a <a>CodeVarChunk</a> from a <a>Quantity</a>.
-quantvar :: (Quantity c, MayHaveUnit c) => c -> CodeVarChunk
+quantvar :: (Quantity c, MayHaveUnit c, Concept c) => c -> CodeVarChunk
 
 -- | Construct a <a>CodeFuncChunk</a> from a <a>Quantity</a>.
-quantfunc :: (Quantity c, MayHaveUnit c) => c -> CodeFuncChunk
+quantfunc :: (Quantity c, MayHaveUnit c, Concept c) => c -> CodeFuncChunk
 
 -- | Get a list of <a>CodeChunk</a>s from an equation.
 codevars :: CodeExpr -> ChunkDB -> [CodeVarChunk]
@@ -34,7 +34,7 @@ funcResolve :: ChunkDB -> UID -> CodeFuncChunk
 module Language.Drasil.Chunk.Code
 
 -- | A <a>CodeIdea</a> must include some code and its name.
-class CodeIdea c
+class () => CodeIdea c
 
 -- | Name of the idea.
 codeName :: CodeIdea c => c -> String
@@ -43,35 +43,35 @@ codeName :: CodeIdea c => c -> String
 codeChunk :: CodeIdea c => c -> CodeChunk
 
 -- | Basic chunk representation in the code generation context. Contains a
---   QuantityDict and the kind of code (variable or function).
-data CodeChunk
-CodeC :: QuantityDict -> VarOrFunc -> CodeChunk
-[_qc] :: CodeChunk -> QuantityDict
+--   DefinedQuantityDict and the kind of code (variable or function).
+data () => CodeChunk
+CodeC :: DefinedQuantityDict -> VarOrFunc -> CodeChunk
+[_qc] :: CodeChunk -> DefinedQuantityDict
 [kind] :: CodeChunk -> VarOrFunc
 
 -- | Chunk representing a variable. The <tt>obv</tt> field represents the
 --   object containing this variable, if it is an object field.
-data CodeVarChunk
+data () => CodeVarChunk
 CodeVC :: CodeChunk -> Maybe CodeChunk -> CodeVarChunk
 [_ccv] :: CodeVarChunk -> CodeChunk
 [_obv] :: CodeVarChunk -> Maybe CodeChunk
 
 -- | Chunk representing a function.
-newtype CodeFuncChunk
+newtype () => CodeFuncChunk
 CodeFC :: CodeChunk -> CodeFuncChunk
 [_ccf] :: CodeFuncChunk -> CodeChunk
 
 -- | Details if a piece of code is meant to be a variable or a function.
-data VarOrFunc
+data () => VarOrFunc
 Var :: VarOrFunc
 Func :: VarOrFunc
 obv :: Lens' CodeVarChunk (Maybe CodeChunk)
 
 -- | Construct a <a>CodeVarChunk</a> from a <a>Quantity</a>.
-quantvar :: (Quantity c, MayHaveUnit c) => c -> CodeVarChunk
+quantvar :: (Quantity c, MayHaveUnit c, Concept c) => c -> CodeVarChunk
 
 -- | Construct a <a>CodeFuncChunk</a> from a <a>Quantity</a>.
-quantfunc :: (Quantity c, MayHaveUnit c) => c -> CodeFuncChunk
+quantfunc :: (Quantity c, MayHaveUnit c, Concept c) => c -> CodeFuncChunk
 
 -- | Combine an Object-type <a>CodeChunk</a> with another <a>CodeChunk</a>
 --   to create a new <a>CodeChunk</a> which represents a field of the
@@ -106,9 +106,9 @@ funcPrefix :: String
 --   the CodeExpr language.
 class CodeIdea c => DefiningCodeExpr c
 codeExpr :: DefiningCodeExpr c => Lens' c CodeExpr
-instance Language.Drasil.Chunk.CodeVar.CodeIdea Language.Drasil.Chunk.CodeVar.CodeChunk
-instance Language.Drasil.Chunk.CodeVar.CodeIdea Language.Drasil.Chunk.CodeVar.CodeVarChunk
-instance Language.Drasil.Chunk.CodeVar.CodeIdea Language.Drasil.Chunk.CodeVar.CodeFuncChunk
+instance Drasil.Code.CodeVar.CodeIdea Drasil.Code.CodeVar.CodeChunk
+instance Drasil.Code.CodeVar.CodeIdea Drasil.Code.CodeVar.CodeVarChunk
+instance Drasil.Code.CodeVar.CodeIdea Drasil.Code.CodeVar.CodeFuncChunk
 
 module Language.Drasil.Chunk.ConstraintMap
 
@@ -133,21 +133,23 @@ sfwrLookup :: HasUID q => ConstraintCEMap -> q -> (q, [ConstraintCE])
 module Language.Drasil.Chunk.NamedArgument
 
 -- | Any quantity can be a named argument (wrapper for
---   <a>QuantityDict</a>), but with more of a focus on generating code
---   arguments.
+--   <a>DefinedQuantityDict</a>), but with more of a focus on generating
+--   code arguments.
 newtype NamedArgument
-NA :: QuantityDict -> NamedArgument
-[_qtd] :: NamedArgument -> QuantityDict
+NA :: DefinedQuantityDict -> NamedArgument
+[_qtd] :: NamedArgument -> DefinedQuantityDict
 
 -- | Smart constructor for <a>NamedArgument</a> .
-narg :: (Quantity q, MayHaveUnit q) => q -> NamedArgument
-instance Language.Drasil.UID.HasUID Language.Drasil.Chunk.NamedArgument.NamedArgument
+narg :: (Quantity q, MayHaveUnit q, Concept q) => q -> NamedArgument
+instance Drasil.Database.UID.HasUID Language.Drasil.Chunk.NamedArgument.NamedArgument
 instance Language.Drasil.Chunk.NamedIdea.NamedIdea Language.Drasil.Chunk.NamedArgument.NamedArgument
 instance Language.Drasil.Chunk.NamedIdea.Idea Language.Drasil.Chunk.NamedArgument.NamedArgument
+instance Language.Drasil.Classes.Definition Language.Drasil.Chunk.NamedArgument.NamedArgument
+instance Language.Drasil.Classes.ConceptDomain Language.Drasil.Chunk.NamedArgument.NamedArgument
 instance Language.Drasil.Space.HasSpace Language.Drasil.Chunk.NamedArgument.NamedArgument
 instance Language.Drasil.Symbol.HasSymbol Language.Drasil.Chunk.NamedArgument.NamedArgument
 instance Language.Drasil.Classes.Quantity Language.Drasil.Chunk.NamedArgument.NamedArgument
-instance Language.Drasil.Classes.IsArgumentName Language.Drasil.Chunk.NamedArgument.NamedArgument
+instance Drasil.Code.Classes.IsArgumentName Language.Drasil.Chunk.NamedArgument.NamedArgument
 instance GHC.Classes.Eq Language.Drasil.Chunk.NamedArgument.NamedArgument
 instance Language.Drasil.Chunk.UnitDefn.MayHaveUnit Language.Drasil.Chunk.NamedArgument.NamedArgument
 
@@ -170,13 +172,15 @@ pcAuto :: CodeIdea c => c -> ParameterChunk
 
 -- | Constructs a pass-by-value parameter.
 pcVal :: CodeIdea c => c -> ParameterChunk
-instance Language.Drasil.UID.HasUID Language.Drasil.Chunk.Parameter.ParameterChunk
+instance Drasil.Database.UID.HasUID Language.Drasil.Chunk.Parameter.ParameterChunk
 instance Language.Drasil.Chunk.NamedIdea.NamedIdea Language.Drasil.Chunk.Parameter.ParameterChunk
 instance Language.Drasil.Chunk.NamedIdea.Idea Language.Drasil.Chunk.Parameter.ParameterChunk
+instance Language.Drasil.Classes.Definition Language.Drasil.Chunk.Parameter.ParameterChunk
+instance Language.Drasil.Classes.ConceptDomain Language.Drasil.Chunk.Parameter.ParameterChunk
 instance Language.Drasil.Space.HasSpace Language.Drasil.Chunk.Parameter.ParameterChunk
 instance Language.Drasil.Symbol.HasSymbol Language.Drasil.Chunk.Parameter.ParameterChunk
 instance Language.Drasil.Classes.Quantity Language.Drasil.Chunk.Parameter.ParameterChunk
-instance Language.Drasil.Chunk.CodeVar.CodeIdea Language.Drasil.Chunk.Parameter.ParameterChunk
+instance Drasil.Code.CodeVar.CodeIdea Language.Drasil.Chunk.Parameter.ParameterChunk
 instance GHC.Classes.Eq Language.Drasil.Chunk.Parameter.ParameterChunk
 instance Language.Drasil.Chunk.UnitDefn.MayHaveUnit Language.Drasil.Chunk.Parameter.ParameterChunk
 
@@ -198,13 +202,14 @@ spaceToCodeType :: Space -> [CodeType]
 module Language.Drasil.Code.CodeQuantityDicts
 
 -- | Variable for the input file's name.
-inFileName :: QuantityDict
+inFileName :: DefinedQuantityDict
 
 -- | Variable for an object of the InputParameters class.
-inParams :: QuantityDict
+inParams :: DefinedQuantityDict
 
 -- | Variable for an object of the Constants class.
-consts :: QuantityDict
+consts :: DefinedQuantityDict
+codeDQDs :: [DefinedQuantityDict]
 
 module Language.Drasil.Code.DataDesc
 
@@ -528,6 +533,7 @@ CSharp :: Lang
 Java :: Lang
 Python :: Lang
 Swift :: Lang
+Julia :: Lang
 instance GHC.Show.Show Language.Drasil.Code.Lang.Lang
 instance GHC.Classes.Eq Language.Drasil.Code.Lang.Lang
 
@@ -606,7 +612,7 @@ ODE :: DefinitionType
 
 -- | Constructs a <a>CodeDefinition</a> where the underlying
 --   <a>CodeChunk</a> is for a function.
-qtoc :: (Quantity (q Expr), MayHaveUnit (q Expr), DefiningExpr q) => q Expr -> CodeDefinition
+qtoc :: (Quantity (q Expr), MayHaveUnit (q Expr), DefiningExpr q, Concept (q Expr)) => q Expr -> CodeDefinition
 
 -- | Constructs a <a>CodeDefinition</a> where the underlying
 --   <a>CodeChunk</a> is for a variable.
@@ -616,16 +622,18 @@ qtov :: CanGenCode e => QDefinition e -> CodeDefinition
 odeDef :: ODEInfo -> CodeDefinition
 auxExprs :: Lens' CodeDefinition [CodeExpr]
 defType :: Lens' CodeDefinition DefinitionType
-instance Language.Drasil.UID.HasUID Language.Drasil.Chunk.CodeDefinition.CodeDefinition
+instance Drasil.Database.UID.HasUID Language.Drasil.Chunk.CodeDefinition.CodeDefinition
 instance Language.Drasil.Chunk.NamedIdea.NamedIdea Language.Drasil.Chunk.CodeDefinition.CodeDefinition
 instance Language.Drasil.Chunk.NamedIdea.Idea Language.Drasil.Chunk.CodeDefinition.CodeDefinition
+instance Language.Drasil.Classes.Definition Language.Drasil.Chunk.CodeDefinition.CodeDefinition
+instance Language.Drasil.Classes.ConceptDomain Language.Drasil.Chunk.CodeDefinition.CodeDefinition
 instance Language.Drasil.Space.HasSpace Language.Drasil.Chunk.CodeDefinition.CodeDefinition
 instance Language.Drasil.Symbol.HasSymbol Language.Drasil.Chunk.CodeDefinition.CodeDefinition
 instance Language.Drasil.Classes.Quantity Language.Drasil.Chunk.CodeDefinition.CodeDefinition
-instance Language.Drasil.Chunk.CodeVar.CodeIdea Language.Drasil.Chunk.CodeDefinition.CodeDefinition
+instance Drasil.Code.CodeVar.CodeIdea Language.Drasil.Chunk.CodeDefinition.CodeDefinition
 instance GHC.Classes.Eq Language.Drasil.Chunk.CodeDefinition.CodeDefinition
 instance Language.Drasil.Chunk.UnitDefn.MayHaveUnit Language.Drasil.Chunk.CodeDefinition.CodeDefinition
-instance Language.Drasil.Chunk.CodeVar.DefiningCodeExpr Language.Drasil.Chunk.CodeDefinition.CodeDefinition
+instance Drasil.Code.CodeVar.DefiningCodeExpr Language.Drasil.Chunk.CodeDefinition.CodeDefinition
 
 
 -- | Defines an AST for defining Modules.
@@ -633,18 +641,19 @@ module Language.Drasil.Mod
 
 -- | Holds information needed to define a class.
 data Class
-ClassDef :: Name -> Maybe Name -> Description -> [StateVariable] -> [Func] -> Class
+ClassDef :: Name -> Maybe Name -> Description -> [StateVariable] -> [Func] -> [Func] -> Class
 [className] :: Class -> Name
 [implements] :: Class -> Maybe Name
 [classDesc] :: Class -> Description
 [stateVars] :: Class -> [StateVariable]
+[constructors] :: Class -> [Func]
 [methods] :: Class -> [Func]
 
--- | State variables hold attach a <a>ScopeTag</a> to a
+-- | State variables hold attach a <a>VisibilityTag</a> to a
 --   <a>CodeVarChunk</a>.
 data StateVariable
-SV :: ScopeTag -> CodeVarChunk -> StateVariable
-[svScope] :: StateVariable -> ScopeTag
+SV :: VisibilityTag -> CodeVarChunk -> StateVariable
+[svVisibility] :: StateVariable -> VisibilityTag
 [stVar] :: StateVariable -> CodeVarChunk
 
 -- | Holds a function definition or function data.
@@ -703,7 +712,7 @@ type Description = String
 type Import = String
 
 -- | Define an assignment statement.
-($:=) :: (Quantity c, MayHaveUnit c) => c -> CodeExpr -> FuncStmt
+($:=) :: (Quantity c, MayHaveUnit c, Concept c) => c -> CodeExpr -> FuncStmt
 
 -- | Define a public state variable based on the given <a>CodeVarChunk</a>.
 pubStateVar :: CodeVarChunk -> StateVariable
@@ -714,11 +723,11 @@ privStateVar :: CodeVarChunk -> StateVariable
 
 -- | Define a class with the given <a>Name</a>, <a>Description</a>, state
 --   variables, and methods.
-classDef :: Name -> Description -> [StateVariable] -> [Func] -> Class
+classDef :: Name -> Description -> [StateVariable] -> [Func] -> [Func] -> Class
 
 -- | Define a class that implements an interface. 1st <a>Name</a> is class
 --   name, 2nd is interface name.
-classImplements :: Name -> Name -> Description -> [StateVariable] -> [Func] -> Class
+classImplements :: Name -> Name -> Description -> [StateVariable] -> [Func] -> [Func] -> Class
 
 -- | Define a constructor, with the given name, description, parameters,
 --   initializers (variable-value pairs), and <a>FuncStmt</a>s for the
@@ -728,15 +737,15 @@ ctorDef :: Name -> Description -> [ParameterChunk] -> [Initializer] -> [FuncStmt
 -- | Define a for-loop. <a>Quantity</a> is for the iteration variable,
 --   <a>CodeExpr</a> is the upper bound at that variable (the variable will
 --   start with a value of 0). [<a>FuncStmt</a>] is for the loop body.
-ffor :: (Quantity c, MayHaveUnit c) => c -> CodeExpr -> [FuncStmt] -> FuncStmt
+ffor :: (Quantity c, MayHaveUnit c, Concept c) => c -> CodeExpr -> [FuncStmt] -> FuncStmt
 
 -- | Define a for-loop. <a>Quantity</a> is for the iteration variable, and
 --   3 <a>CodeExpr</a>s for the start, stop, step numbers.
 --   [<a>FuncStmt</a>] is for the loop body.
-fforRange :: (Quantity c, MayHaveUnit c) => c -> CodeExpr -> CodeExpr -> CodeExpr -> [FuncStmt] -> FuncStmt
+fforRange :: (Quantity c, MayHaveUnit c, Concept c) => c -> CodeExpr -> CodeExpr -> CodeExpr -> [FuncStmt] -> FuncStmt
 
 -- | Define a declare-define statement.
-fDecDef :: (Quantity c, MayHaveUnit c) => c -> CodeExpr -> FuncStmt
+fDecDef :: (Quantity c, MayHaveUnit c, Concept c) => c -> CodeExpr -> FuncStmt
 
 -- | Gets the name of a function.
 fname :: Func -> Name
@@ -752,7 +761,7 @@ funcData :: Name -> Description -> DataDesc -> Func
 -- | Define a function by providing the <a>FuncStmt</a>s for its body.
 --   Other parameters are function name, description, list of parameters,
 --   space of the returned value, and description of the returned value.
-funcDef :: (Quantity c, MayHaveUnit c) => Name -> Description -> [c] -> Space -> Maybe Description -> [FuncStmt] -> Func
+funcDef :: (Quantity c, MayHaveUnit c, Concept c) => Name -> Description -> [c] -> Space -> Maybe Description -> [FuncStmt] -> Func
 
 -- | Like <a>funcDef</a> but uses <a>ParameterChunk</a>s to represent the
 --   parameters.
@@ -1214,6 +1223,46 @@ mkODELib :: Name -> Version -> ExternalLibrary -> (ODEInfo -> ExternalLibraryCal
 mkODELibNoPath :: Name -> Version -> ExternalLibrary -> (ODEInfo -> ExternalLibraryCall) -> [Lang] -> ODELibPckg
 
 
+-- | Defines functions for simultaneous interpretation of ExternalLibrary
+--   and ExternalLibraryCall.
+module Language.Drasil.Code.ExtLibImport
+
+-- | State object used during interpretation of an <a>ExternalLibrary</a>
+--   and <a>ExternalLibraryCall</a>.
+data ExtLibState
+ELS :: [Mod] -> [FuncStmt] -> [Name] -> [FuncStmt] -> [String] -> [(Name, Name)] -> ExtLibState
+
+-- | Additional modules that must be generated to use the library.
+[_auxMods] :: ExtLibState -> [Mod]
+
+-- | The defining statements for variables that must be pre-defined before
+--   being passed as arguments in an external library call.
+[_defs] :: ExtLibState -> [FuncStmt]
+
+-- | The names of variables for which a defining statement has already been
+--   generated.
+[_defined] :: ExtLibState -> [Name]
+
+-- | The statements corresponding to the external library use case.
+[_steps] :: ExtLibState -> [FuncStmt]
+
+-- | The imports required to use the external library.
+[_imports] :: ExtLibState -> [String]
+
+-- | An association list between library method/function names and the
+--   external library module that exports them.
+[_modExports] :: ExtLibState -> [(Name, Name)]
+auxMods :: Lens' ExtLibState [Mod]
+defs :: Lens' ExtLibState [FuncStmt]
+imports :: Lens' ExtLibState [String]
+modExports :: Lens' ExtLibState [(Name, Name)]
+steps :: Lens' ExtLibState [FuncStmt]
+
+-- | Interprets an <a>ExternalLibrary</a> and <a>ExternalLibraryCall</a>
+--   and returns the resulting <a>ExtLibState</a>.
+genExternalLibraryCall :: ExternalLibrary -> ExternalLibraryCall -> ExtLibState
+
+
 -- | Defines the design language for SCS.
 module Language.Drasil.Choices
 
@@ -1221,7 +1270,7 @@ module Language.Drasil.Choices
 --   down. Full details of Choices documentation
 --   <a>https://github.com/JacquesCarette/Drasil/wiki/The-Code-Generator</a>
 data Choices
-Choices :: [Lang] -> Architecture -> DataInfo -> Maps -> OptionalFeatures -> Constraints -> [ExtLib] -> Int -> Choices
+Choices :: [Lang] -> Architecture -> DataInfo -> Maps -> OptionalFeatures -> Constraints -> [ExtLib] -> (InternalConcept -> Name) -> Int -> Choices
 
 -- | Target languages. Choosing multiple means program will be generated in
 --   multiple languages.
@@ -1246,6 +1295,9 @@ Choices :: [Lang] -> Architecture -> DataInfo -> Maps -> OptionalFeatures -> Con
 
 -- | List of external libraries what to utilize
 [extLibs] :: Choices -> [ExtLib]
+
+-- | Function to get modifiable function names
+[icNames] :: Choices -> InternalConcept -> Name
 
 -- | Number of folders to go up in order to obtain the image
 [folderVal] :: Choices -> Int
@@ -1371,25 +1423,10 @@ Math :: ODE -> ExtLib
 data Modularity
 
 -- | Different modules. For controller, input, calculations, output.
-Modular :: InputModule -> Modularity
+Modular :: Modularity
 
 -- | All generated code is in one module/file.
 Unmodular :: Modularity
-
--- | Options for input modules.
-data InputModule
-
--- | Input-related functions combined in one module.
-Combined :: InputModule
-
--- | Input-related functions each in own module.
-Separated :: InputModule
-
--- | Determines whether there is a <a>Combined</a> input module or many
---   <a>Separated</a> input modules, based on a <a>Choices</a> structure.
---   An <a>Unmodular</a> design implicitly means that input modules are
---   <a>Combined</a>.
-inputModule :: Choices -> InputModule
 
 -- | Variable structure options.
 data Structure
@@ -1524,10 +1561,26 @@ defaultChoices :: Choices
 -- | Renders <a>Choices</a> as <a>Sentence</a>s.
 choicesSent :: Choices -> [Sentence]
 showChs :: RenderChoices a => a -> Sentence
+
+-- | Data type of internal concepts
+data InternalConcept
+InputConstraintsFn :: InternalConcept
+InputConstraintsMod :: InternalConcept
+WriteOutput :: InternalConcept
+DerivedValuesFn :: InternalConcept
+DerivedValuesMod :: InternalConcept
+GetInput :: InternalConcept
+InputParameters :: InternalConcept
+InputFormat :: InternalConcept
+OutputFormat :: InternalConcept
+Calculations :: InternalConcept
+Constants :: InternalConcept
 instance GHC.Classes.Eq Language.Drasil.Choices.CodeConcept
 instance GHC.Classes.Eq Language.Drasil.Choices.Comments
 instance GHC.Classes.Eq Language.Drasil.Choices.Logging
 instance GHC.Classes.Eq Language.Drasil.Choices.AuxFile
+instance GHC.Classes.Ord Language.Drasil.Choices.InternalConcept
+instance GHC.Classes.Eq Language.Drasil.Choices.InternalConcept
 instance Language.Drasil.Choices.RenderChoices Language.Drasil.Choices.ConstraintBehaviour
 instance Language.Drasil.Choices.RenderChoices Language.Drasil.Choices.AuxFile
 instance Language.Drasil.Choices.RenderChoices Language.Drasil.Choices.Logging
@@ -1560,12 +1613,80 @@ type Derived = CodeDefinition
 -- | Mathematical definition.
 type Def = CodeDefinition
 
--- | Code specifications. Holds information needed to generate code.
-data CodeSpec
-[CodeSpec] :: HasName a => Name -> [a] -> Purpose -> Background -> [Input] -> [Input] -> [Derived] -> [Output] -> [FilePath] -> [Def] -> ConstraintCEMap -> [Const] -> ConstantMap -> [Mod] -> ChunkDB -> CodeSpec
-
 -- | Maps constants to their respective <a>CodeDefinition</a>.
 type ConstantMap = Map UID CodeDefinition
+
+-- | Old Code specifications. Holds information needed to generate code.
+data OldCodeSpec
+OldCodeSpec :: Name -> People -> [Input] -> [Input] -> [Derived] -> [Output] -> [FilePath] -> [Def] -> ConstraintCEMap -> [Const] -> ConstantMap -> [Mod] -> ChunkDB -> OldCodeSpec
+
+-- | Program name.
+[_pName] :: OldCodeSpec -> Name
+
+-- | Authors.
+[_authors] :: OldCodeSpec -> People
+
+-- | All inputs.
+[_inputs] :: OldCodeSpec -> [Input]
+
+-- | Explicit inputs (values to be supplied by a file).
+[_extInputs] :: OldCodeSpec -> [Input]
+
+-- | Derived inputs (each calculated from explicit inputs in a single
+--   step).
+[_derivedInputs] :: OldCodeSpec -> [Derived]
+
+-- | All outputs.
+[_outputs] :: OldCodeSpec -> [Output]
+
+-- | List of files that must be in same directory for running the
+--   executable.
+[_configFiles] :: OldCodeSpec -> [FilePath]
+
+-- | Mathematical definitions, ordered so that they form a path from inputs
+--   to outputs.
+[_execOrder] :: OldCodeSpec -> [Def]
+
+-- | Map from <a>UID</a>s to constraints for all constrained chunks used in
+--   the problem.
+[_cMap] :: OldCodeSpec -> ConstraintCEMap
+
+-- | List of all constants used in the problem.
+[_constants] :: OldCodeSpec -> [Const]
+
+-- | Map containing all constants used in the problem.
+[_constMap] :: OldCodeSpec -> ConstantMap
+
+-- | Additional modules required in the generated code, which Drasil cannot
+--   yet automatically define.
+[_mods] :: OldCodeSpec -> [Mod]
+
+-- | The database of all chunks used in the problem.
+[_systemdb] :: OldCodeSpec -> ChunkDB
+class HasOldCodeSpec c_axJq
+oldCodeSpec :: HasOldCodeSpec c_axJq => Lens' c_axJq OldCodeSpec
+authorsO :: HasOldCodeSpec c_axJq => Lens' c_axJq People
+cMapO :: HasOldCodeSpec c_axJq => Lens' c_axJq ConstraintCEMap
+configFilesO :: HasOldCodeSpec c_axJq => Lens' c_axJq [FilePath]
+constMapO :: HasOldCodeSpec c_axJq => Lens' c_axJq ConstantMap
+constantsO :: HasOldCodeSpec c_axJq => Lens' c_axJq [Const]
+derivedInputsO :: HasOldCodeSpec c_axJq => Lens' c_axJq [Derived]
+execOrderO :: HasOldCodeSpec c_axJq => Lens' c_axJq [Def]
+extInputsO :: HasOldCodeSpec c_axJq => Lens' c_axJq [Input]
+inputsO :: HasOldCodeSpec c_axJq => Lens' c_axJq [Input]
+modsO :: HasOldCodeSpec c_axJq => Lens' c_axJq [Mod]
+outputsO :: HasOldCodeSpec c_axJq => Lens' c_axJq [Output]
+pNameO :: HasOldCodeSpec c_axJq => Lens' c_axJq Name
+systemdbO :: HasOldCodeSpec c_axJq => Lens' c_axJq ChunkDB
+
+-- | New Code Specification. Holds system information and a reference to
+--   <a>OldCodeSpec</a>.
+data CodeSpec
+CS :: System -> OldCodeSpec -> CodeSpec
+[_system'] :: CodeSpec -> System
+[_oldCode] :: CodeSpec -> OldCodeSpec
+system' :: Lens' CodeSpec System
+oldCode :: Lens' CodeSpec OldCodeSpec
 
 -- | Converts a list of chunks that have <a>UID</a>s to a Map from
 --   <a>UID</a> to the associated chunk.
@@ -1577,13 +1698,20 @@ getODE :: [ExtLib] -> Maybe ODE
 -- | Maps ODE to their respective <a>CodeDefinition</a>.
 mapODE :: Maybe ODE -> [CodeDefinition]
 
--- | Defines a <a>CodeSpec</a> based on the <a>SystemInformation</a>,
---   <a>Choices</a>, and <a>Mod</a>s defined by the user.
-codeSpec :: SystemInformation -> Choices -> [Mod] -> CodeSpec
+-- | Creates a <a>CodeSpec</a> using the provided <tt>System</tt>,
+--   <a>Choices</a>, and <a>Mod</a>s. The <a>CodeSpec</a> consists of the
+--   system information and a corresponding <a>OldCodeSpec</a>.
+codeSpec :: System -> Choices -> [Mod] -> CodeSpec
 
--- | Convert a <a>Func</a> to an implementation-stage <a>QuantityDict</a>
---   representing the function.
-asVC :: Func -> QuantityDict
+-- | Generates an <a>OldCodeSpec</a> from <tt>System</tt>, <a>Choices</a>,
+--   and a list of <a>Mod</a>s. This function extracts various components
+--   (e.g., inputs, outputs, constraints, etc.) from <tt>System</tt> to
+--   populate the <a>OldCodeSpec</a> structure.
+oldcodeSpec :: System -> Choices -> [Mod] -> OldCodeSpec
+
+-- | Convert a <a>Func</a> to an implementation-stage
+--   <a>DefinedQuantityDict</a> representing the function.
+asVC :: Func -> DefinedQuantityDict
 
 -- | Get a <a>UID</a> of a chunk corresponding to a <a>Func</a>.
 funcUID :: Func -> UID
@@ -1609,15 +1737,18 @@ getConstraints :: HasUID c => ConstraintCEMap -> [c] -> [ConstraintCE]
 
 -- | Get a list of <a>CodeChunk</a>s from a constraint.
 constraintvars :: ConstraintCE -> ChunkDB -> [CodeChunk]
+instance Drasil.System.HasSystem Language.Drasil.CodeSpec.CodeSpec
+instance Language.Drasil.CodeSpec.HasOldCodeSpec Language.Drasil.CodeSpec.CodeSpec
+instance Language.Drasil.CodeSpec.HasOldCodeSpec Language.Drasil.CodeSpec.OldCodeSpec
 
 
--- | Defines a package extension for GOOL, with functions for pairing a
---   GOOL program with auxiliary, non-source-code files.
-module Language.Drasil.Code.Imperative.GOOL.ClassInterface
+-- | This module defines structures and functions for handling README
+--   files, which are used as auxiliary documentation files for the system.
+module Language.Drasil.Code.Imperative.ReadMe.Import
 
 -- | Holds all information needed to create a README file.
 data ReadMeInfo
-ReadMeInfo :: LangAbbrev -> LangVers -> Maybe String -> ImplementationType -> [(Name, Version)] -> [FilePath] -> [Contributor] -> [FilePath] -> CaseName -> ExamplePurpose -> ExampleDescr -> Int -> (InFile, OutFile) -> ReadMeInfo
+ReadMeInfo :: LangAbbrev -> LangVers -> Maybe String -> ImplementationType -> [(Name, Version)] -> [FilePath] -> [Contributor] -> [FilePath] -> CaseName -> ExamplePurpose -> ExampleDescr -> ExampleMotivation -> ExampleScope -> Int -> (InFile, OutFile) -> ReadMeInfo
 [langName] :: ReadMeInfo -> LangAbbrev
 [langVersion] :: ReadMeInfo -> LangVers
 [invalidOS] :: ReadMeInfo -> Maybe String
@@ -1629,8 +1760,32 @@ ReadMeInfo :: LangAbbrev -> LangVers -> Maybe String -> ImplementationType -> [(
 [caseName] :: ReadMeInfo -> CaseName
 [examplePurpose] :: ReadMeInfo -> ExamplePurpose
 [exampleDescr] :: ReadMeInfo -> ExampleDescr
+[exampleMotivation] :: ReadMeInfo -> ExampleMotivation
+[exampleScope] :: ReadMeInfo -> ExampleScope
 [folderNum] :: ReadMeInfo -> Int
 [inputOutput] :: ReadMeInfo -> (InFile, OutFile)
+
+module Language.Drasil.Code.Imperative.WriteReadMe
+
+-- | Generates a README file.
+makeReadMe :: ReadMeInfo -> Doc
+
+module Language.Drasil.Code.Imperative.GenODE
+
+-- | Chooses the first <a>ODELibPckg</a> from the list specified by the
+--   user that is compatible with the current target <a>Lang</a>.
+--   Interprets the ExternalLibrary and ExternalLibraryCall for the
+--   selected <a>ODELibPckg</a> by concretizing the ExternalLibraryCall
+--   with each of the <tt>ODEInfo</tt>s The internal helper chooseODELib'
+--   keeps a read only preference list and a currently considered
+--   preference list (which can change), this facilitates the
+--   <a>firstChoiceODELib</a> check.
+chooseODELib :: Lang -> Maybe ODE -> State [Sentence] ODEGenInfo
+
+
+-- | Defines a package extension for GOOL, with functions for pairing a
+--   GOOL program with auxiliary, non-source-code files.
+module Language.Drasil.Code.Imperative.GOOL.ClassInterface
 
 -- | Members of this class must have all the information necessary for the
 --   <a>AuxiliarySym</a> in addition to information necessary to create a
@@ -1656,10 +1811,242 @@ makefile :: AuxiliarySym r => [FilePath] -> ImplementationType -> [Comments] -> 
 auxHelperDoc :: AuxiliarySym r => r (AuxHelper r) -> Doc
 auxFromData :: AuxiliarySym r => FilePath -> Doc -> r (Auxiliary r)
 
-module Language.Drasil.Code.Imperative.WriteReadMe
+module Language.Drasil.Code.Imperative.DrasilState
+
+-- | Abbreviation used throughout generator.
+type GenState = State DrasilState
+
+-- | Private State, used to push these options around the generator.
+data DrasilState
+DrasilState :: CodeSpec -> Modularity -> ImplementationType -> Structure -> ConstantStructure -> ConstantRepr -> MatchedConceptMap -> MatchedSpaces -> ConstraintBehaviour -> ConstraintBehaviour -> [Comments] -> Verbosity -> String -> String -> [Logging] -> [AuxFile] -> [Expr] -> (InternalConcept -> Name) -> [Mod] -> [(Name, Version)] -> ExtLibMap -> [FilePath] -> ModExportMap -> ModExportMap -> ClassDefinitionMap -> Set Name -> Int -> String -> String -> Doc -> [(Space, CodeType)] -> ScopeType -> DrasilState
+[codeSpec] :: DrasilState -> CodeSpec
+[modular] :: DrasilState -> Modularity
+[implType] :: DrasilState -> ImplementationType
+[inStruct] :: DrasilState -> Structure
+[conStruct] :: DrasilState -> ConstantStructure
+[conRepr] :: DrasilState -> ConstantRepr
+[concMatches] :: DrasilState -> MatchedConceptMap
+[spaceMatches] :: DrasilState -> MatchedSpaces
+[onSfwrC] :: DrasilState -> ConstraintBehaviour
+[onPhysC] :: DrasilState -> ConstraintBehaviour
+[commented] :: DrasilState -> [Comments]
+[doxOutput] :: DrasilState -> Verbosity
+[date] :: DrasilState -> String
+[logName] :: DrasilState -> String
+[logKind] :: DrasilState -> [Logging]
+[auxiliaries] :: DrasilState -> [AuxFile]
+[sampleData] :: DrasilState -> [Expr]
+[dsICNames] :: DrasilState -> InternalConcept -> Name
+[modules] :: DrasilState -> [Mod]
+[extLibNames] :: DrasilState -> [(Name, Version)]
+[extLibMap] :: DrasilState -> ExtLibMap
+[libPaths] :: DrasilState -> [FilePath]
+[eMap] :: DrasilState -> ModExportMap
+[libEMap] :: DrasilState -> ModExportMap
+[clsMap] :: DrasilState -> ClassDefinitionMap
+[defSet] :: DrasilState -> Set Name
+[getVal] :: DrasilState -> Int
+[currentModule] :: DrasilState -> String
+[currentClass] :: DrasilState -> String
+[_designLog] :: DrasilState -> Doc
+[_loggedSpaces] :: DrasilState -> [(Space, CodeType)]
+[currentScope] :: DrasilState -> ScopeType
+designLog :: Lens' DrasilState Doc
+
+-- | Type for the mapping between <a>Space</a>s and <a>CodeType</a>s.
+type MatchedSpaces = Space -> GenState CodeType
+
+-- | Variable/function name maps to module name.
+type ModExportMap = Map String String
+
+-- | Variable/function name maps to class name.
+type ClassDefinitionMap = Map String String
+
+-- | Variable scope
+data ScopeType
+Local :: ScopeType
+Global :: ScopeType
+MainFn :: ScopeType
+
+-- | Builds the module export map, mapping each function and state variable
+--   name in the generated code to the name of the generated module that
+--   exports it.
+modExportMap :: OldCodeSpec -> Choices -> [Mod] -> ModExportMap
+
+-- | Builds the class definition map, mapping each generated method and
+--   state variable name to the name of the generated class where it is
+--   defined.
+clsDefMap :: OldCodeSpec -> Choices -> [Mod] -> ClassDefinitionMap
+
+-- | Adds a message to the design log if the given
+--   <a>Space</a>-<a>CodeType</a> match has not already been logged.
+addToDesignLog :: Space -> CodeType -> Doc -> DrasilState -> DrasilState
+
+-- | Adds a <a>Space</a>-<a>CodeType</a> pair to the loggedSpaces list in
+--   <a>DrasilState</a> to prevent a duplicate log from being generated for
+--   that <a>Space</a>-<a>CodeType</a> pair.
+addLoggedSpace :: Space -> CodeType -> DrasilState -> DrasilState
+
+-- | Get InternalConcept name using DrasilState
+genICName :: InternalConcept -> GenState Name
+
+module Language.Drasil.Code.Imperative.SpaceMatch
+
+-- | Concretizes the <a>spaceMatch</a> in <a>Choices</a> to a
+--   <tt>MatchedSpace</tt> based on target language.
+chooseSpace :: Lang -> Choices -> MatchedSpaces
+
+module Language.Drasil.Code.Imperative.Parameters
+
+-- | Since the input constructor calls the three input-related methods, the
+--   parameters to the constructor are the parameters to the three methods,
+--   except excluding any of variables that are state variables in the
+--   class, since they are already in scope. If InputParameters is not in
+--   the definition list, then the default constructor is used, which takes
+--   no parameters.
+getInConstructorParams :: GenState [CodeVarChunk]
+
+-- | The inputs to the function for reading inputs are the input file name.
+getInputFormatIns :: GenState [CodeVarChunk]
+
+-- | The outputs from the function for reading inputs are the inputs.
+getInputFormatOuts :: GenState [CodeVarChunk]
+
+-- | The inputs to the function for calculating derived inputs are any
+--   variables used in the equations for the derived inputs.
+getDerivedIns :: GenState [CodeVarChunk]
+
+-- | The outputs from the function for calculating derived inputs are the
+--   derived inputs.
+getDerivedOuts :: GenState [CodeVarChunk]
+
+-- | The parameters to the function for checking constraints on the inputs
+--   are any inputs with constraints, and any variables used in the
+--   expressions of the constraints.
+getConstraintParams :: GenState [CodeVarChunk]
+
+-- | The parameters to a calculation function are any variables used in the
+--   expression representing the calculation.
+getCalcParams :: CodeDefinition -> GenState [CodeVarChunk]
+
+-- | The parameters to the function for printing outputs are the outputs.
+getOutputParams :: GenState [CodeVarChunk]
+instance GHC.Classes.Eq Language.Drasil.Code.Imperative.Parameters.ParamType
+
+module Language.Drasil.Code.Imperative.Logging
+
+-- | Generates a statement that logs the given variable's value, if the
+--   user chose to turn on logging of variable assignments.
+maybeLog :: SharedProg r => SVariable r -> GenState [MSStatement r]
+
+-- | Generates the body of a function with the given name, list of
+--   parameters, and blocks to include in the body. If the user chose to
+--   turn on logging of function calls, statements that log how the
+--   function was called are added to the beginning of the body.
+logBody :: SharedProg r => Label -> [SVariable r] -> [MSBlock r] -> GenState (MSBody r)
+
+-- | Generates a block that logs, to the given <a>FilePath</a>, the name of
+--   a function, and the names and values of the passed list of variables.
+--   Intended to be used as the first block in the function, to log that it
+--   was called and what inputs it was called with.
+loggedMethod :: SharedProg r => FilePath -> Label -> [SVariable r] -> MSBlock r
+
+-- | The variable representing the log file in write mode.
+varLogFile :: SharedProg r => SVariable r
+
+module Language.Drasil.Code.Imperative.Helpers
+
+-- | Puts a state-dependent value into a singleton list.
+liftS :: State a b -> State a [b]
+
+-- | Gets the <a>DefinedQuantityDict</a> corresponding to a <a>UID</a>.
+lookupC :: DrasilState -> UID -> DefinedQuantityDict
+
+-- | Converts a <a>ScopeType</a> to a <a>Scope</a>
+convScope :: SharedProg r => ScopeType -> r (Scope r)
+
+module Language.Drasil.Code.Imperative.GenerateGOOL
+data ClassType
+Primary :: ClassType
+Auxiliary :: ClassType
+
+-- | Defines a GOOL module. If the user chose <a>CommentMod</a>, the module
+--   will have Doxygen comments. If the user did not choose
+--   <a>CommentMod</a> but did choose <a>CommentFunc</a>, a module-level
+--   Doxygen comment is still created, though it only documents the file
+--   name, because without this Doxygen will not find the function-level
+--   comments in the file.
+genModuleWithImports :: OOProg r => Name -> Description -> [Import] -> [GenState (Maybe (SMethod r))] -> [GenState (Maybe (SClass r))] -> GenState (SFile r)
+
+-- | Defines a GOOL module. If the user chose <a>CommentMod</a>, the module
+--   will have Doxygen comments. If the user did not choose
+--   <a>CommentMod</a> but did choose <a>CommentFunc</a>, a module-level
+--   Doxygen comment is still created, though it only documents the file
+--   name, because without this Doxygen will not find the function-level
+--   comments in the file.
+genModuleWithImportsProc :: ProcProg r => Name -> Description -> [Import] -> [GenState (Maybe (SMethod r))] -> GenState (SFile r)
+
+-- | Generates a module for when imports do not need to be explicitly
+--   stated.
+genModule :: OOProg r => Name -> Description -> [GenState (Maybe (SMethod r))] -> [GenState (Maybe (SClass r))] -> GenState (SFile r)
+
+-- | Generates a module for when imports do not need to be explicitly
+--   stated.
+genModuleProc :: ProcProg r => Name -> Description -> [GenState (Maybe (SMethod r))] -> GenState (SFile r)
+
+-- | Generates a Doxygen configuration file if the user has comments
+--   enabled.
+genDoxConfig :: AuxiliarySym r => GOOLState -> GenState (Maybe (r (Auxiliary r)))
 
 -- | Generates a README file.
-makeReadMe :: ReadMeInfo -> Doc
+genReadMe :: AuxiliarySym r => ReadMeInfo -> GenState (Maybe (r (Auxiliary r)))
+
+-- | Generates a primary class.
+primaryClass :: OOProg r => Name -> Maybe Name -> Description -> [CSStateVar r] -> GenState [SMethod r] -> GenState [SMethod r] -> GenState (SClass r)
+
+-- | Generates an auxiliary class (for when a module contains multiple
+--   classes).
+auxClass :: OOProg r => Name -> Maybe Name -> Description -> [CSStateVar r] -> GenState [SMethod r] -> GenState [SMethod r] -> GenState (SClass r)
+
+-- | Function call generator. The first parameter (<tt>m</tt>) is the
+--   module where the function is defined. If <tt>m</tt> is not the current
+--   module, use GOOL's function for calling functions from external
+--   modules. If <tt>m</tt> is the current module and the function is in
+--   export map, use GOOL's basic function for function applications. If
+--   <tt>m</tt> is the current module and function is not exported, use
+--   GOOL's function for calling a method on self. This assumes all private
+--   methods are dynamic, which is true for this generator.
+fApp :: OOProg r => Name -> Name -> VSType r -> [SValue r] -> NamedArgs r -> GenState (SValue r)
+
+-- | Function call generator. The first parameter (<tt>m</tt>) is the
+--   module where the function is defined. If <tt>m</tt> is not the current
+--   module, use GOOL's function for calling functions from external
+--   modules. If <tt>m</tt> is the current module and the function is in
+--   export map, use GOOL's basic function for function applications. If
+--   <tt>m</tt> is the current module and function is not exported, use
+--   GOOL's function for calling a method on self. This assumes all private
+--   methods are dynamic, which is true for this generator.
+fAppProc :: SharedProg r => Name -> Name -> VSType r -> [SValue r] -> NamedArgs r -> GenState (SValue r)
+
+-- | Logic similar to <a>fApp</a>, but the self case is not required here
+--   (because constructor will never be private). Calls
+--   <a>newObjMixedArgs</a>.
+ctorCall :: OOProg r => Name -> VSType r -> [SValue r] -> NamedArgs r -> GenState (SValue r)
+
+-- | Logic similar to <a>fApp</a>, but for In/Out calls.
+fAppInOut :: OOProg r => Name -> Name -> [SValue r] -> [SVariable r] -> [SVariable r] -> GenState (MSStatement r)
+
+-- | Logic similar to <a>fApp</a>, but for In/Out calls.
+fAppInOutProc :: SharedProg r => Name -> Name -> [SValue r] -> [SVariable r] -> [SVariable r] -> GenState (MSStatement r)
+
+
+-- | Contains functions for generating code comments that describe a chunk.
+module Language.Drasil.Code.Imperative.Comments
+
+-- | Generates a comment string for a chunk, including the term, definition
+--   (if applicable), and unit (if applicable).
+getComment :: CodeIdea c => c -> GenState String
+getCommentBrief :: CodeIdea c => c -> GenState String
 
 module Language.Drasil.Code.Imperative.Doxygen.Import
 
@@ -1734,6 +2121,20 @@ instance Language.Drasil.Code.Imperative.GOOL.ClassInterface.PackageSym Language
 instance Language.Drasil.Code.Imperative.GOOL.ClassInterface.AuxiliarySym Language.Drasil.Code.Imperative.GOOL.LanguageRenderer.PythonRenderer.PythonProject
 
 
+-- | The logic to render Julia auxiliary files is contained in this module
+module Language.Drasil.Code.Imperative.GOOL.LanguageRenderer.JuliaRenderer
+
+-- | Holds a Julia project
+newtype JuliaProject a
+JLP :: a -> JuliaProject a
+[unJLP] :: JuliaProject a -> a
+instance GHC.Base.Functor Language.Drasil.Code.Imperative.GOOL.LanguageRenderer.JuliaRenderer.JuliaProject
+instance GHC.Base.Applicative Language.Drasil.Code.Imperative.GOOL.LanguageRenderer.JuliaRenderer.JuliaProject
+instance GHC.Base.Monad Language.Drasil.Code.Imperative.GOOL.LanguageRenderer.JuliaRenderer.JuliaProject
+instance Language.Drasil.Code.Imperative.GOOL.ClassInterface.PackageSym Language.Drasil.Code.Imperative.GOOL.LanguageRenderer.JuliaRenderer.JuliaProject
+instance Language.Drasil.Code.Imperative.GOOL.ClassInterface.AuxiliarySym Language.Drasil.Code.Imperative.GOOL.LanguageRenderer.JuliaRenderer.JuliaProject
+
+
 -- | The logic to render Java auxiliary files is contained in this module
 module Language.Drasil.Code.Imperative.GOOL.LanguageRenderer.JavaRenderer
 
@@ -1776,270 +2177,6 @@ instance Language.Drasil.Code.Imperative.GOOL.ClassInterface.PackageSym Language
 instance Language.Drasil.Code.Imperative.GOOL.ClassInterface.AuxiliarySym Language.Drasil.Code.Imperative.GOOL.LanguageRenderer.CSharpRenderer.CSharpProject
 
 
--- | Contains functions related to the choice of concept matches.
-module Language.Drasil.Code.Imperative.ConceptMatch
-
--- | Concretizes the ConceptMatchMap in Choices to a
---   <a>MatchedConceptMap</a>. Currently we don't have any Choices that
---   would prevent a <a>CodeConcept</a> from being mapped, so we just take
---   the head of the list of <a>CodeConcept</a>s The ConceptMatchMap from
---   choices is passed to chooseConcept' internally, this way any
---   <a>CodeConcept</a> list can be matched to its appropiate <a>UID</a>.
-chooseConcept :: Choices -> State [Sentence] MatchedConceptMap
-
--- | Translates a <a>CodeConcept</a> into GOOL.
-conceptToGOOL :: OOProg r => CodeConcept -> SValue r
-
-
--- | Defines functions for simultaneous interpretation of ExternalLibrary
---   and ExternalLibraryCall.
-module Language.Drasil.Code.ExtLibImport
-
--- | State object used during interpretation of an <a>ExternalLibrary</a>
---   and <a>ExternalLibraryCall</a>.
-data ExtLibState
-ELS :: [Mod] -> [FuncStmt] -> [Name] -> [FuncStmt] -> [String] -> [(Name, Name)] -> ExtLibState
-
--- | Additional modules that must be generated to use the library.
-[_auxMods] :: ExtLibState -> [Mod]
-
--- | The defining statements for variables that must be pre-defined before
---   being passed as arguments in an external library call.
-[_defs] :: ExtLibState -> [FuncStmt]
-
--- | The names of variables for which a defining statement has already been
---   generated.
-[_defined] :: ExtLibState -> [Name]
-
--- | The statements corresponding to the external library use case.
-[_steps] :: ExtLibState -> [FuncStmt]
-
--- | The imports required to use the external library.
-[_imports] :: ExtLibState -> [String]
-
--- | An association list between library method/function names and the
---   external library module that exports them.
-[_modExports] :: ExtLibState -> [(Name, Name)]
-auxMods :: Lens' ExtLibState [Mod]
-defs :: Lens' ExtLibState [FuncStmt]
-imports :: Lens' ExtLibState [String]
-modExports :: Lens' ExtLibState [(Name, Name)]
-steps :: Lens' ExtLibState [FuncStmt]
-
--- | Interprets an <a>ExternalLibrary</a> and <a>ExternalLibraryCall</a>
---   and returns the resulting <a>ExtLibState</a>.
-genExternalLibraryCall :: ExternalLibrary -> ExternalLibraryCall -> ExtLibState
-
-module Language.Drasil.Code.Imperative.GenODE
-
--- | Chooses the first <a>ODELibPckg</a> from the list specified by the
---   user that is compatible with the current target <a>Lang</a>.
---   Interprets the ExternalLibrary and ExternalLibraryCall for the
---   selected <a>ODELibPckg</a> by concretizing the ExternalLibraryCall
---   with each of the <tt>ODEInfo</tt>s The internal helper chooseODELib'
---   keeps a read only preference list and a currently considered
---   preference list (which can change), this facilitates the
---   <a>firstChoiceODELib</a> check.
-chooseODELib :: Lang -> Maybe ODE -> State [Sentence] ODEGenInfo
-
-module Language.Drasil.Code.Imperative.DrasilState
-
--- | Abbreviation used throughout generator.
-type GenState = State DrasilState
-
--- | Private State, used to push these options around the generator.
-data DrasilState
-DrasilState :: CodeSpec -> Modularity -> ImplementationType -> Structure -> ConstantStructure -> ConstantRepr -> MatchedConceptMap -> MatchedSpaces -> ConstraintBehaviour -> ConstraintBehaviour -> [Comments] -> Verbosity -> String -> String -> [Logging] -> [AuxFile] -> [Expr] -> [Mod] -> [(Name, Version)] -> ExtLibMap -> [FilePath] -> ModExportMap -> ModExportMap -> ClassDefinitionMap -> [Name] -> Int -> String -> String -> Doc -> [(Space, CodeType)] -> DrasilState
-[codeSpec] :: DrasilState -> CodeSpec
-[modular] :: DrasilState -> Modularity
-[implType] :: DrasilState -> ImplementationType
-[inStruct] :: DrasilState -> Structure
-[conStruct] :: DrasilState -> ConstantStructure
-[conRepr] :: DrasilState -> ConstantRepr
-[concMatches] :: DrasilState -> MatchedConceptMap
-[spaceMatches] :: DrasilState -> MatchedSpaces
-[onSfwrC] :: DrasilState -> ConstraintBehaviour
-[onPhysC] :: DrasilState -> ConstraintBehaviour
-[commented] :: DrasilState -> [Comments]
-[doxOutput] :: DrasilState -> Verbosity
-[date] :: DrasilState -> String
-[logName] :: DrasilState -> String
-[logKind] :: DrasilState -> [Logging]
-[auxiliaries] :: DrasilState -> [AuxFile]
-[sampleData] :: DrasilState -> [Expr]
-[modules] :: DrasilState -> [Mod]
-[extLibNames] :: DrasilState -> [(Name, Version)]
-[extLibMap] :: DrasilState -> ExtLibMap
-[libPaths] :: DrasilState -> [FilePath]
-[eMap] :: DrasilState -> ModExportMap
-[libEMap] :: DrasilState -> ModExportMap
-[clsMap] :: DrasilState -> ClassDefinitionMap
-[defList] :: DrasilState -> [Name]
-[getVal] :: DrasilState -> Int
-[currentModule] :: DrasilState -> String
-[currentClass] :: DrasilState -> String
-[_designLog] :: DrasilState -> Doc
-[_loggedSpaces] :: DrasilState -> [(Space, CodeType)]
-designLog :: Lens' DrasilState Doc
-
--- | Determines whether input modules are <a>Combined</a> or
---   <a>Separated</a> based on the <a>Modularity</a> stored in
---   <a>DrasilState</a>.
-inMod :: DrasilState -> InputModule
-
--- | Type for the mapping between <a>Space</a>s and <a>CodeType</a>s.
-type MatchedSpaces = Space -> GenState CodeType
-
--- | Variable/function name maps to module name.
-type ModExportMap = Map String String
-
--- | Variable/function name maps to class name.
-type ClassDefinitionMap = Map String String
-
--- | Builds the module export map, mapping each function and state variable
---   name in the generated code to the name of the generated module that
---   exports it.
-modExportMap :: CodeSpec -> Choices -> [Mod] -> ModExportMap
-
--- | Builds the class definition map, mapping each generated method and
---   state variable name to the name of the generated class where it is
---   defined.
-clsDefMap :: CodeSpec -> Choices -> [Mod] -> ClassDefinitionMap
-
--- | Adds a message to the design log if the given
---   <a>Space</a>-<a>CodeType</a> match has not already been logged.
-addToDesignLog :: Space -> CodeType -> Doc -> DrasilState -> DrasilState
-
--- | Adds a <a>Space</a>-<a>CodeType</a> pair to the loggedSpaces list in
---   <a>DrasilState</a> to prevent a duplicate log from being generated for
---   that <a>Space</a>-<a>CodeType</a> pair.
-addLoggedSpace :: Space -> CodeType -> DrasilState -> DrasilState
-
-module Language.Drasil.Code.Imperative.SpaceMatch
-
--- | Concretizes the <a>spaceMatch</a> in <a>Choices</a> to a
---   <tt>MatchedSpace</tt> based on target language.
-chooseSpace :: Lang -> Choices -> MatchedSpaces
-
-module Language.Drasil.Code.Imperative.Parameters
-
--- | Since the input constructor calls the three input-related methods, the
---   parameters to the constructor are the parameters to the three methods,
---   except excluding any of variables that are state variables in the
---   class, since they are already in scope. If InputParameters is not in
---   the definition list, then the default constructor is used, which takes
---   no parameters.
-getInConstructorParams :: GenState [CodeVarChunk]
-
--- | The inputs to the function for reading inputs are the input file name,
---   and the <a>inParams</a> object if inputs are bundled and input
---   components are separated. The latter is needed because we want to
---   populate the object through state transitions, not by returning it.
-getInputFormatIns :: GenState [CodeVarChunk]
-
--- | The outputs from the function for reading inputs are the inputs.
-getInputFormatOuts :: GenState [CodeVarChunk]
-
--- | The inputs to the function for calculating derived inputs are any
---   variables used in the equations for the derived inputs.
-getDerivedIns :: GenState [CodeVarChunk]
-
--- | The outputs from the function for calculating derived inputs are the
---   derived inputs.
-getDerivedOuts :: GenState [CodeVarChunk]
-
--- | The parameters to the function for checking constraints on the inputs
---   are any inputs with constraints, and any variables used in the
---   expressions of the constraints.
-getConstraintParams :: GenState [CodeVarChunk]
-
--- | The parameters to a calculation function are any variables used in the
---   expression representing the calculation.
-getCalcParams :: CodeDefinition -> GenState [CodeVarChunk]
-
--- | The parameters to the function for printing outputs are the outputs.
-getOutputParams :: GenState [CodeVarChunk]
-instance GHC.Classes.Eq Language.Drasil.Code.Imperative.Parameters.ParamType
-
-module Language.Drasil.Code.Imperative.Logging
-
--- | Generates a statement that logs the given variable's value, if the
---   user chose to turn on logging of variable assignments.
-maybeLog :: OOProg r => SVariable r -> GenState [MSStatement r]
-
--- | Generates the body of a function with the given name, list of
---   parameters, and blocks to include in the body. If the user chose to
---   turn on logging of function calls, statements that log how the
---   function was called are added to the beginning of the body.
-logBody :: OOProg r => Label -> [SVariable r] -> [MSBlock r] -> GenState (MSBody r)
-
--- | Generates a block that logs, to the given <a>FilePath</a>, the name of
---   a function, and the names and values of the passed list of variables.
---   Intended to be used as the first block in the function, to log that it
---   was called and what inputs it was called with.
-loggedMethod :: OOProg r => FilePath -> Label -> [SVariable r] -> MSBlock r
-
--- | The variable representing the log file in write mode.
-varLogFile :: OOProg r => SVariable r
-
-module Language.Drasil.Code.Imperative.Helpers
-
--- | Puts a state-dependent value into a singleton list.
-liftS :: State a b -> State a [b]
-
--- | Gets the <a>QuantityDict</a> corresponding to a <a>UID</a>.
-lookupC :: DrasilState -> UID -> QuantityDict
-
-module Language.Drasil.Code.Imperative.GenerateGOOL
-data ClassType
-Primary :: ClassType
-Auxiliary :: ClassType
-
--- | Defines a GOOL module. If the user chose <a>CommentMod</a>, the module
---   will have Doxygen comments. If the user did not choose
---   <a>CommentMod</a> but did choose <a>CommentFunc</a>, a module-level
---   Doxygen comment is still created, though it only documents the file
---   name, because without this Doxygen will not find the function-level
---   comments in the file.
-genModuleWithImports :: OOProg r => Name -> Description -> [Import] -> [GenState (Maybe (SMethod r))] -> [GenState (Maybe (SClass r))] -> GenState (SFile r)
-
--- | Generates a module for when imports do not need to be explicitly
---   stated.
-genModule :: OOProg r => Name -> Description -> [GenState (Maybe (SMethod r))] -> [GenState (Maybe (SClass r))] -> GenState (SFile r)
-
--- | Generates a Doxygen configuration file if the user has comments
---   enabled.
-genDoxConfig :: AuxiliarySym r => GOOLState -> GenState (Maybe (r (Auxiliary r)))
-
--- | Generates a README file.
-genReadMe :: AuxiliarySym r => ReadMeInfo -> GenState (Maybe (r (Auxiliary r)))
-
--- | Generates a primary class.
-primaryClass :: OOProg r => Name -> Maybe Name -> Description -> [CSStateVar r] -> GenState [SMethod r] -> GenState (SClass r)
-
--- | Generates an auxiliary class (for when a module contains multiple
---   classes).
-auxClass :: OOProg r => Name -> Maybe Name -> Description -> [CSStateVar r] -> GenState [SMethod r] -> GenState (SClass r)
-
--- | Function call generator. The first parameter (<tt>m</tt>) is the
---   module where the function is defined. If <tt>m</tt> is not the current
---   module, use GOOL's function for calling functions from external
---   modules. If <tt>m</tt> is the current module and the function is in
---   export map, use GOOL's basic function for function applications. If
---   <tt>m</tt> is the current module and function is not exported, use
---   GOOL's function for calling a method on self. This assumes all private
---   methods are dynamic, which is true for this generator.
-fApp :: OOProg r => Name -> Name -> VSType r -> [SValue r] -> NamedArgs r -> GenState (SValue r)
-
--- | Logic similar to <a>fApp</a>, but the self case is not required here
---   (because constructor will never be private). Calls
---   <a>newObjMixedArgs</a>.
-ctorCall :: OOProg r => Name -> VSType r -> [SValue r] -> NamedArgs r -> GenState (SValue r)
-
--- | Logic similar to <a>fApp</a>, but for In/Out calls.
-fAppInOut :: OOProg r => Name -> Name -> [SValue r] -> [SVariable r] -> [SVariable r] -> GenState (MSStatement r)
-
-
 -- | Defines description generators for common SCS functions, classes, and
 --   modules.
 module Language.Drasil.Code.Imperative.Descriptions
@@ -2057,10 +2194,8 @@ unmodularDesc :: GenState Description
 -- | Returns description of what is contained in the Input Parameters
 --   module. If user chooses the <a>Bundled</a> input parameter, this
 --   module will include the structure for holding the input values. Does
---   not include the structure if they choose <a>Unbundled</a>. If the user
---   chooses the <a>Combined</a> input parameter, this module includes the
---   input-related functions. Does not inlcude those functions if they
---   choose <a>Separated</a>.
+--   not include the structure if they choose <a>Unbundled</a>. This module
+--   includes the input-related functions.
 inputParametersDesc :: GenState [Description]
 
 -- | Returns a description of the input constructor, checking whether each
@@ -2119,12 +2254,19 @@ calcModDesc :: Description
 woFuncDesc :: GenState Description
 
 
--- | Contains functions for generating code comments that describe a chunk.
-module Language.Drasil.Code.Imperative.Comments
+-- | Contains functions related to the choice of concept matches.
+module Language.Drasil.Code.Imperative.ConceptMatch
 
--- | Generates a comment string for a chunk, including the term, definition
---   (if applicable), and unit (if applicable).
-getComment :: CodeIdea c => c -> GenState String
+-- | Concretizes the ConceptMatchMap in Choices to a
+--   <a>MatchedConceptMap</a>. Currently we don't have any Choices that
+--   would prevent a <a>CodeConcept</a> from being mapped, so we just take
+--   the head of the list of <a>CodeConcept</a>s The ConceptMatchMap from
+--   choices is passed to chooseConcept' internally, this way any
+--   <a>CodeConcept</a> list can be matched to its appropiate <a>UID</a>.
+chooseConcept :: Choices -> State [Sentence] MatchedConceptMap
+
+-- | Translates a <a>CodeConcept</a> into GOOL.
+conceptToGOOL :: SharedProg r => CodeConcept -> SValue r
 
 module Language.Drasil.Code.Imperative.Import
 
@@ -2139,14 +2281,26 @@ spaceCodeType :: Space -> GenState CodeType
 -- | Generates a public function.
 publicFunc :: OOProg r => Label -> VSType r -> Description -> [ParameterChunk] -> Maybe Description -> [MSBlock r] -> GenState (SMethod r)
 
+-- | Generates a public function.
+publicFuncProc :: SharedProg r => Label -> VSType r -> Description -> [ParameterChunk] -> Maybe Description -> [MSBlock r] -> GenState (SMethod r)
+
 -- | Generates a private method.
 privateMethod :: OOProg r => Label -> VSType r -> Description -> [ParameterChunk] -> Maybe Description -> [MSBlock r] -> GenState (SMethod r)
+
+-- | Generates a private function.
+privateFuncProc :: SharedProg r => Label -> VSType r -> Description -> [ParameterChunk] -> Maybe Description -> [MSBlock r] -> GenState (SMethod r)
 
 -- | Generates a public function, defined by its inputs and outputs.
 publicInOutFunc :: OOProg r => Label -> Description -> [CodeVarChunk] -> [CodeVarChunk] -> [MSBlock r] -> GenState (SMethod r)
 
+-- | Generates a public function, defined by its inputs and outputs.
+publicInOutFuncProc :: SharedProg r => Label -> Description -> [CodeVarChunk] -> [CodeVarChunk] -> [MSBlock r] -> GenState (SMethod r)
+
 -- | Generates a private method, defined by its inputs and outputs.
 privateInOutMethod :: OOProg r => Label -> Description -> [CodeVarChunk] -> [CodeVarChunk] -> [MSBlock r] -> GenState (SMethod r)
+
+-- | Generates a private function, defined by its inputs and outputs.
+privateInOutFuncProc :: SharedProg r => Label -> Description -> [CodeVarChunk] -> [CodeVarChunk] -> [MSBlock r] -> GenState (SMethod r)
 
 -- | Generates a constructor.
 genConstructor :: OOProg r => Label -> Description -> [ParameterChunk] -> [MSBlock r] -> GenState (SMethod r)
@@ -2155,21 +2309,41 @@ genConstructor :: OOProg r => Label -> Description -> [ParameterChunk] -> [MSBlo
 --   <a>CodeVarChunk</a>.
 mkVar :: OOProg r => CodeVarChunk -> GenState (SVariable r)
 
+-- | Generates a GOOL Variable for a variable represented by a
+--   <a>CodeVarChunk</a>.
+mkVarProc :: SharedProg r => CodeVarChunk -> GenState (SVariable r)
+
 -- | Generates a GOOL Value for a variable represented by a
 --   <a>CodeVarChunk</a>.
 mkVal :: OOProg r => CodeVarChunk -> GenState (SValue r)
 
+-- | Generates a GOOL Value for a variable represented by a
+--   <a>CodeVarChunk</a>.
+mkValProc :: SharedProg r => CodeVarChunk -> GenState (SValue r)
+
 -- | Converts an <tt>Expr</tt> to a GOOL Value.
 convExpr :: OOProg r => CodeExpr -> GenState (SValue r)
+
+-- | Converts an <tt>Expr</tt> to a GOOL Value.
+convExprProc :: SharedProg r => CodeExpr -> GenState (SValue r)
 
 -- | Converts a <a>FuncStmt</a> to a GOOL Statement.
 convStmt :: OOProg r => FuncStmt -> GenState (MSStatement r)
 
+-- | Converts a <a>FuncStmt</a> to a GOOL Statement.
+convStmtProc :: SharedProg r => FuncStmt -> GenState (MSStatement r)
+
 -- | Converts a <a>Mod</a> to GOOL.
 genModDef :: OOProg r => Mod -> GenState (SFile r)
 
+-- | Converts a <a>Mod</a> to GOOL.
+genModDefProc :: ProcProg r => Mod -> GenState (SFile r)
+
 -- | Converts a <a>Mod</a>'s functions to GOOL.
 genModFuncs :: OOProg r => Mod -> [GenState (SMethod r)]
+
+-- | Converts a <a>Mod</a>'s functions to GOOL.
+genModFuncsProc :: SharedProg r => Mod -> [GenState (SMethod r)]
 
 -- | Converts a <a>Mod</a>'s classes to GOOL.
 genModClasses :: OOProg r => Mod -> [GenState (SClass r)]
@@ -2177,6 +2351,10 @@ genModClasses :: OOProg r => Mod -> [GenState (SClass r)]
 -- | Read from a data description into a <a>MSBlock</a> of
 --   <a>MSStatement</a>s.
 readData :: OOProg r => DataDesc -> GenState [MSBlock r]
+
+-- | Read from a data description into a <a>MSBlock</a> of
+--   <a>MSStatement</a>s.
+readDataProc :: SharedProg r => DataDesc -> GenState [MSBlock r]
 
 -- | Converts a <a>Constraint</a> to a <a>CodeExpr</a>.
 renderC :: (HasUID c, HasSymbol c) => c -> Constraint CodeExpr -> CodeExpr
@@ -2187,29 +2365,55 @@ module Language.Drasil.Code.Imperative.FunctionCalls
 --   call to the function for reading inputs, then the function for
 --   calculating derived inputs, then the function for checking input
 --   constraints.
-getAllInputCalls :: OOProg r => GenState [MSStatement r]
+genAllInputCalls :: OOProg r => GenState [MSStatement r]
+
+-- | Generates calls to all of the input-related functions. First is the
+--   call to the function for reading inputs, then the function for
+--   calculating derived inputs, then the function for checking input
+--   constraints.
+genAllInputCallsProc :: SharedProg r => GenState [MSStatement r]
 
 -- | Generates a call to the function for reading inputs from a file.
-getInputCall :: OOProg r => GenState (Maybe (MSStatement r))
+genInputCall :: OOProg r => GenState (Maybe (MSStatement r))
+
+-- | Generates a call to the function for reading inputs from a file.
+genInputCallProc :: SharedProg r => GenState (Maybe (MSStatement r))
 
 -- | Generates a call to the function for calculating derived inputs.
-getDerivedCall :: OOProg r => GenState (Maybe (MSStatement r))
+genDerivedCall :: OOProg r => GenState (Maybe (MSStatement r))
+
+-- | Generates a call to the function for calculating derived inputs.
+genDerivedCallProc :: SharedProg r => GenState (Maybe (MSStatement r))
 
 -- | Generates a call to the function for checking constraints on the
 --   input.
-getConstraintCall :: OOProg r => GenState (Maybe (MSStatement r))
+genConstraintCall :: OOProg r => GenState (Maybe (MSStatement r))
+
+-- | Generates a call to the function for checking constraints on the
+--   input.
+genConstraintCallProc :: SharedProg r => GenState (Maybe (MSStatement r))
 
 -- | Generates a call to a calculation function, given the
 --   <a>CodeDefinition</a> for the value being calculated.
-getCalcCall :: OOProg r => CodeDefinition -> GenState (Maybe (MSStatement r))
+genCalcCall :: OOProg r => CodeDefinition -> GenState (Maybe (MSStatement r))
+
+-- | Generates a call to a calculation function, given the
+--   <a>CodeDefinition</a> for the value being calculated.
+genCalcCallProc :: SharedProg r => CodeDefinition -> GenState (Maybe (MSStatement r))
 
 -- | Generates a call to the function for printing outputs.
-getOutputCall :: OOProg r => GenState (Maybe (MSStatement r))
+genOutputCall :: OOProg r => GenState (Maybe (MSStatement r))
+
+-- | Generates a call to the function for printing outputs.
+genOutputCallProc :: SharedProg r => GenState (Maybe (MSStatement r))
 
 module Language.Drasil.Code.Imperative.Modules
 
 -- | Generates a controller module.
 genMain :: OOProg r => GenState (SFile r)
+
+-- | Generates a controller module.
+genMainProc :: ProcProg r => GenState (SFile r)
 
 -- | Generates a main function, to act as the controller for an SCS
 --   program. The controller declares input and constant variables, then
@@ -2218,10 +2422,12 @@ genMain :: OOProg r => GenState (SFile r)
 --   outputs. Returns Nothing if the user chose to generate a library.
 genMainFunc :: OOProg r => GenState (Maybe (SMethod r))
 
--- | Generates either a single module containing all input-related
---   components, or separate modules for each input-related component,
---   depending on the user's modularity choice.
-chooseInModule :: OOProg r => InputModule -> GenState [SFile r]
+-- | Generates a main function, to act as the controller for an SCS
+--   program. The controller declares input and constant variables, then
+--   calls the functions for reading input values, calculating derived
+--   inputs, checking constraints, calculating outputs, and printing
+--   outputs. Returns Nothing if the user chose to generate a library.
+genMainFuncProc :: SharedProg r => GenState (Maybe (SMethod r))
 
 -- | Returns <a>Nothing</a> if no inputs or constants are mapped to
 --   InputParameters in the class definition map. If any inputs or
@@ -2233,16 +2439,35 @@ chooseInModule :: OOProg r => InputModule -> GenState [SFile r]
 genInputClass :: OOProg r => ClassType -> GenState (Maybe (SClass r))
 
 -- | Generates a function for calculating derived inputs.
-genInputDerived :: OOProg r => ScopeTag -> GenState (Maybe (SMethod r))
+genInputDerived :: OOProg r => VisibilityTag -> GenState (Maybe (SMethod r))
+
+-- | Generates a function for calculating derived inputs.
+genInputDerivedProc :: SharedProg r => VisibilityTag -> GenState (Maybe (SMethod r))
+
+-- | Generates a single module containing all input-related components.
+genInputMod :: OOProg r => GenState [SFile r]
+
+-- | Generates a single module containing all input-related components.
+genInputModProc :: ProcProg r => GenState [SFile r]
 
 -- | Generates function that checks constraints on the input.
-genInputConstraints :: OOProg r => ScopeTag -> GenState (Maybe (SMethod r))
+genInputConstraints :: OOProg r => VisibilityTag -> GenState (Maybe (SMethod r))
+
+-- | Generates function that checks constraints on the input.
+genInputConstraintsProc :: SharedProg r => VisibilityTag -> GenState (Maybe (SMethod r))
 
 -- | | Generates a function for reading inputs from a file.
-genInputFormat :: OOProg r => ScopeTag -> GenState (Maybe (SMethod r))
+genInputFormat :: OOProg r => VisibilityTag -> GenState (Maybe (SMethod r))
+
+-- | | Generates a function for reading inputs from a file.
+genInputFormatProc :: SharedProg r => VisibilityTag -> GenState (Maybe (SMethod r))
 
 -- | Generates a module containing the class where constants are stored.
 genConstMod :: OOProg r => GenState [SFile r]
+
+-- | Checks if a class is needed to store constants, i.e. if constants are
+--   mapped to the constants class in the class definition map.
+checkConstClass :: GenState Bool
 
 -- | Generates a class to store constants, if constants are mapped to the
 --   Constants class in the class definition map, otherwise returns
@@ -2252,17 +2477,32 @@ genConstClass :: OOProg r => ClassType -> GenState (Maybe (SClass r))
 -- | Generates a module containing calculation functions.
 genCalcMod :: OOProg r => GenState (SFile r)
 
+-- | Generates a module containing calculation functions.
+genCalcModProc :: ProcProg r => GenState (SFile r)
+
 -- | Generates a calculation function corresponding to the
 --   <a>CodeDefinition</a>. For solving ODEs, the <tt>ExtLibState</tt>
 --   containing the information needed to generate code is found by looking
 --   it up in the external library map.
 genCalcFunc :: OOProg r => CodeDefinition -> GenState (SMethod r)
 
+-- | Generates a calculation function corresponding to the
+--   <a>CodeDefinition</a>. For solving ODEs, the <tt>ExtLibState</tt>
+--   containing the information needed to generate code is found by looking
+--   it up in the external library map.
+genCalcFuncProc :: SharedProg r => CodeDefinition -> GenState (SMethod r)
+
 -- | Generates a module containing the function for printing outputs.
 genOutputMod :: OOProg r => GenState [SFile r]
 
+-- | Generates a module containing the function for printing outputs.
+genOutputModProc :: ProcProg r => GenState [SFile r]
+
 -- | Generates a function for printing output values.
 genOutputFormat :: OOProg r => GenState (Maybe (SMethod r))
+
+-- | Generates a function for printing output values.
+genOutputFormatProc :: SharedProg r => GenState (Maybe (SMethod r))
 
 -- | Generates a sample input file compatible with the generated program,
 --   if the user chose to.
@@ -2282,6 +2522,11 @@ generator :: Lang -> String -> [Expr] -> Choices -> CodeSpec -> DrasilState
 --   un-representation functions determine which target language the
 --   package will be generated in.
 generateCode :: (OOProg progRepr, PackageSym packRepr) => Lang -> (progRepr (Program progRepr) -> ProgData) -> (packRepr (Package packRepr) -> PackData) -> DrasilState -> IO ()
+
+-- | Generates a package with the given <a>DrasilState</a>. The passed
+--   un-representation functions determine which target language the
+--   package will be generated in.
+generateCodeProc :: (ProcProg progRepr, PackageSym packRepr) => Lang -> (progRepr (Program progRepr) -> ProgData) -> (packRepr (Package packRepr) -> PackData) -> DrasilState -> IO ()
 
 
 -- | Re-export code-related smart constructors for external code writing
@@ -2306,6 +2551,11 @@ generator :: Lang -> String -> [Expr] -> Choices -> CodeSpec -> DrasilState
 --   package will be generated in.
 generateCode :: (OOProg progRepr, PackageSym packRepr) => Lang -> (progRepr (Program progRepr) -> ProgData) -> (packRepr (Package packRepr) -> PackData) -> DrasilState -> IO ()
 
+-- | Generates a package with the given <a>DrasilState</a>. The passed
+--   un-representation functions determine which target language the
+--   package will be generated in.
+generateCodeProc :: (ProcProg progRepr, PackageSym packRepr) => Lang -> (progRepr (Program progRepr) -> ProgData) -> (packRepr (Package packRepr) -> PackData) -> DrasilState -> IO ()
+
 -- | Reads data from a file and converts the values to <a>Expr</a>s. The
 --   file must be formatted according to the <a>DataDesc'</a> passed as a
 --   parameter.
@@ -2319,7 +2569,7 @@ sampleInputDD :: [CodeVarChunk] -> DataDesc'
 --   down. Full details of Choices documentation
 --   <a>https://github.com/JacquesCarette/Drasil/wiki/The-Code-Generator</a>
 data Choices
-Choices :: [Lang] -> Architecture -> DataInfo -> Maps -> OptionalFeatures -> Constraints -> [ExtLib] -> Int -> Choices
+Choices :: [Lang] -> Architecture -> DataInfo -> Maps -> OptionalFeatures -> Constraints -> [ExtLib] -> (InternalConcept -> Name) -> Int -> Choices
 
 -- | Target languages. Choosing multiple means program will be generated in
 --   multiple languages.
@@ -2344,6 +2594,9 @@ Choices :: [Lang] -> Architecture -> DataInfo -> Maps -> OptionalFeatures -> Con
 
 -- | List of external libraries what to utilize
 [extLibs] :: Choices -> [ExtLib]
+
+-- | Function to get modifiable function names
+[icNames] :: Choices -> InternalConcept -> Name
 
 -- | Number of folders to go up in order to obtain the image
 [folderVal] :: Choices -> Int
@@ -2485,7 +2738,7 @@ LogVar :: Logging
 data Modularity
 
 -- | Different modules. For controller, input, calculations, output.
-Modular :: InputModule -> Modularity
+Modular :: Modularity
 
 -- | All generated code is in one module/file.
 Unmodular :: Modularity
@@ -2519,15 +2772,6 @@ Var :: ConstantRepr
 
 -- | Use target language's mechanism for defining constants.
 Const :: ConstantRepr
-
--- | Options for input modules.
-data InputModule
-
--- | Input-related functions combined in one module.
-Combined :: InputModule
-
--- | Input-related functions each in own module.
-Separated :: InputModule
 
 -- | Code concepts. For now, just pi.
 data CodeConcept
@@ -2568,29 +2812,96 @@ Hide :: Visibility
 --   specifications can be built.
 defaultChoices :: Choices
 
--- | Code specifications. Holds information needed to generate code.
+-- | New Code Specification. Holds system information and a reference to
+--   <a>OldCodeSpec</a>.
 data CodeSpec
-[CodeSpec] :: HasName a => Name -> [a] -> Purpose -> Background -> [Input] -> [Input] -> [Derived] -> [Output] -> [FilePath] -> [Def] -> ConstraintCEMap -> [Const] -> ConstantMap -> [Mod] -> ChunkDB -> CodeSpec
+CS :: System -> OldCodeSpec -> CodeSpec
+[_system'] :: CodeSpec -> System
+[_oldCode] :: CodeSpec -> OldCodeSpec
+
+-- | Old Code specifications. Holds information needed to generate code.
+data OldCodeSpec
+OldCodeSpec :: Name -> People -> [Input] -> [Input] -> [Derived] -> [Output] -> [FilePath] -> [Def] -> ConstraintCEMap -> [Const] -> ConstantMap -> [Mod] -> ChunkDB -> OldCodeSpec
+
+-- | Program name.
+[_pName] :: OldCodeSpec -> Name
+
+-- | Authors.
+[_authors] :: OldCodeSpec -> People
+
+-- | All inputs.
+[_inputs] :: OldCodeSpec -> [Input]
+
+-- | Explicit inputs (values to be supplied by a file).
+[_extInputs] :: OldCodeSpec -> [Input]
+
+-- | Derived inputs (each calculated from explicit inputs in a single
+--   step).
+[_derivedInputs] :: OldCodeSpec -> [Derived]
+
+-- | All outputs.
+[_outputs] :: OldCodeSpec -> [Output]
+
+-- | List of files that must be in same directory for running the
+--   executable.
+[_configFiles] :: OldCodeSpec -> [FilePath]
+
+-- | Mathematical definitions, ordered so that they form a path from inputs
+--   to outputs.
+[_execOrder] :: OldCodeSpec -> [Def]
+
+-- | Map from <a>UID</a>s to constraints for all constrained chunks used in
+--   the problem.
+[_cMap] :: OldCodeSpec -> ConstraintCEMap
+
+-- | List of all constants used in the problem.
+[_constants] :: OldCodeSpec -> [Const]
+
+-- | Map containing all constants used in the problem.
+[_constMap] :: OldCodeSpec -> ConstantMap
+
+-- | Additional modules required in the generated code, which Drasil cannot
+--   yet automatically define.
+[_mods] :: OldCodeSpec -> [Mod]
+
+-- | The database of all chunks used in the problem.
+[_systemdb] :: OldCodeSpec -> ChunkDB
+
+-- | Creates a <a>CodeSpec</a> using the provided <tt>System</tt>,
+--   <a>Choices</a>, and <a>Mod</a>s. The <a>CodeSpec</a> consists of the
+--   system information and a corresponding <a>OldCodeSpec</a>.
+codeSpec :: System -> Choices -> [Mod] -> CodeSpec
+class HasOldCodeSpec c_axJq
+oldCodeSpec :: HasOldCodeSpec c_axJq => Lens' c_axJq OldCodeSpec
+authorsO :: HasOldCodeSpec c_axJq => Lens' c_axJq People
+cMapO :: HasOldCodeSpec c_axJq => Lens' c_axJq ConstraintCEMap
+configFilesO :: HasOldCodeSpec c_axJq => Lens' c_axJq [FilePath]
+constMapO :: HasOldCodeSpec c_axJq => Lens' c_axJq ConstantMap
+constantsO :: HasOldCodeSpec c_axJq => Lens' c_axJq [Const]
+derivedInputsO :: HasOldCodeSpec c_axJq => Lens' c_axJq [Derived]
+execOrderO :: HasOldCodeSpec c_axJq => Lens' c_axJq [Def]
+extInputsO :: HasOldCodeSpec c_axJq => Lens' c_axJq [Input]
+inputsO :: HasOldCodeSpec c_axJq => Lens' c_axJq [Input]
+modsO :: HasOldCodeSpec c_axJq => Lens' c_axJq [Mod]
+outputsO :: HasOldCodeSpec c_axJq => Lens' c_axJq [Output]
+pNameO :: HasOldCodeSpec c_axJq => Lens' c_axJq Name
+systemdbO :: HasOldCodeSpec c_axJq => Lens' c_axJq ChunkDB
 
 -- | Get a <a>UID</a> of a chunk corresponding to a <a>Func</a>.
 funcUID :: Func -> UID
 
--- | Convert a <a>Func</a> to an implementation-stage <a>QuantityDict</a>
---   representing the function.
-asVC :: Func -> QuantityDict
-
--- | Defines a <a>CodeSpec</a> based on the <a>SystemInformation</a>,
---   <a>Choices</a>, and <a>Mod</a>s defined by the user.
-codeSpec :: SystemInformation -> Choices -> [Mod] -> CodeSpec
+-- | Convert a <a>Func</a> to an implementation-stage
+--   <a>DefinedQuantityDict</a> representing the function.
+asVC :: Func -> DefinedQuantityDict
 
 -- | Define an assignment statement.
-($:=) :: (Quantity c, MayHaveUnit c) => c -> CodeExpr -> FuncStmt
+($:=) :: (Quantity c, MayHaveUnit c, Concept c) => c -> CodeExpr -> FuncStmt
 
 -- | Holds module information.
 data Mod
 Mod :: Name -> Description -> [Import] -> [Class] -> [Func] -> Mod
 
--- | State variables hold attach a <a>ScopeTag</a> to a
+-- | State variables hold attach a <a>VisibilityTag</a> to a
 --   <a>CodeVarChunk</a>.
 data StateVariable
 
@@ -2623,17 +2934,17 @@ pubStateVar :: CodeVarChunk -> StateVariable
 privStateVar :: CodeVarChunk -> StateVariable
 
 -- | Define a declare-define statement.
-fDecDef :: (Quantity c, MayHaveUnit c) => c -> CodeExpr -> FuncStmt
+fDecDef :: (Quantity c, MayHaveUnit c, Concept c) => c -> CodeExpr -> FuncStmt
 
 -- | Define a for-loop. <a>Quantity</a> is for the iteration variable,
 --   <a>CodeExpr</a> is the upper bound at that variable (the variable will
 --   start with a value of 0). [<a>FuncStmt</a>] is for the loop body.
-ffor :: (Quantity c, MayHaveUnit c) => c -> CodeExpr -> [FuncStmt] -> FuncStmt
+ffor :: (Quantity c, MayHaveUnit c, Concept c) => c -> CodeExpr -> [FuncStmt] -> FuncStmt
 
 -- | Define a for-loop. <a>Quantity</a> is for the iteration variable, and
 --   3 <a>CodeExpr</a>s for the start, stop, step numbers.
 --   [<a>FuncStmt</a>] is for the loop body.
-fforRange :: (Quantity c, MayHaveUnit c) => c -> CodeExpr -> CodeExpr -> CodeExpr -> [FuncStmt] -> FuncStmt
+fforRange :: (Quantity c, MayHaveUnit c, Concept c) => c -> CodeExpr -> CodeExpr -> CodeExpr -> [FuncStmt] -> FuncStmt
 
 -- | Define a function that reads data from a file, according to the given
 --   <a>DataDesc</a>.
@@ -2642,7 +2953,7 @@ funcData :: Name -> Description -> DataDesc -> Func
 -- | Define a function by providing the <a>FuncStmt</a>s for its body.
 --   Other parameters are function name, description, list of parameters,
 --   space of the returned value, and description of the returned value.
-funcDef :: (Quantity c, MayHaveUnit c) => Name -> Description -> [c] -> Space -> Maybe Description -> [FuncStmt] -> Func
+funcDef :: (Quantity c, MayHaveUnit c, Concept c) => Name -> Description -> [c] -> Space -> Maybe Description -> [FuncStmt] -> Func
 
 -- | Define a <a>Mod</a> with the given <a>Name</a>, <a>Description</a>,
 --   <tt>Classes</tt>, and <tt>Functions</tt>.
@@ -3006,6 +3317,7 @@ CSharp :: Lang
 Java :: Lang
 Python :: Lang
 Swift :: Lang
+Julia :: Lang
 
 -- | Members of this class must have all the information necessary for the
 --   <a>AuxiliarySym</a> in addition to information necessary to create a
@@ -3038,21 +3350,21 @@ data AuxData
 data PackData
 
 -- | Basic chunk representation in the code generation context. Contains a
---   QuantityDict and the kind of code (variable or function).
-data CodeChunk
+--   DefinedQuantityDict and the kind of code (variable or function).
+data () => CodeChunk
 
 -- | Chunk representing a variable. The <tt>obv</tt> field represents the
 --   object containing this variable, if it is an object field.
-data CodeVarChunk
+data () => CodeVarChunk
 
 -- | Chunk representing a function.
-data CodeFuncChunk
+data () => CodeFuncChunk
 
 -- | Construct a <a>CodeVarChunk</a> from a <a>Quantity</a>.
-quantvar :: (Quantity c, MayHaveUnit c) => c -> CodeVarChunk
+quantvar :: (Quantity c, MayHaveUnit c, Concept c) => c -> CodeVarChunk
 
 -- | Construct a <a>CodeFuncChunk</a> from a <a>Quantity</a>.
-quantfunc :: (Quantity c, MayHaveUnit c) => c -> CodeFuncChunk
+quantfunc :: (Quantity c, MayHaveUnit c, Concept c) => c -> CodeFuncChunk
 
 -- | Combine an Object-type <a>CodeChunk</a> with another <a>CodeChunk</a>
 --   to create a new <a>CodeChunk</a> which represents a field of the
@@ -3158,14 +3470,16 @@ unJP :: JavaProject a -> a
 unCSP :: CSharpProject a -> a
 unCPPP :: CppProject a -> a
 unSP :: SwiftProject a -> a
+unJLP :: JuliaProject a -> a
 
 -- | Any quantity can be a named argument (wrapper for
---   <a>QuantityDict</a>), but with more of a focus on generating code
---   arguments.
+--   <a>DefinedQuantityDict</a>), but with more of a focus on generating
+--   code arguments.
 data NamedArgument
 
 -- | Smart constructor for <a>NamedArgument</a> .
-narg :: (Quantity q, MayHaveUnit q) => q -> NamedArgument
+narg :: (Quantity q, MayHaveUnit q, Concept q) => q -> NamedArgument
+codeDQDs :: [DefinedQuantityDict]
 
 
 -- | Define and collect information about ODEs and ODE solvers from various
@@ -3175,14 +3489,16 @@ module Data.Drasil.ExternalLibraries.ODELibraries
 -- | <a>SciPy</a> ODE library package.
 scipyODEPckg :: ODELibPckg
 
--- | Collects variables needed for SciPy's ODEs as <a>QuantityDict</a>s.
-scipyODESymbols :: [QuantityDict]
+-- | Collects variables needed for SciPy's ODEs as
+--   <a>DefinedQuantityDict</a>s.
+scipyODESymbols :: [DefinedQuantityDict]
 
 -- | <a>Oslo</a> ODE library package.
 osloPckg :: ODELibPckg
 
--- | Collects variables needed for Oslo's ODEs as <a>QuantityDict</a>s.
-osloSymbols :: [QuantityDict]
+-- | Collects variables needed for Oslo's ODEs as
+--   <a>DefinedQuantityDict</a>s.
+osloSymbols :: [DefinedQuantityDict]
 
 -- | Oslo's Vector type behaves like an array, so needs to be represented
 --   as one or else will hit type errors in GOOL.
@@ -3191,11 +3507,17 @@ arrayVecDepVar :: ODEInfo -> CodeVarChunk
 -- | <a>Apache Commons</a> ODE library package.
 apacheODEPckg :: ODELibPckg
 
--- | Collects variables needed for Apache's ODEs as <a>QuantityDict</a>s.
-apacheODESymbols :: [QuantityDict]
+-- | Collects variables needed for Apache's ODEs as
+--   <a>DefinedQuantityDict</a>s.
+apacheODESymbols :: [DefinedQuantityDict]
 
 -- | <a>odeint</a> ODE library package.
 odeintPckg :: ODELibPckg
 
--- | Collects variables needed for odeint's ODEs as <a>QuantityDict</a>s.
-odeintSymbols :: [QuantityDict]
+-- | Collects variables needed for odeint's ODEs as
+--   <a>DefinedQuantityDict</a>s.
+odeintSymbols :: [DefinedQuantityDict]
+
+-- | Change in <tt>X</tt> chunk constructor (where <tt>X</tt> is a given
+--   argument).
+diffCodeChunk :: CodeVarChunk -> CodeVarChunk

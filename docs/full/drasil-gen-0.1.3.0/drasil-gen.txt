@@ -9,6 +9,9 @@
 @package drasil-gen
 @version 0.1.3.0
 
+module Database.Drasil.ChunkDB
+cdb :: (Quantity q, MayHaveUnit q, Concept q, Concept c, IsUnit u) => [q] -> [IdeaDict] -> [c] -> [u] -> [DataDefinition] -> [InstanceModel] -> [GenDefn] -> [TheoryModel] -> [ConceptInstance] -> [LabelledContent] -> [Reference] -> [Citation] -> ChunkDB
+
 module Language.Drasil.Dump
 type Path = String
 type TargetFile = String
@@ -16,8 +19,8 @@ type TargetFile = String
 -- | For debugging purposes, if the system has a <tt>DEBUG_ENV</tt>
 --   environment variable set to anything, we can dump the chunk maps in a
 --   system to the host system.
-dumpEverything :: SystemInformation -> PrintingInformation -> Path -> IO ()
-dumpEverything0 :: SystemInformation -> PrintingInformation -> Path -> IO ()
+dumpEverything :: System -> PrintingInformation -> Path -> IO ()
+dumpEverything0 :: System -> PrintingInformation -> Path -> IO ()
 dumpTo :: ToJSON a => a -> TargetFile -> IO ()
 dumpChunkTables :: PrintingInformation -> TargetFile -> IO ()
 
@@ -55,7 +58,7 @@ ExDoc :: Maybe String -> String -> ExDoc
 instance Build.Drasil.Make.Import.RuleTransformer Language.Drasil.Output.Formats.DocSpec
 
 module Language.Drasil.TypeCheck
-typeCheckSI :: SystemInformation -> IO ()
+typeCheckSI :: System -> IO ()
 
 
 -- | Defines Drasil generator functions.
@@ -65,14 +68,14 @@ dumpTo :: ToJSON a => a -> TargetFile -> IO ()
 -- | For debugging purposes, if the system has a <tt>DEBUG_ENV</tt>
 --   environment variable set to anything, we can dump the chunk maps in a
 --   system to the host system.
-dumpEverything :: SystemInformation -> PrintingInformation -> Path -> IO ()
-typeCheckSI :: SystemInformation -> IO ()
+dumpEverything :: System -> PrintingInformation -> Path -> IO ()
+typeCheckSI :: System -> IO ()
 
 -- | Generate a number of artifacts based on a list of recipes.
 gen :: DocSpec -> Document -> PrintingInformation -> IO ()
 
 -- | Generates traceability graphs as .dot files.
-genDot :: SystemInformation -> IO ()
+genDot :: System -> IO ()
 
 -- | Calls the code generator.
 genCode :: Choices -> CodeSpec -> IO ()
@@ -81,26 +84,27 @@ genCode :: Choices -> CodeSpec -> IO ()
 --   Website. Choosing SRS will generate both TeX and HTML files, while
 --   Website generates only as HTML. This also determines what folders the
 --   generated files will be placed into.
-data DocType
+data () => DocType
 SRS :: DocType
 Website :: DocType
-Jupyter :: DocType
+Lesson :: DocType
 
 -- | Document specifications. Holds the type of document (<a>DocType</a>)
 --   and its name (<a>Filename</a>).
 data DocSpec
 DocSpec :: DocChoices -> Filename -> DocSpec
 
--- | Possible formats for printer output.
-data Format
-TeX :: Format
-HTML :: Format
-JSON :: Format
-
 -- | Document choices include the type of document as well as the file
 --   formats we want to generate as.
 data DocChoices
 DC :: DocType -> [Format] -> DocChoices
+
+-- | Possible formats for printer output.
+data () => Format
+TeX :: Format
+HTML :: Format
+Jupyter :: Format
+MDBook :: Format
 
 -- | Constructor for users to choose their document options
 docChoices :: DocType -> [Format] -> DocChoices

@@ -16,8 +16,6 @@ con :: [ConceptChunk]
 acronyms :: [CI]
 acronymsFull :: [CI]
 phsChgMtrl :: CI
-progName :: CI
-full :: IdeaDict
 charging :: ConceptChunk
 coil :: ConceptChunk
 discharging :: ConceptChunk
@@ -32,20 +30,23 @@ sWHT :: ConceptChunk
 tankParam :: ConceptChunk
 swhsPCM :: CI
 
+module Drasil.SWHS.MetaConcepts
+progName :: CI
+progName' :: CI
+
 module Drasil.SWHS.References
 citations :: BibRef
 bueche1986 :: Citation
 incroperaEtAl2007 :: Citation
-koothoor2013 :: Citation
 lightstone2012 :: Citation
-parnasClements1986 :: Citation
-smithEtAl2007 :: Citation
-smithLai2005 :: Citation
-smithKoothoor2016 :: Citation
+uriReferences :: [Reference]
+consThemESrc :: Reference
+latHtESrc :: Reference
+sensHtESrc :: Reference
 
 module Drasil.SWHS.Unitals
 symbols :: [DefinedQuantityDict]
-symbolsAll :: [QuantityDict]
+symbolsAll :: [DefinedQuantityDict]
 units :: [UnitalChunk]
 unitalChuncks :: [UnitalChunk]
 inSA :: UnitalChunk
@@ -85,7 +86,7 @@ aspectRatio :: DefinedQuantityDict
 aspectRatioMin :: DefinedQuantityDict
 aspectRatioMax :: DefinedQuantityDict
 constrained :: [ConstrConcept]
-inputs :: [QuantityDict]
+inputs :: [DefinedQuantityDict]
 inputConstraints :: [UncertQ]
 tankLength :: UncertQ
 diam :: UncertQ
@@ -110,8 +111,8 @@ tempW :: ConstrConcept
 watE :: ConstrConcept
 pcmE :: ConstrConcept
 outputs :: [ConstrConcept]
-absTol :: UncertainChunk
-relTol :: UncertainChunk
+absTol :: UncertQ
+relTol :: UncertQ
 specParamValList :: [ConstQDef]
 tankLengthMin :: ConstQDef
 tankLengthMax :: ConstQDef
@@ -266,6 +267,7 @@ nwtnCooling :: TheoryModel
 sensHtE :: TheoryModel
 sensHtETemplate :: PhaseChange -> Sentence -> TheoryModel
 tMods :: [TheoryModel]
+consThemESrc :: Reference
 
 module Drasil.SWHS.GenDefs
 genDefs :: [GenDefn]
@@ -317,25 +319,29 @@ unlikelyChgs :: [ConceptInstance]
 
 module Drasil.SWHS.Body
 srs :: Document
-fullSI :: SystemInformation
+fullSI :: System
 printSetting :: PrintingInformation
 resourcePath :: String
-units :: [UnitDefn]
-si :: SystemInformation
+si :: System
 purp :: Sentence
+motivation :: Sentence
+ideaDicts :: [IdeaDict]
+conceptChunks :: [ConceptChunk]
 symbMap :: ChunkDB
-usedDB :: ChunkDB
-refDB :: ReferenceDB
+abbreviationsList :: [IdeaDict]
+
+-- | Holds all references and links used in the document.
+allRefs :: [Reference]
 mkSRS :: SRSDecl
 tSymbIntro :: [TSIntro]
 insModel :: [InstanceModel]
 concIns :: [ConceptInstance]
-section :: [Section]
 stdFields :: Fields
 priorityNFReqs :: [ConceptChunk]
 introStart :: Sentence
 introStartSWHS :: Sentence
 introEnd :: Sentence -> CI -> Sentence
+externalLinkRef :: Reference
 scope :: Sentence
 charsOfReader :: [Sentence]
 charReaderHTT :: Sentence

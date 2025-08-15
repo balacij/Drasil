@@ -19,12 +19,11 @@ aR :: CI
 fullyT :: CI
 glassTypeFac :: CI
 heatS :: CI
-loadDurFactor :: CI
+lDurFac :: CI
 iGlass :: CI
 lGlass :: CI
 lResistance :: CI
 lShareFac :: CI
-glassBR :: CI
 stdOffDist :: CI
 nFL :: CI
 beam :: IdeaDict
@@ -38,6 +37,9 @@ glass :: IdeaDict
 ptOfExplsn :: IdeaDict
 responseTy :: IdeaDict
 
+module Drasil.GlassBR.MetaConcepts
+progName :: CI
+
 module Drasil.GlassBR.References
 astm2009 :: Citation
 astm2016 :: Citation
@@ -49,31 +51,33 @@ module Drasil.GlassBR.Units
 sFlawPU :: UnitDefn
 
 module Drasil.GlassBR.Unitals
-symbolsWithDefns :: [UnitalChunk]
-modElas :: UnitalChunk
-constrained :: [ConstrainedChunk]
+constrained :: [ConstrConcept]
 plateLen :: UncertQ
 plateWidth :: UncertQ
 aspectRatio :: UncertQ
 charWeight :: UncertQ
 standOffDist :: UncertQ
-pbTol :: UncertainChunk
-tNT :: UncertainChunk
-nomThick :: ConstrainedChunk
+pbTol :: UncertQ
+tNT :: UncertQ
 glassTypeCon :: ConstrConcept
-inputs :: [QuantityDict]
+nomThick :: ConstrConcept
+inputs :: [DefinedQuantityDict]
 inputsWUnitsUncrtn :: [UncertQ]
+inputsWUncrtn :: [UncertQ]
+inputsNoUncrtn :: [ConstrConcept]
 derivedInsWUnitsUncrtn :: [UncertQ]
-inputsWUncrtn :: [UncertainChunk]
 derivedInsWUncrtn :: [UncertQ]
-inputsNoUncrtn :: [ConstrainedChunk]
-inputDataConstraints :: [UncertainChunk]
-outputs :: [QuantityDict]
-tmSymbols :: [QuantityDict]
-probBr :: ConstrainedChunk
-probFail :: ConstrainedChunk
-pbTolfail :: ConstrainedChunk
-stressDistFac :: ConstrainedChunk
+inputDataConstraints :: [UncertQ]
+derivedInputDataConstraints :: [UncertQ]
+dataConstraints :: [UncertQ]
+outputs :: [DefinedQuantityDict]
+
+-- | Symbols uniquely relevant to theory models.
+tmSymbols :: [DefinedQuantityDict]
+probBr :: ConstrConcept
+probFail :: ConstrConcept
+pbTolfail :: ConstrConcept
+stressDistFac :: ConstrConcept
 specParamVals :: [ConstQDef]
 dimMax :: ConstQDef
 dimMin :: ConstQDef
@@ -84,40 +88,41 @@ sdMax :: ConstQDef
 stressDistFacMin :: ConstQDef
 stressDistFacMax :: ConstQDef
 sdMin :: ConstQDef
-symbols :: [UnitaryChunk]
-minThick :: UnitaryChunk
-sflawParamK :: UnitaryChunk
-sflawParamM :: UnitaryChunk
-sdx :: UnitaryChunk
-sdy :: UnitaryChunk
-sdz :: UnitaryChunk
-loadDur :: UnitaryChunk
+unitalSymbols :: [UnitalChunk]
+sdx :: UnitalChunk
+sdy :: UnitalChunk
+sdz :: UnitalChunk
 demand :: UnitalChunk
 tmDemand :: UnitalChunk
 lRe :: UnitalChunk
 tmLRe :: UnitalChunk
+minThick :: UnitalChunk
 nonFactorL :: UnitalChunk
 eqTNTWeight :: UnitalChunk
-unitless :: [QuantityDict]
-interps :: [QuantityDict]
-riskFun :: QuantityDict
-isSafePb :: QuantityDict
-isSafeProb :: QuantityDict
-isSafeLR :: QuantityDict
-isSafeLoad :: QuantityDict
-sdfTol :: QuantityDict
-dimlessLoad :: QuantityDict
-tolLoad :: QuantityDict
-lDurFac :: QuantityDict
-interpY :: QuantityDict
-interpZ :: QuantityDict
+sflawParamM :: UnitalChunk
+sflawParamK :: UnitalChunk
+loadDur :: UnitalChunk
+modElas :: UnitalChunk
+unitless :: [DefinedQuantityDict]
+interps :: [DefinedQuantityDict]
+riskFun :: DefinedQuantityDict
+isSafePb :: DefinedQuantityDict
+isSafeProb :: DefinedQuantityDict
+isSafeLR :: DefinedQuantityDict
+isSafeLoad :: DefinedQuantityDict
+sdfTol :: DefinedQuantityDict
+dimlessLoad :: DefinedQuantityDict
+tolLoad :: DefinedQuantityDict
+interpY :: DefinedQuantityDict
+interpZ :: DefinedQuantityDict
 gTF :: DefinedQuantityDict
 loadSF :: DefinedQuantityDict
+loadDF :: DefinedQuantityDict
 lBreak :: Symbol
 lDur :: Symbol
 lFail :: Symbol
 lTol :: Symbol
-terms :: [ConceptChunk]
+concepts :: [ConceptChunk]
 aspectRatioCon :: ConceptChunk
 glBreakage :: ConceptChunk
 lite :: ConceptChunk
@@ -129,8 +134,10 @@ glTyFac :: ConceptChunk
 lateral :: ConceptChunk
 load :: ConceptChunk
 specDeLoad :: ConceptChunk
+loadDurFac :: ConceptChunk
 loadResis :: ConceptChunk
 longDurLoad :: ConceptChunk
+modE :: ConceptChunk
 nonFactoredL :: ConceptChunk
 glassWL :: ConceptChunk
 shortDurLoad :: ConceptChunk
@@ -155,8 +162,7 @@ constantK :: ConstQDef
 constantModElas :: ConstQDef
 constantLoadDur :: ConstQDef
 constantLoadSF :: ConstQDef
-sdVectorSent :: Sentence
-sdVector :: [UnitaryChunk]
+sdVector :: [UnitalChunk]
 termsWithDefsOnly :: [ConceptChunk]
 termsWithAccDefn :: [ConceptChunk]
 loadTypes :: [ConceptChunk]
@@ -178,9 +184,15 @@ lrIsSafe :: TheoryModel
 
 module Drasil.GlassBR.ModuleDefs
 allMods :: [Mod]
-implVars :: [QuantityDict]
+implVars :: [DefinedQuantityDict]
 interpY :: Func
 interpZ :: Func
+
+module Drasil.GlassBR.Symbols
+symbolsForSymbolTable :: [DefinedQuantityDict]
+symbolsForTermTable :: [DefinedQuantityDict]
+thisSymbols :: [DefinedQuantityDict]
+thisTerms :: [DefinedQuantityDict]
 
 module Drasil.GlassBR.Goals
 goals :: [ConceptInstance]
@@ -216,7 +228,7 @@ glaTyFacQD :: SimpleQDef
 gtfRef :: Sentence
 hFromt :: DataDefinition
 hFromtQD :: SimpleQDef
-loadDF :: DataDefinition
+loadDFDD :: DataDefinition
 standOffDis :: DataDefinition
 eqTNTWDD :: DataDefinition
 calofDemand :: DataDefinition
@@ -232,11 +244,6 @@ iMods :: [InstanceModel]
 pbIsSafe :: InstanceModel
 lrIsSafe :: InstanceModel
 instModIntro :: Sentence
-qDefns :: [Block SimpleQDef]
-
-module Drasil.GlassBR.Symbols
-symbolsForTable :: [QuantityDict]
-thisSymbols :: [QuantityDict]
 
 module Drasil.GlassBR.Requirements
 funcReqs :: [ConceptInstance]
@@ -250,17 +257,21 @@ unlikelyChgs :: [ConceptInstance]
 
 module Drasil.GlassBR.Body
 srs :: Document
-fullSI :: SystemInformation
+fullSI :: System
 printSetting :: PrintingInformation
-si :: SystemInformation
+si :: System
 mkSRS :: SRSDecl
 purp :: Sentence
+background :: Sentence
+ideaDicts :: [IdeaDict]
+conceptChunks :: [ConceptChunk]
+abbreviationsList :: [IdeaDict]
 symbMap :: ChunkDB
+
+-- | Holds all references and links used in the document.
+allRefs :: [Reference]
 concIns :: [ConceptInstance]
 labCon :: [LabelledContent]
-usedDB :: ChunkDB
-refDB :: ReferenceDB
-section :: [Section]
 stdFields :: Fields
 termsAndDescBullets :: Contents
 termsAndDescBulletsGlTySubSec :: [ItemType]
@@ -269,6 +280,7 @@ solChSpecSubsections :: [CI]
 auxiliaryConstants :: [ConstQDef]
 priorityNFReqs :: [ConceptChunk]
 startIntro :: NamedIdea n => n -> Sentence -> CI -> Sentence
+externalLinkRef :: Reference
 undIR :: [Sentence]
 appStanddIR :: [Sentence]
 scope :: Sentence
