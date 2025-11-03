@@ -3,8 +3,8 @@ module Language.Drasil.Code.Imperative.Comments (
   getComment, getCommentBrief
 ) where
 
+import Drasil.Database.SearchTools (DomDefn (definition), defResolve')
 import Language.Drasil
-import Database.Drasil (DomDefn (definition), defResolve')
 import Language.Drasil.Code.Imperative.DrasilState (GenState, DrasilState(..))
 import Language.Drasil.CodeSpec (HasOldCodeSpec(..))
 import Language.Drasil.Printers (SingleLine(OneLine), sentenceDoc, unitDoc)
@@ -18,7 +18,7 @@ getTermDoc :: (CodeIdea c) => c -> GenState Doc
 getTermDoc c = do
   g <- get
   let db = codeSpec g ^. systemdbO
-  return $ sentenceDoc db Implementation OneLine $ phraseNP $ codeChunk c ^. term
+  return $ sentenceDoc db Implementation OneLine $ phrase $ codeChunk c
 
 -- | Gets a plain rendering of the definition of a chunk, preceded by a colon
 -- as it is intended to follow the term for the chunk. Returns empty if the

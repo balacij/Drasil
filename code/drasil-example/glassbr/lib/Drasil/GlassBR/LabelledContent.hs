@@ -1,9 +1,10 @@
-module Drasil.GlassBR.Figures where
+module Drasil.GlassBR.LabelledContent where
 
 import Control.Lens((^.))
 
 import Language.Drasil
 import Language.Drasil.Chunk.Concept.NamedCombinators
+import qualified Language.Drasil.Development as D
 import qualified Language.Drasil.Sentence.Combinators as S
 
 import Data.Drasil.Concepts.Documentation (assumption, item, physicalSystem,
@@ -16,13 +17,18 @@ import Drasil.GlassBR.Unitals (aspectRatio, charWeight, demand, demandq,
 resourcePath :: String
 resourcePath = "../../../../datafiles/glassbr/"
 
-sysCtxFig, physSystFig, traceItemSecsFig, traceReqsItemsFig, traceAssumpsOthersFig, demandVsSDFig, dimlessloadVsARFig :: LabelledContent
+figures :: [LabelledContent]
+figures = [sysCtxFig, physSystFig, traceItemSecsFig, traceReqsItemsFig,
+  traceAssumpsOthersFig, demandVsSDFig, dimlessloadVsARFig]
 
-sysCtxFig = llcc (makeFigRef "sysCtxDiag") $ 
+sysCtxFig, physSystFig, traceItemSecsFig, traceReqsItemsFig,
+  traceAssumpsOthersFig, demandVsSDFig, dimlessloadVsARFig :: LabelledContent
+
+sysCtxFig = llcc (makeFigRef "sysCtxDiag") $
   fig (titleize sysCont) (resourcePath ++ "SystemContextFigure.png")
 
-physSystFig = llcc (makeFigRef "physSystImage") $ figWithWidth 
-  (atStartNP $ the physicalSystem) (resourcePath ++ "physicalsystimage.png") 30
+physSystFig = llcc (makeFigRef "physSystImage") $ figWithWidth
+  (D.toSent $ atStartNP $ the physicalSystem) (resourcePath ++ "physicalsystimage.png") 30
 
 traceItemSecsFig = llcc (makeFigRef "TraceyItemSecs") $ fig (showingCxnBw traceyMatrix $
   titleize' item +:+ S "of Different" +:+ titleize' section_)

@@ -1,20 +1,21 @@
 module Drasil.SWHSNoPCM.Body (si, srs, printSetting, noPCMODEInfo, fullSI) where
 
+import Control.Lens ((^.))
+import Data.List ((\\))
+
 import Language.Drasil hiding (section)
+import Language.Drasil.Chunk.Concept.NamedCombinators
+import qualified Language.Drasil.Development as D
+import qualified Language.Drasil.Sentence.Combinators as S
+import Drasil.System (SystemKind(Specification), mkSystem, systemdb)
+
 import Drasil.Metadata (inModel)
 import Drasil.SRSDocument
-import Database.Drasil.ChunkDB (cdb)
 import qualified Drasil.DocLang.SRS as SRS (inModel)
-import Theory.Drasil (TheoryModel)
-import Language.Drasil.Chunk.Concept.NamedCombinators
-import qualified Language.Drasil.Sentence.Combinators as S
-
-import Language.Drasil.Code (ODEInfo (depVar))
-
-import Data.List ((\\))
+import Drasil.Generator (cdb)
 import Data.Drasil.People (thulasi)
 
-import Data.Drasil.Concepts.Documentation as Doc (material_, sysCont)
+import Data.Drasil.Concepts.Documentation as Doc (material_)
 import Data.Drasil.Concepts.Math (mathcon', ode)
 import Data.Drasil.Concepts.PhysicalProperties (materialProprty, physicalcon)
 import qualified Data.Drasil.Concepts.Physics as CP (physicCon', energy, mechEnergy, pressure)
@@ -23,7 +24,7 @@ import Data.Drasil.Concepts.Thermodynamics (heatCapSpec, htFlux, phaseChange,
   temp, thermalAnalysis, thermalConduction, thermocon, boilPt, latentHeat, meltPt)
 
 import Data.Drasil.ExternalLibraries.ODELibraries (scipyODESymbols, osloSymbols,
-  arrayVecDepVar, apacheODESymbols, odeintSymbols, diffCodeChunk)
+  apacheODESymbols, odeintSymbols, odeInfoChunks)
 
 import qualified Data.Drasil.Quantities.Thermodynamics as QT (temp,
   heatCapSpec, htFlux, sensHeat)
@@ -31,6 +32,8 @@ import Data.Drasil.Quantities.Math (gradient, pi_, piConst, surface,
   uNormalVect, surArea, area)
 import Data.Drasil.Quantities.PhysicalProperties (vol, mass, density)
 import Data.Drasil.Quantities.Physics (time, energy)
+
+import Theory.Drasil (TheoryModel)
 
 -- Since NoPCM is a simplified version of SWHS, the file is to be built off
 -- of the SWHS libraries.  If the source for something cannot be found in
@@ -51,10 +54,11 @@ import Drasil.SWHS.References (uriReferences)
 import Drasil.SWHSNoPCM.Assumptions
 import Drasil.SWHSNoPCM.Changes (likelyChgs, unlikelyChgs)
 import qualified Drasil.SWHSNoPCM.DataDefs as NoPCM (dataDefs)
-import Drasil.SWHSNoPCM.Definitions (srsSWHS, htTrans)
+import Drasil.SWHSNoPCM.Definitions (htTrans)
 import Drasil.SWHSNoPCM.GenDefs (genDefs)
 import Drasil.SWHSNoPCM.Goals (goals)
 import Drasil.SWHSNoPCM.IMods (eBalanceOnWtr, instModIntro)
+import Drasil.SWHSNoPCM.LabelledContent (labelledContent, figTank, sysCntxtFig)
 import Drasil.SWHSNoPCM.MetaConcepts (progName)
 import qualified Drasil.SWHSNoPCM.IMods as NoPCM (iMods)
 import Drasil.SWHSNoPCM.ODEs
@@ -63,19 +67,14 @@ import Drasil.SWHSNoPCM.References (citations)
 import Drasil.SWHSNoPCM.Unitals (inputs, constrained, unconstrained,
   specParamValList)
 
-import Drasil.System (SystemKind(Specification), mkSystem)
-
 srs :: Document
-srs = mkDoc mkSRS S.forT si
+srs = mkDoc mkSRS S.forT fullSI
 
 fullSI :: System
 fullSI = fillcdbSRS mkSRS si
 
 printSetting :: PrintingInformation
-printSetting = piSys fullSI Equational defaultConfiguration
-
-resourcePath :: String
-resourcePath = "../../../../datafiles/swhsnopcm/"
+printSetting = piSys (fullSI ^. systemdb) Equational defaultConfiguration
 
 -- This contains the list of symbols used throughout the document
 symbols :: [DefinedQuantityDict]
@@ -85,14 +84,12 @@ symbols = map dqdWr concepts ++ map dqdWr constrained
 symbolsAll :: [DefinedQuantityDict] --FIXME: Why is PCM (swhsSymbolsAll) here?
                                --Can't generate without SWHS-specific symbols like pcmHTC and pcmSA
                                --FOUND LOC OF ERROR: Instance Models
--- FIXME: the dependent variable of noPCMODEInfo (tempW) is added to symbolsAll as it is used to create new chunks with tempW's UID suffixed in ODELibraries.hs.
+-- FIXME: the dependent variable of noPCMODEInfo (tempW) is currently added to symbolsAll automatically as it is used to create new chunks with tempW's UID suffixed in ODELibraries.hs.
 -- The correct way to fix this is to add the chunks when they are created in the original functions. See #4298 and #4301
 symbolsAll = [gradient, pi_, uNormalVect, dqdWr surface] ++ symbols ++
   map dqdWr symbolConcepts ++ map dqdWr specParamValList ++ map dqdWr [absTol, relTol] ++
   scipyODESymbols ++ osloSymbols ++ apacheODESymbols ++ odeintSymbols ++
-  map dqdWr [listToArray dp, arrayVecDepVar noPCMODEInfo, 
-  diffCodeChunk dp, listToArray $ diffCodeChunk dp]
-  where dp = depVar noPCMODEInfo
+  odeInfoChunks noPCMODEInfo
 
 concepts :: [UnitalChunk]
 concepts = map ucw [tau, inSA, outSA, htCapL, htFluxIn, htFluxOut, volHtGen,
@@ -164,10 +161,10 @@ stdFields = [DefiningEquation, Description Verbose IncludeUnits, Notes, Source, 
 
 si :: System
 si = mkSystem
-  srsSWHS Specification [thulasi]
+  progName Specification [thulasi]
   [purp] [introStartNoPCM] [scope] [motivation]
   -- FIXME: Everything after (and including) \\ should be removed when
-  -- #1658 is resolved. Basically, _quants is used here, but 
+  -- #1658 is resolved. Basically, _quants is used here, but
   -- tau does not appear in the document and thus should not be displayed.
   ((map dqdWr unconstrained ++ symbolsAll) \\ [dqdWr tau])
   tMods genDefs NoPCM.dataDefs NoPCM.iMods
@@ -177,14 +174,14 @@ si = mkSystem
   symbMap
 
 purp :: Sentence
-purp = foldlSent_ [S "investigate the heating" `S.of_` phraseNP (water `inA` sWHT)]
+purp = foldlSent_ [S "investigate the heating" `S.of_` D.toSent (phraseNP (water `inA` sWHT))]
 
 ideaDicts :: [IdeaDict]
 ideaDicts =
   -- Actual IdeaDicts
   [htTrans, materialProprty] ++
   -- CIs
-  map nw [srsSWHS, progName, phsChgMtrl] ++
+  map nw [progName, phsChgMtrl] ++
   map nw CP.physicCon' ++ map nw mathcon'
 
 conceptChunks :: [ConceptChunk]
@@ -197,7 +194,7 @@ conceptChunks =
 
 symbMap :: ChunkDB
 symbMap = cdb symbolsAll ideaDicts conceptChunks ([] :: [UnitDefn]) NoPCM.dataDefs
-  NoPCM.iMods genDefs tMods concIns [] allRefs citations
+  NoPCM.iMods genDefs tMods concIns labelledContent allRefs citations
 
 abbreviationsList :: [IdeaDict]
 abbreviationsList =
@@ -249,9 +246,9 @@ scope = phrase thermalAnalysis `S.of_` S "a single" +:+ phrase sWHT
 ---------------------------------------
 
 orgDocEnd :: Sentence
-orgDocEnd = foldlSent_ [atStartNP (the inModel),
+orgDocEnd = foldlSent_ [D.toSent (atStartNP (the inModel)),
   S "to be solved" `S.is` S "referred to as" +:+. refS eBalanceOnWtr,
-  atStartNP (the inModel), S "provides the", titleize ode,
+  D.toSent (atStartNP (the inModel)), S "provides the", titleize ode,
   sParen (short ode), S "that models the" +:+. phrase progName,
   short progName, S "solves this", short ode]
 
@@ -266,11 +263,6 @@ orgDocEnd = foldlSent_ [atStartNP (the inModel),
 ------------------------------
 --Section 3.1 : SYSTEM CONTEXT
 ------------------------------
-
-sysCntxtFig :: LabelledContent
-sysCntxtFig = llcc (makeFigRef "SysCon")
-  $ fig (titleize sysCont)
-  $ resourcePath ++ "SystemContextFigure.png"
 
 ------------------------------------
 --Section 3.2 : USER CHARACTERISTICS
@@ -299,17 +291,12 @@ sysCntxtFig = llcc (makeFigRef "SysCon")
 terms :: [ConceptChunk]
 terms = [htFlux, heatCapSpec, thermalConduction, transient]
 
-figTank :: LabelledContent
-figTank = llcc (makeFigRef "Tank") $ fig (atStart sWHT `sC` S "with" +:+ phrase htFlux +:+
-  S "from" +:+ phrase coil `S.of_` ch htFluxC)
-  $ resourcePath ++ "TankWaterOnly.png"
-
 physSystParts :: [Sentence]
 physSystParts = map foldlSent_ [physSyst1 tank water, physSyst2 coil tank htFluxC]
 
 goalInputs :: [Sentence]
-goalInputs = [phraseNP (temp `the_ofThe` coil),
-  S "the initial" +:+ phrase tempW, pluralNP (the materialProprty)]
+goalInputs = [D.toSent (phraseNP (temp `the_ofThe` coil)),
+  S "the initial" +:+ phrase tempW, D.toSent (pluralNP (the materialProprty))]
 
 ------------------------------------------------------
 --Section 4.2 : SOLUTION CHARACTERISTICS SPECIFICATION
@@ -360,7 +347,7 @@ dataConstListOut = [tempW, watE]
 -- Traceabilty Graphs --
 ------------------------
 
--- Using the SWHS graphs as place holders until ones can be generated for NoPCM 
+-- Using the SWHS graphs as place holders until ones can be generated for NoPCM
 
 ------------------------------------------
 --Section 8: SPECIFICATION PARAMETER VALUE

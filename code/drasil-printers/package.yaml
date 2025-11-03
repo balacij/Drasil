@@ -24,7 +24,6 @@ dependencies:
 - drasil-data
 - drasil-database
 - drasil-lang
-- drasil-system
 - drasil-theory
 - drasil-utils
 - split
@@ -36,6 +35,7 @@ ghc-options:
 library:
   source-dirs: lib
   exposed-modules:
+  - Drasil.Database.SearchTools
   - Language.Drasil.Printers
   when:
   - condition: false

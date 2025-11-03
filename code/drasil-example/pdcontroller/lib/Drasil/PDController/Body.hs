@@ -1,17 +1,19 @@
 module Drasil.PDController.Body (pidODEInfo, printSetting, si, srs, fullSI) where
 
+import Control.Lens ((^.))
+
 import Language.Drasil
-import Language.Drasil.Code (ODEInfo(..))
 import Drasil.Metadata (dataDefn)
 import Drasil.SRSDocument
-import Database.Drasil.ChunkDB (cdb)
+import Drasil.Generator (cdb)
 import qualified Drasil.DocLang.SRS as SRS (inModel)
 import qualified Language.Drasil.Sentence.Combinators as S
+import Drasil.System (SystemKind(Specification), mkSystem, systemdb)
 
 import Data.Drasil.Concepts.Math (mathcon', ode)
 import Data.Drasil.ExternalLibraries.ODELibraries
-       (apacheODESymbols, arrayVecDepVar, odeintSymbols, osloSymbols,
-        scipyODESymbols, diffCodeChunk)
+       (apacheODESymbols, odeintSymbols, osloSymbols,
+        scipyODESymbols, odeInfoChunks)
 import Data.Drasil.Quantities.Physics (physicscon)
 import Data.Drasil.Concepts.PhysicalProperties (physicalcon)
 import Data.Drasil.Concepts.Physics (angular, linear) -- FIXME: should not be needed?
@@ -23,34 +25,32 @@ import Drasil.PDController.Changes (likelyChgs)
 import Drasil.PDController.Concepts (acronyms, pidC, concepts, defs)
 import Drasil.PDController.DataDefs (dataDefinitions)
 import Drasil.PDController.GenDefs (genDefns)
+import Drasil.PDController.LabelledContent (labelledContent, gsdSysContextFig, sysFigure)
 import Drasil.PDController.MetaConcepts (progName)
 import Drasil.PDController.GenSysDesc
-       (gsdSysContextFig, gsdSysContextList, gsdSysContextP1, gsdSysContextP2,
-        gsduserCharacteristics)
+       (gsdSysContextList, gsdSysContextP1, gsdSysContextP2, gsduserCharacteristics)
 import Drasil.PDController.IModel (instanceModels, imPD)
 import Drasil.PDController.IntroSection (introPara, introPurposeOfDoc, externalLinkRef,
        introUserChar1, introUserChar2, introscopeOfReq, scope)
 import Drasil.PDController.References (citations)
 import Drasil.PDController.Requirements (funcReqs, nonfuncReqs)
-import Drasil.PDController.SpSysDesc (goals, sysFigure, sysGoalInput, sysParts)
+import Drasil.PDController.SpSysDesc (goals, sysGoalInput, sysParts)
 import Drasil.PDController.TModel (theoreticalModels)
 import Drasil.PDController.Unitals (symbols, inputs, outputs, inputsUC,
   inpConstrained, pidConstants)
 import Drasil.PDController.ODEs (pidODEInfo)
 
-import Drasil.System (SystemKind(Specification), mkSystem)
-
 naveen :: Person
 naveen = person "Naveen Ganesh" "Muralidharan"
 
 srs :: Document
-srs = mkDoc mkSRS (S.forGen titleize phrase) si
+srs = mkDoc mkSRS (S.forGen titleize phrase) fullSI
 
 fullSI :: System
 fullSI = fillcdbSRS mkSRS si
 
 printSetting :: PrintingInformation
-printSetting = piSys fullSI Equational defaultConfiguration
+printSetting = piSys (fullSI ^. systemdb) Equational defaultConfiguration
 
 mkSRS :: SRSDecl
 mkSRS
@@ -117,14 +117,12 @@ background = foldlSent_ [S "Automatic process control with a controller (P/PI/PD
               S "in a variety of applications such as thermostats, automobile",
               S "cruise-control, etc"]
 
--- FIXME: the dependent variable of pidODEInfo (opProcessVariable) is added to symbolsAll as it is used to create new chunks with opProcessVariable's UID suffixed in ODELibraries.hs.
+-- FIXME: the dependent variable of pidODEInfo (opProcessVariable) is currently added to symbolsAll automatically as it is used to create new chunks with opProcessVariable's UID suffixed in ODELibraries.hs.
 -- The correct way to fix this is to add the chunks when they are created in the original functions. See #4298 and #4301
 symbolsAll :: [DefinedQuantityDict]
 symbolsAll = symbols ++ map dqdWr pidConstants
   ++ scipyODESymbols ++ osloSymbols ++ apacheODESymbols ++ odeintSymbols
-  ++ map dqdWr [listToArray dp, arrayVecDepVar pidODEInfo,
-  listToArray $ diffCodeChunk dp, diffCodeChunk dp]
-  where dp = depVar pidODEInfo
+  ++ odeInfoChunks pidODEInfo
 
 ideaDicts :: [IdeaDict]
 ideaDicts =
@@ -148,7 +146,7 @@ symbMap = cdb (map dqdWr physicscon ++ symbolsAll ++ [dqdWr mass, dqdWr posInf, 
   genDefns
   theoreticalModels
   conceptInstances
-  ([] :: [LabelledContent])
+  labelledContent
   allRefs
   citations
 

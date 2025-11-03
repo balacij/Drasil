@@ -3,9 +3,9 @@ module Drasil.Website.Body where
 
 import Control.Lens ((^.))
 
-import Language.Drasil.Printers (PrintingInformation(..), defaultConfiguration)
+import Language.Drasil.Printers (PrintingInformation, defaultConfiguration, piSys)
 import Database.Drasil
-import Database.Drasil.ChunkDB (cdb)
+import Drasil.Generator (cdb)
 import Drasil.System
 import Language.Drasil
 import Drasil.DocLang (findAllRefs)
@@ -33,7 +33,7 @@ import Drasil.SSP.IMods (fctSfty)
 
 -- | Printing info to get document to generate. Takes in the 'FolderLocation'.
 printSetting :: FolderLocation -> PrintingInformation
-printSetting fl = PI (symbMap fl) Equational defaultConfiguration
+printSetting fl = piSys (symbMap fl) Equational defaultConfiguration
 
 -- | Instead of being an 'SRSDecl', this takes the folder locations and generates the document from there.
 mkWebsite :: FolderLocation -> Document
