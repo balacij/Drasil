@@ -34,7 +34,6 @@ waterVolume :: DataDefinition
 
 module Drasil.SWHSNoPCM.Definitions
 htTrans :: IdeaDict
-srsSWHS :: CI
 
 module Drasil.SWHSNoPCM.Derivations
 eBalanceOnWtrDerivEqns :: [ModelExpr]
@@ -57,6 +56,11 @@ eBalanceOnWtrRC :: DifferentialModel
 module Drasil.SWHSNoPCM.Changes
 likelyChgs :: [ConceptInstance]
 unlikelyChgs :: [ConceptInstance]
+
+module Drasil.SWHSNoPCM.LabelledContent
+labelledContent :: [LabelledContent]
+figTank :: LabelledContent
+sysCntxtFig :: LabelledContent
 
 module Drasil.SWHSNoPCM.MetaConcepts
 progName :: CI

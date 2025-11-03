@@ -23,7 +23,7 @@
 </span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Drasil.Concepts.Documentation</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">assumpDom</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">funcReqDom</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">goalStmtDom</span></span><span class="hs-special">,</span><span>
 </span><span id="line-24"></span><span>  </span><span class="annot"><span class="hs-identifier">nonFuncReqDom</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">likeChgDom</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">unlikeChgDom</span></span><span class="hs-special">)</span><span>
 </span><span id="line-25"></span><span>
-</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Lens</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(^.)</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">Getting</span></span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Lens</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(^.)</span></span><span class="hs-special">)</span><span>
 </span><span id="line-27"></span><span>
 </span><span id="line-28"></span><span class="annot"><span class="hs-comment">-- * Types</span></span><span>
 </span><span id="line-29"></span><span>
@@ -397,50 +397,29 @@ forall c.
 </span><a href="#local-6989586621679098861"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">[Contents]
 </span><a href="#local-6989586621679098862"><span class="hs-identifier hs-var">cs</span></a></span><span>
 </span><span id="line-148"></span><span>
-</span><span id="line-149"></span><span>  </span><span id="local-6989586621679098648"><span class="annot"><a href="#local-6989586621679098864"><span class="hs-identifier hs-type">expandFromDB</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679098648"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679098648"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Getting</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">UMap</span></span><span> </span><span class="annot"><a href="#local-6989586621679098648"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ChunkDB</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">UMap</span></span><span> </span><span class="annot"><a href="#local-6989586621679098648"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679098648"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span><span>
-</span><span id="line-150"></span><span>  </span><span id="local-6989586621679098864"><span class="annot"><span class="annottext">expandFromDB :: forall a. ([a] -&gt; [a]) -&gt; Getting (UMap a) ChunkDB (UMap a) -&gt; [a]
-</span><a href="#local-6989586621679098864"><span class="hs-identifier hs-var hs-var">expandFromDB</span></a></span></span><span> </span><span id="local-6989586621679098865"><span class="annot"><span class="annottext">[a] -&gt; [a]
-</span><a href="#local-6989586621679098865"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[a] -&gt; [a]
-</span><a href="#local-6989586621679098865"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">([a] -&gt; [a])
--&gt; (Getting (UMap a) ChunkDB (UMap a) -&gt; [a])
--&gt; Getting (UMap a) ChunkDB (UMap a)
--&gt; [a]
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">UMap a -&gt; [a]
-forall a. UMap a -&gt; [a]
-</span><span class="hs-identifier hs-var">asOrderedList</span></span><span> </span><span class="annot"><span class="annottext">(UMap a -&gt; [a])
--&gt; (Getting (UMap a) ChunkDB (UMap a) -&gt; UMap a)
--&gt; Getting (UMap a) ChunkDB (UMap a)
--&gt; [a]
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ChunkDB
-</span><a href="#local-6989586621679098761"><span class="hs-identifier hs-var">db</span></a></span><span> </span><span class="annot"><span class="annottext">ChunkDB -&gt; Getting (UMap a) ChunkDB (UMap a) -&gt; UMap a
-forall s a. s -&gt; Getting a s a -&gt; a
-</span><span class="hs-operator hs-var">^.</span></span><span class="hs-special">)</span><span>
-</span><span id="line-151"></span><span>
-</span><span id="line-152"></span><span>  </span><span id="local-6989586621679098611"><span class="annot"><a href="#local-6989586621679098782"><span class="hs-identifier hs-type">fromConcInsDB</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Concept</span></span><span> </span><span class="annot"><a href="#local-6989586621679098611"><span class="hs-identifier hs-type">c</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679098611"><span class="hs-identifier hs-type">c</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">ConceptInstance</span></span><span class="hs-special">]</span></span><span>
-</span><span id="line-153"></span><span>  </span><span id="local-6989586621679098782"><span class="annot"><span class="annottext">fromConcInsDB :: forall c. Concept c =&gt; c -&gt; [ConceptInstance]
-</span><a href="#local-6989586621679098782"><span class="hs-identifier hs-var hs-var">fromConcInsDB</span></a></span></span><span> </span><span id="local-6989586621679098883"><span class="annot"><span class="annottext">c
-</span><a href="#local-6989586621679098883"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">([ConceptInstance] -&gt; [ConceptInstance])
--&gt; Getting (UMap ConceptInstance) ChunkDB (UMap ConceptInstance)
--&gt; [ConceptInstance]
-forall a. ([a] -&gt; [a]) -&gt; Getting (UMap a) ChunkDB (UMap a) -&gt; [a]
-</span><a href="#local-6989586621679098864"><span class="hs-identifier hs-var">expandFromDB</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(ConceptInstance -&gt; Bool) -&gt; [ConceptInstance] -&gt; [ConceptInstance]
+</span><span id="line-149"></span><span>  </span><span id="local-6989586621679098615"><span class="annot"><a href="#local-6989586621679098782"><span class="hs-identifier hs-type">fromConcInsDB</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Concept</span></span><span> </span><span class="annot"><a href="#local-6989586621679098615"><span class="hs-identifier hs-type">c</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679098615"><span class="hs-identifier hs-type">c</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">ConceptInstance</span></span><span class="hs-special">]</span></span><span>
+</span><span id="line-150"></span><span>  </span><span id="local-6989586621679098782"><span class="annot"><span class="annottext">fromConcInsDB :: forall c. Concept c =&gt; c -&gt; [ConceptInstance]
+</span><a href="#local-6989586621679098782"><span class="hs-identifier hs-var hs-var">fromConcInsDB</span></a></span></span><span> </span><span id="local-6989586621679098884"><span class="annot"><span class="annottext">c
+</span><a href="#local-6989586621679098884"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(ConceptInstance -&gt; Bool) -&gt; [ConceptInstance] -&gt; [ConceptInstance]
 forall a. (a -&gt; Bool) -&gt; [a] -&gt; [a]
-</span><span class="hs-identifier hs-var">filter</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679098884"><span class="annot"><span class="annottext">ConceptInstance
-</span><a href="#local-6989586621679098884"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">[UID] -&gt; UID
+</span><span class="hs-identifier hs-var">filter</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679098885"><span class="annot"><span class="annottext">ConceptInstance
+</span><a href="#local-6989586621679098885"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">[UID] -&gt; UID
 </span><span class="hs-identifier hs-var">sDom</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ConceptInstance -&gt; [UID]
 forall c. ConceptDomain c =&gt; c -&gt; [UID]
 </span><span class="hs-identifier hs-var">cdom</span></span><span> </span><span class="annot"><span class="annottext">ConceptInstance
-</span><a href="#local-6989586621679098884"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">UID -&gt; UID -&gt; Bool
+</span><a href="#local-6989586621679098885"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">UID -&gt; UID -&gt; Bool
 forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">c
-</span><a href="#local-6989586621679098883"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">c -&gt; Getting UID c UID -&gt; UID
+</span><a href="#local-6989586621679098884"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">c -&gt; Getting UID c UID -&gt; UID
 forall s a. s -&gt; Getting a s a -&gt; a
 </span><span class="hs-operator hs-var">^.</span></span><span> </span><span class="annot"><span class="annottext">Getting UID c UID
 forall c. HasUID c =&gt; Getter c UID
 Getter c UID
-</span><span class="hs-identifier hs-var">uid</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Getting (UMap ConceptInstance) ChunkDB (UMap ConceptInstance)
-Lens' ChunkDB (UMap ConceptInstance)
-</span><span class="hs-identifier hs-var">conceptinsTable</span></span><span>
-</span><span id="line-154"></span></pre></body></html>
+</span><span class="hs-identifier hs-var">uid</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">([ConceptInstance] -&gt; [ConceptInstance])
+-&gt; [ConceptInstance] -&gt; [ConceptInstance]
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">ChunkDB -&gt; [ConceptInstance]
+forall a. IsChunk a =&gt; ChunkDB -&gt; [a]
+</span><span class="hs-identifier hs-var">findAll</span></span><span> </span><span class="annot"><span class="annottext">ChunkDB
+</span><a href="#local-6989586621679098761"><span class="hs-identifier hs-var">db</span></a></span><span>
+</span><span id="line-151"></span></pre></body></html>

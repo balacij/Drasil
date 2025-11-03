@@ -49,12 +49,13 @@ timeStartZero :: ConceptInstance
 twoDMotion :: ConceptInstance
 yAxisGravity :: ConceptInstance
 
-module Drasil.Projectile.Figures
-figLaunch :: LabelledContent
-sysCtxFig1 :: LabelledContent
-
 module Drasil.Projectile.Goals
 goals :: [ConceptInstance]
+
+module Drasil.Projectile.LabelledContent
+labelledContent :: [LabelledContent]
+figLaunch :: LabelledContent
+sysCtxFig1 :: LabelledContent
 
 module Drasil.Projectile.Lesson.Example
 exampleContent :: [Contents]
@@ -96,7 +97,6 @@ launAngle :: ConstrConcept
 launSpeed :: ConstrConcept
 offset :: ConstrConcept
 targPos :: ConstrConcept
-message :: DefinedQuantityDict
 tol :: ConstQDef
 
 module Drasil.Projectile.Expressions
@@ -105,7 +105,6 @@ iyPos :: PExpr
 yConstAccel :: PExpr
 iSpeed :: PExpr
 offset' :: PExpr
-message :: PExpr
 speed' :: PExpr
 scalarPos' :: PExpr
 rectNoTime :: PExpr
@@ -189,9 +188,10 @@ printSetting :: PrintingInformation
 mkNB :: LsnDecl
 si :: System
 symbMap :: ChunkDB
-usedDB :: ChunkDB
+ideaDicts :: [IdeaDict]
+conceptChunks :: [ConceptChunk]
 symbols :: [DefinedQuantityDict]
-projectileMotion :: CI
+projectileMotionLesson :: CI
 allRefs :: [Reference]
 
 module Drasil.Projectile.Lesson.Main
@@ -215,7 +215,6 @@ speedIY :: DataDefinition
 module Drasil.Projectile.IMods
 iMods :: [InstanceModel]
 landPosIM :: InstanceModel
-messageIM :: InstanceModel
 offsetIM :: InstanceModel
 timeIM :: InstanceModel
 
