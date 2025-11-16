@@ -1,6 +1,4 @@
 on:
-  push:
-    paths: [code/**, .github/workflows/Build.yaml]
   pull_request:
     branches: main
     paths: [code/**, .github/workflows/Build.yaml]
@@ -13,21 +11,13 @@ defaults:
 env:
   is_deployment: ${{ github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') }}
 jobs:
-  auto-cancel:
-    if: | 
-      github.event_name == 'pull_request'
-      || github.event_name == 'workflow_dispatch'
-      || (github.event_name == 'push' && (github.ref == 'refs/heads/main' || contains(github.event.head_commit.message, '[workflow-trigger]')))
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.12.1
-        with:
-          access_token: ${{ github.token }}
   build:
     needs: auto-cancel
     name: "Build & Deploy"
     runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v5
 
