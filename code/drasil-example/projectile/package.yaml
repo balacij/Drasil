@@ -47,6 +47,8 @@ executables:
     ghc-options:
     - -threaded
     - -O2
+    # - -with-rtsopts="-l-ag"
+    # - -with-rtsopts="-h"
     dependencies:
     - projectile
     when:

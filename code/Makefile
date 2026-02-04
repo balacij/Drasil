@@ -167,7 +167,7 @@ FULL ?= 0
 
 # GHC debug options
 PROFALL := --profile
-PROFEXEC := --profile --rts-options '-xc -P'
+PROFEXEC := --profile --rts-options '-xc -P -l-ag -hT'
 
 # GHC build options
 GHCTHREADS ?= 2
